@@ -1,0 +1,22 @@
+# Local build payloads and enrolled device metadata
+/ram-rescue-demo/work/
+/ram-rescue-demo/rescue-root.tar.gz
+/ram-rescue-demo/rescue-root.sha256
+/ram-rescue-demo/manifest.json
+
+# Keep incident summaries, not raw host diagnostics
+/ram-rescue-demo/incidents/*/*
+!/ram-rescue-demo/incidents/*/README.md
+
+# Python caches and local environments
+__pycache__/
+*.py[cod]
+.venv/
+.env
+.env.*
+!.env.example
+
+# Editor and OS temporary files
+*~
+*.swp
+.DS_Store

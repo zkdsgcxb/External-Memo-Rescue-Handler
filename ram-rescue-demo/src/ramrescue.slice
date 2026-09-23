@@ -1,0 +1,8 @@
+[Unit]
+Description=Memory budget for disk-independent rescue demo
+
+[Slice]
+MemoryAccounting=yes
+MemoryMax=768M
+MemorySwapMax=0
+MemoryMin=64M

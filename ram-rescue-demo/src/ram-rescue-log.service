@@ -1,0 +1,19 @@
+[Unit]
+Description=Bounded RAM-only kernel log for USB root-disk failures
+Requires=ram-rescue-prepare.service
+After=ram-rescue-prepare.service
+
+[Service]
+Type=simple
+Slice=ramrescue.slice
+MemorySwapMax=0
+OOMScoreAdjust=-900
+RootDirectory=/run/ram-rescue-demo
+WorkingDirectory=/
+ExecStart=/usr/bin/python3 -I /sbin/rescue-kernel-log
+StandardOutput=null
+StandardError=null
+Restart=no
+
+[Install]
+WantedBy=multi-user.target

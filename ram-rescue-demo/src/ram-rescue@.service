@@ -1,0 +1,27 @@
+[Unit]
+Description=Resident RAM rescue login on %I
+Requires=ram-rescue-prepare.service
+After=ram-rescue-prepare.service
+Conflicts=getty@%i.service
+
+[Service]
+Type=simple
+Slice=ramrescue.slice
+MemorySwapMax=0
+OOMScoreAdjust=-900
+RootDirectory=/run/ram-rescue-demo
+WorkingDirectory=/
+ExecStart=/bin/busybox sh /sbin/rescue-supervisor
+StandardInput=tty
+StandardOutput=tty
+StandardError=tty
+TTYPath=/dev/%I
+TTYReset=yes
+TTYVHangup=yes
+TTYVTDisallocate=no
+UtmpIdentifier=%I
+Environment=TERM=linux
+Restart=no
+
+[Install]
+WantedBy=multi-user.target

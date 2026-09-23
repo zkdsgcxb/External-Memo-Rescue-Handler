@@ -1,0 +1,14 @@
+[Unit]
+Description=Prepare standalone rescue tools in non-swappable RAM
+After=local-fs.target
+Before=ram-rescue@tty9.service ram-rescue@tty10.service ram-rescue-log.service
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+Slice=ramrescue.slice
+MemorySwapMax=0
+ExecStart=/usr/local/lib/ram-rescue-demo/prepare.sh start
+ExecStop=/usr/local/lib/ram-rescue-demo/prepare.sh stop
+TimeoutStartSec=90
+TimeoutStopSec=15
