@@ -13,7 +13,7 @@ import subprocess
 BASE = Path(__file__).resolve().parent
 PROJECT = BASE.parent
 WORK = BASE / 'work'
-MODULES = ['xhci_pci', 'usb_storage', 'uas', 'sd_mod', 'dm_mod', 'dm_multipath', 'dm_round_robin', 'ext4']
+MODULES = ['xhci_pci', 'usb_storage', 'uas', 'sd_mod', 'dm_mod', 'dm_multipath', 'dm_round_robin', 'ext4', 'virtio_pci', 'virtio_blk']
 
 
 def main():
@@ -41,6 +41,8 @@ def main():
         payload.with_libs('/usr/sbin/' + name, '/sbin/' + name)
     payload.with_libs('/usr/bin/python3.12')
     payload.with_libs('/usr/bin/kmod')
+    payload.with_libs('/usr/bin/tar')
+    payload.with_libs('/usr/bin/xz')
     (root / 'sbin/modprobe').symlink_to('/usr/bin/kmod')
     (root / 'usr/bin/python3').symlink_to('python3.12')
     shutil.copytree('/usr/lib/python3.12', root / 'usr/lib/python3.12',

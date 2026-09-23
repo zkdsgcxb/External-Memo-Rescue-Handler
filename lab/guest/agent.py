@@ -14,6 +14,7 @@ import time
 import traceback
 
 sys.path.insert(0, '/opt/lab')
+from wire import encode
 
 
 def guard():
@@ -32,6 +33,8 @@ def run(*args, **kwargs):
 
 def setup():
     from rescue import rows
+    from ubuntu import enabled
+    full_ubuntu=enabled()
     protected='ram_rescue_mpath=1' in Path('/proc/cmdline').read_text().split()
     deadline = time.monotonic()+30
     while not Path('/dev/sda').exists():
@@ -61,13 +64,20 @@ def setup():
         pvnode=DEVICE
     run('/sbin/lvm', 'pvcreate', '--devices',pvnode,pvnode)
     run('/sbin/lvm', 'vgcreate', '--devices',pvnode,'labrescue',pvnode)
-    for name, size in [('ubuntu', '1024M'), ('shared', '256M')]:
+    for name, size in [('ubuntu', '6144M' if full_ubuntu else '1024M'), ('shared', '256M')]:
         run('/sbin/lvm', 'lvcreate','--devices',pvnode, '-L', size, '-n', name, 'labrescue', '--zero', 'n', '--wipesignatures', 'n')
         run('/sbin/mkfs.ext4', '-F', '-E', 'lazy_itable_init=0,lazy_journal_init=0', '/dev/labrescue/'+name)
     run('/bin/mount', '-o', 'errors=remount-ro', '/dev/labrescue/ubuntu', '/newroot')
-    for item in ['bin', 'sbin', 'usr', 'lib', 'lib64', 'etc', 'opt']:
-        if Path('/'+item).exists():
-            run('/bin/cp', '-a', '/'+item, '/newroot/')
+    if full_ubuntu:
+        subprocess.run(['/usr/bin/tar', '--xattrs', '--xattrs-include=*', '--acls', '--numeric-owner',
+                        '-xJf', '/dev/vda', '-C', '/newroot'], check=True, timeout=240,
+                       env={**os.environ, 'PATH':'/usr/bin:/bin:/usr/sbin:/sbin'})
+        from ubuntu import prepare
+        prepare()
+    else:
+        for item in ['bin', 'sbin', 'usr', 'lib', 'lib64', 'etc', 'opt']:
+            if Path('/'+item).exists():
+                run('/bin/cp', '-a', '/'+item, '/newroot/')
     for item in ['dev','proc','sys','run','tmp','root','shared','var/log']:
         Path('/newroot/'+item).mkdir(parents=True, exist_ok=True)
     run('/bin/mount', '-o', 'errors=remount-ro', '/dev/labrescue/shared', '/newroot/shared')
@@ -104,7 +114,7 @@ def serve():
     lock = threading.Lock()
     def send(value):
         with lock:
-            stream.write((json.dumps(value)+'\n').encode())
+            stream.write(encode(value))
     def heartbeat():
         while True:
             send({'event':'heartbeat','uptime':time.monotonic()})
@@ -156,6 +166,23 @@ def serve():
                 action = request['action']
                 if action == 'snapshot':
                     result = snapshot()
+                elif action == 'git_clone_start':
+                    from ubuntu import enabled, systemctl
+                    if not enabled() or 'ram_rescue_git=1' not in Path('/proc/cmdline').read_text().split():
+                        raise ValueError('Ubuntu Git scenario required')
+                    result = systemctl('start', '--no-block', 'lab-git-clone.service')
+                elif action == 'git_status':
+                    from ubuntu import git_status
+                    result = git_status()
+                elif action == 'git_diagnostics':
+                    from ubuntu import git_diagnostics
+                    result = git_diagnostics()
+                elif action == 'git_validate':
+                    from ubuntu import git_validate
+                    result = git_validate()
+                elif action == 'ubuntu_status':
+                    from ubuntu import status
+                    result = status()
                 elif action == 'verify':
                     result = recovery.verify()
                 elif action == 'refresh':
@@ -165,8 +192,17 @@ def serve():
                     result = recovery.refresh(request.get('target','ubuntu'), confirm=lambda _: 'REFRESH labrescue/'+request.get('target','ubuntu'))
                 elif action == 'workload':
                     if worker is None or worker.poll() is not None:
-                        worker = subprocess.Popen(['/bin/chroot','/proc/1/root','/usr/bin/python3','/opt/lab/workload.py'],
-                                                  stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+                        from ubuntu import enabled, systemctl, ServiceWorker
+                        if enabled():
+                            systemctl('start', 'lab-workload.service')
+                            for _ in range(100):
+                                if Path('/run/workload.pid').exists():
+                                    break
+                                time.sleep(0.05)
+                            worker = ServiceWorker(int(Path('/run/workload.pid').read_text()))
+                        else:
+                            worker = subprocess.Popen(['/bin/chroot','/proc/1/root','/usr/bin/python3','/opt/lab/workload.py'],
+                                                      stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
                     result = worker.pid
                 elif action == 'prepare_wrong_disk':
                     if not protected:

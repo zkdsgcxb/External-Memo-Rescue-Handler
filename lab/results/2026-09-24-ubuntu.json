@@ -1,0 +1,2141 @@
+{
+  "note": "VM-only. Negative cases pass when queue release and RAM rescue work, not when applications recover. Original reports remain under ignored lab/work. Guest and runner hashes identify each tested revision.",
+  "accepted_runs": [
+    {
+      "run": "20260924-002651-auto-8513",
+      "report_sha256": "6bb1df767bdd3360971ba0a37f330423812cfb4688d3a882d1681f5530842641",
+      "guest": "ubuntu",
+      "mode": "automatic-multipath",
+      "transport": "uas",
+      "gap": 0.2,
+      "queue_seconds": 8,
+      "reconnect": "same",
+      "completed": true,
+      "passed": true,
+      "checks": {
+        "ram_heartbeat": true,
+        "ram_shell": true,
+        "stable_upper_mappings": true,
+        "same_process_alive": true,
+        "automatic_recovery": true,
+        "zero_application_errors": true,
+        "writes_continued": true,
+        "block_read": true,
+        "root_read": true,
+        "filesystem_writable": true,
+        "no_journal_abort": true,
+        "ubuntu_systemd": true,
+        "same_boot": true,
+        "services_survived": true,
+        "no_failed_units": true,
+        "acknowledged_data_present": true
+      },
+      "successful_writes": 36,
+      "failed_writes": 0,
+      "max_write_latency": 0.015743653000001245,
+      "max_heartbeat_gap": 0.6538291739998385,
+      "runner_sha256": "1c67bea2d559c6250d719f3958f30973fe17fc9a460d70791ae8819647869185",
+      "build": {
+        "kernel_release": "6.8.0-139-generic",
+        "source_commit": "acbd979f12e513474257890edb342531d3653525",
+        "source_sha256": {
+          "lab/build.py": "1df2c8e5508aa59d974287677a42396634dd18c06af4b9b073aefb9ddfacc58d",
+          "ram-rescue-demo/src/rescue.py": "79d5f850f191f227bf52f9195b8b6845e82d9f4ec5bd978e96c5f479c0d2e97f",
+          "ram-rescue-demo/src/lvm.conf": "10708bf37ce4b01ec3e7e3e0d3d6394301f0bf3d4046fbd1da8521dad80d0cd3",
+          "lab/guest/agent.py": "8cec4add202b959fd652b5dee29c14ecb683479ecafcd931420717e2657a570c",
+          "lab/guest/init.sh": "1daefd2151e6782c3f57cb69555cf511de0985f94000fdad753b8bdb9a00f293",
+          "lab/guest/path_guard.py": "e95c382ce684398436e2d40fb46bb354882911458ad72b891ea3df27a11b94dd",
+          "lab/guest/root-init.sh": "078ec84bb1f502fc2b80b99b4eef2ee4a40432ccb9a476bf7757952547ca57d9",
+          "lab/guest/ubuntu.py": "3637430538e77ab52e7e26fd3941aedd194fd3cbf1cfba39c3bfca9dd6cb7e1c",
+          "lab/guest/ubuntu_workload.py": "2cb4f4a137fa6b6e8b99d87c29efe89c2dbcc7d7cc7ee814b736a193f667a890",
+          "lab/guest/workload.py": "15d8e159ab16b2e7786aeee10d4be861a6b1cf448bf3ddf16b6a8c64ab72ad2c"
+        },
+        "kernel_sha256": "0066409132868538bc0c9076f60131025775d5bbd8617df074d059f91b584918",
+        "initramfs_sha256": "db340c58366b404bfd5c30678b3083229affcfcdf45399131185e9cc4514f3df",
+        "note": "guest payload copied from working tree; no host identities or passwords"
+      },
+      "ubuntu_source": {
+        "distribution": "Ubuntu Server 24.04 LTS",
+        "image_build": "20260911",
+        "url": "https://cloud-images.ubuntu.com/noble/20260911/noble-server-cloudimg-amd64-root.tar.xz",
+        "archive_sha256": "2ea580b9dd2d0e97ba9047798becc63a94427679876dec193221e345a6e0cdc9",
+        "seed_sha256": "8ae5beb36209e924b04612f7347babac8a7930947411aba353ae03aa8f956bbb",
+        "signed_checksums_sha256": "86919782a8b9e4dbd9478f00f8fda31da67af11facfc4408138a487d20bbff33",
+        "signature_verified": true
+      },
+      "ubuntu_before": {
+        "os_release": "PRETTY_NAME=\"Ubuntu 24.04.5 LTS\"\nNAME=\"Ubuntu\"\nVERSION_ID=\"24.04\"\nVERSION=\"24.04.5 LTS (Noble Numbat)\"\nVERSION_CODENAME=noble\nID=ubuntu\nID_LIKE=debian\nHOME_URL=\"https://www.ubuntu.com/\"\nSUPPORT_URL=\"https://help.ubuntu.com/\"\nBUG_REPORT_URL=\"https://bugs.launchpad.net/ubuntu/\"\nPRIVACY_POLICY_URL=\"https://www.ubuntu.com/legal/terms-and-policies/privacy-policy\"\nUBUNTU_CODENAME=noble\nLOGO=ubuntu-logo\n",
+        "pid1_comm": "systemd",
+        "pid1_start_ticks": "16",
+        "boot_id": "578696d0-cad7-4c48-8ac6-9f237ea90842",
+        "services": {
+          "systemd-journald": {
+            "MainPID": "188",
+            "NRestarts": "0",
+            "ActiveState": "active",
+            "SubState": "running",
+            "start_ticks": "2913"
+          },
+          "dbus": {
+            "MainPID": "461",
+            "NRestarts": "0",
+            "ActiveState": "active",
+            "SubState": "running",
+            "start_ticks": "3089"
+          },
+          "lab-agent": {
+            "MainPID": "464",
+            "NRestarts": "0",
+            "ActiveState": "active",
+            "SubState": "running",
+            "start_ticks": "3092"
+          },
+          "lab-guard": {
+            "MainPID": "465",
+            "NRestarts": "0",
+            "ActiveState": "active",
+            "SubState": "running",
+            "start_ticks": "3094"
+          },
+          "lab-shell": {
+            "MainPID": "467",
+            "NRestarts": "0",
+            "ActiveState": "active",
+            "SubState": "running",
+            "start_ticks": "3095"
+          },
+          "lab-workload": {
+            "MainPID": "1924",
+            "NRestarts": "0",
+            "ActiveState": "active",
+            "SubState": "running",
+            "start_ticks": "6514"
+          }
+        },
+        "failed_units": "",
+        "multi_user": "active",
+        "installed_packages": 603
+      },
+      "ubuntu_after": {
+        "os_release": "PRETTY_NAME=\"Ubuntu 24.04.5 LTS\"\nNAME=\"Ubuntu\"\nVERSION_ID=\"24.04\"\nVERSION=\"24.04.5 LTS (Noble Numbat)\"\nVERSION_CODENAME=noble\nID=ubuntu\nID_LIKE=debian\nHOME_URL=\"https://www.ubuntu.com/\"\nSUPPORT_URL=\"https://help.ubuntu.com/\"\nBUG_REPORT_URL=\"https://bugs.launchpad.net/ubuntu/\"\nPRIVACY_POLICY_URL=\"https://www.ubuntu.com/legal/terms-and-policies/privacy-policy\"\nUBUNTU_CODENAME=noble\nLOGO=ubuntu-logo\n",
+        "pid1_comm": "systemd",
+        "pid1_start_ticks": "16",
+        "boot_id": "578696d0-cad7-4c48-8ac6-9f237ea90842",
+        "services": {
+          "systemd-journald": {
+            "MainPID": "188",
+            "NRestarts": "0",
+            "ActiveState": "active",
+            "SubState": "running",
+            "start_ticks": "2913"
+          },
+          "dbus": {
+            "MainPID": "461",
+            "NRestarts": "0",
+            "ActiveState": "active",
+            "SubState": "running",
+            "start_ticks": "3089"
+          },
+          "lab-agent": {
+            "MainPID": "464",
+            "NRestarts": "0",
+            "ActiveState": "active",
+            "SubState": "running",
+            "start_ticks": "3092"
+          },
+          "lab-guard": {
+            "MainPID": "465",
+            "NRestarts": "0",
+            "ActiveState": "active",
+            "SubState": "running",
+            "start_ticks": "3094"
+          },
+          "lab-shell": {
+            "MainPID": "467",
+            "NRestarts": "0",
+            "ActiveState": "active",
+            "SubState": "running",
+            "start_ticks": "3095"
+          },
+          "lab-workload": {
+            "MainPID": "1924",
+            "NRestarts": "0",
+            "ActiveState": "active",
+            "SubState": "running",
+            "start_ticks": "6514"
+          }
+        },
+        "failed_units": "",
+        "multi_user": "active",
+        "installed_packages": 603
+      },
+      "data_audit": {
+        "id": 129,
+        "ok": true,
+        "result": {
+          "acknowledged_records": 40,
+          "confirmed_bytes": 163951,
+          "prefix_matches": true
+        },
+        "output": ""
+      },
+      "cycles": []
+    },
+    {
+      "run": "20260924-002815-auto-8815",
+      "report_sha256": "cbb41617f92fe0123e1320b36db84d838b0df7e74c15d7ec9899686b6a100730",
+      "guest": "ubuntu",
+      "mode": "automatic-multipath",
+      "transport": "uas",
+      "gap": 1.0,
+      "queue_seconds": 8,
+      "reconnect": "same",
+      "completed": true,
+      "passed": true,
+      "checks": {
+        "ram_heartbeat": true,
+        "ram_shell": true,
+        "stable_upper_mappings": true,
+        "same_process_alive": true,
+        "automatic_recovery": true,
+        "zero_application_errors": true,
+        "writes_continued": true,
+        "block_read": true,
+        "root_read": true,
+        "filesystem_writable": true,
+        "no_journal_abort": true,
+        "ubuntu_systemd": true,
+        "same_boot": true,
+        "services_survived": true,
+        "no_failed_units": true,
+        "acknowledged_data_present": true
+      },
+      "successful_writes": 80,
+      "failed_writes": 0,
+      "max_write_latency": 2.4394178699999998,
+      "max_heartbeat_gap": 0.7812241650001397,
+      "runner_sha256": "1c67bea2d559c6250d719f3958f30973fe17fc9a460d70791ae8819647869185",
+      "build": {
+        "kernel_release": "6.8.0-139-generic",
+        "source_commit": "acbd979f12e513474257890edb342531d3653525",
+        "source_sha256": {
+          "lab/build.py": "1df2c8e5508aa59d974287677a42396634dd18c06af4b9b073aefb9ddfacc58d",
+          "ram-rescue-demo/src/rescue.py": "79d5f850f191f227bf52f9195b8b6845e82d9f4ec5bd978e96c5f479c0d2e97f",
+          "ram-rescue-demo/src/lvm.conf": "10708bf37ce4b01ec3e7e3e0d3d6394301f0bf3d4046fbd1da8521dad80d0cd3",
+          "lab/guest/agent.py": "8cec4add202b959fd652b5dee29c14ecb683479ecafcd931420717e2657a570c",
+          "lab/guest/init.sh": "1daefd2151e6782c3f57cb69555cf511de0985f94000fdad753b8bdb9a00f293",
+          "lab/guest/path_guard.py": "e95c382ce684398436e2d40fb46bb354882911458ad72b891ea3df27a11b94dd",
+          "lab/guest/root-init.sh": "078ec84bb1f502fc2b80b99b4eef2ee4a40432ccb9a476bf7757952547ca57d9",
+          "lab/guest/ubuntu.py": "3637430538e77ab52e7e26fd3941aedd194fd3cbf1cfba39c3bfca9dd6cb7e1c",
+          "lab/guest/ubuntu_workload.py": "2cb4f4a137fa6b6e8b99d87c29efe89c2dbcc7d7cc7ee814b736a193f667a890",
+          "lab/guest/workload.py": "15d8e159ab16b2e7786aeee10d4be861a6b1cf448bf3ddf16b6a8c64ab72ad2c"
+        },
+        "kernel_sha256": "0066409132868538bc0c9076f60131025775d5bbd8617df074d059f91b584918",
+        "initramfs_sha256": "db340c58366b404bfd5c30678b3083229affcfcdf45399131185e9cc4514f3df",
+        "note": "guest payload copied from working tree; no host identities or passwords"
+      },
+      "ubuntu_source": {
+        "distribution": "Ubuntu Server 24.04 LTS",
+        "image_build": "20260911",
+        "url": "https://cloud-images.ubuntu.com/noble/20260911/noble-server-cloudimg-amd64-root.tar.xz",
+        "archive_sha256": "2ea580b9dd2d0e97ba9047798becc63a94427679876dec193221e345a6e0cdc9",
+        "seed_sha256": "8ae5beb36209e924b04612f7347babac8a7930947411aba353ae03aa8f956bbb",
+        "signed_checksums_sha256": "86919782a8b9e4dbd9478f00f8fda31da67af11facfc4408138a487d20bbff33",
+        "signature_verified": true
+      },
+      "ubuntu_before": {
+        "os_release": "PRETTY_NAME=\"Ubuntu 24.04.5 LTS\"\nNAME=\"Ubuntu\"\nVERSION_ID=\"24.04\"\nVERSION=\"24.04.5 LTS (Noble Numbat)\"\nVERSION_CODENAME=noble\nID=ubuntu\nID_LIKE=debian\nHOME_URL=\"https://www.ubuntu.com/\"\nSUPPORT_URL=\"https://help.ubuntu.com/\"\nBUG_REPORT_URL=\"https://bugs.launchpad.net/ubuntu/\"\nPRIVACY_POLICY_URL=\"https://www.ubuntu.com/legal/terms-and-policies/privacy-policy\"\nUBUNTU_CODENAME=noble\nLOGO=ubuntu-logo\n",
+        "pid1_comm": "systemd",
+        "pid1_start_ticks": "19",
+        "boot_id": "40878910-cc74-4490-8c03-0d9cac25ba86",
+        "services": {
+          "systemd-journald": {
+            "MainPID": "188",
+            "NRestarts": "0",
+            "ActiveState": "active",
+            "SubState": "running",
+            "start_ticks": "2941"
+          },
+          "dbus": {
+            "MainPID": "460",
+            "NRestarts": "0",
+            "ActiveState": "active",
+            "SubState": "running",
+            "start_ticks": "3159"
+          },
+          "lab-agent": {
+            "MainPID": "463",
+            "NRestarts": "0",
+            "ActiveState": "active",
+            "SubState": "running",
+            "start_ticks": "3162"
+          },
+          "lab-guard": {
+            "MainPID": "464",
+            "NRestarts": "0",
+            "ActiveState": "active",
+            "SubState": "running",
+            "start_ticks": "3164"
+          },
+          "lab-shell": {
+            "MainPID": "466",
+            "NRestarts": "0",
+            "ActiveState": "active",
+            "SubState": "running",
+            "start_ticks": "3165"
+          },
+          "lab-workload": {
+            "MainPID": "1894",
+            "NRestarts": "0",
+            "ActiveState": "active",
+            "SubState": "running",
+            "start_ticks": "6541"
+          }
+        },
+        "failed_units": "",
+        "multi_user": "active",
+        "installed_packages": 603
+      },
+      "ubuntu_after": {
+        "os_release": "PRETTY_NAME=\"Ubuntu 24.04.5 LTS\"\nNAME=\"Ubuntu\"\nVERSION_ID=\"24.04\"\nVERSION=\"24.04.5 LTS (Noble Numbat)\"\nVERSION_CODENAME=noble\nID=ubuntu\nID_LIKE=debian\nHOME_URL=\"https://www.ubuntu.com/\"\nSUPPORT_URL=\"https://help.ubuntu.com/\"\nBUG_REPORT_URL=\"https://bugs.launchpad.net/ubuntu/\"\nPRIVACY_POLICY_URL=\"https://www.ubuntu.com/legal/terms-and-policies/privacy-policy\"\nUBUNTU_CODENAME=noble\nLOGO=ubuntu-logo\n",
+        "pid1_comm": "systemd",
+        "pid1_start_ticks": "19",
+        "boot_id": "40878910-cc74-4490-8c03-0d9cac25ba86",
+        "services": {
+          "systemd-journald": {
+            "MainPID": "188",
+            "NRestarts": "0",
+            "ActiveState": "active",
+            "SubState": "running",
+            "start_ticks": "2941"
+          },
+          "dbus": {
+            "MainPID": "460",
+            "NRestarts": "0",
+            "ActiveState": "active",
+            "SubState": "running",
+            "start_ticks": "3159"
+          },
+          "lab-agent": {
+            "MainPID": "463",
+            "NRestarts": "0",
+            "ActiveState": "active",
+            "SubState": "running",
+            "start_ticks": "3162"
+          },
+          "lab-guard": {
+            "MainPID": "464",
+            "NRestarts": "0",
+            "ActiveState": "active",
+            "SubState": "running",
+            "start_ticks": "3164"
+          },
+          "lab-shell": {
+            "MainPID": "466",
+            "NRestarts": "0",
+            "ActiveState": "active",
+            "SubState": "running",
+            "start_ticks": "3165"
+          },
+          "lab-workload": {
+            "MainPID": "1894",
+            "NRestarts": "0",
+            "ActiveState": "active",
+            "SubState": "running",
+            "start_ticks": "6541"
+          }
+        },
+        "failed_units": "",
+        "multi_user": "active",
+        "installed_packages": 603
+      },
+      "data_audit": {
+        "id": 137,
+        "ok": true,
+        "result": {
+          "acknowledged_records": 91,
+          "confirmed_bytes": 373000,
+          "prefix_matches": true
+        },
+        "output": ""
+      },
+      "cycles": [
+        {
+          "index": 1,
+          "deleted_host_time": 1155.518693958,
+          "outcome_after_delete": 2.253087300999823,
+          "outcome": {
+            "time": 69.036255078,
+            "state": "ready",
+            "recoveries": 1,
+            "node": "/dev/sdb1"
+          },
+          "reattach_after_delete": 1.1162415709998186
+        },
+        {
+          "index": 2,
+          "deleted_host_time": 1158.874150465,
+          "outcome_after_delete": 2.9264655229999335,
+          "outcome": {
+            "time": 72.485603559,
+            "state": "ready",
+            "recoveries": 2,
+            "node": "/dev/sda1"
+          },
+          "reattach_after_delete": 1.1141811610000332
+        },
+        {
+          "index": 3,
+          "deleted_host_time": 1162.902067727,
+          "outcome_after_delete": 3.148417246000008,
+          "outcome": {
+            "time": 77.073123162,
+            "state": "ready",
+            "recoveries": 3,
+            "node": "/dev/sdb1"
+          },
+          "reattach_after_delete": 1.114274389000002
+        }
+      ]
+    },
+    {
+      "run": "20260924-003028-auto-10198",
+      "report_sha256": "87a7109ac43037d5baa1ada2179fd3c3e4c4ade4a6cc74d34209da9c6b2b6209",
+      "guest": "ubuntu",
+      "workload": "fsync",
+      "mode": "automatic-multipath",
+      "transport": "bot",
+      "gap": 0.2,
+      "queue_seconds": 8,
+      "reconnect": "same",
+      "completed": true,
+      "passed": true,
+      "checks": {
+        "ram_heartbeat": true,
+        "ram_shell": true,
+        "stable_upper_mappings": true,
+        "same_process_alive": true,
+        "automatic_recovery": true,
+        "zero_application_errors": true,
+        "writes_continued": true,
+        "block_read": true,
+        "root_read": true,
+        "filesystem_writable": true,
+        "no_journal_abort": true,
+        "ubuntu_systemd": true,
+        "same_boot": true,
+        "services_survived": true,
+        "no_failed_units": true,
+        "acknowledged_data_present": true
+      },
+      "successful_writes": 91,
+      "failed_writes": 0,
+      "max_write_latency": 3.174587299999999,
+      "max_heartbeat_gap": 0.8279610439999487,
+      "runner_sha256": "7ffb63abd16dc109210416507c225f6c7d7db805e11a91db3cf059aaac53fd67",
+      "build": {
+        "kernel_release": "6.8.0-139-generic",
+        "source_commit": "acbd979f12e513474257890edb342531d3653525",
+        "source_sha256": {
+          "lab/build.py": "1df2c8e5508aa59d974287677a42396634dd18c06af4b9b073aefb9ddfacc58d",
+          "ram-rescue-demo/src/rescue.py": "79d5f850f191f227bf52f9195b8b6845e82d9f4ec5bd978e96c5f479c0d2e97f",
+          "ram-rescue-demo/src/lvm.conf": "10708bf37ce4b01ec3e7e3e0d3d6394301f0bf3d4046fbd1da8521dad80d0cd3",
+          "lab/guest/agent.py": "1b468be7c818dcdd3edeedcdd7f43a6db3b472dcd48d5a15cc2ae3e3b21fcd3e",
+          "lab/guest/git_workload.py": "c61d4c440a44cdb263f247e868292cea4270a78d59dd537706090909cd7c0538",
+          "lab/guest/init.sh": "1daefd2151e6782c3f57cb69555cf511de0985f94000fdad753b8bdb9a00f293",
+          "lab/guest/path_guard.py": "e95c382ce684398436e2d40fb46bb354882911458ad72b891ea3df27a11b94dd",
+          "lab/guest/root-init.sh": "078ec84bb1f502fc2b80b99b4eef2ee4a40432ccb9a476bf7757952547ca57d9",
+          "lab/guest/ubuntu.py": "26855043b4fab094ae68aa9c1350399b3397614efbfdf2ec70c752db2a6a1a67",
+          "lab/guest/ubuntu_workload.py": "2cb4f4a137fa6b6e8b99d87c29efe89c2dbcc7d7cc7ee814b736a193f667a890",
+          "lab/guest/workload.py": "15d8e159ab16b2e7786aeee10d4be861a6b1cf448bf3ddf16b6a8c64ab72ad2c"
+        },
+        "kernel_sha256": "0066409132868538bc0c9076f60131025775d5bbd8617df074d059f91b584918",
+        "initramfs_sha256": "ffefb3f8f401efda1e82791b328d5f9f628da8de43b64d4af341158acbbe0f52",
+        "note": "guest payload copied from working tree; no host identities or passwords"
+      },
+      "ubuntu_source": {
+        "distribution": "Ubuntu Server 24.04 LTS",
+        "image_build": "20260911",
+        "url": "https://cloud-images.ubuntu.com/noble/20260911/noble-server-cloudimg-amd64-root.tar.xz",
+        "archive_sha256": "2ea580b9dd2d0e97ba9047798becc63a94427679876dec193221e345a6e0cdc9",
+        "seed_sha256": "8ae5beb36209e924b04612f7347babac8a7930947411aba353ae03aa8f956bbb",
+        "signed_checksums_sha256": "86919782a8b9e4dbd9478f00f8fda31da67af11facfc4408138a487d20bbff33",
+        "signature_verified": true
+      },
+      "git_source": null,
+      "ubuntu_before": {
+        "os_release": "PRETTY_NAME=\"Ubuntu 24.04.5 LTS\"\nNAME=\"Ubuntu\"\nVERSION_ID=\"24.04\"\nVERSION=\"24.04.5 LTS (Noble Numbat)\"\nVERSION_CODENAME=noble\nID=ubuntu\nID_LIKE=debian\nHOME_URL=\"https://www.ubuntu.com/\"\nSUPPORT_URL=\"https://help.ubuntu.com/\"\nBUG_REPORT_URL=\"https://bugs.launchpad.net/ubuntu/\"\nPRIVACY_POLICY_URL=\"https://www.ubuntu.com/legal/terms-and-policies/privacy-policy\"\nUBUNTU_CODENAME=noble\nLOGO=ubuntu-logo\n",
+        "pid1_comm": "systemd",
+        "pid1_start_ticks": "16",
+        "boot_id": "7be12ace-f870-4a0a-82eb-df4cc7dff28b",
+        "services": {
+          "systemd-journald": {
+            "MainPID": "189",
+            "NRestarts": "0",
+            "ActiveState": "active",
+            "SubState": "running",
+            "start_ticks": "3234"
+          },
+          "dbus": {
+            "MainPID": "464",
+            "NRestarts": "0",
+            "ActiveState": "active",
+            "SubState": "running",
+            "start_ticks": "3402"
+          },
+          "lab-agent": {
+            "MainPID": "467",
+            "NRestarts": "0",
+            "ActiveState": "active",
+            "SubState": "running",
+            "start_ticks": "3405"
+          },
+          "lab-guard": {
+            "MainPID": "468",
+            "NRestarts": "0",
+            "ActiveState": "active",
+            "SubState": "running",
+            "start_ticks": "3406"
+          },
+          "lab-shell": {
+            "MainPID": "469",
+            "NRestarts": "0",
+            "ActiveState": "active",
+            "SubState": "running",
+            "start_ticks": "3408"
+          },
+          "lab-workload": {
+            "MainPID": "1893",
+            "NRestarts": "0",
+            "ActiveState": "active",
+            "SubState": "running",
+            "start_ticks": "6806"
+          }
+        },
+        "failed_units": "",
+        "multi_user": "active",
+        "installed_packages": 603
+      },
+      "ubuntu_after": {
+        "os_release": "PRETTY_NAME=\"Ubuntu 24.04.5 LTS\"\nNAME=\"Ubuntu\"\nVERSION_ID=\"24.04\"\nVERSION=\"24.04.5 LTS (Noble Numbat)\"\nVERSION_CODENAME=noble\nID=ubuntu\nID_LIKE=debian\nHOME_URL=\"https://www.ubuntu.com/\"\nSUPPORT_URL=\"https://help.ubuntu.com/\"\nBUG_REPORT_URL=\"https://bugs.launchpad.net/ubuntu/\"\nPRIVACY_POLICY_URL=\"https://www.ubuntu.com/legal/terms-and-policies/privacy-policy\"\nUBUNTU_CODENAME=noble\nLOGO=ubuntu-logo\n",
+        "pid1_comm": "systemd",
+        "pid1_start_ticks": "16",
+        "boot_id": "7be12ace-f870-4a0a-82eb-df4cc7dff28b",
+        "services": {
+          "systemd-journald": {
+            "MainPID": "189",
+            "NRestarts": "0",
+            "ActiveState": "active",
+            "SubState": "running",
+            "start_ticks": "3234"
+          },
+          "dbus": {
+            "MainPID": "464",
+            "NRestarts": "0",
+            "ActiveState": "active",
+            "SubState": "running",
+            "start_ticks": "3402"
+          },
+          "lab-agent": {
+            "MainPID": "467",
+            "NRestarts": "0",
+            "ActiveState": "active",
+            "SubState": "running",
+            "start_ticks": "3405"
+          },
+          "lab-guard": {
+            "MainPID": "468",
+            "NRestarts": "0",
+            "ActiveState": "active",
+            "SubState": "running",
+            "start_ticks": "3406"
+          },
+          "lab-shell": {
+            "MainPID": "469",
+            "NRestarts": "0",
+            "ActiveState": "active",
+            "SubState": "running",
+            "start_ticks": "3408"
+          },
+          "lab-workload": {
+            "MainPID": "1893",
+            "NRestarts": "0",
+            "ActiveState": "active",
+            "SubState": "running",
+            "start_ticks": "6806"
+          }
+        },
+        "failed_units": "",
+        "multi_user": "active",
+        "installed_packages": 603
+      },
+      "data_audit": {
+        "id": 143,
+        "ok": true,
+        "result": {
+          "acknowledged_records": 95,
+          "confirmed_bytes": 389396,
+          "prefix_matches": true
+        },
+        "output": ""
+      },
+      "cycles": [
+        {
+          "index": 1,
+          "deleted_host_time": 1290.935492594,
+          "outcome_after_delete": 3.756150990000151,
+          "outcome": {
+            "time": 72.886389295,
+            "state": "ready",
+            "recoveries": 1,
+            "node": "/dev/sdb1"
+          },
+          "reattach_after_delete": 0.7805798730000788
+        },
+        {
+          "index": 2,
+          "deleted_host_time": 1295.79392008,
+          "outcome_after_delete": 3.8029939350001314,
+          "outcome": {
+            "time": 77.759525725,
+            "state": "ready",
+            "recoveries": 2,
+            "node": "/dev/sda1"
+          },
+          "reattach_after_delete": 0.6026984810000613
+        },
+        {
+          "index": 3,
+          "deleted_host_time": 1300.69980332,
+          "outcome_after_delete": 3.9645574510000188,
+          "outcome": {
+            "time": 82.360729028,
+            "state": "ready",
+            "recoveries": 3,
+            "node": "/dev/sdb1"
+          },
+          "reattach_after_delete": 0.6513660230000369
+        }
+      ]
+    },
+    {
+      "run": "20260924-003029-auto-10212",
+      "report_sha256": "98571b79b899d0500e57ef97003b2e17317a8a13b6b865b4e5dcd9bda7d6b56d",
+      "guest": "ubuntu",
+      "workload": "fsync",
+      "mode": "automatic-multipath",
+      "transport": "uas",
+      "gap": 0.2,
+      "queue_seconds": 4,
+      "reconnect": "none",
+      "completed": true,
+      "passed": true,
+      "checks": {
+        "ram_heartbeat": true,
+        "ram_shell": true,
+        "stable_upper_mappings": true,
+        "same_process_alive": true,
+        "deadline_released_queue": true,
+        "no_recovery_after_failure": true,
+        "bounded_wait": true
+      },
+      "successful_writes": 12,
+      "failed_writes": 26,
+      "max_write_latency": 4.986074250999991,
+      "max_heartbeat_gap": 0.610590755999965,
+      "runner_sha256": "7ffb63abd16dc109210416507c225f6c7d7db805e11a91db3cf059aaac53fd67",
+      "build": {
+        "kernel_release": "6.8.0-139-generic",
+        "source_commit": "acbd979f12e513474257890edb342531d3653525",
+        "source_sha256": {
+          "lab/build.py": "1df2c8e5508aa59d974287677a42396634dd18c06af4b9b073aefb9ddfacc58d",
+          "ram-rescue-demo/src/rescue.py": "79d5f850f191f227bf52f9195b8b6845e82d9f4ec5bd978e96c5f479c0d2e97f",
+          "ram-rescue-demo/src/lvm.conf": "10708bf37ce4b01ec3e7e3e0d3d6394301f0bf3d4046fbd1da8521dad80d0cd3",
+          "lab/guest/agent.py": "1b468be7c818dcdd3edeedcdd7f43a6db3b472dcd48d5a15cc2ae3e3b21fcd3e",
+          "lab/guest/git_workload.py": "c61d4c440a44cdb263f247e868292cea4270a78d59dd537706090909cd7c0538",
+          "lab/guest/init.sh": "1daefd2151e6782c3f57cb69555cf511de0985f94000fdad753b8bdb9a00f293",
+          "lab/guest/path_guard.py": "e95c382ce684398436e2d40fb46bb354882911458ad72b891ea3df27a11b94dd",
+          "lab/guest/root-init.sh": "078ec84bb1f502fc2b80b99b4eef2ee4a40432ccb9a476bf7757952547ca57d9",
+          "lab/guest/ubuntu.py": "26855043b4fab094ae68aa9c1350399b3397614efbfdf2ec70c752db2a6a1a67",
+          "lab/guest/ubuntu_workload.py": "2cb4f4a137fa6b6e8b99d87c29efe89c2dbcc7d7cc7ee814b736a193f667a890",
+          "lab/guest/workload.py": "15d8e159ab16b2e7786aeee10d4be861a6b1cf448bf3ddf16b6a8c64ab72ad2c"
+        },
+        "kernel_sha256": "0066409132868538bc0c9076f60131025775d5bbd8617df074d059f91b584918",
+        "initramfs_sha256": "ffefb3f8f401efda1e82791b328d5f9f628da8de43b64d4af341158acbbe0f52",
+        "note": "guest payload copied from working tree; no host identities or passwords"
+      },
+      "ubuntu_source": {
+        "distribution": "Ubuntu Server 24.04 LTS",
+        "image_build": "20260911",
+        "url": "https://cloud-images.ubuntu.com/noble/20260911/noble-server-cloudimg-amd64-root.tar.xz",
+        "archive_sha256": "2ea580b9dd2d0e97ba9047798becc63a94427679876dec193221e345a6e0cdc9",
+        "seed_sha256": "8ae5beb36209e924b04612f7347babac8a7930947411aba353ae03aa8f956bbb",
+        "signed_checksums_sha256": "86919782a8b9e4dbd9478f00f8fda31da67af11facfc4408138a487d20bbff33",
+        "signature_verified": true
+      },
+      "git_source": null,
+      "ubuntu_before": {
+        "os_release": "PRETTY_NAME=\"Ubuntu 24.04.5 LTS\"\nNAME=\"Ubuntu\"\nVERSION_ID=\"24.04\"\nVERSION=\"24.04.5 LTS (Noble Numbat)\"\nVERSION_CODENAME=noble\nID=ubuntu\nID_LIKE=debian\nHOME_URL=\"https://www.ubuntu.com/\"\nSUPPORT_URL=\"https://help.ubuntu.com/\"\nBUG_REPORT_URL=\"https://bugs.launchpad.net/ubuntu/\"\nPRIVACY_POLICY_URL=\"https://www.ubuntu.com/legal/terms-and-policies/privacy-policy\"\nUBUNTU_CODENAME=noble\nLOGO=ubuntu-logo\n",
+        "pid1_comm": "systemd",
+        "pid1_start_ticks": "16",
+        "boot_id": "04415638-da18-49d6-8fba-12a2b5c0477e",
+        "services": {
+          "systemd-journald": {
+            "MainPID": "188",
+            "NRestarts": "0",
+            "ActiveState": "active",
+            "SubState": "running",
+            "start_ticks": "2937"
+          },
+          "dbus": {
+            "MainPID": "463",
+            "NRestarts": "0",
+            "ActiveState": "active",
+            "SubState": "running",
+            "start_ticks": "3111"
+          },
+          "lab-agent": {
+            "MainPID": "466",
+            "NRestarts": "0",
+            "ActiveState": "active",
+            "SubState": "running",
+            "start_ticks": "3114"
+          },
+          "lab-guard": {
+            "MainPID": "467",
+            "NRestarts": "0",
+            "ActiveState": "active",
+            "SubState": "running",
+            "start_ticks": "3116"
+          },
+          "lab-shell": {
+            "MainPID": "469",
+            "NRestarts": "0",
+            "ActiveState": "active",
+            "SubState": "running",
+            "start_ticks": "3117"
+          },
+          "lab-workload": {
+            "MainPID": "1927",
+            "NRestarts": "0",
+            "ActiveState": "active",
+            "SubState": "running",
+            "start_ticks": "6524"
+          }
+        },
+        "failed_units": "",
+        "multi_user": "active",
+        "installed_packages": 603
+      },
+      "cycles": [
+        {
+          "index": 1,
+          "deleted_host_time": 1289.462721691,
+          "outcome_after_delete": 5.035836668999991,
+          "outcome": {
+            "time": 71.183969235,
+            "state": "expired",
+            "recoveries": 0,
+            "reason": "queue deadline exceeded; I/O now fails rather than waiting forever"
+          }
+        }
+      ]
+    },
+    {
+      "run": "20260924-003030-auto-10222",
+      "report_sha256": "f706a24195be52711f5956c2fe817cc880cbe2f92a70b6bc61f5ac05b2c5df33",
+      "guest": "minimal",
+      "workload": "fsync",
+      "mode": "automatic-multipath",
+      "transport": "uas",
+      "gap": 0.2,
+      "queue_seconds": 8,
+      "reconnect": "same",
+      "completed": true,
+      "passed": true,
+      "checks": {
+        "ram_heartbeat": true,
+        "ram_shell": true,
+        "stable_upper_mappings": true,
+        "same_process_alive": true,
+        "automatic_recovery": true,
+        "zero_application_errors": true,
+        "writes_continued": true,
+        "block_read": true,
+        "root_read": true,
+        "filesystem_writable": true,
+        "no_journal_abort": true,
+        "acknowledged_data_present": true
+      },
+      "successful_writes": 47,
+      "failed_writes": 0,
+      "max_write_latency": 1.5046290620000002,
+      "max_heartbeat_gap": 0.7831272609998905,
+      "runner_sha256": "7ffb63abd16dc109210416507c225f6c7d7db805e11a91db3cf059aaac53fd67",
+      "build": {
+        "kernel_release": "6.8.0-139-generic",
+        "source_commit": "acbd979f12e513474257890edb342531d3653525",
+        "source_sha256": {
+          "lab/build.py": "1df2c8e5508aa59d974287677a42396634dd18c06af4b9b073aefb9ddfacc58d",
+          "ram-rescue-demo/src/rescue.py": "79d5f850f191f227bf52f9195b8b6845e82d9f4ec5bd978e96c5f479c0d2e97f",
+          "ram-rescue-demo/src/lvm.conf": "10708bf37ce4b01ec3e7e3e0d3d6394301f0bf3d4046fbd1da8521dad80d0cd3",
+          "lab/guest/agent.py": "1b468be7c818dcdd3edeedcdd7f43a6db3b472dcd48d5a15cc2ae3e3b21fcd3e",
+          "lab/guest/git_workload.py": "c61d4c440a44cdb263f247e868292cea4270a78d59dd537706090909cd7c0538",
+          "lab/guest/init.sh": "1daefd2151e6782c3f57cb69555cf511de0985f94000fdad753b8bdb9a00f293",
+          "lab/guest/path_guard.py": "e95c382ce684398436e2d40fb46bb354882911458ad72b891ea3df27a11b94dd",
+          "lab/guest/root-init.sh": "078ec84bb1f502fc2b80b99b4eef2ee4a40432ccb9a476bf7757952547ca57d9",
+          "lab/guest/ubuntu.py": "26855043b4fab094ae68aa9c1350399b3397614efbfdf2ec70c752db2a6a1a67",
+          "lab/guest/ubuntu_workload.py": "2cb4f4a137fa6b6e8b99d87c29efe89c2dbcc7d7cc7ee814b736a193f667a890",
+          "lab/guest/workload.py": "15d8e159ab16b2e7786aeee10d4be861a6b1cf448bf3ddf16b6a8c64ab72ad2c"
+        },
+        "kernel_sha256": "0066409132868538bc0c9076f60131025775d5bbd8617df074d059f91b584918",
+        "initramfs_sha256": "ffefb3f8f401efda1e82791b328d5f9f628da8de43b64d4af341158acbbe0f52",
+        "note": "guest payload copied from working tree; no host identities or passwords"
+      },
+      "ubuntu_source": null,
+      "git_source": null,
+      "data_audit": {
+        "id": 13,
+        "ok": true,
+        "result": {
+          "acknowledged_records": 48,
+          "confirmed_bytes": 196743,
+          "prefix_matches": true
+        },
+        "output": ""
+      },
+      "cycles": [
+        {
+          "index": 1,
+          "deleted_host_time": 1228.9701328,
+          "outcome_after_delete": 1.9471273599999677,
+          "outcome": {
+            "time": 7.274476747,
+            "state": "ready",
+            "recoveries": 1,
+            "node": "/dev/sdb1"
+          },
+          "reattach_after_delete": 0.5174346869998772
+        }
+      ]
+    },
+    {
+      "run": "20260924-005140-auto-16189",
+      "report_sha256": "ccd698279bc24437f085bf051cd0d00568951db09c0b3aae895217034582ef2c",
+      "guest": "ubuntu",
+      "workload": "git-clone",
+      "mode": "automatic-multipath",
+      "transport": "uas",
+      "gap": 0.2,
+      "queue_seconds": 8,
+      "reconnect": "same",
+      "completed": true,
+      "passed": true,
+      "checks": {
+        "ram_heartbeat": true,
+        "ram_shell": true,
+        "stable_upper_mappings": true,
+        "same_process_alive": true,
+        "automatic_recovery": true,
+        "zero_application_errors": true,
+        "writes_continued": true,
+        "block_read": true,
+        "root_read": true,
+        "filesystem_writable": true,
+        "no_journal_abort": true,
+        "ubuntu_systemd": true,
+        "same_boot": true,
+        "services_survived": true,
+        "no_failed_units": true,
+        "acknowledged_data_present": true,
+        "git_clone_succeeded": true,
+        "same_git_process": true,
+        "git_active_during_fault": true,
+        "git_integrity": true
+      },
+      "successful_writes": 735,
+      "failed_writes": 0,
+      "max_write_latency": 0.3310229040000081,
+      "max_heartbeat_gap": 0.9559702050000851,
+      "runner_sha256": "4623ae310be5618ff02a04bcd6b5e5401820ec2baae032a8ccae71e5932c5402",
+      "qemu_runner_sha256": "b39137e46f11e44b8cb1a317304cb50ad32ad326fda07640628bfaae0c6a9d03",
+      "build": {
+        "kernel_release": "6.8.0-139-generic",
+        "source_commit": "acbd979f12e513474257890edb342531d3653525",
+        "source_sha256": {
+          "lab/build.py": "1df2c8e5508aa59d974287677a42396634dd18c06af4b9b073aefb9ddfacc58d",
+          "ram-rescue-demo/src/rescue.py": "79d5f850f191f227bf52f9195b8b6845e82d9f4ec5bd978e96c5f479c0d2e97f",
+          "ram-rescue-demo/src/lvm.conf": "10708bf37ce4b01ec3e7e3e0d3d6394301f0bf3d4046fbd1da8521dad80d0cd3",
+          "lab/guest/agent.py": "3c0f06180aa71ecb508658f6af3fbc1eaca3bf1b217a405301f701153db9c805",
+          "lab/guest/git_workload.py": "c61d4c440a44cdb263f247e868292cea4270a78d59dd537706090909cd7c0538",
+          "lab/guest/init.sh": "1daefd2151e6782c3f57cb69555cf511de0985f94000fdad753b8bdb9a00f293",
+          "lab/guest/path_guard.py": "e95c382ce684398436e2d40fb46bb354882911458ad72b891ea3df27a11b94dd",
+          "lab/guest/root-init.sh": "078ec84bb1f502fc2b80b99b4eef2ee4a40432ccb9a476bf7757952547ca57d9",
+          "lab/guest/ubuntu.py": "61ade71d1f8f3da7433f086b0501b2c0dc75fb613b408a17609406de526150b2",
+          "lab/guest/ubuntu_workload.py": "2cb4f4a137fa6b6e8b99d87c29efe89c2dbcc7d7cc7ee814b736a193f667a890",
+          "lab/guest/wire.py": "66180734f19432381ff6fbd3b8853c536d083ee3c681e52864902a91efafe87e",
+          "lab/guest/workload.py": "15d8e159ab16b2e7786aeee10d4be861a6b1cf448bf3ddf16b6a8c64ab72ad2c"
+        },
+        "kernel_sha256": "0066409132868538bc0c9076f60131025775d5bbd8617df074d059f91b584918",
+        "initramfs_sha256": "2050c59dfb29426d30a61c94d1417ea393588e82109ab66f7b78429089511823",
+        "note": "guest payload copied from working tree; no host identities or passwords"
+      },
+      "ubuntu_source": {
+        "distribution": "Ubuntu Server 24.04 LTS",
+        "image_build": "20260911",
+        "url": "https://cloud-images.ubuntu.com/noble/20260911/noble-server-cloudimg-amd64-root.tar.xz",
+        "archive_sha256": "2ea580b9dd2d0e97ba9047798becc63a94427679876dec193221e345a6e0cdc9",
+        "seed_sha256": "8ae5beb36209e924b04612f7347babac8a7930947411aba353ae03aa8f956bbb",
+        "signed_checksums_sha256": "86919782a8b9e4dbd9478f00f8fda31da67af11facfc4408138a487d20bbff33",
+        "signature_verified": true
+      },
+      "git_source": {
+        "url": "https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git",
+        "ref": "v6.8",
+        "commit": "e8f897f4afef0031fe618a8e94127a0934896aba",
+        "history": "depth 1",
+        "tracked_files": 83475,
+        "object_disk_bytes": 260778158,
+        "image_sha256": "5e8efa55f6603982383be11a9e57842923fa845a121a4f79bae9cea5f014d6b4"
+      },
+      "ubuntu_before": {
+        "os_release": "PRETTY_NAME=\"Ubuntu 24.04.5 LTS\"\nNAME=\"Ubuntu\"\nVERSION_ID=\"24.04\"\nVERSION=\"24.04.5 LTS (Noble Numbat)\"\nVERSION_CODENAME=noble\nID=ubuntu\nID_LIKE=debian\nHOME_URL=\"https://www.ubuntu.com/\"\nSUPPORT_URL=\"https://help.ubuntu.com/\"\nBUG_REPORT_URL=\"https://bugs.launchpad.net/ubuntu/\"\nPRIVACY_POLICY_URL=\"https://www.ubuntu.com/legal/terms-and-policies/privacy-policy\"\nUBUNTU_CODENAME=noble\nLOGO=ubuntu-logo\n",
+        "pid1_comm": "systemd",
+        "pid1_start_ticks": "61",
+        "boot_id": "c2116f2e-9322-4e6c-8cf5-fb65c8b290b8",
+        "services": {
+          "systemd-journald": {
+            "MainPID": "195",
+            "NRestarts": "0",
+            "ActiveState": "active",
+            "SubState": "running",
+            "start_ticks": "6285"
+          },
+          "dbus": {
+            "MainPID": "468",
+            "NRestarts": "0",
+            "ActiveState": "active",
+            "SubState": "running",
+            "start_ticks": "6868"
+          },
+          "lab-agent": {
+            "MainPID": "471",
+            "NRestarts": "0",
+            "ActiveState": "active",
+            "SubState": "running",
+            "start_ticks": "6872"
+          },
+          "lab-guard": {
+            "MainPID": "473",
+            "NRestarts": "0",
+            "ActiveState": "active",
+            "SubState": "running",
+            "start_ticks": "6877"
+          },
+          "lab-shell": {
+            "MainPID": "476",
+            "NRestarts": "0",
+            "ActiveState": "active",
+            "SubState": "running",
+            "start_ticks": "6884"
+          },
+          "lab-workload": {
+            "MainPID": "1651",
+            "NRestarts": "0",
+            "ActiveState": "active",
+            "SubState": "running",
+            "start_ticks": "10613"
+          }
+        },
+        "failed_units": "",
+        "multi_user": "active",
+        "installed_packages": 603
+      },
+      "ubuntu_after": {
+        "os_release": "PRETTY_NAME=\"Ubuntu 24.04.5 LTS\"\nNAME=\"Ubuntu\"\nVERSION_ID=\"24.04\"\nVERSION=\"24.04.5 LTS (Noble Numbat)\"\nVERSION_CODENAME=noble\nID=ubuntu\nID_LIKE=debian\nHOME_URL=\"https://www.ubuntu.com/\"\nSUPPORT_URL=\"https://help.ubuntu.com/\"\nBUG_REPORT_URL=\"https://bugs.launchpad.net/ubuntu/\"\nPRIVACY_POLICY_URL=\"https://www.ubuntu.com/legal/terms-and-policies/privacy-policy\"\nUBUNTU_CODENAME=noble\nLOGO=ubuntu-logo\n",
+        "pid1_comm": "systemd",
+        "pid1_start_ticks": "61",
+        "boot_id": "c2116f2e-9322-4e6c-8cf5-fb65c8b290b8",
+        "services": {
+          "systemd-journald": {
+            "MainPID": "195",
+            "NRestarts": "0",
+            "ActiveState": "active",
+            "SubState": "running",
+            "start_ticks": "6285"
+          },
+          "dbus": {
+            "MainPID": "468",
+            "NRestarts": "0",
+            "ActiveState": "active",
+            "SubState": "running",
+            "start_ticks": "6868"
+          },
+          "lab-agent": {
+            "MainPID": "471",
+            "NRestarts": "0",
+            "ActiveState": "active",
+            "SubState": "running",
+            "start_ticks": "6872"
+          },
+          "lab-guard": {
+            "MainPID": "473",
+            "NRestarts": "0",
+            "ActiveState": "active",
+            "SubState": "running",
+            "start_ticks": "6877"
+          },
+          "lab-shell": {
+            "MainPID": "476",
+            "NRestarts": "0",
+            "ActiveState": "active",
+            "SubState": "running",
+            "start_ticks": "6884"
+          },
+          "lab-workload": {
+            "MainPID": "1651",
+            "NRestarts": "0",
+            "ActiveState": "active",
+            "SubState": "running",
+            "start_ticks": "10613"
+          }
+        },
+        "failed_units": "",
+        "multi_user": "active",
+        "installed_packages": 603
+      },
+      "git_validation": {
+        "head": "e8f897f4afef0031fe618a8e94127a0934896aba",
+        "expected_head": "e8f897f4afef0031fe618a8e94127a0934896aba",
+        "head_matches": true,
+        "fsck_passed": true,
+        "fsck_output": "",
+        "worktree_clean": true,
+        "tracked_files": 83475,
+        "source": {
+          "url": "https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git",
+          "ref": "v6.8",
+          "commit": "e8f897f4afef0031fe618a8e94127a0934896aba",
+          "history": "depth 1",
+          "tracked_files": 83475,
+          "object_disk_bytes": 260778158
+        }
+      },
+      "data_audit": {
+        "id": 432,
+        "ok": true,
+        "result": {
+          "acknowledged_records": 760,
+          "confirmed_bytes": 3115892,
+          "prefix_matches": true
+        },
+        "output": ""
+      },
+      "cycles": [],
+      "git_before": {
+        "pid": 1685,
+        "start_ticks": "10835",
+        "started": 108.361495812,
+        "exit_code": null,
+        "progress_tail": "8% (86688/88457)        \nremote: Counting objects:  99% (87573/88457)        \nremote: Counting objects: 100% (88457/88457)        \nremote: Counting objects: 100% (88457/88457), done.        \nremote: Compressing objects:   0% (1/80775)        \nremote: Compressing objects:   1% (808/80775)        \nremote: Compressing objects:   2% (1616/80775)        \nremote: Compressing objects:   3% (2424/80775)        \nremote: Compressing objects:   4% (3231/80775)        \nremote: Compressing objects:   5% (4039/80775)        \nremote: Compressing objects:   6% (4847/80775)        \nremote: Compressing objects:   7% (5655/80775)        \nremote: Compressing objects:   8% (6462/80775)        \nremote: Compressing objects:   9% (7270/80775)        \nremote: Compressing objects:  10% (8078/80775)        \nremote: Compressing objects:  11% (8886/80775)        \nremote: Compressing objects:  12% (9693/80775)        \nremote: Compressing objects:  13% (10501/80775)        \nremote: Compressing objects:  14% (11309/80775)        \nremote: Compressing objects:  15% (12117/80775)        \nremote: Compressing objects:  16% (12924/80775)        \nremote: Compressing objects:  17% (13732/80775)        \nremote: Compressing objects:  18% (14540/80775)        \nremote: Compressing objects:  19% (15348/80775)        \nremote: Compressing objects:  20% (16155/80775)        \nremote: Compressing objects:  21% (16963/80775)        \nremote: Compressing objects:  22% (17771/80775)        \nremote: Compressing objects:  23% (18579/80775)        \nremote: Compressing objects:  24% (19386/80775)        \nremote: Compressing objects:  25% (20194/80775)        \nremote: Compressing objects:  26% (21002/80775)        \nremote: Compressing objects:  27% (21810/80775)        \nremote: Compressing objects:  28% (22617/80775)        \nremote: Compressing objects:  29% (23425/80775)        \nremote: Compressing objects:  30% (24233/80775)        \nremote: Compressing objects:  31% (25041/80775)        \nremote: Compressing objects:  32% (25848/80775)        \nremote: Compressing objects:  33% (26656/80775)        \nremote: Compressing objects:  34% (27464/80775)        \nremote: Compressing objects:  35% (28272/80775)        \nremote: Compressing objects:  36% (29079/80775)        \nremote: Compressing objects:  37% (29887/80775)        \nremote: Compressing objects:  38% (30695/80775)        \nremote: Compressing objects:  39% (31503/80775)        \nremote: Compressing objects:  40% (32310/80775)        \nremote: Compressing objects:  41% (33118/80775)        \nremote: Compressing objects:  42% (33926/80775)        \nremote: Compressing objects:  43% (34734/80775)        \nremote: Compressing objects:  44% (35541/80775)        \nremote: Compressing objects:  45% (36349/80775)        \nremote: Compressing objects:  46% (37157/80775)        \nremote: Compressing objects:  47% (37965/80775)        \nremote: Compressing objects:  48% (38772/80775)        \nremote: Compressing objects:  49% (39580/80775)        \nremote: Compressing objects:  50% (40388/80775)        \nremote: Compressing objects:  51% (41196/80775)        \nremote: Compressing objects:  52% (42003/80775)        \nremote: Compressing objects:  53% (42811/80775)        \nremote: Compressing objects:  54% (43619/80775)        \nremote: Compressing objects:  55% (44427/80775)        \nremote: Compressing objects:  56% (45234/80775)        \nremote: Compressing objects:  57% (46042/80775)        \nremote: Compressing objects:  58% (46850/80775)        \nremote: Compressing objects:  59% (47658/80775)        \nremote: Compressing objects:  60% (48465/80775)        \nremote: Compressing objects:  61% (49273/80775)        \nremote: Compressing objects:  62% (50081/80775)        \nremote: Compressing objects:  63% (50889/80775)        \nremote: Compressing objects:  64% (51696/80775)        \nremote: Compressing objects:  65% (52504/80775)        \nremote: Compressing objects:  66% (53312/80775)        \nremote: Compressing objects:  67% (54120/80775)        \nremote: Compressing objects:  68% (54927/80775)        \nremote: Compressing objects:  69% (55735/80775)        \nremote: Compressing objects:  70% (56543/80775)        \nremote: Compressing objects:  71% (57351/80775)        \nremote: Compressing objects:  72% (58158/80775)        \nremote: Compressing objects:  73% (58966/80775)        \nremote: Compressing objects:  74% (59774/80775)        \nremote: Compressing objects:  75% (60582/80775)        \nremote: Compressing objects:  76% (61389/80775)        \nremote: Compressing objects:  77% (62197/80775)        \nremote: Compressing objects:  78% (63005/80775)        \nremote: Compressing objects:  79% (63813/80775)        \nremote: Compressing objects:  80% (64620/80775)        \nremote: Compressing objects:  81% (65428/80775)        \nremote: Compressing objects:  82% (66236/80775)        \nremote: Compressing objects:  83% (67044/80775)        \nremote: Compressing objects:  84% (67851/80775)        \nremote: Compressing objects:  85% (68659/80775)        \nremote: Compressing objects:  86% (69467/80775)        \nremote: Compressing objects:  87% (70275/80775)        \nremote: Compressing objects:  88% (71082/80775)        \nremote: Compressing objects:  89% (71890/80775)        \nremote: Compressing objects:  90% (72698/80775)        \nremote: Compressing objects:  91% (73506/80775)        \nremote: Compressing objects:  92% (74313/80775)        \nremote: Compressing objects:  93% (75121/80775)        \nremote: Compressing objects:  94% (75929/80775)        \nremote: Compressing objects:  95% (76737/80775)        \nremote: Compressing objects:  96% (77544/80775)        \nremote: Compressing objects:  97% (78352/80775)        \nremote: Compressing objects:  98% (79160/80775)        \nremote: Compressing objects:  99% (79968/80775)        \nremote: Compressing objects: 100% (80775/80775)        \nremote: Compressing objects: 100% (80775/80775), done.        \nReceiving objects:   0% (1/88457)\nReceiving objects:   1% (885/88457)\nReceiving objects:   2% (1770/88457)\n",
+        "same_process_alive": true
+      },
+      "git_after": {
+        "pid": 1685,
+        "start_ticks": "10835",
+        "started": 108.361495812,
+        "exit_code": 0,
+        "finished": 192.955413378,
+        "progress_tail": "esolving deltas:  89% (6018/6761)\nResolving deltas:  90% (6085/6761)\nResolving deltas:  91% (6153/6761)\nResolving deltas:  92% (6221/6761)\nResolving deltas:  93% (6288/6761)\nResolving deltas:  94% (6356/6761)\nResolving deltas:  95% (6423/6761)\nResolving deltas:  96% (6491/6761)\nResolving deltas:  97% (6559/6761)\nResolving deltas:  98% (6626/6761)\nResolving deltas:  99% (6694/6761)\nResolving deltas: 100% (6761/6761)\nResolving deltas: 100% (6761/6761), done.\nChecking connectivity: 88457, done.\nNote: switching to 'e8f897f4afef0031fe618a8e94127a0934896aba'.\n\nYou are in 'detached HEAD' state. You can look around, make experimental\nchanges and commit them, and you can discard any commits you make in this\nstate without impacting any branches by switching back to a branch.\n\nIf you want to create a new branch to retain commits you create, you may\ndo so (now or later) by using -c with the switch command. Example:\n\n  git switch -c <new-branch-name>\n\nOr undo this operation with:\n\n  git switch -\n\nTurn off this advice by setting config variable advice.detachedHead to false\n\nUpdating files:   0% (1/83475)\nUpdating files:   1% (835/83475)\nUpdating files:   2% (1670/83475)\nUpdating files:   3% (2505/83475)\nUpdating files:   4% (3339/83475)\nUpdating files:   4% (3484/83475)\nUpdating files:   5% (4174/83475)\nUpdating files:   6% (5009/83475)\nUpdating files:   7% (5844/83475)\nUpdating files:   8% (6678/83475)\nUpdating files:   9% (7513/83475)\nUpdating files:   9% (8108/83475)\nUpdating files:  10% (8348/83475)\nUpdating files:  11% (9183/83475)\nUpdating files:  11% (9754/83475)\nUpdating files:  12% (10017/83475)\nUpdating files:  13% (10852/83475)\nUpdating files:  14% (11687/83475)\nUpdating files:  15% (12522/83475)\nUpdating files:  15% (12634/83475)\nUpdating files:  16% (13356/83475)\nUpdating files:  17% (14191/83475)\nUpdating files:  18% (15026/83475)\nUpdating files:  19% (15861/83475)\nUpdating files:  20% (16695/83475)\nUpdating files:  20% (17082/83475)\nUpdating files:  21% (17530/83475)\nUpdating files:  22% (18365/83475)\nUpdating files:  23% (19200/83475)\nUpdating files:  24% (20034/83475)\nUpdating files:  25% (20869/83475)\nUpdating files:  26% (21704/83475)\nUpdating files:  27% (22539/83475)\nUpdating files:  27% (22766/83475)\nUpdating files:  28% (23373/83475)\nUpdating files:  29% (24208/83475)\nUpdating files:  30% (25043/83475)\nUpdating files:  30% (25280/83475)\nUpdating files:  31% (25878/83475)\nUpdating files:  32% (26712/83475)\nUpdating files:  32% (27198/83475)\nUpdating files:  33% (27547/83475)\nUpdating files:  34% (28382/83475)\nUpdating files:  34% (28638/83475)\nUpdating files:  35% (29217/83475)\nUpdating files:  36% (30051/83475)\nUpdating files:  36% (30820/83475)\nUpdating files:  37% (30886/83475)\nUpdating files:  38% (31721/83475)\nUpdating files:  38% (32297/83475)\nUpdating files:  39% (32556/83475)\nUpdating files:  39% (33321/83475)\nUpdating files:  40% (33390/83475)\nUpdating files:  40% (33473/83475)\nUpdating files:  40% (33490/83475)\nUpdating files:  40% (33500/83475)\nUpdating files:  40% (33512/83475)\nUpdating files:  40% (33516/83475)\nUpdating files:  40% (33560/83475)\nUpdating files:  40% (33664/83475)\nUpdating files:  40% (33683/83475)\nUpdating files:  41% (34225/83475)\nUpdating files:  41% (34460/83475)\nUpdating files:  42% (35060/83475)\nUpdating files:  43% (35895/83475)\nUpdating files:  44% (36729/83475)\nUpdating files:  45% (37564/83475)\nUpdating files:  45% (37695/83475)\nUpdating files:  46% (38399/83475)\nUpdating files:  47% (39234/83475)\nUpdating files:  47% (39820/83475)\nUpdating files:  48% (40068/83475)\nUpdating files:  49% (40903/83475)\nUpdating files:  50% (41738/83475)\nUpdating files:  50% (42343/83475)\nUpdating files:  51% (42573/83475)\nUpdating files:  52% (43407/83475)\nUpdating files:  53% (44242/83475)\nUpdating files:  54% (45077/83475)\nUpdating files:  54% (45286/83475)\nUpdating files:  55% (45912/83475)\nUpdating files:  56% (46746/83475)\nUpdating files:  57% (47581/83475)\nUpdating files:  57% (48033/83475)\nUpdating files:  58% (48416/83475)\nUpdating files:  59% (49251/83475)\nUpdating files:  59% (49529/83475)\nUpdating files:  60% (50085/83475)\nUpdating files:  61% (50920/83475)\nUpdating files:  61% (51333/83475)\nUpdating files:  62% (51755/83475)\nUpdating files:  63% (52590/83475)\nUpdating files:  64% (53424/83475)\nUpdating files:  65% (54259/83475)\nUpdating files:  65% (54469/83475)\nUpdating files:  66% (55094/83475)\nUpdating files:  67% (55929/83475)\nUpdating files:  67% (56721/83475)\nUpdating files:  68% (56763/83475)\nUpdating files:  69% (57598/83475)\nUpdating files:  70% (58433/83475)\nUpdating files:  71% (59268/83475)\nUpdating files:  71% (59592/83475)\nUpdating files:  72% (60102/83475)\nUpdating files:  73% (60937/83475)\nUpdating files:  74% (61772/83475)\nUpdating files:  74% (62099/83475)\nUpdating files:  75% (62607/83475)\nUpdating files:  76% (63441/83475)\nUpdating files:  77% (64276/83475)\nUpdating files:  78% (65111/83475)\nUpdating files:  78% (65340/83475)\nUpdating files:  79% (65946/83475)\nUpdating files:  80% (66780/83475)\nUpdating files:  81% (67615/83475)\nUpdating files:  81% (68299/83475)\nUpdating files:  82% (68450/83475)\nUpdating files:  83% (69285/83475)\nUpdating files:  84% (70119/83475)\nUpdating files:  85% (70954/83475)\nUpdating files:  85% (71187/83475)\nUpdating files:  86% (71789/83475)\nUpdating files:  87% (72624/83475)\nUpdating files:  88% (73458/83475)\nUpdating files:  88% (73931/83475)\nUpdating files:  89% (74293/83475)\nUpdating files:  90% (75128/83475)\nUpdating files:  91% (75963/83475)\nUpdating files:  91% (76050/83475)\nUpdating files:  92% (76797/83475)\nUpdating files:  93% (77632/83475)\nUpdating files:  94% (78467/83475)\nUpdating files:  95% (79302/83475)\nUpdating files:  95% (79414/83475)\nUpdating files:  96% (80136/83475)\nUpdating files:  97% (80971/83475)\nUpdating files:  98% (81806/83475)\nUpdating files:  99% (82641/83475)\nUpdating files:  99% (83018/83475)\nUpdating files: 100% (83475/83475)\nUpdating files: 100% (83475/83475), done.\n"
+      },
+      "git_elapsed_seconds": 84.593917566
+    },
+    {
+      "run": "20260924-005142-auto-16190",
+      "report_sha256": "d705bcba03d8b479aae9a2e2a42e15d0bb2598aabcdbe8a200231434c81bbdaf",
+      "guest": "ubuntu",
+      "workload": "git-clone",
+      "mode": "automatic-multipath",
+      "transport": "uas",
+      "gap": 0.2,
+      "queue_seconds": 8,
+      "reconnect": "same",
+      "completed": true,
+      "passed": true,
+      "checks": {
+        "ram_heartbeat": true,
+        "ram_shell": true,
+        "stable_upper_mappings": true,
+        "same_process_alive": true,
+        "automatic_recovery": true,
+        "zero_application_errors": true,
+        "writes_continued": true,
+        "block_read": true,
+        "root_read": true,
+        "filesystem_writable": true,
+        "no_journal_abort": true,
+        "ubuntu_systemd": true,
+        "same_boot": true,
+        "services_survived": true,
+        "no_failed_units": true,
+        "acknowledged_data_present": true,
+        "git_clone_succeeded": true,
+        "same_git_process": true,
+        "git_active_during_fault": true,
+        "git_integrity": true
+      },
+      "successful_writes": 799,
+      "failed_writes": 0,
+      "max_write_latency": 3.458175240999992,
+      "max_heartbeat_gap": 1.349017202000141,
+      "runner_sha256": "4623ae310be5618ff02a04bcd6b5e5401820ec2baae032a8ccae71e5932c5402",
+      "qemu_runner_sha256": "b39137e46f11e44b8cb1a317304cb50ad32ad326fda07640628bfaae0c6a9d03",
+      "build": {
+        "kernel_release": "6.8.0-139-generic",
+        "source_commit": "acbd979f12e513474257890edb342531d3653525",
+        "source_sha256": {
+          "lab/build.py": "1df2c8e5508aa59d974287677a42396634dd18c06af4b9b073aefb9ddfacc58d",
+          "ram-rescue-demo/src/rescue.py": "79d5f850f191f227bf52f9195b8b6845e82d9f4ec5bd978e96c5f479c0d2e97f",
+          "ram-rescue-demo/src/lvm.conf": "10708bf37ce4b01ec3e7e3e0d3d6394301f0bf3d4046fbd1da8521dad80d0cd3",
+          "lab/guest/agent.py": "3c0f06180aa71ecb508658f6af3fbc1eaca3bf1b217a405301f701153db9c805",
+          "lab/guest/git_workload.py": "c61d4c440a44cdb263f247e868292cea4270a78d59dd537706090909cd7c0538",
+          "lab/guest/init.sh": "1daefd2151e6782c3f57cb69555cf511de0985f94000fdad753b8bdb9a00f293",
+          "lab/guest/path_guard.py": "e95c382ce684398436e2d40fb46bb354882911458ad72b891ea3df27a11b94dd",
+          "lab/guest/root-init.sh": "078ec84bb1f502fc2b80b99b4eef2ee4a40432ccb9a476bf7757952547ca57d9",
+          "lab/guest/ubuntu.py": "61ade71d1f8f3da7433f086b0501b2c0dc75fb613b408a17609406de526150b2",
+          "lab/guest/ubuntu_workload.py": "2cb4f4a137fa6b6e8b99d87c29efe89c2dbcc7d7cc7ee814b736a193f667a890",
+          "lab/guest/wire.py": "66180734f19432381ff6fbd3b8853c536d083ee3c681e52864902a91efafe87e",
+          "lab/guest/workload.py": "15d8e159ab16b2e7786aeee10d4be861a6b1cf448bf3ddf16b6a8c64ab72ad2c"
+        },
+        "kernel_sha256": "0066409132868538bc0c9076f60131025775d5bbd8617df074d059f91b584918",
+        "initramfs_sha256": "2050c59dfb29426d30a61c94d1417ea393588e82109ab66f7b78429089511823",
+        "note": "guest payload copied from working tree; no host identities or passwords"
+      },
+      "ubuntu_source": {
+        "distribution": "Ubuntu Server 24.04 LTS",
+        "image_build": "20260911",
+        "url": "https://cloud-images.ubuntu.com/noble/20260911/noble-server-cloudimg-amd64-root.tar.xz",
+        "archive_sha256": "2ea580b9dd2d0e97ba9047798becc63a94427679876dec193221e345a6e0cdc9",
+        "seed_sha256": "8ae5beb36209e924b04612f7347babac8a7930947411aba353ae03aa8f956bbb",
+        "signed_checksums_sha256": "86919782a8b9e4dbd9478f00f8fda31da67af11facfc4408138a487d20bbff33",
+        "signature_verified": true
+      },
+      "git_source": {
+        "url": "https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git",
+        "ref": "v6.8",
+        "commit": "e8f897f4afef0031fe618a8e94127a0934896aba",
+        "history": "depth 1",
+        "tracked_files": 83475,
+        "object_disk_bytes": 260778158,
+        "image_sha256": "5e8efa55f6603982383be11a9e57842923fa845a121a4f79bae9cea5f014d6b4"
+      },
+      "ubuntu_before": {
+        "os_release": "PRETTY_NAME=\"Ubuntu 24.04.5 LTS\"\nNAME=\"Ubuntu\"\nVERSION_ID=\"24.04\"\nVERSION=\"24.04.5 LTS (Noble Numbat)\"\nVERSION_CODENAME=noble\nID=ubuntu\nID_LIKE=debian\nHOME_URL=\"https://www.ubuntu.com/\"\nSUPPORT_URL=\"https://help.ubuntu.com/\"\nBUG_REPORT_URL=\"https://bugs.launchpad.net/ubuntu/\"\nPRIVACY_POLICY_URL=\"https://www.ubuntu.com/legal/terms-and-policies/privacy-policy\"\nUBUNTU_CODENAME=noble\nLOGO=ubuntu-logo\n",
+        "pid1_comm": "systemd",
+        "pid1_start_ticks": "44",
+        "boot_id": "7f93e8f9-5f04-47e5-8a3a-fcf1daad8a2d",
+        "services": {
+          "systemd-journald": {
+            "MainPID": "193",
+            "NRestarts": "0",
+            "ActiveState": "active",
+            "SubState": "running",
+            "start_ticks": "6247"
+          },
+          "dbus": {
+            "MainPID": "467",
+            "NRestarts": "0",
+            "ActiveState": "active",
+            "SubState": "running",
+            "start_ticks": "6778"
+          },
+          "lab-agent": {
+            "MainPID": "470",
+            "NRestarts": "0",
+            "ActiveState": "active",
+            "SubState": "running",
+            "start_ticks": "6788"
+          },
+          "lab-guard": {
+            "MainPID": "472",
+            "NRestarts": "0",
+            "ActiveState": "active",
+            "SubState": "running",
+            "start_ticks": "6799"
+          },
+          "lab-shell": {
+            "MainPID": "474",
+            "NRestarts": "0",
+            "ActiveState": "active",
+            "SubState": "running",
+            "start_ticks": "6805"
+          },
+          "lab-workload": {
+            "MainPID": "1646",
+            "NRestarts": "0",
+            "ActiveState": "active",
+            "SubState": "running",
+            "start_ticks": "10442"
+          }
+        },
+        "failed_units": "",
+        "multi_user": "active",
+        "installed_packages": 603
+      },
+      "ubuntu_after": {
+        "os_release": "PRETTY_NAME=\"Ubuntu 24.04.5 LTS\"\nNAME=\"Ubuntu\"\nVERSION_ID=\"24.04\"\nVERSION=\"24.04.5 LTS (Noble Numbat)\"\nVERSION_CODENAME=noble\nID=ubuntu\nID_LIKE=debian\nHOME_URL=\"https://www.ubuntu.com/\"\nSUPPORT_URL=\"https://help.ubuntu.com/\"\nBUG_REPORT_URL=\"https://bugs.launchpad.net/ubuntu/\"\nPRIVACY_POLICY_URL=\"https://www.ubuntu.com/legal/terms-and-policies/privacy-policy\"\nUBUNTU_CODENAME=noble\nLOGO=ubuntu-logo\n",
+        "pid1_comm": "systemd",
+        "pid1_start_ticks": "44",
+        "boot_id": "7f93e8f9-5f04-47e5-8a3a-fcf1daad8a2d",
+        "services": {
+          "systemd-journald": {
+            "MainPID": "193",
+            "NRestarts": "0",
+            "ActiveState": "active",
+            "SubState": "running",
+            "start_ticks": "6247"
+          },
+          "dbus": {
+            "MainPID": "467",
+            "NRestarts": "0",
+            "ActiveState": "active",
+            "SubState": "running",
+            "start_ticks": "6778"
+          },
+          "lab-agent": {
+            "MainPID": "470",
+            "NRestarts": "0",
+            "ActiveState": "active",
+            "SubState": "running",
+            "start_ticks": "6788"
+          },
+          "lab-guard": {
+            "MainPID": "472",
+            "NRestarts": "0",
+            "ActiveState": "active",
+            "SubState": "running",
+            "start_ticks": "6799"
+          },
+          "lab-shell": {
+            "MainPID": "474",
+            "NRestarts": "0",
+            "ActiveState": "active",
+            "SubState": "running",
+            "start_ticks": "6805"
+          },
+          "lab-workload": {
+            "MainPID": "1646",
+            "NRestarts": "0",
+            "ActiveState": "active",
+            "SubState": "running",
+            "start_ticks": "10442"
+          }
+        },
+        "failed_units": "",
+        "multi_user": "active",
+        "installed_packages": 603
+      },
+      "git_validation": {
+        "head": "e8f897f4afef0031fe618a8e94127a0934896aba",
+        "expected_head": "e8f897f4afef0031fe618a8e94127a0934896aba",
+        "head_matches": true,
+        "fsck_passed": true,
+        "fsck_output": "",
+        "worktree_clean": true,
+        "tracked_files": 83475,
+        "source": {
+          "url": "https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git",
+          "ref": "v6.8",
+          "commit": "e8f897f4afef0031fe618a8e94127a0934896aba",
+          "history": "depth 1",
+          "tracked_files": 83475,
+          "object_disk_bytes": 260778158
+        }
+      },
+      "data_audit": {
+        "id": 456,
+        "ok": true,
+        "result": {
+          "acknowledged_records": 820,
+          "confirmed_bytes": 3361892,
+          "prefix_matches": true
+        },
+        "output": ""
+      },
+      "cycles": [
+        {
+          "index": 1,
+          "deleted_host_time": 2608.541418234,
+          "outcome_after_delete": 4.5103588980000495,
+          "outcome": {
+            "time": 116.504963413,
+            "state": "ready",
+            "recoveries": 1,
+            "node": "/dev/sdb1"
+          },
+          "reattach_after_delete": 1.392598259999886,
+          "git_at_fault": {
+            "pid": 1678,
+            "start_ticks": "10681",
+            "started": 106.81320486,
+            "exit_code": null,
+            "progress_tail": "objects: 100% (88457/88457), done.        \nremote: Compressing objects:   0% (1/80775)        \nremote: Compressing objects:   1% (808/80775)        \nremote: Compressing objects:   2% (1616/80775)        \nremote: Compressing objects:   3% (2424/80775)        \nremote: Compressing objects:   4% (3231/80775)        \nremote: Compressing objects:   5% (4039/80775)        \nremote: Compressing objects:   6% (4847/80775)        \nremote: Compressing objects:   7% (5655/80775)        \nremote: Compressing objects:   8% (6462/80775)        \nremote: Compressing objects:   9% (7270/80775)        \nremote: Compressing objects:  10% (8078/80775)        \nremote: Compressing objects:  11% (8886/80775)        \nremote: Compressing objects:  12% (9693/80775)        \nremote: Compressing objects:  13% (10501/80775)        \nremote: Compressing objects:  14% (11309/80775)        \nremote: Compressing objects:  15% (12117/80775)        \nremote: Compressing objects:  16% (12924/80775)        \nremote: Compressing objects:  17% (13732/80775)        \nremote: Compressing objects:  18% (14540/80775)        \nremote: Compressing objects:  19% (15348/80775)        \nremote: Compressing objects:  20% (16155/80775)        \nremote: Compressing objects:  21% (16963/80775)        \nremote: Compressing objects:  22% (17771/80775)        \nremote: Compressing objects:  23% (18579/80775)        \nremote: Compressing objects:  24% (19386/80775)        \nremote: Compressing objects:  25% (20194/80775)        \nremote: Compressing objects:  26% (21002/80775)        \nremote: Compressing objects:  27% (21810/80775)        \nremote: Compressing objects:  28% (22617/80775)        \nremote: Compressing objects:  29% (23425/80775)        \nremote: Compressing objects:  30% (24233/80775)        \nremote: Compressing objects:  31% (25041/80775)        \nremote: Compressing objects:  32% (25848/80775)        \nremote: Compressing objects:  33% (26656/80775)        \nremote: Compressing objects:  34% (27464/80775)        \nremote: Compressing objects:  35% (28272/80775)        \nremote: Compressing objects:  36% (29079/80775)        \nremote: Compressing objects:  37% (29887/80775)        \nremote: Compressing objects:  38% (30695/80775)        \nremote: Compressing objects:  39% (31503/80775)        \nremote: Compressing objects:  40% (32310/80775)        \nremote: Compressing objects:  41% (33118/80775)        \nremote: Compressing objects:  42% (33926/80775)        \nremote: Compressing objects:  43% (34734/80775)        \nremote: Compressing objects:  44% (35541/80775)        \nremote: Compressing objects:  45% (36349/80775)        \nremote: Compressing objects:  46% (37157/80775)        \nremote: Compressing objects:  47% (37965/80775)        \nremote: Compressing objects:  48% (38772/80775)        \nremote: Compressing objects:  49% (39580/80775)        \nremote: Compressing objects:  50% (40388/80775)        \nremote: Compressing objects:  51% (41196/80775)        \nremote: Compressing objects:  52% (42003/80775)        \nremote: Compressing objects:  53% (42811/80775)        \nremote: Compressing objects:  54% (43619/80775)        \nremote: Compressing objects:  55% (44427/80775)        \nremote: Compressing objects:  56% (45234/80775)        \nremote: Compressing objects:  57% (46042/80775)        \nremote: Compressing objects:  58% (46850/80775)        \nremote: Compressing objects:  59% (47658/80775)        \nremote: Compressing objects:  60% (48465/80775)        \nremote: Compressing objects:  61% (49273/80775)        \nremote: Compressing objects:  62% (50081/80775)        \nremote: Compressing objects:  63% (50889/80775)        \nremote: Compressing objects:  64% (51696/80775)        \nremote: Compressing objects:  65% (52504/80775)        \nremote: Compressing objects:  66% (53312/80775)        \nremote: Compressing objects:  67% (54120/80775)        \nremote: Compressing objects:  68% (54927/80775)        \nremote: Compressing objects:  69% (55735/80775)        \nremote: Compressing objects:  70% (56543/80775)        \nremote: Compressing objects:  71% (57351/80775)        \nremote: Compressing objects:  72% (58158/80775)        \nremote: Compressing objects:  73% (58966/80775)        \nremote: Compressing objects:  74% (59774/80775)        \nremote: Compressing objects:  75% (60582/80775)        \nremote: Compressing objects:  76% (61389/80775)        \nremote: Compressing objects:  77% (62197/80775)        \nremote: Compressing objects:  78% (63005/80775)        \nremote: Compressing objects:  79% (63813/80775)        \nremote: Compressing objects:  80% (64620/80775)        \nremote: Compressing objects:  81% (65428/80775)        \nremote: Compressing objects:  82% (66236/80775)        \nremote: Compressing objects:  83% (67044/80775)        \nremote: Compressing objects:  84% (67851/80775)        \nremote: Compressing objects:  85% (68659/80775)        \nremote: Compressing objects:  86% (69467/80775)        \nremote: Compressing objects:  87% (70275/80775)        \nremote: Compressing objects:  88% (71082/80775)        \nremote: Compressing objects:  89% (71890/80775)        \nremote: Compressing objects:  90% (72698/80775)        \nremote: Compressing objects:  91% (73506/80775)        \nremote: Compressing objects:  92% (74313/80775)        \nremote: Compressing objects:  93% (75121/80775)        \nremote: Compressing objects:  94% (75929/80775)        \nremote: Compressing objects:  95% (76737/80775)        \nremote: Compressing objects:  96% (77544/80775)        \nremote: Compressing objects:  97% (78352/80775)        \nremote: Compressing objects:  98% (79160/80775)        \nremote: Compressing objects:  99% (79968/80775)        \nremote: Compressing objects: 100% (80775/80775)        \nremote: Compressing objects: 100% (80775/80775), done.        \nReceiving objects:   0% (1/88457)\nReceiving objects:   1% (885/88457)\nReceiving objects:   2% (1770/88457)\nReceiving objects:   3% (2654/88457)\nReceiving objects:   4% (3539/88457)\nReceiving objects:   5% (4423/88457)\nReceiving objects:   6% (5308/88457)\n",
+            "same_process_alive": true
+          },
+          "git_while_absent": {
+            "pid": 1678,
+            "start_ticks": "10681",
+            "started": 106.81320486,
+            "exit_code": null,
+            "progress_tail": "mote: Compressing objects:   1% (808/80775)        \nremote: Compressing objects:   2% (1616/80775)        \nremote: Compressing objects:   3% (2424/80775)        \nremote: Compressing objects:   4% (3231/80775)        \nremote: Compressing objects:   5% (4039/80775)        \nremote: Compressing objects:   6% (4847/80775)        \nremote: Compressing objects:   7% (5655/80775)        \nremote: Compressing objects:   8% (6462/80775)        \nremote: Compressing objects:   9% (7270/80775)        \nremote: Compressing objects:  10% (8078/80775)        \nremote: Compressing objects:  11% (8886/80775)        \nremote: Compressing objects:  12% (9693/80775)        \nremote: Compressing objects:  13% (10501/80775)        \nremote: Compressing objects:  14% (11309/80775)        \nremote: Compressing objects:  15% (12117/80775)        \nremote: Compressing objects:  16% (12924/80775)        \nremote: Compressing objects:  17% (13732/80775)        \nremote: Compressing objects:  18% (14540/80775)        \nremote: Compressing objects:  19% (15348/80775)        \nremote: Compressing objects:  20% (16155/80775)        \nremote: Compressing objects:  21% (16963/80775)        \nremote: Compressing objects:  22% (17771/80775)        \nremote: Compressing objects:  23% (18579/80775)        \nremote: Compressing objects:  24% (19386/80775)        \nremote: Compressing objects:  25% (20194/80775)        \nremote: Compressing objects:  26% (21002/80775)        \nremote: Compressing objects:  27% (21810/80775)        \nremote: Compressing objects:  28% (22617/80775)        \nremote: Compressing objects:  29% (23425/80775)        \nremote: Compressing objects:  30% (24233/80775)        \nremote: Compressing objects:  31% (25041/80775)        \nremote: Compressing objects:  32% (25848/80775)        \nremote: Compressing objects:  33% (26656/80775)        \nremote: Compressing objects:  34% (27464/80775)        \nremote: Compressing objects:  35% (28272/80775)        \nremote: Compressing objects:  36% (29079/80775)        \nremote: Compressing objects:  37% (29887/80775)        \nremote: Compressing objects:  38% (30695/80775)        \nremote: Compressing objects:  39% (31503/80775)        \nremote: Compressing objects:  40% (32310/80775)        \nremote: Compressing objects:  41% (33118/80775)        \nremote: Compressing objects:  42% (33926/80775)        \nremote: Compressing objects:  43% (34734/80775)        \nremote: Compressing objects:  44% (35541/80775)        \nremote: Compressing objects:  45% (36349/80775)        \nremote: Compressing objects:  46% (37157/80775)        \nremote: Compressing objects:  47% (37965/80775)        \nremote: Compressing objects:  48% (38772/80775)        \nremote: Compressing objects:  49% (39580/80775)        \nremote: Compressing objects:  50% (40388/80775)        \nremote: Compressing objects:  51% (41196/80775)        \nremote: Compressing objects:  52% (42003/80775)        \nremote: Compressing objects:  53% (42811/80775)        \nremote: Compressing objects:  54% (43619/80775)        \nremote: Compressing objects:  55% (44427/80775)        \nremote: Compressing objects:  56% (45234/80775)        \nremote: Compressing objects:  57% (46042/80775)        \nremote: Compressing objects:  58% (46850/80775)        \nremote: Compressing objects:  59% (47658/80775)        \nremote: Compressing objects:  60% (48465/80775)        \nremote: Compressing objects:  61% (49273/80775)        \nremote: Compressing objects:  62% (50081/80775)        \nremote: Compressing objects:  63% (50889/80775)        \nremote: Compressing objects:  64% (51696/80775)        \nremote: Compressing objects:  65% (52504/80775)        \nremote: Compressing objects:  66% (53312/80775)        \nremote: Compressing objects:  67% (54120/80775)        \nremote: Compressing objects:  68% (54927/80775)        \nremote: Compressing objects:  69% (55735/80775)        \nremote: Compressing objects:  70% (56543/80775)        \nremote: Compressing objects:  71% (57351/80775)        \nremote: Compressing objects:  72% (58158/80775)        \nremote: Compressing objects:  73% (58966/80775)        \nremote: Compressing objects:  74% (59774/80775)        \nremote: Compressing objects:  75% (60582/80775)        \nremote: Compressing objects:  76% (61389/80775)        \nremote: Compressing objects:  77% (62197/80775)        \nremote: Compressing objects:  78% (63005/80775)        \nremote: Compressing objects:  79% (63813/80775)        \nremote: Compressing objects:  80% (64620/80775)        \nremote: Compressing objects:  81% (65428/80775)        \nremote: Compressing objects:  82% (66236/80775)        \nremote: Compressing objects:  83% (67044/80775)        \nremote: Compressing objects:  84% (67851/80775)        \nremote: Compressing objects:  85% (68659/80775)        \nremote: Compressing objects:  86% (69467/80775)        \nremote: Compressing objects:  87% (70275/80775)        \nremote: Compressing objects:  88% (71082/80775)        \nremote: Compressing objects:  89% (71890/80775)        \nremote: Compressing objects:  90% (72698/80775)        \nremote: Compressing objects:  91% (73506/80775)        \nremote: Compressing objects:  92% (74313/80775)        \nremote: Compressing objects:  93% (75121/80775)        \nremote: Compressing objects:  94% (75929/80775)        \nremote: Compressing objects:  95% (76737/80775)        \nremote: Compressing objects:  96% (77544/80775)        \nremote: Compressing objects:  97% (78352/80775)        \nremote: Compressing objects:  98% (79160/80775)        \nremote: Compressing objects:  99% (79968/80775)        \nremote: Compressing objects: 100% (80775/80775)        \nremote: Compressing objects: 100% (80775/80775), done.        \nReceiving objects:   0% (1/88457)\nReceiving objects:   1% (885/88457)\nReceiving objects:   2% (1770/88457)\nReceiving objects:   3% (2654/88457)\nReceiving objects:   4% (3539/88457)\nReceiving objects:   5% (4423/88457)\nReceiving objects:   6% (5308/88457)\nReceiving objects:   7% (6192/88457)\nReceiving objects:   7% (6756/88457), 5.03 MiB | 3.35 MiB/s\n",
+            "same_process_alive": true
+          }
+        }
+      ],
+      "git_before": {
+        "pid": 1678,
+        "start_ticks": "10681",
+        "started": 106.81320486,
+        "exit_code": null,
+        "progress_tail": "   \nremote: Counting objects: 100% (88457/88457)        \nremote: Counting objects: 100% (88457/88457), done.        \nremote: Compressing objects:   0% (1/80775)        \nremote: Compressing objects:   1% (808/80775)        \nremote: Compressing objects:   2% (1616/80775)        \nremote: Compressing objects:   3% (2424/80775)        \nremote: Compressing objects:   4% (3231/80775)        \nremote: Compressing objects:   5% (4039/80775)        \nremote: Compressing objects:   6% (4847/80775)        \nremote: Compressing objects:   7% (5655/80775)        \nremote: Compressing objects:   8% (6462/80775)        \nremote: Compressing objects:   9% (7270/80775)        \nremote: Compressing objects:  10% (8078/80775)        \nremote: Compressing objects:  11% (8886/80775)        \nremote: Compressing objects:  12% (9693/80775)        \nremote: Compressing objects:  13% (10501/80775)        \nremote: Compressing objects:  14% (11309/80775)        \nremote: Compressing objects:  15% (12117/80775)        \nremote: Compressing objects:  16% (12924/80775)        \nremote: Compressing objects:  17% (13732/80775)        \nremote: Compressing objects:  18% (14540/80775)        \nremote: Compressing objects:  19% (15348/80775)        \nremote: Compressing objects:  20% (16155/80775)        \nremote: Compressing objects:  21% (16963/80775)        \nremote: Compressing objects:  22% (17771/80775)        \nremote: Compressing objects:  23% (18579/80775)        \nremote: Compressing objects:  24% (19386/80775)        \nremote: Compressing objects:  25% (20194/80775)        \nremote: Compressing objects:  26% (21002/80775)        \nremote: Compressing objects:  27% (21810/80775)        \nremote: Compressing objects:  28% (22617/80775)        \nremote: Compressing objects:  29% (23425/80775)        \nremote: Compressing objects:  30% (24233/80775)        \nremote: Compressing objects:  31% (25041/80775)        \nremote: Compressing objects:  32% (25848/80775)        \nremote: Compressing objects:  33% (26656/80775)        \nremote: Compressing objects:  34% (27464/80775)        \nremote: Compressing objects:  35% (28272/80775)        \nremote: Compressing objects:  36% (29079/80775)        \nremote: Compressing objects:  37% (29887/80775)        \nremote: Compressing objects:  38% (30695/80775)        \nremote: Compressing objects:  39% (31503/80775)        \nremote: Compressing objects:  40% (32310/80775)        \nremote: Compressing objects:  41% (33118/80775)        \nremote: Compressing objects:  42% (33926/80775)        \nremote: Compressing objects:  43% (34734/80775)        \nremote: Compressing objects:  44% (35541/80775)        \nremote: Compressing objects:  45% (36349/80775)        \nremote: Compressing objects:  46% (37157/80775)        \nremote: Compressing objects:  47% (37965/80775)        \nremote: Compressing objects:  48% (38772/80775)        \nremote: Compressing objects:  49% (39580/80775)        \nremote: Compressing objects:  50% (40388/80775)        \nremote: Compressing objects:  51% (41196/80775)        \nremote: Compressing objects:  52% (42003/80775)        \nremote: Compressing objects:  53% (42811/80775)        \nremote: Compressing objects:  54% (43619/80775)        \nremote: Compressing objects:  55% (44427/80775)        \nremote: Compressing objects:  56% (45234/80775)        \nremote: Compressing objects:  57% (46042/80775)        \nremote: Compressing objects:  58% (46850/80775)        \nremote: Compressing objects:  59% (47658/80775)        \nremote: Compressing objects:  60% (48465/80775)        \nremote: Compressing objects:  61% (49273/80775)        \nremote: Compressing objects:  62% (50081/80775)        \nremote: Compressing objects:  63% (50889/80775)        \nremote: Compressing objects:  64% (51696/80775)        \nremote: Compressing objects:  65% (52504/80775)        \nremote: Compressing objects:  66% (53312/80775)        \nremote: Compressing objects:  67% (54120/80775)        \nremote: Compressing objects:  68% (54927/80775)        \nremote: Compressing objects:  69% (55735/80775)        \nremote: Compressing objects:  70% (56543/80775)        \nremote: Compressing objects:  71% (57351/80775)        \nremote: Compressing objects:  72% (58158/80775)        \nremote: Compressing objects:  73% (58966/80775)        \nremote: Compressing objects:  74% (59774/80775)        \nremote: Compressing objects:  75% (60582/80775)        \nremote: Compressing objects:  76% (61389/80775)        \nremote: Compressing objects:  77% (62197/80775)        \nremote: Compressing objects:  78% (63005/80775)        \nremote: Compressing objects:  79% (63813/80775)        \nremote: Compressing objects:  80% (64620/80775)        \nremote: Compressing objects:  81% (65428/80775)        \nremote: Compressing objects:  82% (66236/80775)        \nremote: Compressing objects:  83% (67044/80775)        \nremote: Compressing objects:  84% (67851/80775)        \nremote: Compressing objects:  85% (68659/80775)        \nremote: Compressing objects:  86% (69467/80775)        \nremote: Compressing objects:  87% (70275/80775)        \nremote: Compressing objects:  88% (71082/80775)        \nremote: Compressing objects:  89% (71890/80775)        \nremote: Compressing objects:  90% (72698/80775)        \nremote: Compressing objects:  91% (73506/80775)        \nremote: Compressing objects:  92% (74313/80775)        \nremote: Compressing objects:  93% (75121/80775)        \nremote: Compressing objects:  94% (75929/80775)        \nremote: Compressing objects:  95% (76737/80775)        \nremote: Compressing objects:  96% (77544/80775)        \nremote: Compressing objects:  97% (78352/80775)        \nremote: Compressing objects:  98% (79160/80775)        \nremote: Compressing objects:  99% (79968/80775)        \nremote: Compressing objects: 100% (80775/80775)        \nremote: Compressing objects: 100% (80775/80775), done.        \nReceiving objects:   0% (1/88457)\nReceiving objects:   1% (885/88457)\nReceiving objects:   2% (1770/88457)\nReceiving objects:   3% (2654/88457)\nReceiving objects:   4% (3539/88457)\n",
+        "same_process_alive": true
+      },
+      "git_after": {
+        "pid": 1678,
+        "start_ticks": "10681",
+        "started": 106.81320486,
+        "exit_code": 0,
+        "finished": 198.220912713,
+        "progress_tail": "esolving deltas:  88% (5950/6761)\nResolving deltas:  89% (6018/6761)\nResolving deltas:  90% (6085/6761)\nResolving deltas:  91% (6153/6761)\nResolving deltas:  92% (6221/6761)\nResolving deltas:  93% (6288/6761)\nResolving deltas:  94% (6356/6761)\nResolving deltas:  95% (6423/6761)\nResolving deltas:  96% (6491/6761)\nResolving deltas:  97% (6559/6761)\nResolving deltas:  98% (6626/6761)\nResolving deltas:  99% (6694/6761)\nResolving deltas: 100% (6761/6761)\nResolving deltas: 100% (6761/6761), done.\nChecking connectivity: 88457, done.\nNote: switching to 'e8f897f4afef0031fe618a8e94127a0934896aba'.\n\nYou are in 'detached HEAD' state. You can look around, make experimental\nchanges and commit them, and you can discard any commits you make in this\nstate without impacting any branches by switching back to a branch.\n\nIf you want to create a new branch to retain commits you create, you may\ndo so (now or later) by using -c with the switch command. Example:\n\n  git switch -c <new-branch-name>\n\nOr undo this operation with:\n\n  git switch -\n\nTurn off this advice by setting config variable advice.detachedHead to false\n\nUpdating files:   0% (1/83475)\nUpdating files:   1% (835/83475)\nUpdating files:   2% (1670/83475)\nUpdating files:   3% (2505/83475)\nUpdating files:   4% (3339/83475)\nUpdating files:   5% (4174/83475)\nUpdating files:   5% (4394/83475)\nUpdating files:   6% (5009/83475)\nUpdating files:   7% (5844/83475)\nUpdating files:   8% (6678/83475)\nUpdating files:   9% (7513/83475)\nUpdating files:  10% (8348/83475)\nUpdating files:  10% (8364/83475)\nUpdating files:  11% (9183/83475)\nUpdating files:  11% (9998/83475)\nUpdating files:  12% (10017/83475)\nUpdating files:  13% (10852/83475)\nUpdating files:  14% (11687/83475)\nUpdating files:  14% (12468/83475)\nUpdating files:  15% (12522/83475)\nUpdating files:  16% (13356/83475)\nUpdating files:  17% (14191/83475)\nUpdating files:  18% (15026/83475)\nUpdating files:  18% (15346/83475)\nUpdating files:  19% (15861/83475)\nUpdating files:  20% (16695/83475)\nUpdating files:  20% (17137/83475)\nUpdating files:  21% (17530/83475)\nUpdating files:  22% (18365/83475)\nUpdating files:  23% (19200/83475)\nUpdating files:  24% (20034/83475)\nUpdating files:  24% (20699/83475)\nUpdating files:  25% (20869/83475)\nUpdating files:  26% (21704/83475)\nUpdating files:  27% (22539/83475)\nUpdating files:  28% (23373/83475)\nUpdating files:  29% (24208/83475)\nUpdating files:  30% (25043/83475)\nUpdating files:  30% (25155/83475)\nUpdating files:  31% (25878/83475)\nUpdating files:  32% (26712/83475)\nUpdating files:  32% (27251/83475)\nUpdating files:  33% (27547/83475)\nUpdating files:  34% (28382/83475)\nUpdating files:  34% (28471/83475)\nUpdating files:  35% (29217/83475)\nUpdating files:  35% (29565/83475)\nUpdating files:  36% (30051/83475)\nUpdating files:  37% (30886/83475)\nUpdating files:  37% (31578/83475)\nUpdating files:  38% (31721/83475)\nUpdating files:  39% (32556/83475)\nUpdating files:  39% (32708/83475)\nUpdating files:  40% (33390/83475)\nUpdating files:  40% (33446/83475)\nUpdating files:  40% (33480/83475)\nUpdating files:  40% (33492/83475)\nUpdating files:  40% (33506/83475)\nUpdating files:  40% (33538/83475)\nUpdating files:  40% (33556/83475)\nUpdating files:  40% (33666/83475)\nUpdating files:  40% (33683/83475)\nUpdating files:  41% (34225/83475)\nUpdating files:  42% (35060/83475)\nUpdating files:  42% (35702/83475)\nUpdating files:  43% (35895/83475)\nUpdating files:  44% (36729/83475)\nUpdating files:  45% (37564/83475)\nUpdating files:  46% (38399/83475)\nUpdating files:  46% (38883/83475)\nUpdating files:  47% (39234/83475)\nUpdating files:  48% (40068/83475)\nUpdating files:  49% (40903/83475)\nUpdating files:  50% (41738/83475)\nUpdating files:  50% (42130/83475)\nUpdating files:  51% (42573/83475)\nUpdating files:  52% (43407/83475)\nUpdating files:  53% (44242/83475)\nUpdating files:  53% (44911/83475)\nUpdating files:  54% (45077/83475)\nUpdating files:  55% (45912/83475)\nUpdating files:  56% (46746/83475)\nUpdating files:  56% (47321/83475)\nUpdating files:  57% (47581/83475)\nUpdating files:  58% (48416/83475)\nUpdating files:  59% (49251/83475)\nUpdating files:  59% (49635/83475)\nUpdating files:  60% (50085/83475)\nUpdating files:  61% (50920/83475)\nUpdating files:  62% (51755/83475)\nUpdating files:  62% (51868/83475)\nUpdating files:  63% (52590/83475)\nUpdating files:  64% (53424/83475)\nUpdating files:  65% (54259/83475)\nUpdating files:  65% (54549/83475)\nUpdating files:  66% (55094/83475)\nUpdating files:  67% (55929/83475)\nUpdating files:  68% (56763/83475)\nUpdating files:  68% (56766/83475)\nUpdating files:  69% (57598/83475)\nUpdating files:  70% (58433/83475)\nUpdating files:  70% (59015/83475)\nUpdating files:  71% (59268/83475)\nUpdating files:  72% (60102/83475)\nUpdating files:  73% (60937/83475)\nUpdating files:  73% (61357/83475)\nUpdating files:  74% (61772/83475)\nUpdating files:  75% (62607/83475)\nUpdating files:  75% (62660/83475)\nUpdating files:  76% (63441/83475)\nUpdating files:  77% (64276/83475)\nUpdating files:  78% (65111/83475)\nUpdating files:  79% (65946/83475)\nUpdating files:  79% (66531/83475)\nUpdating files:  80% (66780/83475)\nUpdating files:  81% (67615/83475)\nUpdating files:  82% (68450/83475)\nUpdating files:  83% (69285/83475)\nUpdating files:  84% (70119/83475)\nUpdating files:  85% (70954/83475)\nUpdating files:  85% (71075/83475)\nUpdating files:  86% (71789/83475)\nUpdating files:  87% (72624/83475)\nUpdating files:  88% (73458/83475)\nUpdating files:  89% (74293/83475)\nUpdating files:  90% (75128/83475)\nUpdating files:  91% (75963/83475)\nUpdating files:  92% (76797/83475)\nUpdating files:  92% (76913/83475)\nUpdating files:  93% (77632/83475)\nUpdating files:  94% (78467/83475)\nUpdating files:  95% (79302/83475)\nUpdating files:  95% (80033/83475)\nUpdating files:  96% (80136/83475)\nUpdating files:  97% (80971/83475)\nUpdating files:  98% (81806/83475)\nUpdating files:  99% (82641/83475)\nUpdating files:  99% (82930/83475)\nUpdating files: 100% (83475/83475)\nUpdating files: 100% (83475/83475), done.\n"
+      },
+      "git_elapsed_seconds": 91.40770785299999
+    },
+    {
+      "guest": "ubuntu",
+      "workload": "git-clone",
+      "mode": "automatic-multipath",
+      "transport": "uas",
+      "gap": 0.2,
+      "queue_seconds": 8,
+      "reconnect": "same",
+      "completed": true,
+      "passed": true,
+      "checks": {
+        "ram_heartbeat": true,
+        "ram_shell": true,
+        "stable_upper_mappings": true,
+        "same_process_alive": true,
+        "automatic_recovery": true,
+        "zero_application_errors": true,
+        "writes_continued": true,
+        "block_read": true,
+        "root_read": true,
+        "filesystem_writable": true,
+        "no_journal_abort": true,
+        "ubuntu_systemd": true,
+        "same_boot": true,
+        "services_survived": true,
+        "no_failed_units": true,
+        "acknowledged_data_present": true,
+        "git_clone_succeeded": true,
+        "same_git_process": true,
+        "git_active_during_fault": true,
+        "git_integrity": true
+      },
+      "successful_writes": 519,
+      "failed_writes": 0,
+      "max_write_latency": 1.061854126,
+      "max_heartbeat_gap": 0.7566145889995823,
+      "runner_sha256": "61e2342729201a9f1f631a205f2926a10908e334ee3f2161d51189cf09cbde15",
+      "qemu_runner_sha256": "b39137e46f11e44b8cb1a317304cb50ad32ad326fda07640628bfaae0c6a9d03",
+      "build": {
+        "kernel_release": "6.8.0-139-generic",
+        "source_commit": "acbd979f12e513474257890edb342531d3653525",
+        "source_sha256": {
+          "lab/build.py": "1df2c8e5508aa59d974287677a42396634dd18c06af4b9b073aefb9ddfacc58d",
+          "ram-rescue-demo/src/rescue.py": "79d5f850f191f227bf52f9195b8b6845e82d9f4ec5bd978e96c5f479c0d2e97f",
+          "ram-rescue-demo/src/lvm.conf": "10708bf37ce4b01ec3e7e3e0d3d6394301f0bf3d4046fbd1da8521dad80d0cd3",
+          "lab/guest/agent.py": "3c0f06180aa71ecb508658f6af3fbc1eaca3bf1b217a405301f701153db9c805",
+          "lab/guest/git_workload.py": "c61d4c440a44cdb263f247e868292cea4270a78d59dd537706090909cd7c0538",
+          "lab/guest/init.sh": "1daefd2151e6782c3f57cb69555cf511de0985f94000fdad753b8bdb9a00f293",
+          "lab/guest/path_guard.py": "e95c382ce684398436e2d40fb46bb354882911458ad72b891ea3df27a11b94dd",
+          "lab/guest/root-init.sh": "078ec84bb1f502fc2b80b99b4eef2ee4a40432ccb9a476bf7757952547ca57d9",
+          "lab/guest/ubuntu.py": "61ade71d1f8f3da7433f086b0501b2c0dc75fb613b408a17609406de526150b2",
+          "lab/guest/ubuntu_workload.py": "2cb4f4a137fa6b6e8b99d87c29efe89c2dbcc7d7cc7ee814b736a193f667a890",
+          "lab/guest/wire.py": "66180734f19432381ff6fbd3b8853c536d083ee3c681e52864902a91efafe87e",
+          "lab/guest/workload.py": "15d8e159ab16b2e7786aeee10d4be861a6b1cf448bf3ddf16b6a8c64ab72ad2c"
+        },
+        "kernel_sha256": "0066409132868538bc0c9076f60131025775d5bbd8617df074d059f91b584918",
+        "initramfs_sha256": "2050c59dfb29426d30a61c94d1417ea393588e82109ab66f7b78429089511823",
+        "note": "guest payload copied from working tree; no host identities or passwords"
+      },
+      "ubuntu_source": {
+        "distribution": "Ubuntu Server 24.04 LTS",
+        "image_build": "20260911",
+        "url": "https://cloud-images.ubuntu.com/noble/20260911/noble-server-cloudimg-amd64-root.tar.xz",
+        "archive_sha256": "2ea580b9dd2d0e97ba9047798becc63a94427679876dec193221e345a6e0cdc9",
+        "seed_sha256": "8ae5beb36209e924b04612f7347babac8a7930947411aba353ae03aa8f956bbb",
+        "signed_checksums_sha256": "86919782a8b9e4dbd9478f00f8fda31da67af11facfc4408138a487d20bbff33",
+        "signature_verified": true
+      },
+      "git_source": {
+        "url": "https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git",
+        "ref": "v6.8",
+        "commit": "e8f897f4afef0031fe618a8e94127a0934896aba",
+        "history": "depth 1",
+        "tracked_files": 83475,
+        "object_disk_bytes": 260778158,
+        "image_sha256": "5e8efa55f6603982383be11a9e57842923fa845a121a4f79bae9cea5f014d6b4"
+      },
+      "ubuntu_before": {
+        "os_release": "PRETTY_NAME=\"Ubuntu 24.04.5 LTS\"\nNAME=\"Ubuntu\"\nVERSION_ID=\"24.04\"\nVERSION=\"24.04.5 LTS (Noble Numbat)\"\nVERSION_CODENAME=noble\nID=ubuntu\nID_LIKE=debian\nHOME_URL=\"https://www.ubuntu.com/\"\nSUPPORT_URL=\"https://help.ubuntu.com/\"\nBUG_REPORT_URL=\"https://bugs.launchpad.net/ubuntu/\"\nPRIVACY_POLICY_URL=\"https://www.ubuntu.com/legal/terms-and-policies/privacy-policy\"\nUBUNTU_CODENAME=noble\nLOGO=ubuntu-logo\n",
+        "pid1_comm": "systemd",
+        "pid1_start_ticks": "25",
+        "boot_id": "d4b1381c-c65a-48e0-8971-3add9c3cd6d7",
+        "services": {
+          "systemd-journald": {
+            "MainPID": "193",
+            "NRestarts": "0",
+            "ActiveState": "active",
+            "SubState": "running",
+            "start_ticks": "3217"
+          },
+          "dbus": {
+            "MainPID": "466",
+            "NRestarts": "0",
+            "ActiveState": "active",
+            "SubState": "running",
+            "start_ticks": "3428"
+          },
+          "lab-agent": {
+            "MainPID": "469",
+            "NRestarts": "0",
+            "ActiveState": "active",
+            "SubState": "running",
+            "start_ticks": "3433"
+          },
+          "lab-guard": {
+            "MainPID": "472",
+            "NRestarts": "0",
+            "ActiveState": "active",
+            "SubState": "running",
+            "start_ticks": "3435"
+          },
+          "lab-shell": {
+            "MainPID": "474",
+            "NRestarts": "0",
+            "ActiveState": "active",
+            "SubState": "running",
+            "start_ticks": "3437"
+          },
+          "lab-workload": {
+            "MainPID": "2086",
+            "NRestarts": "0",
+            "ActiveState": "active",
+            "SubState": "running",
+            "start_ticks": "6847"
+          }
+        },
+        "failed_units": "",
+        "multi_user": "active",
+        "installed_packages": 603
+      },
+      "ubuntu_after": {
+        "os_release": "PRETTY_NAME=\"Ubuntu 24.04.5 LTS\"\nNAME=\"Ubuntu\"\nVERSION_ID=\"24.04\"\nVERSION=\"24.04.5 LTS (Noble Numbat)\"\nVERSION_CODENAME=noble\nID=ubuntu\nID_LIKE=debian\nHOME_URL=\"https://www.ubuntu.com/\"\nSUPPORT_URL=\"https://help.ubuntu.com/\"\nBUG_REPORT_URL=\"https://bugs.launchpad.net/ubuntu/\"\nPRIVACY_POLICY_URL=\"https://www.ubuntu.com/legal/terms-and-policies/privacy-policy\"\nUBUNTU_CODENAME=noble\nLOGO=ubuntu-logo\n",
+        "pid1_comm": "systemd",
+        "pid1_start_ticks": "25",
+        "boot_id": "d4b1381c-c65a-48e0-8971-3add9c3cd6d7",
+        "services": {
+          "systemd-journald": {
+            "MainPID": "193",
+            "NRestarts": "0",
+            "ActiveState": "active",
+            "SubState": "running",
+            "start_ticks": "3217"
+          },
+          "dbus": {
+            "MainPID": "466",
+            "NRestarts": "0",
+            "ActiveState": "active",
+            "SubState": "running",
+            "start_ticks": "3428"
+          },
+          "lab-agent": {
+            "MainPID": "469",
+            "NRestarts": "0",
+            "ActiveState": "active",
+            "SubState": "running",
+            "start_ticks": "3433"
+          },
+          "lab-guard": {
+            "MainPID": "472",
+            "NRestarts": "0",
+            "ActiveState": "active",
+            "SubState": "running",
+            "start_ticks": "3435"
+          },
+          "lab-shell": {
+            "MainPID": "474",
+            "NRestarts": "0",
+            "ActiveState": "active",
+            "SubState": "running",
+            "start_ticks": "3437"
+          },
+          "lab-workload": {
+            "MainPID": "2086",
+            "NRestarts": "0",
+            "ActiveState": "active",
+            "SubState": "running",
+            "start_ticks": "6847"
+          }
+        },
+        "failed_units": "",
+        "multi_user": "active",
+        "installed_packages": 603
+      },
+      "git_validation": {
+        "head": "e8f897f4afef0031fe618a8e94127a0934896aba",
+        "expected_head": "e8f897f4afef0031fe618a8e94127a0934896aba",
+        "head_matches": true,
+        "fsck_passed": true,
+        "fsck_output": "",
+        "worktree_clean": true,
+        "tracked_files": 83475,
+        "source": {
+          "url": "https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git",
+          "ref": "v6.8",
+          "commit": "e8f897f4afef0031fe618a8e94127a0934896aba",
+          "history": "depth 1",
+          "tracked_files": 83475,
+          "object_disk_bytes": 260778158
+        }
+      },
+      "data_audit": {
+        "id": 397,
+        "ok": true,
+        "result": {
+          "acknowledged_records": 534,
+          "confirmed_bytes": 2189292,
+          "prefix_matches": true
+        },
+        "output": ""
+      },
+      "git_before": {
+        "pid": 2116,
+        "start_ticks": "7014",
+        "started": 70.146576465,
+        "exit_code": null,
+        "progress_tail": "8% (86688/88457)        \nremote: Counting objects:  99% (87573/88457)        \nremote: Counting objects: 100% (88457/88457)        \nremote: Counting objects: 100% (88457/88457), done.        \nremote: Compressing objects:   0% (1/80775)        \nremote: Compressing objects:   1% (808/80775)        \nremote: Compressing objects:   2% (1616/80775)        \nremote: Compressing objects:   3% (2424/80775)        \nremote: Compressing objects:   4% (3231/80775)        \nremote: Compressing objects:   5% (4039/80775)        \nremote: Compressing objects:   6% (4847/80775)        \nremote: Compressing objects:   7% (5655/80775)        \nremote: Compressing objects:   8% (6462/80775)        \nremote: Compressing objects:   9% (7270/80775)        \nremote: Compressing objects:  10% (8078/80775)        \nremote: Compressing objects:  11% (8886/80775)        \nremote: Compressing objects:  12% (9693/80775)        \nremote: Compressing objects:  13% (10501/80775)        \nremote: Compressing objects:  14% (11309/80775)        \nremote: Compressing objects:  15% (12117/80775)        \nremote: Compressing objects:  16% (12924/80775)        \nremote: Compressing objects:  17% (13732/80775)        \nremote: Compressing objects:  18% (14540/80775)        \nremote: Compressing objects:  19% (15348/80775)        \nremote: Compressing objects:  20% (16155/80775)        \nremote: Compressing objects:  21% (16963/80775)        \nremote: Compressing objects:  22% (17771/80775)        \nremote: Compressing objects:  23% (18579/80775)        \nremote: Compressing objects:  24% (19386/80775)        \nremote: Compressing objects:  25% (20194/80775)        \nremote: Compressing objects:  26% (21002/80775)        \nremote: Compressing objects:  27% (21810/80775)        \nremote: Compressing objects:  28% (22617/80775)        \nremote: Compressing objects:  29% (23425/80775)        \nremote: Compressing objects:  30% (24233/80775)        \nremote: Compressing objects:  31% (25041/80775)        \nremote: Compressing objects:  32% (25848/80775)        \nremote: Compressing objects:  33% (26656/80775)        \nremote: Compressing objects:  34% (27464/80775)        \nremote: Compressing objects:  35% (28272/80775)        \nremote: Compressing objects:  36% (29079/80775)        \nremote: Compressing objects:  37% (29887/80775)        \nremote: Compressing objects:  38% (30695/80775)        \nremote: Compressing objects:  39% (31503/80775)        \nremote: Compressing objects:  40% (32310/80775)        \nremote: Compressing objects:  41% (33118/80775)        \nremote: Compressing objects:  42% (33926/80775)        \nremote: Compressing objects:  43% (34734/80775)        \nremote: Compressing objects:  44% (35541/80775)        \nremote: Compressing objects:  45% (36349/80775)        \nremote: Compressing objects:  46% (37157/80775)        \nremote: Compressing objects:  47% (37965/80775)        \nremote: Compressing objects:  48% (38772/80775)        \nremote: Compressing objects:  49% (39580/80775)        \nremote: Compressing objects:  50% (40388/80775)        \nremote: Compressing objects:  51% (41196/80775)        \nremote: Compressing objects:  52% (42003/80775)        \nremote: Compressing objects:  53% (42811/80775)        \nremote: Compressing objects:  54% (43619/80775)        \nremote: Compressing objects:  55% (44427/80775)        \nremote: Compressing objects:  56% (45234/80775)        \nremote: Compressing objects:  57% (46042/80775)        \nremote: Compressing objects:  58% (46850/80775)        \nremote: Compressing objects:  59% (47658/80775)        \nremote: Compressing objects:  60% (48465/80775)        \nremote: Compressing objects:  61% (49273/80775)        \nremote: Compressing objects:  62% (50081/80775)        \nremote: Compressing objects:  63% (50889/80775)        \nremote: Compressing objects:  64% (51696/80775)        \nremote: Compressing objects:  65% (52504/80775)        \nremote: Compressing objects:  66% (53312/80775)        \nremote: Compressing objects:  67% (54120/80775)        \nremote: Compressing objects:  68% (54927/80775)        \nremote: Compressing objects:  69% (55735/80775)        \nremote: Compressing objects:  70% (56543/80775)        \nremote: Compressing objects:  71% (57351/80775)        \nremote: Compressing objects:  72% (58158/80775)        \nremote: Compressing objects:  73% (58966/80775)        \nremote: Compressing objects:  74% (59774/80775)        \nremote: Compressing objects:  75% (60582/80775)        \nremote: Compressing objects:  76% (61389/80775)        \nremote: Compressing objects:  77% (62197/80775)        \nremote: Compressing objects:  78% (63005/80775)        \nremote: Compressing objects:  79% (63813/80775)        \nremote: Compressing objects:  80% (64620/80775)        \nremote: Compressing objects:  81% (65428/80775)        \nremote: Compressing objects:  82% (66236/80775)        \nremote: Compressing objects:  83% (67044/80775)        \nremote: Compressing objects:  84% (67851/80775)        \nremote: Compressing objects:  85% (68659/80775)        \nremote: Compressing objects:  86% (69467/80775)        \nremote: Compressing objects:  87% (70275/80775)        \nremote: Compressing objects:  88% (71082/80775)        \nremote: Compressing objects:  89% (71890/80775)        \nremote: Compressing objects:  90% (72698/80775)        \nremote: Compressing objects:  91% (73506/80775)        \nremote: Compressing objects:  92% (74313/80775)        \nremote: Compressing objects:  93% (75121/80775)        \nremote: Compressing objects:  94% (75929/80775)        \nremote: Compressing objects:  95% (76737/80775)        \nremote: Compressing objects:  96% (77544/80775)        \nremote: Compressing objects:  97% (78352/80775)        \nremote: Compressing objects:  98% (79160/80775)        \nremote: Compressing objects:  99% (79968/80775)        \nremote: Compressing objects: 100% (80775/80775)        \nremote: Compressing objects: 100% (80775/80775), done.        \nReceiving objects:   0% (1/88457)\nReceiving objects:   1% (885/88457)\nReceiving objects:   2% (1770/88457)\n",
+        "same_process_alive": true
+      },
+      "git_after": {
+        "pid": 2116,
+        "start_ticks": "7014",
+        "started": 70.146576465,
+        "exit_code": 0,
+        "finished": 117.170507079,
+        "progress_tail": "lving deltas:  71% (4801/6761)\nResolving deltas:  72% (4868/6761)\nResolving deltas:  73% (4936/6761)\nResolving deltas:  74% (5004/6761)\nResolving deltas:  75% (5071/6761)\nResolving deltas:  76% (5139/6761)\nResolving deltas:  77% (5206/6761)\nResolving deltas:  78% (5274/6761)\nResolving deltas:  79% (5342/6761)\nResolving deltas:  80% (5409/6761)\nResolving deltas:  81% (5477/6761)\nResolving deltas:  82% (5545/6761)\nResolving deltas:  83% (5612/6761)\nResolving deltas:  84% (5680/6761)\nResolving deltas:  85% (5747/6761)\nResolving deltas:  86% (5815/6761)\nResolving deltas:  87% (5883/6761)\nResolving deltas:  88% (5950/6761)\nResolving deltas:  89% (6018/6761)\nResolving deltas:  90% (6085/6761)\nResolving deltas:  91% (6153/6761)\nResolving deltas:  92% (6221/6761)\nResolving deltas:  93% (6288/6761)\nResolving deltas:  93% (6315/6761)\nResolving deltas:  94% (6356/6761)\nResolving deltas:  95% (6423/6761)\nResolving deltas:  96% (6491/6761)\nResolving deltas:  97% (6559/6761)\nResolving deltas:  98% (6626/6761)\nResolving deltas:  99% (6694/6761)\nResolving deltas: 100% (6761/6761)\nResolving deltas: 100% (6761/6761), done.\nChecking connectivity: 88457, done.\nNote: switching to 'e8f897f4afef0031fe618a8e94127a0934896aba'.\n\nYou are in 'detached HEAD' state. You can look around, make experimental\nchanges and commit them, and you can discard any commits you make in this\nstate without impacting any branches by switching back to a branch.\n\nIf you want to create a new branch to retain commits you create, you may\ndo so (now or later) by using -c with the switch command. Example:\n\n  git switch -c <new-branch-name>\n\nOr undo this operation with:\n\n  git switch -\n\nTurn off this advice by setting config variable advice.detachedHead to false\n\nUpdating files:   0% (1/83475)\nUpdating files:   1% (835/83475)\nUpdating files:   2% (1670/83475)\nUpdating files:   3% (2505/83475)\nUpdating files:   4% (3339/83475)\nUpdating files:   5% (4174/83475)\nUpdating files:   6% (5009/83475)\nUpdating files:   7% (5844/83475)\nUpdating files:   8% (6678/83475)\nUpdating files:   9% (7513/83475)\nUpdating files:  10% (8348/83475)\nUpdating files:  11% (9183/83475)\nUpdating files:  12% (10017/83475)\nUpdating files:  13% (10852/83475)\nUpdating files:  13% (11441/83475)\nUpdating files:  14% (11687/83475)\nUpdating files:  15% (12522/83475)\nUpdating files:  16% (13356/83475)\nUpdating files:  17% (14191/83475)\nUpdating files:  18% (15026/83475)\nUpdating files:  19% (15861/83475)\nUpdating files:  20% (16695/83475)\nUpdating files:  21% (17530/83475)\nUpdating files:  22% (18365/83475)\nUpdating files:  23% (19200/83475)\nUpdating files:  23% (19505/83475)\nUpdating files:  24% (20034/83475)\nUpdating files:  25% (20869/83475)\nUpdating files:  26% (21704/83475)\nUpdating files:  27% (22539/83475)\nUpdating files:  28% (23373/83475)\nUpdating files:  29% (24208/83475)\nUpdating files:  30% (25043/83475)\nUpdating files:  30% (25425/83475)\nUpdating files:  31% (25878/83475)\nUpdating files:  32% (26712/83475)\nUpdating files:  33% (27547/83475)\nUpdating files:  34% (28382/83475)\nUpdating files:  34% (29037/83475)\nUpdating files:  35% (29217/83475)\nUpdating files:  36% (30051/83475)\nUpdating files:  37% (30886/83475)\nUpdating files:  38% (31721/83475)\nUpdating files:  39% (32556/83475)\nUpdating files:  40% (33390/83475)\nUpdating files:  40% (33445/83475)\nUpdating files:  40% (33505/83475)\nUpdating files:  40% (33555/83475)\nUpdating files:  40% (33673/83475)\nUpdating files:  41% (34225/83475)\nUpdating files:  41% (34982/83475)\nUpdating files:  42% (35060/83475)\nUpdating files:  43% (35895/83475)\nUpdating files:  44% (36729/83475)\nUpdating files:  45% (37564/83475)\nUpdating files:  46% (38399/83475)\nUpdating files:  47% (39234/83475)\nUpdating files:  48% (40068/83475)\nUpdating files:  49% (40903/83475)\nUpdating files:  49% (40919/83475)\nUpdating files:  50% (41738/83475)\nUpdating files:  51% (42573/83475)\nUpdating files:  52% (43407/83475)\nUpdating files:  53% (44242/83475)\nUpdating files:  53% (44914/83475)\nUpdating files:  54% (45077/83475)\nUpdating files:  55% (45912/83475)\nUpdating files:  56% (46746/83475)\nUpdating files:  57% (47581/83475)\nUpdating files:  58% (48416/83475)\nUpdating files:  58% (48831/83475)\nUpdating files:  59% (49251/83475)\nUpdating files:  60% (50085/83475)\nUpdating files:  61% (50920/83475)\nUpdating files:  62% (51755/83475)\nUpdating files:  62% (51812/83475)\nUpdating files:  63% (52590/83475)\nUpdating files:  64% (53424/83475)\nUpdating files:  65% (54259/83475)\nUpdating files:  66% (55094/83475)\nUpdating files:  66% (55520/83475)\nUpdating files:  67% (55929/83475)\nUpdating files:  68% (56763/83475)\nUpdating files:  69% (57598/83475)\nUpdating files:  70% (58433/83475)\nUpdating files:  70% (58740/83475)\nUpdating files:  71% (59268/83475)\nUpdating files:  72% (60102/83475)\nUpdating files:  73% (60937/83475)\nUpdating files:  73% (61600/83475)\nUpdating files:  74% (61772/83475)\nUpdating files:  75% (62607/83475)\nUpdating files:  76% (63441/83475)\nUpdating files:  77% (64276/83475)\nUpdating files:  78% (65111/83475)\nUpdating files:  78% (65178/83475)\nUpdating files:  79% (65946/83475)\nUpdating files:  80% (66780/83475)\nUpdating files:  81% (67615/83475)\nUpdating files:  82% (68450/83475)\nUpdating files:  83% (69285/83475)\nUpdating files:  83% (69895/83475)\nUpdating files:  84% (70119/83475)\nUpdating files:  85% (70954/83475)\nUpdating files:  86% (71789/83475)\nUpdating files:  87% (72624/83475)\nUpdating files:  88% (73458/83475)\nUpdating files:  88% (74088/83475)\nUpdating files:  89% (74293/83475)\nUpdating files:  90% (75128/83475)\nUpdating files:  91% (75963/83475)\nUpdating files:  92% (76797/83475)\nUpdating files:  93% (77632/83475)\nUpdating files:  94% (78467/83475)\nUpdating files:  94% (78703/83475)\nUpdating files:  95% (79302/83475)\nUpdating files:  96% (80136/83475)\nUpdating files:  97% (80971/83475)\nUpdating files:  98% (81806/83475)\nUpdating files:  99% (82641/83475)\nUpdating files: 100% (83475/83475)\nUpdating files: 100% (83475/83475), done.\n"
+      },
+      "run": "20260924-011334-auto-17774",
+      "report_sha256": "91ee5961526f32dc2afaea6daada33d17d5c7d88acb2cfb2fed5c3cbbaaae8f7",
+      "git_elapsed_seconds": 47.02393061400001,
+      "cycles": [
+        {
+          "index": 1,
+          "request_after_delete": 0.2001583850001225,
+          "reattach_after_delete": 0.3166346930001964,
+          "outcome_after_delete": 1.7591803860000255,
+          "shell_completed_before_reattach": true,
+          "outcome": {
+            "time": 73.255042659,
+            "state": "ready",
+            "recoveries": 1,
+            "node": "/dev/sdb1"
+          },
+          "git_at_fault": {
+            "pid": 2116,
+            "start_ticks": "7014",
+            "started": 70.146576465,
+            "exit_code": null,
+            "progress_tail": "     \nremote: Compressing objects:   0% (1/80775)        \nremote: Compressing objects:   1% (808/80775)        \nremote: Compressing objects:   2% (1616/80775)        \nremote: Compressing objects:   3% (2424/80775)        \nremote: Compressing objects:   4% (3231/80775)        \nremote: Compressing objects:   5% (4039/80775)        \nremote: Compressing objects:   6% (4847/80775)        \nremote: Compressing objects:   7% (5655/80775)        \nremote: Compressing objects:   8% (6462/80775)        \nremote: Compressing objects:   9% (7270/80775)        \nremote: Compressing objects:  10% (8078/80775)        \nremote: Compressing objects:  11% (8886/80775)        \nremote: Compressing objects:  12% (9693/80775)        \nremote: Compressing objects:  13% (10501/80775)        \nremote: Compressing objects:  14% (11309/80775)        \nremote: Compressing objects:  15% (12117/80775)        \nremote: Compressing objects:  16% (12924/80775)        \nremote: Compressing objects:  17% (13732/80775)        \nremote: Compressing objects:  18% (14540/80775)        \nremote: Compressing objects:  19% (15348/80775)        \nremote: Compressing objects:  20% (16155/80775)        \nremote: Compressing objects:  21% (16963/80775)        \nremote: Compressing objects:  22% (17771/80775)        \nremote: Compressing objects:  23% (18579/80775)        \nremote: Compressing objects:  24% (19386/80775)        \nremote: Compressing objects:  25% (20194/80775)        \nremote: Compressing objects:  26% (21002/80775)        \nremote: Compressing objects:  27% (21810/80775)        \nremote: Compressing objects:  28% (22617/80775)        \nremote: Compressing objects:  29% (23425/80775)        \nremote: Compressing objects:  30% (24233/80775)        \nremote: Compressing objects:  31% (25041/80775)        \nremote: Compressing objects:  32% (25848/80775)        \nremote: Compressing objects:  33% (26656/80775)        \nremote: Compressing objects:  34% (27464/80775)        \nremote: Compressing objects:  35% (28272/80775)        \nremote: Compressing objects:  36% (29079/80775)        \nremote: Compressing objects:  37% (29887/80775)        \nremote: Compressing objects:  38% (30695/80775)        \nremote: Compressing objects:  39% (31503/80775)        \nremote: Compressing objects:  40% (32310/80775)        \nremote: Compressing objects:  41% (33118/80775)        \nremote: Compressing objects:  42% (33926/80775)        \nremote: Compressing objects:  43% (34734/80775)        \nremote: Compressing objects:  44% (35541/80775)        \nremote: Compressing objects:  45% (36349/80775)        \nremote: Compressing objects:  46% (37157/80775)        \nremote: Compressing objects:  47% (37965/80775)        \nremote: Compressing objects:  48% (38772/80775)        \nremote: Compressing objects:  49% (39580/80775)        \nremote: Compressing objects:  50% (40388/80775)        \nremote: Compressing objects:  51% (41196/80775)        \nremote: Compressing objects:  52% (42003/80775)        \nremote: Compressing objects:  53% (42811/80775)        \nremote: Compressing objects:  54% (43619/80775)        \nremote: Compressing objects:  55% (44427/80775)        \nremote: Compressing objects:  56% (45234/80775)        \nremote: Compressing objects:  57% (46042/80775)        \nremote: Compressing objects:  58% (46850/80775)        \nremote: Compressing objects:  59% (47658/80775)        \nremote: Compressing objects:  60% (48465/80775)        \nremote: Compressing objects:  61% (49273/80775)        \nremote: Compressing objects:  62% (50081/80775)        \nremote: Compressing objects:  63% (50889/80775)        \nremote: Compressing objects:  64% (51696/80775)        \nremote: Compressing objects:  65% (52504/80775)        \nremote: Compressing objects:  66% (53312/80775)        \nremote: Compressing objects:  67% (54120/80775)        \nremote: Compressing objects:  68% (54927/80775)        \nremote: Compressing objects:  69% (55735/80775)        \nremote: Compressing objects:  70% (56543/80775)        \nremote: Compressing objects:  71% (57351/80775)        \nremote: Compressing objects:  72% (58158/80775)        \nremote: Compressing objects:  73% (58966/80775)        \nremote: Compressing objects:  74% (59774/80775)        \nremote: Compressing objects:  75% (60582/80775)        \nremote: Compressing objects:  76% (61389/80775)        \nremote: Compressing objects:  77% (62197/80775)        \nremote: Compressing objects:  78% (63005/80775)        \nremote: Compressing objects:  79% (63813/80775)        \nremote: Compressing objects:  80% (64620/80775)        \nremote: Compressing objects:  81% (65428/80775)        \nremote: Compressing objects:  82% (66236/80775)        \nremote: Compressing objects:  83% (67044/80775)        \nremote: Compressing objects:  84% (67851/80775)        \nremote: Compressing objects:  85% (68659/80775)        \nremote: Compressing objects:  86% (69467/80775)        \nremote: Compressing objects:  87% (70275/80775)        \nremote: Compressing objects:  88% (71082/80775)        \nremote: Compressing objects:  89% (71890/80775)        \nremote: Compressing objects:  90% (72698/80775)        \nremote: Compressing objects:  91% (73506/80775)        \nremote: Compressing objects:  92% (74313/80775)        \nremote: Compressing objects:  93% (75121/80775)        \nremote: Compressing objects:  94% (75929/80775)        \nremote: Compressing objects:  95% (76737/80775)        \nremote: Compressing objects:  96% (77544/80775)        \nremote: Compressing objects:  97% (78352/80775)        \nremote: Compressing objects:  98% (79160/80775)        \nremote: Compressing objects:  99% (79968/80775)        \nremote: Compressing objects: 100% (80775/80775)        \nremote: Compressing objects: 100% (80775/80775), done.        \nReceiving objects:   0% (1/88457)\nReceiving objects:   1% (885/88457)\nReceiving objects:   2% (1770/88457)\nReceiving objects:   3% (2654/88457)\nReceiving objects:   4% (3539/88457)\nReceiving objects:   5% (4423/88457)\nReceiving objects:   6% (5308/88457)\nReceiving objects:   7% (6192/88457)\n",
+            "same_process_alive": true
+          },
+          "git_while_absent": {
+            "pid": 2116,
+            "start_ticks": "7014",
+            "started": 70.146576465,
+            "exit_code": null,
+            "progress_tail": "e: Compressing objects:   3% (2424/80775)        \nremote: Compressing objects:   4% (3231/80775)        \nremote: Compressing objects:   5% (4039/80775)        \nremote: Compressing objects:   6% (4847/80775)        \nremote: Compressing objects:   7% (5655/80775)        \nremote: Compressing objects:   8% (6462/80775)        \nremote: Compressing objects:   9% (7270/80775)        \nremote: Compressing objects:  10% (8078/80775)        \nremote: Compressing objects:  11% (8886/80775)        \nremote: Compressing objects:  12% (9693/80775)        \nremote: Compressing objects:  13% (10501/80775)        \nremote: Compressing objects:  14% (11309/80775)        \nremote: Compressing objects:  15% (12117/80775)        \nremote: Compressing objects:  16% (12924/80775)        \nremote: Compressing objects:  17% (13732/80775)        \nremote: Compressing objects:  18% (14540/80775)        \nremote: Compressing objects:  19% (15348/80775)        \nremote: Compressing objects:  20% (16155/80775)        \nremote: Compressing objects:  21% (16963/80775)        \nremote: Compressing objects:  22% (17771/80775)        \nremote: Compressing objects:  23% (18579/80775)        \nremote: Compressing objects:  24% (19386/80775)        \nremote: Compressing objects:  25% (20194/80775)        \nremote: Compressing objects:  26% (21002/80775)        \nremote: Compressing objects:  27% (21810/80775)        \nremote: Compressing objects:  28% (22617/80775)        \nremote: Compressing objects:  29% (23425/80775)        \nremote: Compressing objects:  30% (24233/80775)        \nremote: Compressing objects:  31% (25041/80775)        \nremote: Compressing objects:  32% (25848/80775)        \nremote: Compressing objects:  33% (26656/80775)        \nremote: Compressing objects:  34% (27464/80775)        \nremote: Compressing objects:  35% (28272/80775)        \nremote: Compressing objects:  36% (29079/80775)        \nremote: Compressing objects:  37% (29887/80775)        \nremote: Compressing objects:  38% (30695/80775)        \nremote: Compressing objects:  39% (31503/80775)        \nremote: Compressing objects:  40% (32310/80775)        \nremote: Compressing objects:  41% (33118/80775)        \nremote: Compressing objects:  42% (33926/80775)        \nremote: Compressing objects:  43% (34734/80775)        \nremote: Compressing objects:  44% (35541/80775)        \nremote: Compressing objects:  45% (36349/80775)        \nremote: Compressing objects:  46% (37157/80775)        \nremote: Compressing objects:  47% (37965/80775)        \nremote: Compressing objects:  48% (38772/80775)        \nremote: Compressing objects:  49% (39580/80775)        \nremote: Compressing objects:  50% (40388/80775)        \nremote: Compressing objects:  51% (41196/80775)        \nremote: Compressing objects:  52% (42003/80775)        \nremote: Compressing objects:  53% (42811/80775)        \nremote: Compressing objects:  54% (43619/80775)        \nremote: Compressing objects:  55% (44427/80775)        \nremote: Compressing objects:  56% (45234/80775)        \nremote: Compressing objects:  57% (46042/80775)        \nremote: Compressing objects:  58% (46850/80775)        \nremote: Compressing objects:  59% (47658/80775)        \nremote: Compressing objects:  60% (48465/80775)        \nremote: Compressing objects:  61% (49273/80775)        \nremote: Compressing objects:  62% (50081/80775)        \nremote: Compressing objects:  63% (50889/80775)        \nremote: Compressing objects:  64% (51696/80775)        \nremote: Compressing objects:  65% (52504/80775)        \nremote: Compressing objects:  66% (53312/80775)        \nremote: Compressing objects:  67% (54120/80775)        \nremote: Compressing objects:  68% (54927/80775)        \nremote: Compressing objects:  69% (55735/80775)        \nremote: Compressing objects:  70% (56543/80775)        \nremote: Compressing objects:  71% (57351/80775)        \nremote: Compressing objects:  72% (58158/80775)        \nremote: Compressing objects:  73% (58966/80775)        \nremote: Compressing objects:  74% (59774/80775)        \nremote: Compressing objects:  75% (60582/80775)        \nremote: Compressing objects:  76% (61389/80775)        \nremote: Compressing objects:  77% (62197/80775)        \nremote: Compressing objects:  78% (63005/80775)        \nremote: Compressing objects:  79% (63813/80775)        \nremote: Compressing objects:  80% (64620/80775)        \nremote: Compressing objects:  81% (65428/80775)        \nremote: Compressing objects:  82% (66236/80775)        \nremote: Compressing objects:  83% (67044/80775)        \nremote: Compressing objects:  84% (67851/80775)        \nremote: Compressing objects:  85% (68659/80775)        \nremote: Compressing objects:  86% (69467/80775)        \nremote: Compressing objects:  87% (70275/80775)        \nremote: Compressing objects:  88% (71082/80775)        \nremote: Compressing objects:  89% (71890/80775)        \nremote: Compressing objects:  90% (72698/80775)        \nremote: Compressing objects:  91% (73506/80775)        \nremote: Compressing objects:  92% (74313/80775)        \nremote: Compressing objects:  93% (75121/80775)        \nremote: Compressing objects:  94% (75929/80775)        \nremote: Compressing objects:  95% (76737/80775)        \nremote: Compressing objects:  96% (77544/80775)        \nremote: Compressing objects:  97% (78352/80775)        \nremote: Compressing objects:  98% (79160/80775)        \nremote: Compressing objects:  99% (79968/80775)        \nremote: Compressing objects: 100% (80775/80775)        \nremote: Compressing objects: 100% (80775/80775), done.        \nReceiving objects:   0% (1/88457)\nReceiving objects:   1% (885/88457)\nReceiving objects:   2% (1770/88457)\nReceiving objects:   3% (2654/88457)\nReceiving objects:   4% (3539/88457)\nReceiving objects:   5% (4423/88457)\nReceiving objects:   6% (5308/88457)\nReceiving objects:   7% (6192/88457)\nReceiving objects:   8% (7077/88457)\nReceiving objects:   9% (7962/88457)\nReceiving objects:  10% (8846/88457)\nReceiving objects:  11% (9731/88457), 7.68 MiB | 15.33 MiB/s\n",
+            "same_process_alive": true
+          }
+        }
+      ]
+    }
+  ],
+  "pre_compression_debug_runs": [
+    {
+      "run": "20260924-004446-auto-14793",
+      "report_sha256": "f328c9366695000ee5f8c65e015cd11fff8b19f0acf5518947423facfba9dcb7",
+      "guest": "ubuntu",
+      "workload": "git-clone",
+      "mode": "automatic-multipath",
+      "transport": "uas",
+      "gap": 0.2,
+      "queue_seconds": 8,
+      "reconnect": "same",
+      "completed": true,
+      "passed": false,
+      "checks": {
+        "ram_heartbeat": false,
+        "ram_shell": true,
+        "stable_upper_mappings": true,
+        "same_process_alive": true,
+        "automatic_recovery": true,
+        "zero_application_errors": true,
+        "writes_continued": true,
+        "block_read": true,
+        "root_read": true,
+        "filesystem_writable": true,
+        "no_journal_abort": true,
+        "ubuntu_systemd": true,
+        "same_boot": true,
+        "services_survived": true,
+        "no_failed_units": true,
+        "acknowledged_data_present": true,
+        "git_clone_succeeded": true,
+        "same_git_process": true,
+        "git_active_during_fault": true,
+        "git_integrity": true
+      },
+      "successful_writes": 862,
+      "failed_writes": 0,
+      "max_write_latency": 0.42026755899999557,
+      "max_heartbeat_gap": 2.9714212849999058,
+      "runner_sha256": "4623ae310be5618ff02a04bcd6b5e5401820ec2baae032a8ccae71e5932c5402",
+      "qemu_runner_sha256": "9bc90545676a666f474558418447711f245da90cd051af954823a299ecd74f57",
+      "build": {
+        "kernel_release": "6.8.0-139-generic",
+        "source_commit": "acbd979f12e513474257890edb342531d3653525",
+        "source_sha256": {
+          "lab/build.py": "1df2c8e5508aa59d974287677a42396634dd18c06af4b9b073aefb9ddfacc58d",
+          "ram-rescue-demo/src/rescue.py": "79d5f850f191f227bf52f9195b8b6845e82d9f4ec5bd978e96c5f479c0d2e97f",
+          "ram-rescue-demo/src/lvm.conf": "10708bf37ce4b01ec3e7e3e0d3d6394301f0bf3d4046fbd1da8521dad80d0cd3",
+          "lab/guest/agent.py": "35badcb1e32d64d91e0f96a3c927300f59a4a0758c3c9f23b2156bb7d4927263",
+          "lab/guest/git_workload.py": "c61d4c440a44cdb263f247e868292cea4270a78d59dd537706090909cd7c0538",
+          "lab/guest/init.sh": "1daefd2151e6782c3f57cb69555cf511de0985f94000fdad753b8bdb9a00f293",
+          "lab/guest/path_guard.py": "e95c382ce684398436e2d40fb46bb354882911458ad72b891ea3df27a11b94dd",
+          "lab/guest/root-init.sh": "078ec84bb1f502fc2b80b99b4eef2ee4a40432ccb9a476bf7757952547ca57d9",
+          "lab/guest/ubuntu.py": "61ade71d1f8f3da7433f086b0501b2c0dc75fb613b408a17609406de526150b2",
+          "lab/guest/ubuntu_workload.py": "2cb4f4a137fa6b6e8b99d87c29efe89c2dbcc7d7cc7ee814b736a193f667a890",
+          "lab/guest/workload.py": "15d8e159ab16b2e7786aeee10d4be861a6b1cf448bf3ddf16b6a8c64ab72ad2c"
+        },
+        "kernel_sha256": "0066409132868538bc0c9076f60131025775d5bbd8617df074d059f91b584918",
+        "initramfs_sha256": "a222b1920982ae012249ff00e22c20d79dbc8a0b3aceac414bc00df809fe1b07",
+        "note": "guest payload copied from working tree; no host identities or passwords"
+      },
+      "ubuntu_source": {
+        "distribution": "Ubuntu Server 24.04 LTS",
+        "image_build": "20260911",
+        "url": "https://cloud-images.ubuntu.com/noble/20260911/noble-server-cloudimg-amd64-root.tar.xz",
+        "archive_sha256": "2ea580b9dd2d0e97ba9047798becc63a94427679876dec193221e345a6e0cdc9",
+        "seed_sha256": "8ae5beb36209e924b04612f7347babac8a7930947411aba353ae03aa8f956bbb",
+        "signed_checksums_sha256": "86919782a8b9e4dbd9478f00f8fda31da67af11facfc4408138a487d20bbff33",
+        "signature_verified": true
+      },
+      "git_source": {
+        "url": "https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git",
+        "ref": "v6.8",
+        "commit": "e8f897f4afef0031fe618a8e94127a0934896aba",
+        "history": "depth 1",
+        "tracked_files": 83475,
+        "object_disk_bytes": 260778158,
+        "image_sha256": "5e8efa55f6603982383be11a9e57842923fa845a121a4f79bae9cea5f014d6b4"
+      },
+      "ubuntu_before": {
+        "os_release": "PRETTY_NAME=\"Ubuntu 24.04.5 LTS\"\nNAME=\"Ubuntu\"\nVERSION_ID=\"24.04\"\nVERSION=\"24.04.5 LTS (Noble Numbat)\"\nVERSION_CODENAME=noble\nID=ubuntu\nID_LIKE=debian\nHOME_URL=\"https://www.ubuntu.com/\"\nSUPPORT_URL=\"https://help.ubuntu.com/\"\nBUG_REPORT_URL=\"https://bugs.launchpad.net/ubuntu/\"\nPRIVACY_POLICY_URL=\"https://www.ubuntu.com/legal/terms-and-policies/privacy-policy\"\nUBUNTU_CODENAME=noble\nLOGO=ubuntu-logo\n",
+        "pid1_comm": "systemd",
+        "pid1_start_ticks": "64",
+        "boot_id": "f5f84e79-b171-4b50-9b28-e13e940025d5",
+        "services": {
+          "systemd-journald": {
+            "MainPID": "196",
+            "NRestarts": "0",
+            "ActiveState": "active",
+            "SubState": "running",
+            "start_ticks": "7112"
+          },
+          "dbus": {
+            "MainPID": "470",
+            "NRestarts": "0",
+            "ActiveState": "active",
+            "SubState": "running",
+            "start_ticks": "7791"
+          },
+          "lab-agent": {
+            "MainPID": "473",
+            "NRestarts": "0",
+            "ActiveState": "active",
+            "SubState": "running",
+            "start_ticks": "7800"
+          },
+          "lab-guard": {
+            "MainPID": "476",
+            "NRestarts": "0",
+            "ActiveState": "active",
+            "SubState": "running",
+            "start_ticks": "7807"
+          },
+          "lab-shell": {
+            "MainPID": "478",
+            "NRestarts": "0",
+            "ActiveState": "active",
+            "SubState": "running",
+            "start_ticks": "7813"
+          },
+          "lab-workload": {
+            "MainPID": "1624",
+            "NRestarts": "0",
+            "ActiveState": "active",
+            "SubState": "running",
+            "start_ticks": "11534"
+          }
+        },
+        "failed_units": "",
+        "multi_user": "active",
+        "installed_packages": 603
+      },
+      "ubuntu_after": {
+        "os_release": "PRETTY_NAME=\"Ubuntu 24.04.5 LTS\"\nNAME=\"Ubuntu\"\nVERSION_ID=\"24.04\"\nVERSION=\"24.04.5 LTS (Noble Numbat)\"\nVERSION_CODENAME=noble\nID=ubuntu\nID_LIKE=debian\nHOME_URL=\"https://www.ubuntu.com/\"\nSUPPORT_URL=\"https://help.ubuntu.com/\"\nBUG_REPORT_URL=\"https://bugs.launchpad.net/ubuntu/\"\nPRIVACY_POLICY_URL=\"https://www.ubuntu.com/legal/terms-and-policies/privacy-policy\"\nUBUNTU_CODENAME=noble\nLOGO=ubuntu-logo\n",
+        "pid1_comm": "systemd",
+        "pid1_start_ticks": "64",
+        "boot_id": "f5f84e79-b171-4b50-9b28-e13e940025d5",
+        "services": {
+          "systemd-journald": {
+            "MainPID": "196",
+            "NRestarts": "0",
+            "ActiveState": "active",
+            "SubState": "running",
+            "start_ticks": "7112"
+          },
+          "dbus": {
+            "MainPID": "470",
+            "NRestarts": "0",
+            "ActiveState": "active",
+            "SubState": "running",
+            "start_ticks": "7791"
+          },
+          "lab-agent": {
+            "MainPID": "473",
+            "NRestarts": "0",
+            "ActiveState": "active",
+            "SubState": "running",
+            "start_ticks": "7800"
+          },
+          "lab-guard": {
+            "MainPID": "476",
+            "NRestarts": "0",
+            "ActiveState": "active",
+            "SubState": "running",
+            "start_ticks": "7807"
+          },
+          "lab-shell": {
+            "MainPID": "478",
+            "NRestarts": "0",
+            "ActiveState": "active",
+            "SubState": "running",
+            "start_ticks": "7813"
+          },
+          "lab-workload": {
+            "MainPID": "1624",
+            "NRestarts": "0",
+            "ActiveState": "active",
+            "SubState": "running",
+            "start_ticks": "11534"
+          }
+        },
+        "failed_units": "",
+        "multi_user": "active",
+        "installed_packages": 603
+      },
+      "git_validation": {
+        "head": "e8f897f4afef0031fe618a8e94127a0934896aba",
+        "expected_head": "e8f897f4afef0031fe618a8e94127a0934896aba",
+        "head_matches": true,
+        "fsck_passed": true,
+        "fsck_output": "",
+        "worktree_clean": true,
+        "tracked_files": 83475,
+        "source": {
+          "url": "https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git",
+          "ref": "v6.8",
+          "commit": "e8f897f4afef0031fe618a8e94127a0934896aba",
+          "history": "depth 1",
+          "tracked_files": 83475,
+          "object_disk_bytes": 260778158
+        }
+      },
+      "data_audit": {
+        "id": 459,
+        "ok": true,
+        "result": {
+          "acknowledged_records": 902,
+          "confirmed_bytes": 3698092,
+          "prefix_matches": true
+        },
+        "output": ""
+      },
+      "cycles": [],
+      "git_before": {
+        "pid": 1661,
+        "start_ticks": "11787",
+        "started": 117.874945321,
+        "exit_code": null,
+        "progress_tail": "     \nremote: Compressing objects:   0% (1/80775)        \nremote: Compressing objects:   1% (808/80775)        \nremote: Compressing objects:   2% (1616/80775)        \nremote: Compressing objects:   3% (2424/80775)        \nremote: Compressing objects:   4% (3231/80775)        \nremote: Compressing objects:   5% (4039/80775)        \nremote: Compressing objects:   6% (4847/80775)        \nremote: Compressing objects:   7% (5655/80775)        \nremote: Compressing objects:   8% (6462/80775)        \nremote: Compressing objects:   9% (7270/80775)        \nremote: Compressing objects:  10% (8078/80775)        \nremote: Compressing objects:  11% (8886/80775)        \nremote: Compressing objects:  12% (9693/80775)        \nremote: Compressing objects:  13% (10501/80775)        \nremote: Compressing objects:  14% (11309/80775)        \nremote: Compressing objects:  15% (12117/80775)        \nremote: Compressing objects:  16% (12924/80775)        \nremote: Compressing objects:  17% (13732/80775)        \nremote: Compressing objects:  18% (14540/80775)        \nremote: Compressing objects:  19% (15348/80775)        \nremote: Compressing objects:  20% (16155/80775)        \nremote: Compressing objects:  21% (16963/80775)        \nremote: Compressing objects:  22% (17771/80775)        \nremote: Compressing objects:  23% (18579/80775)        \nremote: Compressing objects:  24% (19386/80775)        \nremote: Compressing objects:  25% (20194/80775)        \nremote: Compressing objects:  26% (21002/80775)        \nremote: Compressing objects:  27% (21810/80775)        \nremote: Compressing objects:  28% (22617/80775)        \nremote: Compressing objects:  29% (23425/80775)        \nremote: Compressing objects:  30% (24233/80775)        \nremote: Compressing objects:  31% (25041/80775)        \nremote: Compressing objects:  32% (25848/80775)        \nremote: Compressing objects:  33% (26656/80775)        \nremote: Compressing objects:  34% (27464/80775)        \nremote: Compressing objects:  35% (28272/80775)        \nremote: Compressing objects:  36% (29079/80775)        \nremote: Compressing objects:  37% (29887/80775)        \nremote: Compressing objects:  38% (30695/80775)        \nremote: Compressing objects:  39% (31503/80775)        \nremote: Compressing objects:  40% (32310/80775)        \nremote: Compressing objects:  41% (33118/80775)        \nremote: Compressing objects:  42% (33926/80775)        \nremote: Compressing objects:  43% (34734/80775)        \nremote: Compressing objects:  44% (35541/80775)        \nremote: Compressing objects:  45% (36349/80775)        \nremote: Compressing objects:  46% (37157/80775)        \nremote: Compressing objects:  47% (37965/80775)        \nremote: Compressing objects:  48% (38772/80775)        \nremote: Compressing objects:  49% (39580/80775)        \nremote: Compressing objects:  50% (40388/80775)        \nremote: Compressing objects:  51% (41196/80775)        \nremote: Compressing objects:  52% (42003/80775)        \nremote: Compressing objects:  53% (42811/80775)        \nremote: Compressing objects:  54% (43619/80775)        \nremote: Compressing objects:  55% (44427/80775)        \nremote: Compressing objects:  56% (45234/80775)        \nremote: Compressing objects:  57% (46042/80775)        \nremote: Compressing objects:  58% (46850/80775)        \nremote: Compressing objects:  59% (47658/80775)        \nremote: Compressing objects:  60% (48465/80775)        \nremote: Compressing objects:  61% (49273/80775)        \nremote: Compressing objects:  62% (50081/80775)        \nremote: Compressing objects:  63% (50889/80775)        \nremote: Compressing objects:  64% (51696/80775)        \nremote: Compressing objects:  65% (52504/80775)        \nremote: Compressing objects:  66% (53312/80775)        \nremote: Compressing objects:  67% (54120/80775)        \nremote: Compressing objects:  68% (54927/80775)        \nremote: Compressing objects:  69% (55735/80775)        \nremote: Compressing objects:  70% (56543/80775)        \nremote: Compressing objects:  71% (57351/80775)        \nremote: Compressing objects:  72% (58158/80775)        \nremote: Compressing objects:  73% (58966/80775)        \nremote: Compressing objects:  74% (59774/80775)        \nremote: Compressing objects:  75% (60582/80775)        \nremote: Compressing objects:  76% (61389/80775)        \nremote: Compressing objects:  77% (62197/80775)        \nremote: Compressing objects:  78% (63005/80775)        \nremote: Compressing objects:  79% (63813/80775)        \nremote: Compressing objects:  80% (64620/80775)        \nremote: Compressing objects:  81% (65428/80775)        \nremote: Compressing objects:  82% (66236/80775)        \nremote: Compressing objects:  83% (67044/80775)        \nremote: Compressing objects:  84% (67851/80775)        \nremote: Compressing objects:  85% (68659/80775)        \nremote: Compressing objects:  86% (69467/80775)        \nremote: Compressing objects:  87% (70275/80775)        \nremote: Compressing objects:  88% (71082/80775)        \nremote: Compressing objects:  89% (71890/80775)        \nremote: Compressing objects:  90% (72698/80775)        \nremote: Compressing objects:  91% (73506/80775)        \nremote: Compressing objects:  92% (74313/80775)        \nremote: Compressing objects:  93% (75121/80775)        \nremote: Compressing objects:  94% (75929/80775)        \nremote: Compressing objects:  95% (76737/80775)        \nremote: Compressing objects:  96% (77544/80775)        \nremote: Compressing objects:  97% (78352/80775)        \nremote: Compressing objects:  98% (79160/80775)        \nremote: Compressing objects:  99% (79968/80775)        \nremote: Compressing objects: 100% (80775/80775)        \nremote: Compressing objects: 100% (80775/80775), done.        \nReceiving objects:   0% (1/88457)\nReceiving objects:   1% (885/88457)\nReceiving objects:   2% (1770/88457)\nReceiving objects:   3% (2654/88457)\nReceiving objects:   4% (3539/88457)\nReceiving objects:   5% (4423/88457)\nReceiving objects:   6% (5308/88457)\nReceiving objects:   7% (6192/88457)\n",
+        "same_process_alive": true
+      },
+      "git_after": {
+        "pid": 1661,
+        "start_ticks": "11787",
+        "started": 117.874945321,
+        "exit_code": 0,
+        "finished": 217.575630124,
+        "progress_tail": "olving deltas:  98% (6626/6761)\nResolving deltas:  99% (6694/6761)\nResolving deltas: 100% (6761/6761)\nResolving deltas: 100% (6761/6761), done.\nChecking connectivity: 88457, done.\nNote: switching to 'e8f897f4afef0031fe618a8e94127a0934896aba'.\n\nYou are in 'detached HEAD' state. You can look around, make experimental\nchanges and commit them, and you can discard any commits you make in this\nstate without impacting any branches by switching back to a branch.\n\nIf you want to create a new branch to retain commits you create, you may\ndo so (now or later) by using -c with the switch command. Example:\n\n  git switch -c <new-branch-name>\n\nOr undo this operation with:\n\n  git switch -\n\nTurn off this advice by setting config variable advice.detachedHead to false\n\nUpdating files:   0% (1/83475)\nUpdating files:   1% (835/83475)\nUpdating files:   2% (1670/83475)\nUpdating files:   3% (2505/83475)\nUpdating files:   4% (3339/83475)\nUpdating files:   5% (4174/83475)\nUpdating files:   6% (5009/83475)\nUpdating files:   7% (5844/83475)\nUpdating files:   8% (6678/83475)\nUpdating files:   9% (7513/83475)\nUpdating files:   9% (7627/83475)\nUpdating files:  10% (8348/83475)\nUpdating files:  11% (9183/83475)\nUpdating files:  12% (10017/83475)\nUpdating files:  13% (10852/83475)\nUpdating files:  14% (11687/83475)\nUpdating files:  14% (12254/83475)\nUpdating files:  15% (12522/83475)\nUpdating files:  16% (13356/83475)\nUpdating files:  17% (14191/83475)\nUpdating files:  18% (15026/83475)\nUpdating files:  18% (15303/83475)\nUpdating files:  19% (15861/83475)\nUpdating files:  20% (16695/83475)\nUpdating files:  21% (17530/83475)\nUpdating files:  21% (17663/83475)\nUpdating files:  22% (18365/83475)\nUpdating files:  23% (19200/83475)\nUpdating files:  24% (20034/83475)\nUpdating files:  24% (20142/83475)\nUpdating files:  25% (20869/83475)\nUpdating files:  26% (21704/83475)\nUpdating files:  27% (22539/83475)\nUpdating files:  28% (23373/83475)\nUpdating files:  29% (24208/83475)\nUpdating files:  29% (25009/83475)\nUpdating files:  30% (25043/83475)\nUpdating files:  31% (25878/83475)\nUpdating files:  32% (26712/83475)\nUpdating files:  33% (27547/83475)\nUpdating files:  33% (27820/83475)\nUpdating files:  34% (28382/83475)\nUpdating files:  34% (29019/83475)\nUpdating files:  35% (29217/83475)\nUpdating files:  36% (30051/83475)\nUpdating files:  37% (30886/83475)\nUpdating files:  37% (31217/83475)\nUpdating files:  38% (31721/83475)\nUpdating files:  38% (32243/83475)\nUpdating files:  39% (32556/83475)\nUpdating files:  40% (33390/83475)\nUpdating files:  40% (33445/83475)\nUpdating files:  40% (33480/83475)\nUpdating files:  40% (33496/83475)\nUpdating files:  40% (33506/83475)\nUpdating files:  40% (33512/83475)\nUpdating files:  40% (33540/83475)\nUpdating files:  40% (33562/83475)\nUpdating files:  40% (33638/83475)\nUpdating files:  40% (33678/83475)\nUpdating files:  40% (34110/83475)\nUpdating files:  41% (34225/83475)\nUpdating files:  42% (35060/83475)\nUpdating files:  42% (35366/83475)\nUpdating files:  43% (35895/83475)\nUpdating files:  44% (36729/83475)\nUpdating files:  44% (37299/83475)\nUpdating files:  45% (37564/83475)\nUpdating files:  46% (38399/83475)\nUpdating files:  46% (39069/83475)\nUpdating files:  47% (39234/83475)\nUpdating files:  48% (40068/83475)\nUpdating files:  48% (40595/83475)\nUpdating files:  49% (40903/83475)\nUpdating files:  50% (41738/83475)\nUpdating files:  50% (42369/83475)\nUpdating files:  51% (42573/83475)\nUpdating files:  52% (43407/83475)\nUpdating files:  52% (43570/83475)\nUpdating files:  53% (44242/83475)\nUpdating files:  53% (44950/83475)\nUpdating files:  54% (45077/83475)\nUpdating files:  55% (45912/83475)\nUpdating files:  55% (45917/83475)\nUpdating files:  56% (46746/83475)\nUpdating files:  56% (46853/83475)\nUpdating files:  57% (47581/83475)\nUpdating files:  58% (48416/83475)\nUpdating files:  58% (48530/83475)\nUpdating files:  58% (49234/83475)\nUpdating files:  59% (49251/83475)\nUpdating files:  60% (50085/83475)\nUpdating files:  60% (50667/83475)\nUpdating files:  61% (50920/83475)\nUpdating files:  62% (51755/83475)\nUpdating files:  62% (52549/83475)\nUpdating files:  63% (52590/83475)\nUpdating files:  64% (53424/83475)\nUpdating files:  65% (54259/83475)\nUpdating files:  65% (54389/83475)\nUpdating files:  66% (55094/83475)\nUpdating files:  66% (55523/83475)\nUpdating files:  67% (55929/83475)\nUpdating files:  67% (56734/83475)\nUpdating files:  68% (56763/83475)\nUpdating files:  69% (57598/83475)\nUpdating files:  69% (57758/83475)\nUpdating files:  70% (58433/83475)\nUpdating files:  70% (59236/83475)\nUpdating files:  71% (59268/83475)\nUpdating files:  72% (60102/83475)\nUpdating files:  73% (60937/83475)\nUpdating files:  74% (61772/83475)\nUpdating files:  74% (62485/83475)\nUpdating files:  75% (62607/83475)\nUpdating files:  76% (63441/83475)\nUpdating files:  77% (64276/83475)\nUpdating files:  78% (65111/83475)\nUpdating files:  79% (65946/83475)\nUpdating files:  79% (66457/83475)\nUpdating files:  80% (66780/83475)\nUpdating files:  81% (67615/83475)\nUpdating files:  82% (68450/83475)\nUpdating files:  82% (68706/83475)\nUpdating files:  83% (69285/83475)\nUpdating files:  84% (70119/83475)\nUpdating files:  84% (70706/83475)\nUpdating files:  85% (70954/83475)\nUpdating files:  86% (71789/83475)\nUpdating files:  86% (72508/83475)\nUpdating files:  87% (72624/83475)\nUpdating files:  88% (73458/83475)\nUpdating files:  88% (74159/83475)\nUpdating files:  89% (74293/83475)\nUpdating files:  90% (75128/83475)\nUpdating files:  90% (75762/83475)\nUpdating files:  91% (75963/83475)\nUpdating files:  92% (76797/83475)\nUpdating files:  92% (77344/83475)\nUpdating files:  93% (77632/83475)\nUpdating files:  93% (78337/83475)\nUpdating files:  94% (78467/83475)\nUpdating files:  95% (79302/83475)\nUpdating files:  96% (80136/83475)\nUpdating files:  97% (80971/83475)\nUpdating files:  98% (81806/83475)\nUpdating files:  98% (82616/83475)\nUpdating files:  99% (82641/83475)\nUpdating files: 100% (83475/83475)\nUpdating files: 100% (83475/83475), done.\n"
+      },
+      "git_elapsed_seconds": 99.70068480300002
+    },
+    {
+      "run": "20260924-004447-auto-14795",
+      "report_sha256": "0a8d757da2693da4bc248ecc7d96f75292f80c9e4ddfcd5064edc5a701b984c2",
+      "guest": "ubuntu",
+      "workload": "git-clone",
+      "mode": "automatic-multipath",
+      "transport": "uas",
+      "gap": 0.2,
+      "queue_seconds": 8,
+      "reconnect": "same",
+      "completed": true,
+      "passed": false,
+      "checks": {
+        "ram_heartbeat": false,
+        "ram_shell": true,
+        "stable_upper_mappings": true,
+        "same_process_alive": true,
+        "automatic_recovery": true,
+        "zero_application_errors": true,
+        "writes_continued": true,
+        "block_read": true,
+        "root_read": true,
+        "filesystem_writable": true,
+        "no_journal_abort": true,
+        "ubuntu_systemd": true,
+        "same_boot": true,
+        "services_survived": true,
+        "no_failed_units": true,
+        "acknowledged_data_present": true,
+        "git_clone_succeeded": true,
+        "same_git_process": true,
+        "git_active_during_fault": true,
+        "git_integrity": true
+      },
+      "successful_writes": 847,
+      "failed_writes": 0,
+      "max_write_latency": 3.8409785550000066,
+      "max_heartbeat_gap": 2.8589968220003357,
+      "runner_sha256": "4623ae310be5618ff02a04bcd6b5e5401820ec2baae032a8ccae71e5932c5402",
+      "qemu_runner_sha256": "9bc90545676a666f474558418447711f245da90cd051af954823a299ecd74f57",
+      "build": {
+        "kernel_release": "6.8.0-139-generic",
+        "source_commit": "acbd979f12e513474257890edb342531d3653525",
+        "source_sha256": {
+          "lab/build.py": "1df2c8e5508aa59d974287677a42396634dd18c06af4b9b073aefb9ddfacc58d",
+          "ram-rescue-demo/src/rescue.py": "79d5f850f191f227bf52f9195b8b6845e82d9f4ec5bd978e96c5f479c0d2e97f",
+          "ram-rescue-demo/src/lvm.conf": "10708bf37ce4b01ec3e7e3e0d3d6394301f0bf3d4046fbd1da8521dad80d0cd3",
+          "lab/guest/agent.py": "35badcb1e32d64d91e0f96a3c927300f59a4a0758c3c9f23b2156bb7d4927263",
+          "lab/guest/git_workload.py": "c61d4c440a44cdb263f247e868292cea4270a78d59dd537706090909cd7c0538",
+          "lab/guest/init.sh": "1daefd2151e6782c3f57cb69555cf511de0985f94000fdad753b8bdb9a00f293",
+          "lab/guest/path_guard.py": "e95c382ce684398436e2d40fb46bb354882911458ad72b891ea3df27a11b94dd",
+          "lab/guest/root-init.sh": "078ec84bb1f502fc2b80b99b4eef2ee4a40432ccb9a476bf7757952547ca57d9",
+          "lab/guest/ubuntu.py": "61ade71d1f8f3da7433f086b0501b2c0dc75fb613b408a17609406de526150b2",
+          "lab/guest/ubuntu_workload.py": "2cb4f4a137fa6b6e8b99d87c29efe89c2dbcc7d7cc7ee814b736a193f667a890",
+          "lab/guest/workload.py": "15d8e159ab16b2e7786aeee10d4be861a6b1cf448bf3ddf16b6a8c64ab72ad2c"
+        },
+        "kernel_sha256": "0066409132868538bc0c9076f60131025775d5bbd8617df074d059f91b584918",
+        "initramfs_sha256": "a222b1920982ae012249ff00e22c20d79dbc8a0b3aceac414bc00df809fe1b07",
+        "note": "guest payload copied from working tree; no host identities or passwords"
+      },
+      "ubuntu_source": {
+        "distribution": "Ubuntu Server 24.04 LTS",
+        "image_build": "20260911",
+        "url": "https://cloud-images.ubuntu.com/noble/20260911/noble-server-cloudimg-amd64-root.tar.xz",
+        "archive_sha256": "2ea580b9dd2d0e97ba9047798becc63a94427679876dec193221e345a6e0cdc9",
+        "seed_sha256": "8ae5beb36209e924b04612f7347babac8a7930947411aba353ae03aa8f956bbb",
+        "signed_checksums_sha256": "86919782a8b9e4dbd9478f00f8fda31da67af11facfc4408138a487d20bbff33",
+        "signature_verified": true
+      },
+      "git_source": {
+        "url": "https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git",
+        "ref": "v6.8",
+        "commit": "e8f897f4afef0031fe618a8e94127a0934896aba",
+        "history": "depth 1",
+        "tracked_files": 83475,
+        "object_disk_bytes": 260778158,
+        "image_sha256": "5e8efa55f6603982383be11a9e57842923fa845a121a4f79bae9cea5f014d6b4"
+      },
+      "ubuntu_before": {
+        "os_release": "PRETTY_NAME=\"Ubuntu 24.04.5 LTS\"\nNAME=\"Ubuntu\"\nVERSION_ID=\"24.04\"\nVERSION=\"24.04.5 LTS (Noble Numbat)\"\nVERSION_CODENAME=noble\nID=ubuntu\nID_LIKE=debian\nHOME_URL=\"https://www.ubuntu.com/\"\nSUPPORT_URL=\"https://help.ubuntu.com/\"\nBUG_REPORT_URL=\"https://bugs.launchpad.net/ubuntu/\"\nPRIVACY_POLICY_URL=\"https://www.ubuntu.com/legal/terms-and-policies/privacy-policy\"\nUBUNTU_CODENAME=noble\nLOGO=ubuntu-logo\n",
+        "pid1_comm": "systemd",
+        "pid1_start_ticks": "51",
+        "boot_id": "78d2ccbe-1627-4028-829d-e8438ee89058",
+        "services": {
+          "systemd-journald": {
+            "MainPID": "194",
+            "NRestarts": "0",
+            "ActiveState": "active",
+            "SubState": "running",
+            "start_ticks": "7085"
+          },
+          "dbus": {
+            "MainPID": "467",
+            "NRestarts": "0",
+            "ActiveState": "active",
+            "SubState": "running",
+            "start_ticks": "7704"
+          },
+          "lab-agent": {
+            "MainPID": "470",
+            "NRestarts": "0",
+            "ActiveState": "active",
+            "SubState": "running",
+            "start_ticks": "7709"
+          },
+          "lab-guard": {
+            "MainPID": "472",
+            "NRestarts": "0",
+            "ActiveState": "active",
+            "SubState": "running",
+            "start_ticks": "7715"
+          },
+          "lab-shell": {
+            "MainPID": "474",
+            "NRestarts": "0",
+            "ActiveState": "active",
+            "SubState": "running",
+            "start_ticks": "7724"
+          },
+          "lab-workload": {
+            "MainPID": "1633",
+            "NRestarts": "0",
+            "ActiveState": "active",
+            "SubState": "running",
+            "start_ticks": "11429"
+          }
+        },
+        "failed_units": "",
+        "multi_user": "active",
+        "installed_packages": 603
+      },
+      "ubuntu_after": {
+        "os_release": "PRETTY_NAME=\"Ubuntu 24.04.5 LTS\"\nNAME=\"Ubuntu\"\nVERSION_ID=\"24.04\"\nVERSION=\"24.04.5 LTS (Noble Numbat)\"\nVERSION_CODENAME=noble\nID=ubuntu\nID_LIKE=debian\nHOME_URL=\"https://www.ubuntu.com/\"\nSUPPORT_URL=\"https://help.ubuntu.com/\"\nBUG_REPORT_URL=\"https://bugs.launchpad.net/ubuntu/\"\nPRIVACY_POLICY_URL=\"https://www.ubuntu.com/legal/terms-and-policies/privacy-policy\"\nUBUNTU_CODENAME=noble\nLOGO=ubuntu-logo\n",
+        "pid1_comm": "systemd",
+        "pid1_start_ticks": "51",
+        "boot_id": "78d2ccbe-1627-4028-829d-e8438ee89058",
+        "services": {
+          "systemd-journald": {
+            "MainPID": "194",
+            "NRestarts": "0",
+            "ActiveState": "active",
+            "SubState": "running",
+            "start_ticks": "7085"
+          },
+          "dbus": {
+            "MainPID": "467",
+            "NRestarts": "0",
+            "ActiveState": "active",
+            "SubState": "running",
+            "start_ticks": "7704"
+          },
+          "lab-agent": {
+            "MainPID": "470",
+            "NRestarts": "0",
+            "ActiveState": "active",
+            "SubState": "running",
+            "start_ticks": "7709"
+          },
+          "lab-guard": {
+            "MainPID": "472",
+            "NRestarts": "0",
+            "ActiveState": "active",
+            "SubState": "running",
+            "start_ticks": "7715"
+          },
+          "lab-shell": {
+            "MainPID": "474",
+            "NRestarts": "0",
+            "ActiveState": "active",
+            "SubState": "running",
+            "start_ticks": "7724"
+          },
+          "lab-workload": {
+            "MainPID": "1633",
+            "NRestarts": "0",
+            "ActiveState": "active",
+            "SubState": "running",
+            "start_ticks": "11429"
+          }
+        },
+        "failed_units": "",
+        "multi_user": "active",
+        "installed_packages": 603
+      },
+      "git_validation": {
+        "head": "e8f897f4afef0031fe618a8e94127a0934896aba",
+        "expected_head": "e8f897f4afef0031fe618a8e94127a0934896aba",
+        "head_matches": true,
+        "fsck_passed": true,
+        "fsck_output": "",
+        "worktree_clean": true,
+        "tracked_files": 83475,
+        "source": {
+          "url": "https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git",
+          "ref": "v6.8",
+          "commit": "e8f897f4afef0031fe618a8e94127a0934896aba",
+          "history": "depth 1",
+          "tracked_files": 83475,
+          "object_disk_bytes": 260778158
+        }
+      },
+      "data_audit": {
+        "id": 442,
+        "ok": true,
+        "result": {
+          "acknowledged_records": 890,
+          "confirmed_bytes": 3648892,
+          "prefix_matches": true
+        },
+        "output": ""
+      },
+      "cycles": [
+        {
+          "index": 1,
+          "deleted_host_time": 2202.899306328,
+          "outcome_after_delete": 5.672793705999993,
+          "outcome": {
+            "time": 125.226184398,
+            "state": "ready",
+            "recoveries": 1,
+            "node": "/dev/sdb1"
+          },
+          "reattach_after_delete": 1.7033743329998288,
+          "git_at_fault": {
+            "pid": 1671,
+            "start_ticks": "11693",
+            "started": 116.937488926,
+            "exit_code": null,
+            "progress_tail": "ting objects:  99% (87573/88457)        \nremote: Counting objects: 100% (88457/88457)        \nremote: Counting objects: 100% (88457/88457), done.        \nremote: Compressing objects:   0% (1/80775)        \nremote: Compressing objects:   1% (808/80775)        \nremote: Compressing objects:   2% (1616/80775)        \nremote: Compressing objects:   3% (2424/80775)        \nremote: Compressing objects:   4% (3231/80775)        \nremote: Compressing objects:   5% (4039/80775)        \nremote: Compressing objects:   6% (4847/80775)        \nremote: Compressing objects:   7% (5655/80775)        \nremote: Compressing objects:   8% (6462/80775)        \nremote: Compressing objects:   9% (7270/80775)        \nremote: Compressing objects:  10% (8078/80775)        \nremote: Compressing objects:  11% (8886/80775)        \nremote: Compressing objects:  12% (9693/80775)        \nremote: Compressing objects:  13% (10501/80775)        \nremote: Compressing objects:  14% (11309/80775)        \nremote: Compressing objects:  15% (12117/80775)        \nremote: Compressing objects:  16% (12924/80775)        \nremote: Compressing objects:  17% (13732/80775)        \nremote: Compressing objects:  18% (14540/80775)        \nremote: Compressing objects:  19% (15348/80775)        \nremote: Compressing objects:  20% (16155/80775)        \nremote: Compressing objects:  21% (16963/80775)        \nremote: Compressing objects:  22% (17771/80775)        \nremote: Compressing objects:  23% (18579/80775)        \nremote: Compressing objects:  24% (19386/80775)        \nremote: Compressing objects:  25% (20194/80775)        \nremote: Compressing objects:  26% (21002/80775)        \nremote: Compressing objects:  27% (21810/80775)        \nremote: Compressing objects:  28% (22617/80775)        \nremote: Compressing objects:  29% (23425/80775)        \nremote: Compressing objects:  30% (24233/80775)        \nremote: Compressing objects:  31% (25041/80775)        \nremote: Compressing objects:  32% (25848/80775)        \nremote: Compressing objects:  33% (26656/80775)        \nremote: Compressing objects:  34% (27464/80775)        \nremote: Compressing objects:  35% (28272/80775)        \nremote: Compressing objects:  36% (29079/80775)        \nremote: Compressing objects:  37% (29887/80775)        \nremote: Compressing objects:  38% (30695/80775)        \nremote: Compressing objects:  39% (31503/80775)        \nremote: Compressing objects:  40% (32310/80775)        \nremote: Compressing objects:  41% (33118/80775)        \nremote: Compressing objects:  42% (33926/80775)        \nremote: Compressing objects:  43% (34734/80775)        \nremote: Compressing objects:  44% (35541/80775)        \nremote: Compressing objects:  45% (36349/80775)        \nremote: Compressing objects:  46% (37157/80775)        \nremote: Compressing objects:  47% (37965/80775)        \nremote: Compressing objects:  48% (38772/80775)        \nremote: Compressing objects:  49% (39580/80775)        \nremote: Compressing objects:  50% (40388/80775)        \nremote: Compressing objects:  51% (41196/80775)        \nremote: Compressing objects:  52% (42003/80775)        \nremote: Compressing objects:  53% (42811/80775)        \nremote: Compressing objects:  54% (43619/80775)        \nremote: Compressing objects:  55% (44427/80775)        \nremote: Compressing objects:  56% (45234/80775)        \nremote: Compressing objects:  57% (46042/80775)        \nremote: Compressing objects:  58% (46850/80775)        \nremote: Compressing objects:  59% (47658/80775)        \nremote: Compressing objects:  60% (48465/80775)        \nremote: Compressing objects:  61% (49273/80775)        \nremote: Compressing objects:  62% (50081/80775)        \nremote: Compressing objects:  63% (50889/80775)        \nremote: Compressing objects:  64% (51696/80775)        \nremote: Compressing objects:  65% (52504/80775)        \nremote: Compressing objects:  66% (53312/80775)        \nremote: Compressing objects:  67% (54120/80775)        \nremote: Compressing objects:  68% (54927/80775)        \nremote: Compressing objects:  69% (55735/80775)        \nremote: Compressing objects:  70% (56543/80775)        \nremote: Compressing objects:  71% (57351/80775)        \nremote: Compressing objects:  72% (58158/80775)        \nremote: Compressing objects:  73% (58966/80775)        \nremote: Compressing objects:  74% (59774/80775)        \nremote: Compressing objects:  75% (60582/80775)        \nremote: Compressing objects:  76% (61389/80775)        \nremote: Compressing objects:  77% (62197/80775)        \nremote: Compressing objects:  78% (63005/80775)        \nremote: Compressing objects:  79% (63813/80775)        \nremote: Compressing objects:  80% (64620/80775)        \nremote: Compressing objects:  81% (65428/80775)        \nremote: Compressing objects:  82% (66236/80775)        \nremote: Compressing objects:  83% (67044/80775)        \nremote: Compressing objects:  84% (67851/80775)        \nremote: Compressing objects:  85% (68659/80775)        \nremote: Compressing objects:  86% (69467/80775)        \nremote: Compressing objects:  87% (70275/80775)        \nremote: Compressing objects:  88% (71082/80775)        \nremote: Compressing objects:  89% (71890/80775)        \nremote: Compressing objects:  90% (72698/80775)        \nremote: Compressing objects:  91% (73506/80775)        \nremote: Compressing objects:  92% (74313/80775)        \nremote: Compressing objects:  93% (75121/80775)        \nremote: Compressing objects:  94% (75929/80775)        \nremote: Compressing objects:  95% (76737/80775)        \nremote: Compressing objects:  96% (77544/80775)        \nremote: Compressing objects:  97% (78352/80775)        \nremote: Compressing objects:  98% (79160/80775)        \nremote: Compressing objects:  99% (79968/80775)        \nremote: Compressing objects: 100% (80775/80775)        \nremote: Compressing objects: 100% (80775/80775), done.        \nReceiving objects:   0% (1/88457)\nReceiving objects:   1% (885/88457)\nReceiving objects:   2% (1770/88457)\nReceiving objects:   3% (2654/88457)\n",
+            "same_process_alive": true
+          },
+          "git_while_absent": {
+            "pid": 1671,
+            "start_ticks": "11693",
+            "started": 116.937488926,
+            "exit_code": null,
+            "progress_tail": "mote: Compressing objects:   1% (808/80775)        \nremote: Compressing objects:   2% (1616/80775)        \nremote: Compressing objects:   3% (2424/80775)        \nremote: Compressing objects:   4% (3231/80775)        \nremote: Compressing objects:   5% (4039/80775)        \nremote: Compressing objects:   6% (4847/80775)        \nremote: Compressing objects:   7% (5655/80775)        \nremote: Compressing objects:   8% (6462/80775)        \nremote: Compressing objects:   9% (7270/80775)        \nremote: Compressing objects:  10% (8078/80775)        \nremote: Compressing objects:  11% (8886/80775)        \nremote: Compressing objects:  12% (9693/80775)        \nremote: Compressing objects:  13% (10501/80775)        \nremote: Compressing objects:  14% (11309/80775)        \nremote: Compressing objects:  15% (12117/80775)        \nremote: Compressing objects:  16% (12924/80775)        \nremote: Compressing objects:  17% (13732/80775)        \nremote: Compressing objects:  18% (14540/80775)        \nremote: Compressing objects:  19% (15348/80775)        \nremote: Compressing objects:  20% (16155/80775)        \nremote: Compressing objects:  21% (16963/80775)        \nremote: Compressing objects:  22% (17771/80775)        \nremote: Compressing objects:  23% (18579/80775)        \nremote: Compressing objects:  24% (19386/80775)        \nremote: Compressing objects:  25% (20194/80775)        \nremote: Compressing objects:  26% (21002/80775)        \nremote: Compressing objects:  27% (21810/80775)        \nremote: Compressing objects:  28% (22617/80775)        \nremote: Compressing objects:  29% (23425/80775)        \nremote: Compressing objects:  30% (24233/80775)        \nremote: Compressing objects:  31% (25041/80775)        \nremote: Compressing objects:  32% (25848/80775)        \nremote: Compressing objects:  33% (26656/80775)        \nremote: Compressing objects:  34% (27464/80775)        \nremote: Compressing objects:  35% (28272/80775)        \nremote: Compressing objects:  36% (29079/80775)        \nremote: Compressing objects:  37% (29887/80775)        \nremote: Compressing objects:  38% (30695/80775)        \nremote: Compressing objects:  39% (31503/80775)        \nremote: Compressing objects:  40% (32310/80775)        \nremote: Compressing objects:  41% (33118/80775)        \nremote: Compressing objects:  42% (33926/80775)        \nremote: Compressing objects:  43% (34734/80775)        \nremote: Compressing objects:  44% (35541/80775)        \nremote: Compressing objects:  45% (36349/80775)        \nremote: Compressing objects:  46% (37157/80775)        \nremote: Compressing objects:  47% (37965/80775)        \nremote: Compressing objects:  48% (38772/80775)        \nremote: Compressing objects:  49% (39580/80775)        \nremote: Compressing objects:  50% (40388/80775)        \nremote: Compressing objects:  51% (41196/80775)        \nremote: Compressing objects:  52% (42003/80775)        \nremote: Compressing objects:  53% (42811/80775)        \nremote: Compressing objects:  54% (43619/80775)        \nremote: Compressing objects:  55% (44427/80775)        \nremote: Compressing objects:  56% (45234/80775)        \nremote: Compressing objects:  57% (46042/80775)        \nremote: Compressing objects:  58% (46850/80775)        \nremote: Compressing objects:  59% (47658/80775)        \nremote: Compressing objects:  60% (48465/80775)        \nremote: Compressing objects:  61% (49273/80775)        \nremote: Compressing objects:  62% (50081/80775)        \nremote: Compressing objects:  63% (50889/80775)        \nremote: Compressing objects:  64% (51696/80775)        \nremote: Compressing objects:  65% (52504/80775)        \nremote: Compressing objects:  66% (53312/80775)        \nremote: Compressing objects:  67% (54120/80775)        \nremote: Compressing objects:  68% (54927/80775)        \nremote: Compressing objects:  69% (55735/80775)        \nremote: Compressing objects:  70% (56543/80775)        \nremote: Compressing objects:  71% (57351/80775)        \nremote: Compressing objects:  72% (58158/80775)        \nremote: Compressing objects:  73% (58966/80775)        \nremote: Compressing objects:  74% (59774/80775)        \nremote: Compressing objects:  75% (60582/80775)        \nremote: Compressing objects:  76% (61389/80775)        \nremote: Compressing objects:  77% (62197/80775)        \nremote: Compressing objects:  78% (63005/80775)        \nremote: Compressing objects:  79% (63813/80775)        \nremote: Compressing objects:  80% (64620/80775)        \nremote: Compressing objects:  81% (65428/80775)        \nremote: Compressing objects:  82% (66236/80775)        \nremote: Compressing objects:  83% (67044/80775)        \nremote: Compressing objects:  84% (67851/80775)        \nremote: Compressing objects:  85% (68659/80775)        \nremote: Compressing objects:  86% (69467/80775)        \nremote: Compressing objects:  87% (70275/80775)        \nremote: Compressing objects:  88% (71082/80775)        \nremote: Compressing objects:  89% (71890/80775)        \nremote: Compressing objects:  90% (72698/80775)        \nremote: Compressing objects:  91% (73506/80775)        \nremote: Compressing objects:  92% (74313/80775)        \nremote: Compressing objects:  93% (75121/80775)        \nremote: Compressing objects:  94% (75929/80775)        \nremote: Compressing objects:  95% (76737/80775)        \nremote: Compressing objects:  96% (77544/80775)        \nremote: Compressing objects:  97% (78352/80775)        \nremote: Compressing objects:  98% (79160/80775)        \nremote: Compressing objects:  99% (79968/80775)        \nremote: Compressing objects: 100% (80775/80775)        \nremote: Compressing objects: 100% (80775/80775), done.        \nReceiving objects:   0% (1/88457)\nReceiving objects:   1% (885/88457)\nReceiving objects:   2% (1770/88457)\nReceiving objects:   3% (2654/88457)\nReceiving objects:   4% (3539/88457)\nReceiving objects:   5% (4423/88457)\nReceiving objects:   6% (5308/88457)\nReceiving objects:   7% (6192/88457)\nReceiving objects:   7% (6530/88457), 4.50 MiB | 2.62 MiB/s\n",
+            "same_process_alive": true
+          }
+        }
+      ],
+      "git_before": {
+        "pid": 1671,
+        "start_ticks": "11693",
+        "started": 116.937488926,
+        "exit_code": null,
+        "progress_tail": "        \nremote: Counting objects:  98% (86688/88457)        \nremote: Counting objects:  99% (87573/88457)        \nremote: Counting objects: 100% (88457/88457)        \nremote: Counting objects: 100% (88457/88457), done.        \nremote: Compressing objects:   0% (1/80775)        \nremote: Compressing objects:   1% (808/80775)        \nremote: Compressing objects:   2% (1616/80775)        \nremote: Compressing objects:   3% (2424/80775)        \nremote: Compressing objects:   4% (3231/80775)        \nremote: Compressing objects:   5% (4039/80775)        \nremote: Compressing objects:   6% (4847/80775)        \nremote: Compressing objects:   7% (5655/80775)        \nremote: Compressing objects:   8% (6462/80775)        \nremote: Compressing objects:   9% (7270/80775)        \nremote: Compressing objects:  10% (8078/80775)        \nremote: Compressing objects:  11% (8886/80775)        \nremote: Compressing objects:  12% (9693/80775)        \nremote: Compressing objects:  13% (10501/80775)        \nremote: Compressing objects:  14% (11309/80775)        \nremote: Compressing objects:  15% (12117/80775)        \nremote: Compressing objects:  16% (12924/80775)        \nremote: Compressing objects:  17% (13732/80775)        \nremote: Compressing objects:  18% (14540/80775)        \nremote: Compressing objects:  19% (15348/80775)        \nremote: Compressing objects:  20% (16155/80775)        \nremote: Compressing objects:  21% (16963/80775)        \nremote: Compressing objects:  22% (17771/80775)        \nremote: Compressing objects:  23% (18579/80775)        \nremote: Compressing objects:  24% (19386/80775)        \nremote: Compressing objects:  25% (20194/80775)        \nremote: Compressing objects:  26% (21002/80775)        \nremote: Compressing objects:  27% (21810/80775)        \nremote: Compressing objects:  28% (22617/80775)        \nremote: Compressing objects:  29% (23425/80775)        \nremote: Compressing objects:  30% (24233/80775)        \nremote: Compressing objects:  31% (25041/80775)        \nremote: Compressing objects:  32% (25848/80775)        \nremote: Compressing objects:  33% (26656/80775)        \nremote: Compressing objects:  34% (27464/80775)        \nremote: Compressing objects:  35% (28272/80775)        \nremote: Compressing objects:  36% (29079/80775)        \nremote: Compressing objects:  37% (29887/80775)        \nremote: Compressing objects:  38% (30695/80775)        \nremote: Compressing objects:  39% (31503/80775)        \nremote: Compressing objects:  40% (32310/80775)        \nremote: Compressing objects:  41% (33118/80775)        \nremote: Compressing objects:  42% (33926/80775)        \nremote: Compressing objects:  43% (34734/80775)        \nremote: Compressing objects:  44% (35541/80775)        \nremote: Compressing objects:  45% (36349/80775)        \nremote: Compressing objects:  46% (37157/80775)        \nremote: Compressing objects:  47% (37965/80775)        \nremote: Compressing objects:  48% (38772/80775)        \nremote: Compressing objects:  49% (39580/80775)        \nremote: Compressing objects:  50% (40388/80775)        \nremote: Compressing objects:  51% (41196/80775)        \nremote: Compressing objects:  52% (42003/80775)        \nremote: Compressing objects:  53% (42811/80775)        \nremote: Compressing objects:  54% (43619/80775)        \nremote: Compressing objects:  55% (44427/80775)        \nremote: Compressing objects:  56% (45234/80775)        \nremote: Compressing objects:  57% (46042/80775)        \nremote: Compressing objects:  58% (46850/80775)        \nremote: Compressing objects:  59% (47658/80775)        \nremote: Compressing objects:  60% (48465/80775)        \nremote: Compressing objects:  61% (49273/80775)        \nremote: Compressing objects:  62% (50081/80775)        \nremote: Compressing objects:  63% (50889/80775)        \nremote: Compressing objects:  64% (51696/80775)        \nremote: Compressing objects:  65% (52504/80775)        \nremote: Compressing objects:  66% (53312/80775)        \nremote: Compressing objects:  67% (54120/80775)        \nremote: Compressing objects:  68% (54927/80775)        \nremote: Compressing objects:  69% (55735/80775)        \nremote: Compressing objects:  70% (56543/80775)        \nremote: Compressing objects:  71% (57351/80775)        \nremote: Compressing objects:  72% (58158/80775)        \nremote: Compressing objects:  73% (58966/80775)        \nremote: Compressing objects:  74% (59774/80775)        \nremote: Compressing objects:  75% (60582/80775)        \nremote: Compressing objects:  76% (61389/80775)        \nremote: Compressing objects:  77% (62197/80775)        \nremote: Compressing objects:  78% (63005/80775)        \nremote: Compressing objects:  79% (63813/80775)        \nremote: Compressing objects:  80% (64620/80775)        \nremote: Compressing objects:  81% (65428/80775)        \nremote: Compressing objects:  82% (66236/80775)        \nremote: Compressing objects:  83% (67044/80775)        \nremote: Compressing objects:  84% (67851/80775)        \nremote: Compressing objects:  85% (68659/80775)        \nremote: Compressing objects:  86% (69467/80775)        \nremote: Compressing objects:  87% (70275/80775)        \nremote: Compressing objects:  88% (71082/80775)        \nremote: Compressing objects:  89% (71890/80775)        \nremote: Compressing objects:  90% (72698/80775)        \nremote: Compressing objects:  91% (73506/80775)        \nremote: Compressing objects:  92% (74313/80775)        \nremote: Compressing objects:  93% (75121/80775)        \nremote: Compressing objects:  94% (75929/80775)        \nremote: Compressing objects:  95% (76737/80775)        \nremote: Compressing objects:  96% (77544/80775)        \nremote: Compressing objects:  97% (78352/80775)        \nremote: Compressing objects:  98% (79160/80775)        \nremote: Compressing objects:  99% (79968/80775)        \nremote: Compressing objects: 100% (80775/80775)        \nremote: Compressing objects: 100% (80775/80775), done.        \nReceiving objects:   0% (1/88457)\nReceiving objects:   1% (885/88457)\n",
+        "same_process_alive": true
+      },
+      "git_after": {
+        "pid": 1671,
+        "start_ticks": "11693",
+        "started": 116.937488926,
+        "exit_code": 0,
+        "finished": 217.998332499,
+        "progress_tail": "solving deltas: 100% (6761/6761), done.\nChecking connectivity: 88457, done.\nNote: switching to 'e8f897f4afef0031fe618a8e94127a0934896aba'.\n\nYou are in 'detached HEAD' state. You can look around, make experimental\nchanges and commit them, and you can discard any commits you make in this\nstate without impacting any branches by switching back to a branch.\n\nIf you want to create a new branch to retain commits you create, you may\ndo so (now or later) by using -c with the switch command. Example:\n\n  git switch -c <new-branch-name>\n\nOr undo this operation with:\n\n  git switch -\n\nTurn off this advice by setting config variable advice.detachedHead to false\n\nUpdating files:   0% (1/83475)\nUpdating files:   1% (835/83475)\nUpdating files:   2% (1670/83475)\nUpdating files:   3% (2505/83475)\nUpdating files:   4% (3339/83475)\nUpdating files:   4% (3768/83475)\nUpdating files:   5% (4174/83475)\nUpdating files:   6% (5009/83475)\nUpdating files:   7% (5844/83475)\nUpdating files:   8% (6678/83475)\nUpdating files:   9% (7513/83475)\nUpdating files:   9% (8021/83475)\nUpdating files:  10% (8348/83475)\nUpdating files:  11% (9183/83475)\nUpdating files:  12% (10017/83475)\nUpdating files:  12% (10567/83475)\nUpdating files:  13% (10852/83475)\nUpdating files:  14% (11687/83475)\nUpdating files:  14% (11766/83475)\nUpdating files:  15% (12522/83475)\nUpdating files:  16% (13356/83475)\nUpdating files:  17% (14191/83475)\nUpdating files:  17% (14500/83475)\nUpdating files:  18% (15026/83475)\nUpdating files:  19% (15861/83475)\nUpdating files:  20% (16695/83475)\nUpdating files:  21% (17530/83475)\nUpdating files:  21% (18290/83475)\nUpdating files:  22% (18365/83475)\nUpdating files:  23% (19200/83475)\nUpdating files:  24% (20034/83475)\nUpdating files:  24% (20550/83475)\nUpdating files:  25% (20869/83475)\nUpdating files:  26% (21704/83475)\nUpdating files:  26% (22518/83475)\nUpdating files:  27% (22539/83475)\nUpdating files:  28% (23373/83475)\nUpdating files:  29% (24208/83475)\nUpdating files:  30% (25043/83475)\nUpdating files:  30% (25060/83475)\nUpdating files:  31% (25878/83475)\nUpdating files:  32% (26712/83475)\nUpdating files:  32% (27124/83475)\nUpdating files:  33% (27547/83475)\nUpdating files:  33% (28155/83475)\nUpdating files:  34% (28382/83475)\nUpdating files:  35% (29217/83475)\nUpdating files:  35% (29355/83475)\nUpdating files:  36% (30051/83475)\nUpdating files:  37% (30886/83475)\nUpdating files:  37% (31122/83475)\nUpdating files:  38% (31721/83475)\nUpdating files:  38% (31751/83475)\nUpdating files:  39% (32556/83475)\nUpdating files:  39% (32800/83475)\nUpdating files:  40% (33390/83475)\nUpdating files:  40% (33445/83475)\nUpdating files:  40% (33480/83475)\nUpdating files:  40% (33490/83475)\nUpdating files:  40% (33501/83475)\nUpdating files:  40% (33512/83475)\nUpdating files:  40% (33513/83475)\nUpdating files:  40% (33542/83475)\nUpdating files:  40% (33566/83475)\nUpdating files:  40% (33662/83475)\nUpdating files:  40% (33683/83475)\nUpdating files:  40% (34097/83475)\nUpdating files:  41% (34225/83475)\nUpdating files:  42% (35060/83475)\nUpdating files:  42% (35083/83475)\nUpdating files:  43% (35895/83475)\nUpdating files:  44% (36729/83475)\nUpdating files:  44% (37555/83475)\nUpdating files:  45% (37564/83475)\nUpdating files:  46% (38399/83475)\nUpdating files:  47% (39234/83475)\nUpdating files:  47% (39823/83475)\nUpdating files:  48% (40068/83475)\nUpdating files:  49% (40903/83475)\nUpdating files:  49% (41072/83475)\nUpdating files:  50% (41738/83475)\nUpdating files:  51% (42573/83475)\nUpdating files:  52% (43407/83475)\nUpdating files:  52% (43779/83475)\nUpdating files:  53% (44242/83475)\nUpdating files:  54% (45077/83475)\nUpdating files:  55% (45912/83475)\nUpdating files:  56% (46746/83475)\nUpdating files:  56% (47029/83475)\nUpdating files:  57% (47581/83475)\nUpdating files:  57% (48308/83475)\nUpdating files:  58% (48416/83475)\nUpdating files:  59% (49251/83475)\nUpdating files:  59% (49604/83475)\nUpdating files:  60% (50085/83475)\nUpdating files:  61% (50920/83475)\nUpdating files:  61% (51090/83475)\nUpdating files:  62% (51755/83475)\nUpdating files:  63% (52590/83475)\nUpdating files:  63% (52770/83475)\nUpdating files:  64% (53424/83475)\nUpdating files:  65% (54259/83475)\nUpdating files:  65% (54730/83475)\nUpdating files:  66% (55094/83475)\nUpdating files:  67% (55929/83475)\nUpdating files:  67% (56069/83475)\nUpdating files:  68% (56763/83475)\nUpdating files:  69% (57598/83475)\nUpdating files:  69% (58064/83475)\nUpdating files:  70% (58433/83475)\nUpdating files:  71% (59268/83475)\nUpdating files:  71% (59511/83475)\nUpdating files:  72% (60102/83475)\nUpdating files:  73% (60937/83475)\nUpdating files:  73% (61534/83475)\nUpdating files:  74% (61772/83475)\nUpdating files:  75% (62607/83475)\nUpdating files:  75% (63203/83475)\nUpdating files:  76% (63441/83475)\nUpdating files:  77% (64276/83475)\nUpdating files:  77% (64446/83475)\nUpdating files:  78% (65111/83475)\nUpdating files:  79% (65946/83475)\nUpdating files:  80% (66780/83475)\nUpdating files:  81% (67615/83475)\nUpdating files:  82% (68450/83475)\nUpdating files:  82% (68618/83475)\nUpdating files:  83% (69285/83475)\nUpdating files:  84% (70119/83475)\nUpdating files:  84% (70579/83475)\nUpdating files:  85% (70954/83475)\nUpdating files:  86% (71789/83475)\nUpdating files:  86% (71891/83475)\nUpdating files:  87% (72624/83475)\nUpdating files:  88% (73458/83475)\nUpdating files:  88% (73592/83475)\nUpdating files:  89% (74293/83475)\nUpdating files:  90% (75128/83475)\nUpdating files:  90% (75263/83475)\nUpdating files:  91% (75963/83475)\nUpdating files:  92% (76797/83475)\nUpdating files:  92% (77057/83475)\nUpdating files:  93% (77632/83475)\nUpdating files:  94% (78467/83475)\nUpdating files:  94% (78866/83475)\nUpdating files:  95% (79302/83475)\nUpdating files:  96% (80136/83475)\nUpdating files:  97% (80971/83475)\nUpdating files:  97% (81521/83475)\nUpdating files:  98% (81806/83475)\nUpdating files:  99% (82641/83475)\nUpdating files: 100% (83475/83475)\nUpdating files: 100% (83475/83475), done.\n"
+      },
+      "git_elapsed_seconds": 101.06084357300001
+    }
+  ],
+  "manual_regressions": [
+    {
+      "run": "20260924-003354-baseline-10989",
+      "report_sha256": "e99c14e0a6719c1403767ea3753439ac7fe2869bef23ac39bc218425e0784c43",
+      "scenario": "baseline",
+      "checks": {
+        "ram_heartbeat": true,
+        "ram_shell": true,
+        "block_read_recovered": true,
+        "baseline_workload": true
+      },
+      "recovery_checks_passed": true,
+      "workload_successes": 40,
+      "workload_failures": 0,
+      "build": {
+        "kernel_release": "6.8.0-139-generic",
+        "source_commit": "acbd979f12e513474257890edb342531d3653525",
+        "source_sha256": {
+          "lab/build.py": "1df2c8e5508aa59d974287677a42396634dd18c06af4b9b073aefb9ddfacc58d",
+          "ram-rescue-demo/src/rescue.py": "79d5f850f191f227bf52f9195b8b6845e82d9f4ec5bd978e96c5f479c0d2e97f",
+          "ram-rescue-demo/src/lvm.conf": "10708bf37ce4b01ec3e7e3e0d3d6394301f0bf3d4046fbd1da8521dad80d0cd3",
+          "lab/guest/agent.py": "1b468be7c818dcdd3edeedcdd7f43a6db3b472dcd48d5a15cc2ae3e3b21fcd3e",
+          "lab/guest/git_workload.py": "c61d4c440a44cdb263f247e868292cea4270a78d59dd537706090909cd7c0538",
+          "lab/guest/init.sh": "1daefd2151e6782c3f57cb69555cf511de0985f94000fdad753b8bdb9a00f293",
+          "lab/guest/path_guard.py": "e95c382ce684398436e2d40fb46bb354882911458ad72b891ea3df27a11b94dd",
+          "lab/guest/root-init.sh": "078ec84bb1f502fc2b80b99b4eef2ee4a40432ccb9a476bf7757952547ca57d9",
+          "lab/guest/ubuntu.py": "26855043b4fab094ae68aa9c1350399b3397614efbfdf2ec70c752db2a6a1a67",
+          "lab/guest/ubuntu_workload.py": "2cb4f4a137fa6b6e8b99d87c29efe89c2dbcc7d7cc7ee814b736a193f667a890",
+          "lab/guest/workload.py": "15d8e159ab16b2e7786aeee10d4be861a6b1cf448bf3ddf16b6a8c64ab72ad2c"
+        },
+        "kernel_sha256": "0066409132868538bc0c9076f60131025775d5bbd8617df074d059f91b584918",
+        "initramfs_sha256": "ffefb3f8f401efda1e82791b328d5f9f628da8de43b64d4af341158acbbe0f52",
+        "note": "guest payload copied from working tree; no host identities or passwords"
+      },
+      "runner_sha256": "9bc90545676a666f474558418447711f245da90cd051af954823a299ecd74f57"
+    },
+    {
+      "run": "20260924-005205-write-16266",
+      "report_sha256": "40badcb49c0165c4f82dc2b9e6dbae263008f1784ce6bda2d152013b00a94f10",
+      "scenario": "write",
+      "checks": {
+        "ram_heartbeat": true,
+        "ram_shell": true,
+        "block_read_recovered": true,
+        "renumbered": true,
+        "fault_reproduced": true,
+        "mapping_refreshed": true
+      },
+      "recovery_checks_passed": true,
+      "workload_successes": 11,
+      "workload_failures": 55,
+      "build": {
+        "kernel_release": "6.8.0-139-generic",
+        "source_commit": "acbd979f12e513474257890edb342531d3653525",
+        "source_sha256": {
+          "lab/build.py": "1df2c8e5508aa59d974287677a42396634dd18c06af4b9b073aefb9ddfacc58d",
+          "ram-rescue-demo/src/rescue.py": "79d5f850f191f227bf52f9195b8b6845e82d9f4ec5bd978e96c5f479c0d2e97f",
+          "ram-rescue-demo/src/lvm.conf": "10708bf37ce4b01ec3e7e3e0d3d6394301f0bf3d4046fbd1da8521dad80d0cd3",
+          "lab/guest/agent.py": "3c0f06180aa71ecb508658f6af3fbc1eaca3bf1b217a405301f701153db9c805",
+          "lab/guest/git_workload.py": "c61d4c440a44cdb263f247e868292cea4270a78d59dd537706090909cd7c0538",
+          "lab/guest/init.sh": "1daefd2151e6782c3f57cb69555cf511de0985f94000fdad753b8bdb9a00f293",
+          "lab/guest/path_guard.py": "e95c382ce684398436e2d40fb46bb354882911458ad72b891ea3df27a11b94dd",
+          "lab/guest/root-init.sh": "078ec84bb1f502fc2b80b99b4eef2ee4a40432ccb9a476bf7757952547ca57d9",
+          "lab/guest/ubuntu.py": "61ade71d1f8f3da7433f086b0501b2c0dc75fb613b408a17609406de526150b2",
+          "lab/guest/ubuntu_workload.py": "2cb4f4a137fa6b6e8b99d87c29efe89c2dbcc7d7cc7ee814b736a193f667a890",
+          "lab/guest/wire.py": "66180734f19432381ff6fbd3b8853c536d083ee3c681e52864902a91efafe87e",
+          "lab/guest/workload.py": "15d8e159ab16b2e7786aeee10d4be861a6b1cf448bf3ddf16b6a8c64ab72ad2c"
+        },
+        "kernel_sha256": "0066409132868538bc0c9076f60131025775d5bbd8617df074d059f91b584918",
+        "initramfs_sha256": "2050c59dfb29426d30a61c94d1417ea393588e82109ab66f7b78429089511823",
+        "note": "guest payload copied from working tree; no host identities or passwords"
+      },
+      "runner_sha256": "b39137e46f11e44b8cb1a317304cb50ad32ad326fda07640628bfaae0c6a9d03"
+    }
+  ]
+}

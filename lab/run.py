@@ -11,6 +11,8 @@ import subprocess
 import threading
 import time
 
+from guest.wire import decode
+
 BASE = Path(__file__).resolve().parent
 WORK = BASE / 'work'
 
@@ -60,7 +62,7 @@ class Channel:
         try:
             for line in self.stream:
                 try:
-                    message = json.loads(line)
+                    message = decode(json.loads(line))
                 except ValueError:
                     continue
                 entry = {'host_time':time.monotonic(), 'message':message}
@@ -96,9 +98,9 @@ class Channel:
         raise TimeoutError(action)
 
 
-def qemu_command(run_dir, transport='uas', tcg=False, extra_kernel_args=''):
+def qemu_command(run_dir, transport='uas', tcg=False, extra_kernel_args='', ubuntu=False, git_source=False):
     command = ['qemu-system-x86_64','-machine','q35','-accel','tcg' if tcg else 'kvm',
-               '-m','1536','-smp','2','-display','none','-nodefaults','-no-reboot','-nic','none',
+               '-m','3072' if ubuntu else '1536','-smp','2','-display','none','-nodefaults','-no-reboot','-nic','none',
                '-smbios','type=1,product=RAMRescueLab',
                '-kernel',str(WORK/'vmlinuz'),'-initrd',str(WORK/'initramfs.cpio.gz'),
                '-append','console=ttyS0 rdinit=/init ram_rescue_lab=1 panic=-1 '+extra_kernel_args,
@@ -115,6 +117,14 @@ def qemu_command(run_dir, transport='uas', tcg=False, extra_kernel_args=''):
                     '-device','scsi-hd,bus=stick.0,id=lun,drive=usbdisk']
     else:
         command += ['-device','usb-storage,bus=xhci.0,id=stick,drive=usbdisk,serial=RAMRESCUE-LAB-001']
+    if ubuntu:
+        command += ['-blockdev',json.dumps({'driver':'raw','node-name':'ubuntu-seed',
+            'read-only':True,'file':{'driver':'file','filename':str(WORK/'ubuntu/rootfs.raw')}}),
+            '-device','virtio-blk-pci,drive=ubuntu-seed,serial=UBUNTU-ROOTFS-SEED']
+    if git_source:
+        command += ['-blockdev',json.dumps({'driver':'raw','node-name':'git-seed',
+            'read-only':True,'file':{'driver':'file','filename':str(WORK/'git-source.raw')}}),
+            '-device','virtio-blk-pci,drive=git-seed,serial=LINUX-GIT-SOURCE']
     return command
 
 

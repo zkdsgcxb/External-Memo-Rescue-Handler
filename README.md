@@ -8,6 +8,8 @@
 
 各部件的职责、我们新增的工作、复用的开源实现与可替换边界见 [`ARCHITECTURE.md`](ARCHITECTURE.md)。
 
+完整 Ubuntu Server 用户空间和真实 Git 克隆场景见 [`lab/UBUNTU.md`](lab/UBUNTU.md)，使用 systemd 管理服务并从虚拟 USB/LVM 根卷运行。
+
 ## 能力边界
 
 - 正常启动并准备服务后，提供 F9/F10 两个独立密码登录入口、RAM 工具环境与内核日志收集。
