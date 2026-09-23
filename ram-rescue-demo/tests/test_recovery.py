@@ -54,7 +54,8 @@ class RecoveryTests(unittest.TestCase):
         if args[1] == 'pvs':
             return json.dumps({'report': [{'pv': [{'pv_uuid': 'pv-id', 'vg_uuid': 'v' * 32, 'vg_name': 'vgportable'}]}]})
         if args[1] == 'lvs':
-            return json.dumps({'report': [{'lv': [{'lv_uuid': self.lv_uuid, 'vg_uuid': 'v' * 32, 'segtype': self.segtype}]}]})
+            # Real `lvs --segments --reportformat json` uses the `seg` report.
+            return json.dumps({'report': [{'seg': [{'lv_uuid': self.lv_uuid, 'vg_uuid': 'v' * 32, 'segtype': self.segtype}]}]})
         if args[1] == 'lvchange':
             (self.dm / 'slaves/sda3').unlink()
             (self.dm / 'slaves/sdc3').touch()
@@ -67,6 +68,25 @@ class RecoveryTests(unittest.TestCase):
     def test_reenumerated_device_with_matching_identity(self):
         self.assertTrue(self.r.verify().endswith('/dev/sdc3'))
         self.assert_no_write()
+
+    def test_refresh_with_real_lvm_segment_report(self):
+        # Captured from lvs in the disposable QEMU guest, not invented mock data.
+        report = (BASE / 'tests/fixtures/lvs-segments.json').read_text()
+        segment = json.loads(report)['report'][0]['seg'][0]
+        self.c['vg_uuid'] = segment['vg_uuid'].replace('-', '')
+        dm_uuid = 'LVM-' + self.c['vg_uuid'] + segment['lv_uuid'].replace('-', '')
+        self.c['lvs']['ubuntu']['dm_uuid'] = dm_uuid
+        (self.dm / 'dm/uuid').write_text(dm_uuid)
+        def runner(args, **kwargs):
+            if args[1] == 'lvs':
+                return report
+            output = self.runner(args, **kwargs)
+            if args[1] == 'pvs':
+                output = output.replace('v' * 32, self.c['vg_uuid'])
+            return output
+        self.r.run = runner
+        self.assertTrue(self.r.refresh('ubuntu', confirm=lambda _: 'REFRESH vgportable/ubuntu'))
+        self.assertEqual([p.name for p in (self.dm / 'slaves').iterdir()], ['sdc3'])
 
     def test_duplicate_serial_refuses_before_probing(self):
         self.disk('sdd')

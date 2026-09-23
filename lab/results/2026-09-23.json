@@ -1,0 +1,814 @@
+[
+  {
+    "run": "20260923-181044-baseline-57852",
+    "report_sha256": "39f544e0653559f9a0096db2c78ccc78bf2c4ea04a6d9ec1ae1592fd701f7439",
+    "scenario": "baseline",
+    "transport": "uas",
+    "requested_gap_seconds": 0.2,
+    "observed_reattach_seconds": null,
+    "observed_verified_seconds": null,
+    "checks": {
+      "ram_heartbeat": true,
+      "ram_shell": true,
+      "block_read_recovered": true,
+      "baseline_workload": true
+    },
+    "recovery_checks_passed": true,
+    "workload_successes": 40,
+    "workload_failures": 0,
+    "writes_after_refresh": null,
+    "max_write_latency_seconds": null,
+    "filesystem_state": null,
+    "max_heartbeat_gap_seconds": 0.5630414120000751,
+    "runner_sha256": "8628ab0aa35d97388d66117252d122b11fd178f1864b78132d4153be4e632ff5",
+    "device_before": "/dev/sda1",
+    "device_after": null,
+    "root_file_read_after": true,
+    "block_read_after": true,
+    "mappings_after": {
+      "shared": {
+        "node": "dm-1",
+        "slaves": [
+          "sda1"
+        ]
+      },
+      "ubuntu": {
+        "node": "dm-0",
+        "slaves": [
+          "sda1"
+        ]
+      }
+    },
+    "worker_before": null,
+    "worker_after": null,
+    "kernel_errors": [],
+    "build": {
+      "kernel_release": "6.8.0-139-generic",
+      "source_commit": "1ce69ef5b5b7b2b3e8457e70e120b93ad97f6d7e",
+      "source_sha256": {
+        "lab/build.py": "e4bd0012388fe1998f719a3711653fedc657affde01cdc75388fb39b2bfd1990",
+        "ram-rescue-demo/src/rescue.py": "79d5f850f191f227bf52f9195b8b6845e82d9f4ec5bd978e96c5f479c0d2e97f",
+        "ram-rescue-demo/src/lvm.conf": "10708bf37ce4b01ec3e7e3e0d3d6394301f0bf3d4046fbd1da8521dad80d0cd3",
+        "lab/guest/agent.py": "c0f1c3616798525a475ec1a7e67eaa1b3a2c54c37fb8f4f69563138a9c7e6f35",
+        "lab/guest/init.sh": "d6d406a78e4aacfb60aadc6a047a246bc30ff924a556eb4b8e90a63b382ead7b",
+        "lab/guest/root-init.sh": "078ec84bb1f502fc2b80b99b4eef2ee4a40432ccb9a476bf7757952547ca57d9",
+        "lab/guest/workload.py": "15d8e159ab16b2e7786aeee10d4be861a6b1cf448bf3ddf16b6a8c64ab72ad2c"
+      },
+      "kernel_sha256": "0066409132868538bc0c9076f60131025775d5bbd8617df074d059f91b584918",
+      "initramfs_sha256": "fbd65fa288cb16083c7cca7ab85c29d60c7e0570c4e854c73d4cfd06ecd359c1",
+      "note": "guest payload copied from working tree; no host identities or passwords"
+    }
+  },
+  {
+    "run": "20260923-181044-idle-57854",
+    "report_sha256": "bda579a9846d2df33f46f86396ff4e922b0933d6949da779a20cb4d222f43059",
+    "scenario": "idle",
+    "transport": "uas",
+    "requested_gap_seconds": 0.2,
+    "observed_reattach_seconds": 0.31517787299981137,
+    "observed_verified_seconds": 0.8292615279997335,
+    "checks": {
+      "ram_heartbeat": true,
+      "ram_shell": true,
+      "block_read_recovered": true,
+      "renumbered": true,
+      "fault_reproduced": true,
+      "mapping_refreshed": true
+    },
+    "recovery_checks_passed": true,
+    "workload_successes": 0,
+    "workload_failures": 0,
+    "writes_after_refresh": {
+      "ok": 0,
+      "failed": 0
+    },
+    "max_write_latency_seconds": null,
+    "filesystem_state": null,
+    "max_heartbeat_gap_seconds": 0.6471265680002034,
+    "runner_sha256": "8628ab0aa35d97388d66117252d122b11fd178f1864b78132d4153be4e632ff5",
+    "device_before": "/dev/sda1",
+    "device_after": "/dev/sdb1",
+    "root_file_read_after": true,
+    "block_read_after": true,
+    "mappings_after": {
+      "shared": {
+        "node": "dm-1",
+        "slaves": [
+          "sdb1"
+        ]
+      },
+      "ubuntu": {
+        "node": "dm-0",
+        "slaves": [
+          "sdb1"
+        ]
+      }
+    },
+    "worker_before": null,
+    "worker_after": null,
+    "kernel_errors": [
+      "[    4.872311] EXT4-fs error (device dm-1): ext4_wait_block_bitmap:582: comm ext4lazyinit: Cannot read block bitmap - block_group = 1, block_bitmap = 34",
+      "[    4.873019] Aborting journal on device dm-1-8.",
+      "[    4.874742] EXT4-fs (dm-1): Remounting filesystem read-only"
+    ],
+    "build": {
+      "kernel_release": "6.8.0-139-generic",
+      "source_commit": "1ce69ef5b5b7b2b3e8457e70e120b93ad97f6d7e",
+      "source_sha256": {
+        "lab/build.py": "e4bd0012388fe1998f719a3711653fedc657affde01cdc75388fb39b2bfd1990",
+        "ram-rescue-demo/src/rescue.py": "79d5f850f191f227bf52f9195b8b6845e82d9f4ec5bd978e96c5f479c0d2e97f",
+        "ram-rescue-demo/src/lvm.conf": "10708bf37ce4b01ec3e7e3e0d3d6394301f0bf3d4046fbd1da8521dad80d0cd3",
+        "lab/guest/agent.py": "c0f1c3616798525a475ec1a7e67eaa1b3a2c54c37fb8f4f69563138a9c7e6f35",
+        "lab/guest/init.sh": "d6d406a78e4aacfb60aadc6a047a246bc30ff924a556eb4b8e90a63b382ead7b",
+        "lab/guest/root-init.sh": "078ec84bb1f502fc2b80b99b4eef2ee4a40432ccb9a476bf7757952547ca57d9",
+        "lab/guest/workload.py": "15d8e159ab16b2e7786aeee10d4be861a6b1cf448bf3ddf16b6a8c64ab72ad2c"
+      },
+      "kernel_sha256": "0066409132868538bc0c9076f60131025775d5bbd8617df074d059f91b584918",
+      "initramfs_sha256": "fbd65fa288cb16083c7cca7ab85c29d60c7e0570c4e854c73d4cfd06ecd359c1",
+      "note": "guest payload copied from working tree; no host identities or passwords"
+    }
+  },
+  {
+    "run": "20260923-181044-write-57853",
+    "report_sha256": "32c2d8f11bd2ca3ffa6dd48b681329f1fd2527fca5fa8bbe3d9d883a907ba6e2",
+    "scenario": "write",
+    "transport": "uas",
+    "requested_gap_seconds": 0.2,
+    "observed_reattach_seconds": 0.31678048699996,
+    "observed_verified_seconds": 0.807004108000001,
+    "checks": {
+      "ram_heartbeat": true,
+      "ram_shell": true,
+      "block_read_recovered": true,
+      "renumbered": true,
+      "fault_reproduced": true,
+      "mapping_refreshed": true
+    },
+    "recovery_checks_passed": true,
+    "workload_successes": 12,
+    "workload_failures": 47,
+    "writes_after_refresh": {
+      "ok": 0,
+      "failed": 33
+    },
+    "max_write_latency_seconds": null,
+    "filesystem_state": null,
+    "max_heartbeat_gap_seconds": 0.6287867440000809,
+    "runner_sha256": "8628ab0aa35d97388d66117252d122b11fd178f1864b78132d4153be4e632ff5",
+    "device_before": "/dev/sda1",
+    "device_after": "/dev/sdb1",
+    "root_file_read_after": false,
+    "block_read_after": true,
+    "mappings_after": {
+      "shared": {
+        "node": "dm-1",
+        "slaves": [
+          "sdb1"
+        ]
+      },
+      "ubuntu": {
+        "node": "dm-0",
+        "slaves": [
+          "sdb1"
+        ]
+      }
+    },
+    "worker_before": null,
+    "worker_after": null,
+    "kernel_errors": [
+      "[    6.239438] EXT4-fs error (device dm-0): __ext4_find_entry:1689: inode #2: comm python3: reading directory lblock 0",
+      "[    6.242201] Aborting journal on device dm-0-8.",
+      "[    6.247949] EXT4-fs (dm-0): Remounting filesystem read-only"
+    ],
+    "build": {
+      "kernel_release": "6.8.0-139-generic",
+      "source_commit": "1ce69ef5b5b7b2b3e8457e70e120b93ad97f6d7e",
+      "source_sha256": {
+        "lab/build.py": "e4bd0012388fe1998f719a3711653fedc657affde01cdc75388fb39b2bfd1990",
+        "ram-rescue-demo/src/rescue.py": "79d5f850f191f227bf52f9195b8b6845e82d9f4ec5bd978e96c5f479c0d2e97f",
+        "ram-rescue-demo/src/lvm.conf": "10708bf37ce4b01ec3e7e3e0d3d6394301f0bf3d4046fbd1da8521dad80d0cd3",
+        "lab/guest/agent.py": "c0f1c3616798525a475ec1a7e67eaa1b3a2c54c37fb8f4f69563138a9c7e6f35",
+        "lab/guest/init.sh": "d6d406a78e4aacfb60aadc6a047a246bc30ff924a556eb4b8e90a63b382ead7b",
+        "lab/guest/root-init.sh": "078ec84bb1f502fc2b80b99b4eef2ee4a40432ccb9a476bf7757952547ca57d9",
+        "lab/guest/workload.py": "15d8e159ab16b2e7786aeee10d4be861a6b1cf448bf3ddf16b6a8c64ab72ad2c"
+      },
+      "kernel_sha256": "0066409132868538bc0c9076f60131025775d5bbd8617df074d059f91b584918",
+      "initramfs_sha256": "fbd65fa288cb16083c7cca7ab85c29d60c7e0570c4e854c73d4cfd06ecd359c1",
+      "note": "guest payload copied from working tree; no host identities or passwords"
+    }
+  },
+  {
+    "run": "20260923-181247-idle-58714",
+    "report_sha256": "c731d42a2561f82225169f1405befc1e982dae37c60daad837182b851a08ef45",
+    "scenario": "idle",
+    "transport": "bot",
+    "requested_gap_seconds": 0.2,
+    "observed_reattach_seconds": 0.25243869600035396,
+    "observed_verified_seconds": 1.6228073480001513,
+    "checks": {
+      "ram_heartbeat": true,
+      "ram_shell": true,
+      "block_read_recovered": true,
+      "renumbered": true,
+      "fault_reproduced": true,
+      "mapping_refreshed": true
+    },
+    "recovery_checks_passed": true,
+    "workload_successes": 0,
+    "workload_failures": 0,
+    "writes_after_refresh": {
+      "ok": 0,
+      "failed": 0
+    },
+    "max_write_latency_seconds": null,
+    "filesystem_state": null,
+    "max_heartbeat_gap_seconds": 0.5428408099996886,
+    "runner_sha256": "8628ab0aa35d97388d66117252d122b11fd178f1864b78132d4153be4e632ff5",
+    "device_before": "/dev/sda1",
+    "device_after": "/dev/sdc1",
+    "root_file_read_after": true,
+    "block_read_after": true,
+    "mappings_after": {
+      "shared": {
+        "node": "dm-1",
+        "slaves": [
+          "sdc1"
+        ]
+      },
+      "ubuntu": {
+        "node": "dm-0",
+        "slaves": [
+          "sdc1"
+        ]
+      }
+    },
+    "worker_before": null,
+    "worker_after": null,
+    "kernel_errors": [],
+    "build": {
+      "kernel_release": "6.8.0-139-generic",
+      "source_commit": "1ce69ef5b5b7b2b3e8457e70e120b93ad97f6d7e",
+      "source_sha256": {
+        "lab/build.py": "e4bd0012388fe1998f719a3711653fedc657affde01cdc75388fb39b2bfd1990",
+        "ram-rescue-demo/src/rescue.py": "79d5f850f191f227bf52f9195b8b6845e82d9f4ec5bd978e96c5f479c0d2e97f",
+        "ram-rescue-demo/src/lvm.conf": "10708bf37ce4b01ec3e7e3e0d3d6394301f0bf3d4046fbd1da8521dad80d0cd3",
+        "lab/guest/agent.py": "c0f1c3616798525a475ec1a7e67eaa1b3a2c54c37fb8f4f69563138a9c7e6f35",
+        "lab/guest/init.sh": "d6d406a78e4aacfb60aadc6a047a246bc30ff924a556eb4b8e90a63b382ead7b",
+        "lab/guest/root-init.sh": "078ec84bb1f502fc2b80b99b4eef2ee4a40432ccb9a476bf7757952547ca57d9",
+        "lab/guest/workload.py": "15d8e159ab16b2e7786aeee10d4be861a6b1cf448bf3ddf16b6a8c64ab72ad2c"
+      },
+      "kernel_sha256": "0066409132868538bc0c9076f60131025775d5bbd8617df074d059f91b584918",
+      "initramfs_sha256": "fbd65fa288cb16083c7cca7ab85c29d60c7e0570c4e854c73d4cfd06ecd359c1",
+      "note": "guest payload copied from working tree; no host identities or passwords"
+    }
+  },
+  {
+    "run": "20260923-181247-write-58712",
+    "report_sha256": "1ee821728db2eccb4abd4a46c2d8ea3972da0629b669fc3473f45b72ff1aa28a",
+    "scenario": "write",
+    "transport": "uas",
+    "requested_gap_seconds": 0.05,
+    "observed_reattach_seconds": 0.17789989199991396,
+    "observed_verified_seconds": 0.7661947370002054,
+    "checks": {
+      "ram_heartbeat": true,
+      "ram_shell": true,
+      "block_read_recovered": true,
+      "renumbered": true,
+      "fault_reproduced": true,
+      "mapping_refreshed": true
+    },
+    "recovery_checks_passed": true,
+    "workload_successes": 7,
+    "workload_failures": 47,
+    "writes_after_refresh": {
+      "ok": 0,
+      "failed": 33
+    },
+    "max_write_latency_seconds": null,
+    "filesystem_state": null,
+    "max_heartbeat_gap_seconds": 0.6444695210002465,
+    "runner_sha256": "8628ab0aa35d97388d66117252d122b11fd178f1864b78132d4153be4e632ff5",
+    "device_before": "/dev/sda1",
+    "device_after": "/dev/sdb1",
+    "root_file_read_after": false,
+    "block_read_after": true,
+    "mappings_after": {
+      "shared": {
+        "node": "dm-1",
+        "slaves": [
+          "sdb1"
+        ]
+      },
+      "ubuntu": {
+        "node": "dm-0",
+        "slaves": [
+          "sdb1"
+        ]
+      }
+    },
+    "worker_before": null,
+    "worker_after": null,
+    "kernel_errors": [
+      "[    4.243233] Aborting journal on device dm-0-8.",
+      "[    4.301278] EXT4-fs error (device dm-1): ext4_wait_block_bitmap:582: comm ext4lazyinit: Cannot read block bitmap - block_group = 1, block_bitmap = 34",
+      "[    4.309191] Aborting journal on device dm-1-8.",
+      "[    4.323724] EXT4-fs (dm-1): Remounting filesystem read-only",
+      "[    4.345190] EXT4-fs error (device dm-0): ext4_journal_check_start:84: comm python3: Detected aborted journal",
+      "[    4.354249] EXT4-fs (dm-0): Remounting filesystem read-only"
+    ],
+    "build": {
+      "kernel_release": "6.8.0-139-generic",
+      "source_commit": "1ce69ef5b5b7b2b3e8457e70e120b93ad97f6d7e",
+      "source_sha256": {
+        "lab/build.py": "e4bd0012388fe1998f719a3711653fedc657affde01cdc75388fb39b2bfd1990",
+        "ram-rescue-demo/src/rescue.py": "79d5f850f191f227bf52f9195b8b6845e82d9f4ec5bd978e96c5f479c0d2e97f",
+        "ram-rescue-demo/src/lvm.conf": "10708bf37ce4b01ec3e7e3e0d3d6394301f0bf3d4046fbd1da8521dad80d0cd3",
+        "lab/guest/agent.py": "c0f1c3616798525a475ec1a7e67eaa1b3a2c54c37fb8f4f69563138a9c7e6f35",
+        "lab/guest/init.sh": "d6d406a78e4aacfb60aadc6a047a246bc30ff924a556eb4b8e90a63b382ead7b",
+        "lab/guest/root-init.sh": "078ec84bb1f502fc2b80b99b4eef2ee4a40432ccb9a476bf7757952547ca57d9",
+        "lab/guest/workload.py": "15d8e159ab16b2e7786aeee10d4be861a6b1cf448bf3ddf16b6a8c64ab72ad2c"
+      },
+      "kernel_sha256": "0066409132868538bc0c9076f60131025775d5bbd8617df074d059f91b584918",
+      "initramfs_sha256": "fbd65fa288cb16083c7cca7ab85c29d60c7e0570c4e854c73d4cfd06ecd359c1",
+      "note": "guest payload copied from working tree; no host identities or passwords"
+    }
+  },
+  {
+    "run": "20260923-181247-write-58713",
+    "report_sha256": "68d46826ea790e8196bc82320f315a38f65c29dcfa7de0d47d3f75e1033e501a",
+    "scenario": "write",
+    "transport": "bot",
+    "requested_gap_seconds": 0.2,
+    "observed_reattach_seconds": 0.2520461859999159,
+    "observed_verified_seconds": 1.6477112689999558,
+    "checks": {
+      "ram_heartbeat": true,
+      "ram_shell": true,
+      "block_read_recovered": true,
+      "renumbered": true,
+      "fault_reproduced": true,
+      "mapping_refreshed": true
+    },
+    "recovery_checks_passed": true,
+    "workload_successes": 12,
+    "workload_failures": 56,
+    "writes_after_refresh": {
+      "ok": 0,
+      "failed": 34
+    },
+    "max_write_latency_seconds": null,
+    "filesystem_state": null,
+    "max_heartbeat_gap_seconds": 0.5725921839998591,
+    "runner_sha256": "8628ab0aa35d97388d66117252d122b11fd178f1864b78132d4153be4e632ff5",
+    "device_before": "/dev/sda1",
+    "device_after": "/dev/sdc1",
+    "root_file_read_after": false,
+    "block_read_after": true,
+    "mappings_after": {
+      "shared": {
+        "node": "dm-1",
+        "slaves": [
+          "sdc1"
+        ]
+      },
+      "ubuntu": {
+        "node": "dm-0",
+        "slaves": [
+          "sdc1"
+        ]
+      }
+    },
+    "worker_before": null,
+    "worker_after": null,
+    "kernel_errors": [
+      "[    6.933611] EXT4-fs error (device dm-1): ext4_wait_block_bitmap:582: comm ext4lazyinit: Cannot read block bitmap - block_group = 1, block_bitmap = 34",
+      "[    6.935430] Aborting journal on device dm-1-8.",
+      "[    6.937291] EXT4-fs (dm-1): Remounting filesystem read-only",
+      "[    8.311333] EXT4-fs error (device dm-0): __ext4_find_entry:1689: inode #2: comm python3: reading directory lblock 0",
+      "[    8.312392] Aborting journal on device dm-0-8.",
+      "[    8.314902] EXT4-fs (dm-0): Remounting filesystem read-only"
+    ],
+    "build": {
+      "kernel_release": "6.8.0-139-generic",
+      "source_commit": "1ce69ef5b5b7b2b3e8457e70e120b93ad97f6d7e",
+      "source_sha256": {
+        "lab/build.py": "e4bd0012388fe1998f719a3711653fedc657affde01cdc75388fb39b2bfd1990",
+        "ram-rescue-demo/src/rescue.py": "79d5f850f191f227bf52f9195b8b6845e82d9f4ec5bd978e96c5f479c0d2e97f",
+        "ram-rescue-demo/src/lvm.conf": "10708bf37ce4b01ec3e7e3e0d3d6394301f0bf3d4046fbd1da8521dad80d0cd3",
+        "lab/guest/agent.py": "c0f1c3616798525a475ec1a7e67eaa1b3a2c54c37fb8f4f69563138a9c7e6f35",
+        "lab/guest/init.sh": "d6d406a78e4aacfb60aadc6a047a246bc30ff924a556eb4b8e90a63b382ead7b",
+        "lab/guest/root-init.sh": "078ec84bb1f502fc2b80b99b4eef2ee4a40432ccb9a476bf7757952547ca57d9",
+        "lab/guest/workload.py": "15d8e159ab16b2e7786aeee10d4be861a6b1cf448bf3ddf16b6a8c64ab72ad2c"
+      },
+      "kernel_sha256": "0066409132868538bc0c9076f60131025775d5bbd8617df074d059f91b584918",
+      "initramfs_sha256": "fbd65fa288cb16083c7cca7ab85c29d60c7e0570c4e854c73d4cfd06ecd359c1",
+      "note": "guest payload copied from working tree; no host identities or passwords"
+    }
+  },
+  {
+    "run": "20260923-181247-write-58715",
+    "report_sha256": "5c72406dc22e77204c27db66a25e4b92b02e55f89b34b543f1df53856380fc5f",
+    "scenario": "write",
+    "transport": "uas",
+    "requested_gap_seconds": 1.0,
+    "observed_reattach_seconds": 1.1136870230002387,
+    "observed_verified_seconds": 1.4843119950000982,
+    "checks": {
+      "ram_heartbeat": true,
+      "ram_shell": true,
+      "block_read_recovered": true,
+      "renumbered": true,
+      "fault_reproduced": true,
+      "mapping_refreshed": true
+    },
+    "recovery_checks_passed": true,
+    "workload_successes": 8,
+    "workload_failures": 55,
+    "writes_after_refresh": {
+      "ok": 0,
+      "failed": 33
+    },
+    "max_write_latency_seconds": null,
+    "filesystem_state": null,
+    "max_heartbeat_gap_seconds": 0.5561007409996819,
+    "runner_sha256": "8628ab0aa35d97388d66117252d122b11fd178f1864b78132d4153be4e632ff5",
+    "device_before": "/dev/sda1",
+    "device_after": "/dev/sdb1",
+    "root_file_read_after": false,
+    "block_read_after": true,
+    "mappings_after": {
+      "shared": {
+        "node": "dm-1",
+        "slaves": [
+          "sdb1"
+        ]
+      },
+      "ubuntu": {
+        "node": "dm-0",
+        "slaves": [
+          "sdb1"
+        ]
+      }
+    },
+    "worker_before": null,
+    "worker_after": null,
+    "kernel_errors": [
+      "[    4.680854] Aborting journal on device dm-0-8.",
+      "[    4.782329] EXT4-fs error (device dm-0): ext4_journal_check_start:84: comm python3: Detected aborted journal",
+      "[    4.786942] EXT4-fs (dm-0): Remounting filesystem read-only"
+    ],
+    "build": {
+      "kernel_release": "6.8.0-139-generic",
+      "source_commit": "1ce69ef5b5b7b2b3e8457e70e120b93ad97f6d7e",
+      "source_sha256": {
+        "lab/build.py": "e4bd0012388fe1998f719a3711653fedc657affde01cdc75388fb39b2bfd1990",
+        "ram-rescue-demo/src/rescue.py": "79d5f850f191f227bf52f9195b8b6845e82d9f4ec5bd978e96c5f479c0d2e97f",
+        "ram-rescue-demo/src/lvm.conf": "10708bf37ce4b01ec3e7e3e0d3d6394301f0bf3d4046fbd1da8521dad80d0cd3",
+        "lab/guest/agent.py": "c0f1c3616798525a475ec1a7e67eaa1b3a2c54c37fb8f4f69563138a9c7e6f35",
+        "lab/guest/init.sh": "d6d406a78e4aacfb60aadc6a047a246bc30ff924a556eb4b8e90a63b382ead7b",
+        "lab/guest/root-init.sh": "078ec84bb1f502fc2b80b99b4eef2ee4a40432ccb9a476bf7757952547ca57d9",
+        "lab/guest/workload.py": "15d8e159ab16b2e7786aeee10d4be861a6b1cf448bf3ddf16b6a8c64ab72ad2c"
+      },
+      "kernel_sha256": "0066409132868538bc0c9076f60131025775d5bbd8617df074d059f91b584918",
+      "initramfs_sha256": "fbd65fa288cb16083c7cca7ab85c29d60c7e0570c4e854c73d4cfd06ecd359c1",
+      "note": "guest payload copied from working tree; no host identities or passwords"
+    }
+  },
+  {
+    "run": "20260923-181542-queued-write-59316",
+    "report_sha256": "ec07a49418a0716770142ce228dbeb79d34f7138235339d96478d0898acd8600",
+    "scenario": "queued-write",
+    "transport": "uas",
+    "requested_gap_seconds": 0.2,
+    "observed_reattach_seconds": 0.3171325479997904,
+    "observed_verified_seconds": 0.7484728019999238,
+    "checks": {
+      "ram_heartbeat": true,
+      "ram_shell": true,
+      "block_read_recovered": true,
+      "renumbered": true,
+      "mapping_refreshed": true,
+      "same_process_survived": true,
+      "writes_continued_without_error": true,
+      "filesystem_writable": true
+    },
+    "recovery_checks_passed": true,
+    "workload_successes": 45,
+    "workload_failures": 0,
+    "writes_after_refresh": {
+      "ok": 31,
+      "failed": 0
+    },
+    "max_write_latency_seconds": 1.3218715530000003,
+    "filesystem_state": {
+      "id": 22,
+      "ok": true,
+      "result": {
+        "statvfs_readonly": false,
+        "write_fsync_ok": true
+      },
+      "output": ""
+    },
+    "max_heartbeat_gap_seconds": 0.5425925179997648,
+    "runner_sha256": "0ab19f61df380ab6a46367d793258200f796bb1d7049f5a0b31811a7383bca42",
+    "device_before": "/dev/sda1",
+    "device_after": "/dev/sdb1",
+    "root_file_read_after": true,
+    "block_read_after": true,
+    "mappings_after": {
+      "shared": {
+        "node": "dm-1",
+        "slaves": [
+          "sdb1"
+        ]
+      },
+      "ubuntu": {
+        "node": "dm-0",
+        "slaves": [
+          "sdb1"
+        ]
+      }
+    },
+    "worker_before": {
+      "pid": 156,
+      "exit_code": null,
+      "start_ticks": "316"
+    },
+    "worker_after": {
+      "pid": 156,
+      "exit_code": null,
+      "start_ticks": "316"
+    },
+    "kernel_errors": [],
+    "build": {
+      "kernel_release": "6.8.0-139-generic",
+      "source_commit": "1ce69ef5b5b7b2b3e8457e70e120b93ad97f6d7e",
+      "source_sha256": {
+        "lab/build.py": "e4bd0012388fe1998f719a3711653fedc657affde01cdc75388fb39b2bfd1990",
+        "ram-rescue-demo/src/rescue.py": "79d5f850f191f227bf52f9195b8b6845e82d9f4ec5bd978e96c5f479c0d2e97f",
+        "ram-rescue-demo/src/lvm.conf": "10708bf37ce4b01ec3e7e3e0d3d6394301f0bf3d4046fbd1da8521dad80d0cd3",
+        "lab/guest/agent.py": "0736fd156d6dd72862b7dccba632c01a0ed8ce6cab9e8b5b4b84091986d3c311",
+        "lab/guest/init.sh": "d6d406a78e4aacfb60aadc6a047a246bc30ff924a556eb4b8e90a63b382ead7b",
+        "lab/guest/root-init.sh": "078ec84bb1f502fc2b80b99b4eef2ee4a40432ccb9a476bf7757952547ca57d9",
+        "lab/guest/workload.py": "15d8e159ab16b2e7786aeee10d4be861a6b1cf448bf3ddf16b6a8c64ab72ad2c"
+      },
+      "kernel_sha256": "0066409132868538bc0c9076f60131025775d5bbd8617df074d059f91b584918",
+      "initramfs_sha256": "2a6f1037e83e92b28c2dfb6dd5272dd484d7cda9343bd9e49669dc91cc575fd6",
+      "note": "guest payload copied from working tree; no host identities or passwords"
+    }
+  },
+  {
+    "run": "20260923-181623-queued-write-59814",
+    "report_sha256": "e234d4204869cbd41c202b940dd854ae7fb9f9d5354a558644ff39b211d82d36",
+    "scenario": "queued-write",
+    "transport": "uas",
+    "requested_gap_seconds": 1.0,
+    "observed_reattach_seconds": 1.1142171249998682,
+    "observed_verified_seconds": 1.4923017609999079,
+    "checks": {
+      "ram_heartbeat": true,
+      "ram_shell": true,
+      "block_read_recovered": true,
+      "renumbered": true,
+      "mapping_refreshed": true,
+      "same_process_survived": true,
+      "writes_continued_without_error": true,
+      "filesystem_writable": true
+    },
+    "recovery_checks_passed": true,
+    "workload_successes": 43,
+    "workload_failures": 0,
+    "writes_after_refresh": {
+      "ok": 30,
+      "failed": 0
+    },
+    "max_write_latency_seconds": 2.0501481330000004,
+    "filesystem_state": {
+      "id": 22,
+      "ok": true,
+      "result": {
+        "statvfs_readonly": false,
+        "write_fsync_ok": true
+      },
+      "output": ""
+    },
+    "max_heartbeat_gap_seconds": 0.5867618869997386,
+    "runner_sha256": "0ab19f61df380ab6a46367d793258200f796bb1d7049f5a0b31811a7383bca42",
+    "device_before": "/dev/sda1",
+    "device_after": "/dev/sdb1",
+    "root_file_read_after": true,
+    "block_read_after": true,
+    "mappings_after": {
+      "shared": {
+        "node": "dm-1",
+        "slaves": [
+          "sdb1"
+        ]
+      },
+      "ubuntu": {
+        "node": "dm-0",
+        "slaves": [
+          "sdb1"
+        ]
+      }
+    },
+    "worker_before": {
+      "pid": 155,
+      "exit_code": null,
+      "start_ticks": "331"
+    },
+    "worker_after": {
+      "pid": 155,
+      "exit_code": null,
+      "start_ticks": "331"
+    },
+    "kernel_errors": [],
+    "build": {
+      "kernel_release": "6.8.0-139-generic",
+      "source_commit": "1ce69ef5b5b7b2b3e8457e70e120b93ad97f6d7e",
+      "source_sha256": {
+        "lab/build.py": "e4bd0012388fe1998f719a3711653fedc657affde01cdc75388fb39b2bfd1990",
+        "ram-rescue-demo/src/rescue.py": "79d5f850f191f227bf52f9195b8b6845e82d9f4ec5bd978e96c5f479c0d2e97f",
+        "ram-rescue-demo/src/lvm.conf": "10708bf37ce4b01ec3e7e3e0d3d6394301f0bf3d4046fbd1da8521dad80d0cd3",
+        "lab/guest/agent.py": "0736fd156d6dd72862b7dccba632c01a0ed8ce6cab9e8b5b4b84091986d3c311",
+        "lab/guest/init.sh": "d6d406a78e4aacfb60aadc6a047a246bc30ff924a556eb4b8e90a63b382ead7b",
+        "lab/guest/root-init.sh": "078ec84bb1f502fc2b80b99b4eef2ee4a40432ccb9a476bf7757952547ca57d9",
+        "lab/guest/workload.py": "15d8e159ab16b2e7786aeee10d4be861a6b1cf448bf3ddf16b6a8c64ab72ad2c"
+      },
+      "kernel_sha256": "0066409132868538bc0c9076f60131025775d5bbd8617df074d059f91b584918",
+      "initramfs_sha256": "2a6f1037e83e92b28c2dfb6dd5272dd484d7cda9343bd9e49669dc91cc575fd6",
+      "note": "guest payload copied from working tree; no host identities or passwords"
+    }
+  },
+  {
+    "run": "20260923-181623-queued-write-59815",
+    "report_sha256": "f04ec787c9cf1214511e74af7c23ca62274acd660fd2c9d145bad51a8dc6b5d3",
+    "scenario": "queued-write",
+    "transport": "bot",
+    "requested_gap_seconds": 0.2,
+    "observed_reattach_seconds": 0.25274507199992513,
+    "observed_verified_seconds": 1.6485731719999421,
+    "checks": {
+      "ram_heartbeat": true,
+      "ram_shell": true,
+      "block_read_recovered": true,
+      "renumbered": true,
+      "mapping_refreshed": true,
+      "same_process_survived": true,
+      "writes_continued_without_error": true,
+      "filesystem_writable": true
+    },
+    "recovery_checks_passed": true,
+    "workload_successes": 44,
+    "workload_failures": 0,
+    "writes_after_refresh": {
+      "ok": 32,
+      "failed": 0
+    },
+    "max_write_latency_seconds": 2.4058560919999996,
+    "filesystem_state": {
+      "id": 31,
+      "ok": true,
+      "result": {
+        "statvfs_readonly": false,
+        "write_fsync_ok": true
+      },
+      "output": ""
+    },
+    "max_heartbeat_gap_seconds": 0.6539330069999778,
+    "runner_sha256": "0ab19f61df380ab6a46367d793258200f796bb1d7049f5a0b31811a7383bca42",
+    "device_before": "/dev/sda1",
+    "device_after": "/dev/sdc1",
+    "root_file_read_after": true,
+    "block_read_after": true,
+    "mappings_after": {
+      "shared": {
+        "node": "dm-1",
+        "slaves": [
+          "sdc1"
+        ]
+      },
+      "ubuntu": {
+        "node": "dm-0",
+        "slaves": [
+          "sdc1"
+        ]
+      }
+    },
+    "worker_before": {
+      "pid": 156,
+      "exit_code": null,
+      "start_ticks": "454"
+    },
+    "worker_after": {
+      "pid": 156,
+      "exit_code": null,
+      "start_ticks": "454"
+    },
+    "kernel_errors": [],
+    "build": {
+      "kernel_release": "6.8.0-139-generic",
+      "source_commit": "1ce69ef5b5b7b2b3e8457e70e120b93ad97f6d7e",
+      "source_sha256": {
+        "lab/build.py": "e4bd0012388fe1998f719a3711653fedc657affde01cdc75388fb39b2bfd1990",
+        "ram-rescue-demo/src/rescue.py": "79d5f850f191f227bf52f9195b8b6845e82d9f4ec5bd978e96c5f479c0d2e97f",
+        "ram-rescue-demo/src/lvm.conf": "10708bf37ce4b01ec3e7e3e0d3d6394301f0bf3d4046fbd1da8521dad80d0cd3",
+        "lab/guest/agent.py": "0736fd156d6dd72862b7dccba632c01a0ed8ce6cab9e8b5b4b84091986d3c311",
+        "lab/guest/init.sh": "d6d406a78e4aacfb60aadc6a047a246bc30ff924a556eb4b8e90a63b382ead7b",
+        "lab/guest/root-init.sh": "078ec84bb1f502fc2b80b99b4eef2ee4a40432ccb9a476bf7757952547ca57d9",
+        "lab/guest/workload.py": "15d8e159ab16b2e7786aeee10d4be861a6b1cf448bf3ddf16b6a8c64ab72ad2c"
+      },
+      "kernel_sha256": "0066409132868538bc0c9076f60131025775d5bbd8617df074d059f91b584918",
+      "initramfs_sha256": "2a6f1037e83e92b28c2dfb6dd5272dd484d7cda9343bd9e49669dc91cc575fd6",
+      "note": "guest payload copied from working tree; no host identities or passwords"
+    }
+  },
+  {
+    "run": "20260923-181623-write-59813",
+    "report_sha256": "12e4497516e925cb5ef4423be3646016029502d891d72d05cc1cb52658135987",
+    "scenario": "write",
+    "transport": "uas",
+    "requested_gap_seconds": 0.2,
+    "observed_reattach_seconds": 0.3132804900001247,
+    "observed_verified_seconds": 0.7335147660000985,
+    "checks": {
+      "ram_heartbeat": true,
+      "ram_shell": true,
+      "block_read_recovered": true,
+      "renumbered": true,
+      "fault_reproduced": true,
+      "mapping_refreshed": true
+    },
+    "recovery_checks_passed": true,
+    "workload_successes": 10,
+    "workload_failures": 46,
+    "writes_after_refresh": {
+      "ok": 0,
+      "failed": 33
+    },
+    "max_write_latency_seconds": 0.13283732400000003,
+    "filesystem_state": {
+      "id": 21,
+      "ok": true,
+      "result": {
+        "statvfs_readonly": false,
+        "write_fsync_ok": false,
+        "errno": 5,
+        "error": "[Errno 5] Input/output error: '/proc/1/root/root/post-recovery-write'"
+      },
+      "output": ""
+    },
+    "max_heartbeat_gap_seconds": 0.5409400100002131,
+    "runner_sha256": "0ab19f61df380ab6a46367d793258200f796bb1d7049f5a0b31811a7383bca42",
+    "device_before": "/dev/sda1",
+    "device_after": "/dev/sdb1",
+    "root_file_read_after": false,
+    "block_read_after": true,
+    "mappings_after": {
+      "shared": {
+        "node": "dm-1",
+        "slaves": [
+          "sdb1"
+        ]
+      },
+      "ubuntu": {
+        "node": "dm-0",
+        "slaves": [
+          "sdb1"
+        ]
+      }
+    },
+    "worker_before": {
+      "pid": 156,
+      "exit_code": null,
+      "start_ticks": "333"
+    },
+    "worker_after": {
+      "pid": 156,
+      "exit_code": null,
+      "start_ticks": "333"
+    },
+    "kernel_errors": [
+      "[    5.750496] EXT4-fs error (device dm-0): __ext4_find_entry:1689: inode #2: comm python3: reading directory lblock 0",
+      "[    5.751122] Aborting journal on device dm-0-8.",
+      "[    5.752987] EXT4-fs (dm-0): Remounting filesystem read-only"
+    ],
+    "build": {
+      "kernel_release": "6.8.0-139-generic",
+      "source_commit": "1ce69ef5b5b7b2b3e8457e70e120b93ad97f6d7e",
+      "source_sha256": {
+        "lab/build.py": "e4bd0012388fe1998f719a3711653fedc657affde01cdc75388fb39b2bfd1990",
+        "ram-rescue-demo/src/rescue.py": "79d5f850f191f227bf52f9195b8b6845e82d9f4ec5bd978e96c5f479c0d2e97f",
+        "ram-rescue-demo/src/lvm.conf": "10708bf37ce4b01ec3e7e3e0d3d6394301f0bf3d4046fbd1da8521dad80d0cd3",
+        "lab/guest/agent.py": "0736fd156d6dd72862b7dccba632c01a0ed8ce6cab9e8b5b4b84091986d3c311",
+        "lab/guest/init.sh": "d6d406a78e4aacfb60aadc6a047a246bc30ff924a556eb4b8e90a63b382ead7b",
+        "lab/guest/root-init.sh": "078ec84bb1f502fc2b80b99b4eef2ee4a40432ccb9a476bf7757952547ca57d9",
+        "lab/guest/workload.py": "15d8e159ab16b2e7786aeee10d4be861a6b1cf448bf3ddf16b6a8c64ab72ad2c"
+      },
+      "kernel_sha256": "0066409132868538bc0c9076f60131025775d5bbd8617df074d059f91b584918",
+      "initramfs_sha256": "2a6f1037e83e92b28c2dfb6dd5272dd484d7cda9343bd9e49669dc91cc575fd6",
+      "note": "guest payload copied from working tree; no host identities or passwords"
+    }
+  }
+]

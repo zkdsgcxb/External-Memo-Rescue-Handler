@@ -112,7 +112,7 @@ class Recovery:
         lvpath = self.c["vg_name"] + "/" + target
         segments = rows(self.run(["/sbin/lvm", "lvs", "--readonly", "--devices", node,
                                   "--reportformat", "json", "--segments", "-o",
-                                  "lv_uuid,vg_uuid,segtype", lvpath]), "lv")
+                                  "lv_uuid,vg_uuid,segtype", lvpath]), "seg")
         expected = self.c["lvs"][target]["dm_uuid"][4:]
         if not segments or any(s["segtype"].strip() != "linear" or
                                (s["vg_uuid"].strip() + s["lv_uuid"].strip()).replace("-", "") != expected

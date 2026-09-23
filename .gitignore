@@ -20,3 +20,6 @@ __pycache__/
 *~
 *.swp
 .DS_Store
+
+# Disposable virtual disks, guest payloads and experiment logs
+/lab/work/

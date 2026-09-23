@@ -2,6 +2,8 @@
 
 针对本机 USB 外置根盘故障的 RAM 救援终端原型，实现在 [`ram-rescue-demo/`](ram-rescue-demo/README.md)。源码与开发数据放在 shared 卷的本项目目录；安装后的系统运行包位于 Ubuntu 的 `/usr/local/lib/ram-rescue-demo`，运行时工具位于 `/run/ram-rescue-demo` 的 RAM 文件系统。
 
+可重复的虚拟 USB/UAS 断联实验见 [`lab/README.md`](lab/README.md)：真实内核、USB 根盘、LVM/ext4、RAM 救援通道与 QMP 故障注入，实验只使用新建的虚拟磁盘。
+
 ## 能力边界
 
 - 正常启动并准备服务后，提供 F9/F10 两个独立密码登录入口、RAM 工具环境与内核日志收集。
