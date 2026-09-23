@@ -5,6 +5,7 @@ import io
 import json
 import mmap
 import os
+import signal
 from pathlib import Path
 import subprocess
 import sys
@@ -23,11 +24,15 @@ def guard():
 
 
 def run(*args, **kwargs):
-    return subprocess.check_output(args, text=True, stderr=subprocess.STDOUT, timeout=30, **kwargs)
+    try:
+        return subprocess.check_output(args, text=True, stderr=subprocess.STDOUT, timeout=30, **kwargs)
+    except subprocess.CalledProcessError as exc:
+        raise RuntimeError(f'{args}: {exc.output}') from exc
 
 
 def setup():
     from rescue import rows
+    protected='ram_rescue_mpath=1' in Path('/proc/cmdline').read_text().split()
     deadline = time.monotonic()+30
     while not Path('/dev/sda').exists():
         if time.monotonic()>deadline:
@@ -42,10 +47,22 @@ def setup():
         if Path('/dev/sda1').exists():
             break
         time.sleep(0.1)
-    run('/sbin/lvm', 'pvcreate', '/dev/sda1')
-    run('/sbin/lvm', 'vgcreate', 'labrescue', '/dev/sda1')
+    pvnode='/dev/sda1'
+    if protected:
+        from path_guard import dm, table, DEVICE, NAME, UUID
+        seconds=int(next(arg.split('=',1)[1] for arg in Path('/proc/cmdline').read_text().split() if arg.startswith('ram_rescue_queue_seconds=')))
+        if not 2<=seconds<=60:
+            raise RuntimeError('Invalid queue timeout')
+        # Kernel-side backstop also releases queued I/O if the userspace manager dies.
+        Path('/sys/module/dm_multipath/parameters/queue_if_no_path_timeout_secs').write_text(str(seconds+2))
+        size=int(Path('/sys/class/block/sda1/size').read_text())
+        dm('create',NAME,'--uuid',UUID,'--table',table(size,pvnode))
+        dm('mknodes',NAME)
+        pvnode=DEVICE
+    run('/sbin/lvm', 'pvcreate', '--devices',pvnode,pvnode)
+    run('/sbin/lvm', 'vgcreate', '--devices',pvnode,'labrescue',pvnode)
     for name, size in [('ubuntu', '1024M'), ('shared', '256M')]:
-        run('/sbin/lvm', 'lvcreate', '-L', size, '-n', name, 'labrescue', '--zero', 'n', '--wipesignatures', 'n')
+        run('/sbin/lvm', 'lvcreate','--devices',pvnode, '-L', size, '-n', name, 'labrescue', '--zero', 'n', '--wipesignatures', 'n')
         run('/sbin/mkfs.ext4', '-F', '-E', 'lazy_itable_init=0,lazy_journal_init=0', '/dev/labrescue/'+name)
     run('/bin/mount', '-o', 'errors=remount-ro', '/dev/labrescue/ubuntu', '/newroot')
     for item in ['bin', 'sbin', 'usr', 'lib', 'lib64', 'etc', 'opt']:
@@ -57,16 +74,23 @@ def setup():
     (Path('/newroot/root')/'sentinel').write_bytes(b'RAM rescue lab sentinel\n')
     run('/bin/sync')
     props = dict(line.split('=',1) for line in run('/sbin/blkid','-p','-o','export','/dev/sda1').splitlines() if '=' in line)
-    pv = rows(run('/sbin/lvm','pvs','--reportformat','json','-o','pv_uuid,vg_uuid,vg_name'), 'pv')[0]
+    pv = rows(run('/sbin/lvm','pvs','--devices',pvnode,'--reportformat','json','-o','pv_uuid,vg_uuid,vg_name'), 'pv')[0]
     lvs = {}
     for path in Path('/sys/class/block').glob('dm-*'):
         name = (path/'dm/name').read_text().strip().removeprefix('labrescue-')
-        lvs[name] = {'dm_uuid': (path/'dm/uuid').read_text().strip()}
+        if name in ['ubuntu','shared']:
+            lvs[name] = {'dm_uuid': (path/'dm/uuid').read_text().strip()}
     config = {'vid': (usb/'idVendor').read_text().strip(), 'pid': (usb/'idProduct').read_text().strip(),
               'usb_serial': 'RAMRESCUE-LAB-001', 'sectors': int((disk/'size').read_text()),
               'partition_number': 1, 'partuuid': props['PART_ENTRY_UUID'], 'pv_uuid': props['UUID'],
               'vg_name': 'labrescue', 'vg_uuid': pv['vg_uuid'].strip().replace('-',''), 'lvs': lvs}
     Path('/etc/rescue/identity.json').write_text(json.dumps(config))
+    if protected:
+        from path_guard import layout
+        Path('/etc/rescue/path-guard.json').write_text(json.dumps({'queue_seconds':seconds,
+            'partition_sectors':int(Path('/sys/class/block/sda1/size').read_text()),
+            'initial_node':'/dev/sda1','initial_sys_path':str(Path('/sys/class/block/sda1').resolve()),
+            'layout':layout('/dev/sda1')}))
     print('LAB_SETUP_COMPLETE', flush=True)
 
 
@@ -97,7 +121,10 @@ def serve():
         finally:
             with open('/run/helper-commands.jsonl','a') as log:
                 log.write(json.dumps(entry)+'\n')
-    recovery = Recovery(json.loads(Path('/etc/rescue/identity.json').read_text()), runner=traced_command)
+    protected=Path('/etc/rescue/path-guard.json').exists()
+    if protected:
+        from path_guard import readonly
+    recovery = Recovery(json.loads(Path('/etc/rescue/identity.json').read_text()), runner=readonly if protected else traced_command)
     worker = None
     def snapshot():
         return {'guest_time':time.monotonic(), 'pid1_mounts': Path('/proc/1/mountinfo').read_text(),
@@ -108,6 +135,9 @@ def serve():
                 'dm_status': run('/sbin/dmsetup','status'),
                 'dm_info': run('/sbin/dmsetup','info','-c'),
                 'identity': recovery.c,
+                'path_guard': json.loads(Path('/run/path-state.json').read_text()) if Path('/run/path-state.json').exists() else None,
+                'path_events':Path('/run/path-events.jsonl').read_text() if Path('/run/path-events.jsonl').exists() else '',
+                'kernel_queue_timeout_seconds': Path('/sys/module/dm_multipath/parameters/queue_if_no_path_timeout_secs').read_text().strip() if protected else None,
                 'helper_commands': Path('/run/helper-commands.jsonl').read_text() if Path('/run/helper-commands.jsonl').exists() else '',
                 'disks': [p.name for p in recovery.candidates()],
                 'mappings': {name: {'node': recovery.mapping(name).name,
@@ -129,6 +159,8 @@ def serve():
                 elif action == 'verify':
                     result = recovery.verify()
                 elif action == 'refresh':
+                    if protected:
+                        raise ValueError('Stable path experiment must not refresh upper LVs')
                     # Explicit host experiment request authorizes only this disposable LV.
                     result = recovery.refresh(request.get('target','ubuntu'), confirm=lambda _: 'REFRESH labrescue/'+request.get('target','ubuntu'))
                 elif action == 'workload':
@@ -136,7 +168,42 @@ def serve():
                         worker = subprocess.Popen(['/bin/chroot','/proc/1/root','/usr/bin/python3','/opt/lab/workload.py'],
                                                   stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
                     result = worker.pid
+                elif action == 'prepare_wrong_disk':
+                    if not protected:
+                        raise ValueError('Requires protected lab')
+                    candidates=[]
+                    for path in Path('/sys/class/block').iterdir():
+                        if (path/'partition').exists():
+                            continue
+                        if any((p/'serial').exists() and (p/'serial').read_text().strip()=='LAB-IMPOSTER'
+                               for p in path.resolve().parents):
+                            candidates.append(path)
+                    if len(candidates)!=1 or int((candidates[0]/'size').read_text())!=recovery.c['sectors']:
+                        raise ValueError('Unique disposable impostor disk not ready')
+                    node='/dev/'+candidates[0].name
+                    disk_id=recovery.c['partuuid'].rsplit('-',1)[0]
+                    run('/sbin/sfdisk',node,input=f'label: dos\nlabel-id: 0x{disk_id}\n, ,8e\n')
+                    run('/sbin/lvm','pvcreate','--devices',node+'1',node+'1')
+                    result={'node':node,'partuuid':recovery.c['partuuid'],'different_pv_uuid':True}
+                elif action == 'kill_path_guard':
+                    if not protected:
+                        raise ValueError('Requires protected lab')
+                    pid=int(Path('/run/path-guard.pid').read_text())
+                    if b'/opt/lab/path_guard.py' not in Path(f'/proc/{pid}/cmdline').read_bytes():
+                        raise ValueError('Guard PID identity differs')
+                    os.kill(pid,signal.SIGKILL)
+                    result={'killed_pid':pid}
+                elif action == 'audit_workload':
+                    records=[json.loads(line) for line in Path('/run/workload.jsonl').read_text().splitlines()]
+                    if any(not row['ok'] for row in records):
+                        raise ValueError('Audit only applies to a stream with no failed writes')
+                    expected=b''.join((str(row['seq'])+'\n').encode()+b'x'*4096 for row in records)
+                    with open('/proc/1/root/root/workload.data','rb') as data:
+                        actual=data.read(len(expected))
+                    result={'acknowledged_records':len(records),'confirmed_bytes':len(expected),'prefix_matches':actual==expected}
                 elif action in ['suspend','resume']:
+                    if protected:
+                        raise ValueError('Stable path experiment must not pre-suspend upper LVs')
                     # Best-case interception experiment: only guest lab LVs, no host devices.
                     result=[]
                     for target in ['ubuntu','shared']:

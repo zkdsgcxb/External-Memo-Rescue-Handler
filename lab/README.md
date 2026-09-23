@@ -12,7 +12,7 @@
 - 身份信息全部在虚拟机内生成。恢复直接调用项目的 `Recovery` 实现；测试框架只为虚拟机内指定的 LV 自动提供确认文本。
 - 每次结束都停止 QEMU，保留磁盘和记录供检查；再次运行使用新盘，不复用故障状态。
 
-这不是完整 Ubuntu 桌面或 systemd 集成测试；没有复现 F9/F10 密码登录、cgroup 限额、宿主服务安装或真实 Hub/供电问题。无感运行也不是当前通过标准。
+这不是完整 Ubuntu 桌面或 systemd 集成测试；没有复现 F9/F10 密码登录、cgroup 限额、宿主服务安装或真实 Hub/供电问题。另有 [后台自动恢复实验](AUTOMATIC.md)，验证非预知断联时的 I/O 排队和同一工作进程继续运行；不等于完整桌面无感运行。
 
 ## 安装与构建
 
@@ -84,6 +84,6 @@ python3 lab/run.py --scenario queued-write --gap 0.2
 
 1. 先扩大保活/映射恢复回归矩阵：更多间隔、重复拔插、错误身份、命令阻塞、完整 Ubuntu/systemd 与认证集成。
 2. 对已经中止 journal 或只读的卷，区分可读数据抢救与离线修复；不在线强行 fsck 或宣称系统恢复正常。
-3. “短暂断联无感”单独研究：需要在 I/O 错误到达 ext4/应用前实现有界等待/重试和稳定块设备身份。仅在错误之后 `lvchange --refresh` 无法撤销失败写入；本版仅实现预先暂停的实验对照，未实现非预知故障的自动排队层。可评估 dm-multipath 的无路径排队机制，但单 USB 路径、身份核验、重接、启动集成、排队超时与应用超时都需要专门验证。
+3. “短暂断联无感”单独研究：需要在 I/O 错误到达 ext4/应用前实现有界等待/重试和稳定块设备身份。仅在错误之后 `lvchange --refresh` 无法撤销失败写入。[自动恢复原型](AUTOMATIC.md) 已在虚拟机中实现单 USB 路径的 dm-multipath 排队、身份核验、重接与超时。真实根盘启动集成、故障竞态、应用超时和长期压力仍待验证。
 
 机制参考：[QEMU USB 热插拔文档](https://www.qemu.org/docs/master/system/devices/usb.html)、[Linux ext4 错误行为](https://www.kernel.org/doc/html/latest/admin-guide/ext4.html)。实测结果见 [VALIDATION.md](VALIDATION.md)。

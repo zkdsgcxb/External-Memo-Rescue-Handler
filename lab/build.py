@@ -13,7 +13,7 @@ import subprocess
 BASE = Path(__file__).resolve().parent
 PROJECT = BASE.parent
 WORK = BASE / 'work'
-MODULES = ['xhci_pci', 'usb_storage', 'uas', 'sd_mod', 'dm_mod', 'ext4']
+MODULES = ['xhci_pci', 'usb_storage', 'uas', 'sd_mod', 'dm_mod', 'dm_multipath', 'dm_round_robin', 'ext4']
 
 
 def main():

@@ -1,0 +1,843 @@
+{
+  "note": "VM-only. passed on negative cases means rejection/timeout worked, not filesystem recovery. Source/build hashes identify each tested working tree.",
+  "shared_qemu_runner_sha256": "895d414a1cc0f2f223d1ae918fa45312d21d22a314d7fbbb56bafe2ddbac1dae",
+  "automatic_runs": [
+    {
+      "run": "20260923-183933-auto-64264",
+      "report_sha256": "4142798b7162781cc8c74d20de4a1d3165619d9774060110a618eae86a25dd7d",
+      "mode": "automatic-multipath",
+      "transport": "uas",
+      "gap": 1.0,
+      "queue_seconds": 8,
+      "reconnect": "same",
+      "kill_manager": false,
+      "completed": true,
+      "passed": true,
+      "checks": {
+        "ram_heartbeat": true,
+        "ram_shell": true,
+        "stable_upper_mappings": true,
+        "same_process_alive": true,
+        "automatic_recovery": true,
+        "zero_application_errors": true,
+        "writes_continued": true,
+        "block_read": true,
+        "root_read": true,
+        "filesystem_writable": true,
+        "no_journal_abort": true,
+        "acknowledged_data_present": true
+      },
+      "successful_writes": 65,
+      "failed_writes": 0,
+      "max_write_latency": 1.875667786000001,
+      "max_heartbeat_gap": 0.710822564999944,
+      "runner_sha256": "cf8ba46d0d79e1d9450b51df39cd255a573b3aa059afa072c87b4042dabc080f",
+      "build": {
+        "kernel_release": "6.8.0-139-generic",
+        "source_commit": "1889fedb52ce4f012d431b94d4fd0750c848ce94",
+        "source_sha256": {
+          "lab/build.py": "8af61619a44ef975657905e6095bfe32443b1d1186cc230e3a6e3f74e5deedeb",
+          "ram-rescue-demo/src/rescue.py": "79d5f850f191f227bf52f9195b8b6845e82d9f4ec5bd978e96c5f479c0d2e97f",
+          "ram-rescue-demo/src/lvm.conf": "10708bf37ce4b01ec3e7e3e0d3d6394301f0bf3d4046fbd1da8521dad80d0cd3",
+          "lab/guest/agent.py": "f1854a87bde5ef1041056cdc1dad3ad42f88eed22904b5f34d09c3045708add7",
+          "lab/guest/init.sh": "30ca9f8bc6c4da9461edee2d16289ad3c6d1145fafcd808784c70f5d8fcf49af",
+          "lab/guest/path_guard.py": "e95c382ce684398436e2d40fb46bb354882911458ad72b891ea3df27a11b94dd",
+          "lab/guest/root-init.sh": "078ec84bb1f502fc2b80b99b4eef2ee4a40432ccb9a476bf7757952547ca57d9",
+          "lab/guest/workload.py": "15d8e159ab16b2e7786aeee10d4be861a6b1cf448bf3ddf16b6a8c64ab72ad2c"
+        },
+        "kernel_sha256": "0066409132868538bc0c9076f60131025775d5bbd8617df074d059f91b584918",
+        "initramfs_sha256": "87d57c3ff8be144d2cd2fec48ec487643256c8fd594fc9417c63a6ccfa7faa49",
+        "note": "guest payload copied from working tree; no host identities or passwords"
+      },
+      "data_audit": {
+        "id": 21,
+        "ok": true,
+        "result": {
+          "acknowledged_records": 68,
+          "confirmed_bytes": 278723,
+          "prefix_matches": true
+        },
+        "output": ""
+      },
+      "kernel_queue_timeout_seconds": "10",
+      "cycles": 3,
+      "path_events": [
+        {
+          "time": 2.183824486,
+          "state": "ready",
+          "recoveries": 0,
+          "node": "/dev/sda1"
+        },
+        {
+          "time": 3.752126379,
+          "state": "waiting",
+          "recoveries": 0,
+          "old_node": "/dev/sda1",
+          "deadline": 11.747170432
+        },
+        {
+          "time": 3.756511702,
+          "state": "rejected",
+          "recoveries": 0,
+          "reason": "Expected ONE matching USB disk; found 0. No changes made."
+        },
+        {
+          "time": 5.482666442,
+          "state": "verified",
+          "recoveries": 0,
+          "node": "/dev/sdb1"
+        },
+        {
+          "time": 5.494292816,
+          "state": "ready",
+          "recoveries": 1,
+          "node": "/dev/sdb1"
+        },
+        {
+          "time": 6.854736683,
+          "state": "waiting",
+          "recoveries": 1,
+          "old_node": "/dev/sdb1",
+          "deadline": 14.853152151
+        },
+        {
+          "time": 6.856430604,
+          "state": "rejected",
+          "recoveries": 1,
+          "reason": "Expected ONE matching USB disk; found 0. No changes made."
+        },
+        {
+          "time": 8.682543199,
+          "state": "verified",
+          "recoveries": 1,
+          "node": "/dev/sda1"
+        },
+        {
+          "time": 8.694408839,
+          "state": "ready",
+          "recoveries": 2,
+          "node": "/dev/sda1"
+        },
+        {
+          "time": 10.049024286,
+          "state": "waiting",
+          "recoveries": 2,
+          "old_node": "/dev/sda1",
+          "deadline": 18.047561848
+        },
+        {
+          "time": 10.050728438,
+          "state": "rejected",
+          "recoveries": 2,
+          "reason": "Expected ONE matching USB disk; found 0. No changes made."
+        },
+        {
+          "time": 11.846916228,
+          "state": "verified",
+          "recoveries": 2,
+          "node": "/dev/sdb1"
+        },
+        {
+          "time": 11.857274066,
+          "state": "ready",
+          "recoveries": 3,
+          "node": "/dev/sdb1"
+        }
+      ],
+      "mappings_before": {
+        "ubuntu": {
+          "node": "dm-1",
+          "slaves": [
+            "dm-0"
+          ]
+        },
+        "shared": {
+          "node": "dm-2",
+          "slaves": [
+            "dm-0"
+          ]
+        }
+      },
+      "mappings_after": {
+        "ubuntu": {
+          "node": "dm-1",
+          "slaves": [
+            "dm-0"
+          ]
+        },
+        "shared": {
+          "node": "dm-2",
+          "slaves": [
+            "dm-0"
+          ]
+        }
+      },
+      "worker_before": {
+        "pid": 167,
+        "exit_code": null,
+        "start_ticks": "250"
+      },
+      "worker_after": {
+        "pid": 167,
+        "exit_code": null,
+        "start_ticks": "250"
+      }
+    },
+    {
+      "run": "20260923-183935-auto-64285",
+      "report_sha256": "0635259cf178948537210503f8b19c54555756a202ddb720dd2c49c5d0e4f3dc",
+      "mode": "automatic-multipath",
+      "transport": "uas",
+      "gap": 0.2,
+      "queue_seconds": 4,
+      "reconnect": "wrong",
+      "kill_manager": false,
+      "completed": true,
+      "passed": true,
+      "checks": {
+        "ram_heartbeat": true,
+        "ram_shell": true,
+        "stable_upper_mappings": true,
+        "same_process_alive": true,
+        "deadline_released_queue": true,
+        "never_attached_unverified_disk": true,
+        "wrong_pv_rejected": true
+      },
+      "successful_writes": 13,
+      "failed_writes": 25,
+      "max_write_latency": 4.196778444,
+      "max_heartbeat_gap": 0.8046789239997452,
+      "runner_sha256": "cf8ba46d0d79e1d9450b51df39cd255a573b3aa059afa072c87b4042dabc080f",
+      "build": {
+        "kernel_release": "6.8.0-139-generic",
+        "source_commit": "1889fedb52ce4f012d431b94d4fd0750c848ce94",
+        "source_sha256": {
+          "lab/build.py": "8af61619a44ef975657905e6095bfe32443b1d1186cc230e3a6e3f74e5deedeb",
+          "ram-rescue-demo/src/rescue.py": "79d5f850f191f227bf52f9195b8b6845e82d9f4ec5bd978e96c5f479c0d2e97f",
+          "ram-rescue-demo/src/lvm.conf": "10708bf37ce4b01ec3e7e3e0d3d6394301f0bf3d4046fbd1da8521dad80d0cd3",
+          "lab/guest/agent.py": "f1854a87bde5ef1041056cdc1dad3ad42f88eed22904b5f34d09c3045708add7",
+          "lab/guest/init.sh": "30ca9f8bc6c4da9461edee2d16289ad3c6d1145fafcd808784c70f5d8fcf49af",
+          "lab/guest/path_guard.py": "e95c382ce684398436e2d40fb46bb354882911458ad72b891ea3df27a11b94dd",
+          "lab/guest/root-init.sh": "078ec84bb1f502fc2b80b99b4eef2ee4a40432ccb9a476bf7757952547ca57d9",
+          "lab/guest/workload.py": "15d8e159ab16b2e7786aeee10d4be861a6b1cf448bf3ddf16b6a8c64ab72ad2c"
+        },
+        "kernel_sha256": "0066409132868538bc0c9076f60131025775d5bbd8617df074d059f91b584918",
+        "initramfs_sha256": "87d57c3ff8be144d2cd2fec48ec487643256c8fd594fc9417c63a6ccfa7faa49",
+        "note": "guest payload copied from working tree; no host identities or passwords"
+      },
+      "kernel_queue_timeout_seconds": "6",
+      "cycles": 1,
+      "path_events": [
+        {
+          "time": 2.164780694,
+          "state": "ready",
+          "recoveries": 0,
+          "node": "/dev/sda1"
+        },
+        {
+          "time": 6.085330378,
+          "state": "waiting",
+          "recoveries": 0,
+          "old_node": "/dev/sda1",
+          "deadline": 10.084133169000001
+        },
+        {
+          "time": 6.08737534,
+          "state": "rejected",
+          "recoveries": 0,
+          "reason": "Expected ONE matching USB disk; found 0. No changes made."
+        },
+        {
+          "time": 6.750205265,
+          "state": "rejected",
+          "recoveries": 0,
+          "reason": "UUID does not match the enrolled disk. No changes made."
+        },
+        {
+          "time": 10.239131666,
+          "state": "expired",
+          "recoveries": 0,
+          "reason": "queue deadline exceeded; I/O now fails rather than waiting forever"
+        }
+      ],
+      "mappings_before": {
+        "ubuntu": {
+          "node": "dm-1",
+          "slaves": [
+            "dm-0"
+          ]
+        },
+        "shared": {
+          "node": "dm-2",
+          "slaves": [
+            "dm-0"
+          ]
+        }
+      },
+      "mappings_after": {
+        "ubuntu": {
+          "node": "dm-1",
+          "slaves": [
+            "dm-0"
+          ]
+        },
+        "shared": {
+          "node": "dm-2",
+          "slaves": [
+            "dm-0"
+          ]
+        }
+      },
+      "worker_before": {
+        "pid": 195,
+        "exit_code": null,
+        "start_ticks": "465"
+      },
+      "worker_after": {
+        "pid": 195,
+        "exit_code": null,
+        "start_ticks": "465"
+      }
+    },
+    {
+      "run": "20260923-183936-auto-64304",
+      "report_sha256": "52bfb95cb791353bbb7ff866084b5a9f092d566ce26ac9f5ce9e5fc84d8047ce",
+      "mode": "automatic-multipath",
+      "transport": "uas",
+      "gap": 0.2,
+      "queue_seconds": 4,
+      "reconnect": "none",
+      "kill_manager": true,
+      "completed": true,
+      "passed": true,
+      "checks": {
+        "ram_heartbeat": true,
+        "ram_shell": true,
+        "stable_upper_mappings": true,
+        "same_process_alive": true,
+        "deadline_released_queue": true,
+        "never_attached_unverified_disk": true
+      },
+      "successful_writes": 12,
+      "failed_writes": 34,
+      "max_write_latency": 6.494157544,
+      "max_heartbeat_gap": 0.7080937799992171,
+      "runner_sha256": "cf8ba46d0d79e1d9450b51df39cd255a573b3aa059afa072c87b4042dabc080f",
+      "build": {
+        "kernel_release": "6.8.0-139-generic",
+        "source_commit": "1889fedb52ce4f012d431b94d4fd0750c848ce94",
+        "source_sha256": {
+          "lab/build.py": "8af61619a44ef975657905e6095bfe32443b1d1186cc230e3a6e3f74e5deedeb",
+          "ram-rescue-demo/src/rescue.py": "79d5f850f191f227bf52f9195b8b6845e82d9f4ec5bd978e96c5f479c0d2e97f",
+          "ram-rescue-demo/src/lvm.conf": "10708bf37ce4b01ec3e7e3e0d3d6394301f0bf3d4046fbd1da8521dad80d0cd3",
+          "lab/guest/agent.py": "f1854a87bde5ef1041056cdc1dad3ad42f88eed22904b5f34d09c3045708add7",
+          "lab/guest/init.sh": "30ca9f8bc6c4da9461edee2d16289ad3c6d1145fafcd808784c70f5d8fcf49af",
+          "lab/guest/path_guard.py": "e95c382ce684398436e2d40fb46bb354882911458ad72b891ea3df27a11b94dd",
+          "lab/guest/root-init.sh": "078ec84bb1f502fc2b80b99b4eef2ee4a40432ccb9a476bf7757952547ca57d9",
+          "lab/guest/workload.py": "15d8e159ab16b2e7786aeee10d4be861a6b1cf448bf3ddf16b6a8c64ab72ad2c"
+        },
+        "kernel_sha256": "0066409132868538bc0c9076f60131025775d5bbd8617df074d059f91b584918",
+        "initramfs_sha256": "87d57c3ff8be144d2cd2fec48ec487643256c8fd594fc9417c63a6ccfa7faa49",
+        "note": "guest payload copied from working tree; no host identities or passwords"
+      },
+      "kernel_queue_timeout_seconds": "6",
+      "cycles": 1,
+      "path_events": [
+        {
+          "time": 2.208957887,
+          "state": "ready",
+          "recoveries": 0,
+          "node": "/dev/sda1"
+        },
+        {
+          "time": 4.277100546,
+          "state": "waiting",
+          "recoveries": 0,
+          "old_node": "/dev/sda1",
+          "deadline": 8.274134669
+        },
+        {
+          "time": 4.279642209,
+          "state": "rejected",
+          "recoveries": 0,
+          "reason": "Expected ONE matching USB disk; found 0. No changes made."
+        }
+      ],
+      "mappings_before": {
+        "ubuntu": {
+          "node": "dm-1",
+          "slaves": [
+            "dm-0"
+          ]
+        },
+        "shared": {
+          "node": "dm-2",
+          "slaves": [
+            "dm-0"
+          ]
+        }
+      },
+      "mappings_after": {
+        "ubuntu": {
+          "node": "dm-1",
+          "slaves": [
+            "dm-0"
+          ]
+        },
+        "shared": {
+          "node": "dm-2",
+          "slaves": [
+            "dm-0"
+          ]
+        }
+      },
+      "worker_before": {
+        "pid": 173,
+        "exit_code": null,
+        "start_ticks": "301"
+      },
+      "worker_after": {
+        "pid": 173,
+        "exit_code": null,
+        "start_ticks": "301"
+      }
+    },
+    {
+      "run": "20260923-184023-auto-64438",
+      "report_sha256": "9f62e215ee503fe75d4ae7e03261105b4094207e8c304e6afde25ed9f270bbe6",
+      "mode": "automatic-multipath",
+      "transport": "bot",
+      "gap": 0.2,
+      "queue_seconds": 8,
+      "reconnect": "same",
+      "kill_manager": false,
+      "completed": true,
+      "passed": true,
+      "checks": {
+        "ram_heartbeat": true,
+        "ram_shell": true,
+        "stable_upper_mappings": true,
+        "same_process_alive": true,
+        "automatic_recovery": true,
+        "zero_application_errors": true,
+        "writes_continued": true,
+        "block_read": true,
+        "root_read": true,
+        "filesystem_writable": true,
+        "no_journal_abort": true,
+        "acknowledged_data_present": true
+      },
+      "successful_writes": 67,
+      "failed_writes": 0,
+      "max_write_latency": 2.1179578670000003,
+      "max_heartbeat_gap": 0.7288991819996227,
+      "runner_sha256": "a64b41085e2cfe2bc76d9917341c4955e21e0be8ce501444e30f6410ee5fa4e0",
+      "build": {
+        "kernel_release": "6.8.0-139-generic",
+        "source_commit": "1889fedb52ce4f012d431b94d4fd0750c848ce94",
+        "source_sha256": {
+          "lab/build.py": "8af61619a44ef975657905e6095bfe32443b1d1186cc230e3a6e3f74e5deedeb",
+          "ram-rescue-demo/src/rescue.py": "79d5f850f191f227bf52f9195b8b6845e82d9f4ec5bd978e96c5f479c0d2e97f",
+          "ram-rescue-demo/src/lvm.conf": "10708bf37ce4b01ec3e7e3e0d3d6394301f0bf3d4046fbd1da8521dad80d0cd3",
+          "lab/guest/agent.py": "f1854a87bde5ef1041056cdc1dad3ad42f88eed22904b5f34d09c3045708add7",
+          "lab/guest/init.sh": "30ca9f8bc6c4da9461edee2d16289ad3c6d1145fafcd808784c70f5d8fcf49af",
+          "lab/guest/path_guard.py": "e95c382ce684398436e2d40fb46bb354882911458ad72b891ea3df27a11b94dd",
+          "lab/guest/root-init.sh": "078ec84bb1f502fc2b80b99b4eef2ee4a40432ccb9a476bf7757952547ca57d9",
+          "lab/guest/workload.py": "15d8e159ab16b2e7786aeee10d4be861a6b1cf448bf3ddf16b6a8c64ab72ad2c"
+        },
+        "kernel_sha256": "0066409132868538bc0c9076f60131025775d5bbd8617df074d059f91b584918",
+        "initramfs_sha256": "87d57c3ff8be144d2cd2fec48ec487643256c8fd594fc9417c63a6ccfa7faa49",
+        "note": "guest payload copied from working tree; no host identities or passwords"
+      },
+      "data_audit": {
+        "id": 31,
+        "ok": true,
+        "result": {
+          "acknowledged_records": 68,
+          "confirmed_bytes": 278723,
+          "prefix_matches": true
+        },
+        "output": ""
+      },
+      "kernel_queue_timeout_seconds": "10",
+      "cycles": 3,
+      "path_events": [
+        {
+          "time": 3.59769514,
+          "state": "ready",
+          "recoveries": 0,
+          "node": "/dev/sda1"
+        },
+        {
+          "time": 5.670264288,
+          "state": "waiting",
+          "recoveries": 0,
+          "old_node": "/dev/sda1",
+          "deadline": 13.668944079
+        },
+        {
+          "time": 5.672703538,
+          "state": "rejected",
+          "recoveries": 0,
+          "reason": "Expected ONE matching USB disk; found 0. No changes made."
+        },
+        {
+          "time": 7.633119792,
+          "state": "verified",
+          "recoveries": 0,
+          "node": "/dev/sdb1"
+        },
+        {
+          "time": 7.805339266,
+          "state": "ready",
+          "recoveries": 1,
+          "node": "/dev/sdb1"
+        },
+        {
+          "time": 9.238564419,
+          "state": "waiting",
+          "recoveries": 1,
+          "old_node": "/dev/sdb1",
+          "deadline": 17.235782073
+        },
+        {
+          "time": 9.240016418,
+          "state": "rejected",
+          "recoveries": 1,
+          "reason": "Expected ONE matching USB disk; found 0. No changes made."
+        },
+        {
+          "time": 11.124034694,
+          "state": "verified",
+          "recoveries": 1,
+          "node": "/dev/sda1"
+        },
+        {
+          "time": 11.133273245,
+          "state": "ready",
+          "recoveries": 2,
+          "node": "/dev/sda1"
+        },
+        {
+          "time": 12.513919085,
+          "state": "waiting",
+          "recoveries": 2,
+          "old_node": "/dev/sda1",
+          "deadline": 20.512210128
+        },
+        {
+          "time": 12.51533902,
+          "state": "rejected",
+          "recoveries": 2,
+          "reason": "Expected ONE matching USB disk; found 0. No changes made."
+        },
+        {
+          "time": 14.536054997,
+          "state": "verified",
+          "recoveries": 2,
+          "node": "/dev/sdb1"
+        },
+        {
+          "time": 14.544217392,
+          "state": "ready",
+          "recoveries": 3,
+          "node": "/dev/sdb1"
+        }
+      ],
+      "mappings_before": {
+        "ubuntu": {
+          "node": "dm-1",
+          "slaves": [
+            "dm-0"
+          ]
+        },
+        "shared": {
+          "node": "dm-2",
+          "slaves": [
+            "dm-0"
+          ]
+        }
+      },
+      "mappings_after": {
+        "ubuntu": {
+          "node": "dm-1",
+          "slaves": [
+            "dm-0"
+          ]
+        },
+        "shared": {
+          "node": "dm-2",
+          "slaves": [
+            "dm-0"
+          ]
+        }
+      },
+      "worker_before": {
+        "pid": 176,
+        "exit_code": null,
+        "start_ticks": "446"
+      },
+      "worker_after": {
+        "pid": 176,
+        "exit_code": null,
+        "start_ticks": "446"
+      }
+    },
+    {
+      "run": "20260923-184024-auto-64459",
+      "report_sha256": "8fb759dc469d378de8335beb37081360313895bb58c7b26168304a5b05cb0f3a",
+      "mode": "automatic-multipath",
+      "transport": "uas",
+      "gap": 6.0,
+      "queue_seconds": 4,
+      "reconnect": "late",
+      "kill_manager": false,
+      "completed": true,
+      "passed": true,
+      "checks": {
+        "ram_heartbeat": true,
+        "ram_shell": true,
+        "stable_upper_mappings": true,
+        "same_process_alive": true,
+        "deadline_released_queue": true,
+        "no_recovery_after_failure": true,
+        "bounded_wait": true
+      },
+      "successful_writes": 9,
+      "failed_writes": 43,
+      "max_write_latency": 4.257471967,
+      "max_heartbeat_gap": 0.7257105559992851,
+      "runner_sha256": "a64b41085e2cfe2bc76d9917341c4955e21e0be8ce501444e30f6410ee5fa4e0",
+      "build": {
+        "kernel_release": "6.8.0-139-generic",
+        "source_commit": "1889fedb52ce4f012d431b94d4fd0750c848ce94",
+        "source_sha256": {
+          "lab/build.py": "8af61619a44ef975657905e6095bfe32443b1d1186cc230e3a6e3f74e5deedeb",
+          "ram-rescue-demo/src/rescue.py": "79d5f850f191f227bf52f9195b8b6845e82d9f4ec5bd978e96c5f479c0d2e97f",
+          "ram-rescue-demo/src/lvm.conf": "10708bf37ce4b01ec3e7e3e0d3d6394301f0bf3d4046fbd1da8521dad80d0cd3",
+          "lab/guest/agent.py": "f1854a87bde5ef1041056cdc1dad3ad42f88eed22904b5f34d09c3045708add7",
+          "lab/guest/init.sh": "30ca9f8bc6c4da9461edee2d16289ad3c6d1145fafcd808784c70f5d8fcf49af",
+          "lab/guest/path_guard.py": "e95c382ce684398436e2d40fb46bb354882911458ad72b891ea3df27a11b94dd",
+          "lab/guest/root-init.sh": "078ec84bb1f502fc2b80b99b4eef2ee4a40432ccb9a476bf7757952547ca57d9",
+          "lab/guest/workload.py": "15d8e159ab16b2e7786aeee10d4be861a6b1cf448bf3ddf16b6a8c64ab72ad2c"
+        },
+        "kernel_sha256": "0066409132868538bc0c9076f60131025775d5bbd8617df074d059f91b584918",
+        "initramfs_sha256": "87d57c3ff8be144d2cd2fec48ec487643256c8fd594fc9417c63a6ccfa7faa49",
+        "note": "guest payload copied from working tree; no host identities or passwords"
+      },
+      "kernel_queue_timeout_seconds": "6",
+      "cycles": 1,
+      "path_events": [
+        {
+          "time": 2.452291911,
+          "state": "ready",
+          "recoveries": 0,
+          "node": "/dev/sda1"
+        },
+        {
+          "time": 4.444537876,
+          "state": "waiting",
+          "recoveries": 0,
+          "old_node": "/dev/sda1",
+          "deadline": 8.443336242
+        },
+        {
+          "time": 4.445826099,
+          "state": "rejected",
+          "recoveries": 0,
+          "reason": "Expected ONE matching USB disk; found 0. No changes made."
+        },
+        {
+          "time": 8.534459689,
+          "state": "expired",
+          "recoveries": 0,
+          "reason": "queue deadline exceeded; I/O now fails rather than waiting forever"
+        }
+      ],
+      "mappings_before": {
+        "ubuntu": {
+          "node": "dm-1",
+          "slaves": [
+            "dm-0"
+          ]
+        },
+        "shared": {
+          "node": "dm-2",
+          "slaves": [
+            "dm-0"
+          ]
+        }
+      },
+      "mappings_after": {
+        "ubuntu": {
+          "node": "dm-1",
+          "slaves": [
+            "dm-0"
+          ]
+        },
+        "shared": {
+          "node": "dm-2",
+          "slaves": [
+            "dm-0"
+          ]
+        }
+      },
+      "worker_before": {
+        "pid": 173,
+        "exit_code": null,
+        "start_ticks": "322"
+      },
+      "worker_after": {
+        "pid": 173,
+        "exit_code": null,
+        "start_ticks": "322"
+      }
+    },
+    {
+      "run": "20260923-184053-auto-64570",
+      "report_sha256": "57291141458847b55b2e5b4b56e0fce75a37db34047a4503259ced5b217f2cdb",
+      "mode": "automatic-multipath",
+      "transport": "uas",
+      "gap": 0.2,
+      "queue_seconds": 4,
+      "reconnect": "none",
+      "kill_manager": false,
+      "completed": true,
+      "passed": true,
+      "checks": {
+        "ram_heartbeat": true,
+        "ram_shell": true,
+        "stable_upper_mappings": true,
+        "same_process_alive": true,
+        "deadline_released_queue": true,
+        "no_recovery_after_failure": true,
+        "bounded_wait": true
+      },
+      "successful_writes": 12,
+      "failed_writes": 25,
+      "max_write_latency": 4.074646616999999,
+      "max_heartbeat_gap": 0.6157478039995112,
+      "runner_sha256": "a64b41085e2cfe2bc76d9917341c4955e21e0be8ce501444e30f6410ee5fa4e0",
+      "build": {
+        "kernel_release": "6.8.0-139-generic",
+        "source_commit": "1889fedb52ce4f012d431b94d4fd0750c848ce94",
+        "source_sha256": {
+          "lab/build.py": "8af61619a44ef975657905e6095bfe32443b1d1186cc230e3a6e3f74e5deedeb",
+          "ram-rescue-demo/src/rescue.py": "79d5f850f191f227bf52f9195b8b6845e82d9f4ec5bd978e96c5f479c0d2e97f",
+          "ram-rescue-demo/src/lvm.conf": "10708bf37ce4b01ec3e7e3e0d3d6394301f0bf3d4046fbd1da8521dad80d0cd3",
+          "lab/guest/agent.py": "f1854a87bde5ef1041056cdc1dad3ad42f88eed22904b5f34d09c3045708add7",
+          "lab/guest/init.sh": "30ca9f8bc6c4da9461edee2d16289ad3c6d1145fafcd808784c70f5d8fcf49af",
+          "lab/guest/path_guard.py": "e95c382ce684398436e2d40fb46bb354882911458ad72b891ea3df27a11b94dd",
+          "lab/guest/root-init.sh": "078ec84bb1f502fc2b80b99b4eef2ee4a40432ccb9a476bf7757952547ca57d9",
+          "lab/guest/workload.py": "15d8e159ab16b2e7786aeee10d4be861a6b1cf448bf3ddf16b6a8c64ab72ad2c"
+        },
+        "kernel_sha256": "0066409132868538bc0c9076f60131025775d5bbd8617df074d059f91b584918",
+        "initramfs_sha256": "87d57c3ff8be144d2cd2fec48ec487643256c8fd594fc9417c63a6ccfa7faa49",
+        "note": "guest payload copied from working tree; no host identities or passwords"
+      },
+      "kernel_queue_timeout_seconds": "6",
+      "cycles": 1,
+      "path_events": [
+        {
+          "time": 2.263619812,
+          "state": "ready",
+          "recoveries": 0,
+          "node": "/dev/sda1"
+        },
+        {
+          "time": 4.371016279,
+          "state": "waiting",
+          "recoveries": 0,
+          "old_node": "/dev/sda1",
+          "deadline": 8.369781297
+        },
+        {
+          "time": 4.372458192,
+          "state": "rejected",
+          "recoveries": 0,
+          "reason": "Expected ONE matching USB disk; found 0. No changes made."
+        },
+        {
+          "time": 8.426474219,
+          "state": "expired",
+          "recoveries": 0,
+          "reason": "queue deadline exceeded; I/O now fails rather than waiting forever"
+        }
+      ],
+      "mappings_before": {
+        "ubuntu": {
+          "node": "dm-1",
+          "slaves": [
+            "dm-0"
+          ]
+        },
+        "shared": {
+          "node": "dm-2",
+          "slaves": [
+            "dm-0"
+          ]
+        }
+      },
+      "mappings_after": {
+        "ubuntu": {
+          "node": "dm-1",
+          "slaves": [
+            "dm-0"
+          ]
+        },
+        "shared": {
+          "node": "dm-2",
+          "slaves": [
+            "dm-0"
+          ]
+        }
+      },
+      "worker_before": {
+        "pid": 173,
+        "exit_code": null,
+        "start_ticks": "306"
+      },
+      "worker_after": {
+        "pid": 173,
+        "exit_code": null,
+        "start_ticks": "306"
+      }
+    }
+  ],
+  "regression_runs": [
+    {
+      "run": "20260923-184025-baseline-64469",
+      "report_sha256": "a9797e2a046b553f293ff0a606a5eaa4c24a3f7eadacf07f0bdf78b9d599889e",
+      "scenario": "baseline",
+      "checks": {
+        "ram_heartbeat": true,
+        "ram_shell": true,
+        "block_read_recovered": true,
+        "baseline_workload": true
+      },
+      "recovery_checks_passed": true,
+      "workload_successes": 40,
+      "workload_failures": 0,
+      "runner_sha256": "895d414a1cc0f2f223d1ae918fa45312d21d22a314d7fbbb56bafe2ddbac1dae"
+    },
+    {
+      "run": "20260923-184051-queued-write-64557",
+      "report_sha256": "2d6e4ad60ac3d0cb0010fa128cd590c6fec9a42ec82a8b723a58ad9dee9e7e34",
+      "scenario": "queued-write",
+      "checks": {
+        "ram_heartbeat": true,
+        "ram_shell": true,
+        "block_read_recovered": true,
+        "renumbered": true,
+        "mapping_refreshed": true,
+        "same_process_survived": true,
+        "writes_continued_without_error": true,
+        "filesystem_writable": true
+      },
+      "recovery_checks_passed": true,
+      "workload_successes": 43,
+      "workload_failures": 0,
+      "runner_sha256": "895d414a1cc0f2f223d1ae918fa45312d21d22a314d7fbbb56bafe2ddbac1dae"
+    }
+  ]
+}

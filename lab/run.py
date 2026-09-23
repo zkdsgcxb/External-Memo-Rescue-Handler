@@ -96,6 +96,28 @@ class Channel:
         raise TimeoutError(action)
 
 
+def qemu_command(run_dir, transport='uas', tcg=False, extra_kernel_args=''):
+    command = ['qemu-system-x86_64','-machine','q35','-accel','tcg' if tcg else 'kvm',
+               '-m','1536','-smp','2','-display','none','-nodefaults','-no-reboot','-nic','none',
+               '-smbios','type=1,product=RAMRescueLab',
+               '-kernel',str(WORK/'vmlinuz'),'-initrd',str(WORK/'initramfs.cpio.gz'),
+               '-append','console=ttyS0 rdinit=/init ram_rescue_lab=1 panic=-1 '+extra_kernel_args,
+               '-serial','file:'+str(run_dir/'console.log'),
+               '-serial','unix:'+str(run_dir/'agent.sock')+',server=on,wait=off',
+               '-serial','unix:'+str(run_dir/'rescue.sock')+',server=on,wait=off',
+               '-qmp','unix:'+str(run_dir/'qmp.sock')+',server=on,wait=off',
+               '-device','qemu-xhci,id=xhci']
+    for name,node in [('usb.raw','usbdisk'),('decoy.raw','decoydisk')]:
+        command += ['-blockdev',json.dumps({'driver':'raw','node-name':node,
+                    'file':{'driver':'file','filename':str(run_dir/name)}})]
+    if transport == 'uas':
+        command += ['-device','usb-uas,bus=xhci.0,id=stick,serial=RAMRESCUE-LAB-001',
+                    '-device','scsi-hd,bus=stick.0,id=lun,drive=usbdisk']
+    else:
+        command += ['-device','usb-storage,bus=xhci.0,id=stick,drive=usbdisk,serial=RAMRESCUE-LAB-001']
+    return command
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--scenario', choices=['baseline','idle','write','queued-write'], default='idle')
@@ -116,24 +138,7 @@ def main():
     for name,size in [('usb.raw',2*1024**3),('decoy.raw',16*1024**2)]:
         with (run_dir/name).open('xb') as stream:
             stream.truncate(size)
-    command = ['qemu-system-x86_64','-machine','q35','-accel','tcg' if args.tcg else 'kvm',
-               '-m','1536','-smp','2','-display','none','-nodefaults','-no-reboot','-nic','none',
-               '-smbios','type=1,product=RAMRescueLab',
-               '-kernel',str(WORK/'vmlinuz'),'-initrd',str(WORK/'initramfs.cpio.gz'),
-               '-append','console=ttyS0 rdinit=/init ram_rescue_lab=1 panic=-1',
-               '-serial','file:'+str(run_dir/'console.log'),
-               '-serial','unix:'+str(run_dir/'agent.sock')+',server=on,wait=off',
-               '-serial','unix:'+str(run_dir/'rescue.sock')+',server=on,wait=off',
-               '-qmp','unix:'+str(run_dir/'qmp.sock')+',server=on,wait=off',
-               '-device','qemu-xhci,id=xhci']
-    for name,node in [('usb.raw','usbdisk'),('decoy.raw','decoydisk')]:
-        command += ['-blockdev',json.dumps({'driver':'raw','node-name':node,
-                    'file':{'driver':'file','filename':str(run_dir/name)}})]
-    if args.transport == 'uas':
-        command += ['-device','usb-uas,bus=xhci.0,id=stick,serial=RAMRESCUE-LAB-001',
-                    '-device','scsi-hd,bus=stick.0,id=lun,drive=usbdisk']
-    else:
-        command += ['-device','usb-storage,bus=xhci.0,id=stick,drive=usbdisk,serial=RAMRESCUE-LAB-001']
+    command=qemu_command(run_dir,args.transport,args.tcg)
     (run_dir/'command.json').write_text(json.dumps(command,indent=2)+'\n')
     report = {'scenario':args.scenario, 'transport':args.transport, 'requested_gap_seconds':args.gap,
               'runner_sha256':hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),

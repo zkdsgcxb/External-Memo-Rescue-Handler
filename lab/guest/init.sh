@@ -6,10 +6,10 @@ mount -t sysfs sysfs /sys
 mount -t devtmpfs devtmpfs /dev
 mount -t tmpfs -o noswap tmpfs /run
 mkdir -p /run/lock/lvm /run/lvm
-for module in xhci_pci usb_storage uas sd_mod dm_mod ext4; do
+for module in xhci_pci usb_storage uas sd_mod dm_mod dm_multipath dm_round_robin ext4; do
     /sbin/modprobe "$module"
 done
-python3 /opt/lab/agent.py --setup
+python3 /opt/lab/agent.py --setup || { sleep 2; exit 1; }
 # Independent tools and control channels stay on tmpfs after switch_root.
 mkdir -p /run/rescue
 mount -t tmpfs -o noswap,size=256M tmpfs /run/rescue
@@ -22,6 +22,9 @@ mount --bind /proc /run/rescue/proc
 mount --bind /sys /run/rescue/sys
 mount --bind /run /run/rescue/run
 chroot /run/rescue python3 /opt/lab/agent.py &
+if [ -f /run/rescue/etc/rescue/path-guard.json ]; then
+    chroot /run/rescue python3 /opt/lab/path_guard.py &
+fi
 chroot /run/rescue /bin/sh -c 'exec /bin/setsid /bin/sh -i </dev/ttyS2 >/dev/ttyS2 2>&1' &
 for item in dev proc sys run; do mount --move "/$item" "/newroot/$item"; done
 exec switch_root /newroot /opt/lab/root-init.sh
