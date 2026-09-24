@@ -1,0 +1,127 @@
+{
+  "recorded_at_utc": "2026-09-24T18:33:09.503127+00:00",
+  "scope": "Consolidation of already inspected primary sources and existing local files. No live block-device ioctl, kernel module loading, driver change, new VM run, or host configuration change.",
+  "source_facts": {
+    "introduced_mainline_release": "v6.16",
+    "introducing_commit": "7734fb4ad98c3fdaf0fde82978ef8638195a5285",
+    "introducing_commit_url": "https://github.com/torvalds/linux/commit/7734fb4ad98c3fdaf0fde82978ef8638195a5285",
+    "followup_locking_and_probe_coalescing_commit": "5c977f1023156938915c57d362fddde8fad2b052",
+    "followup_url": "https://github.com/torvalds/linux/commit/5c977f1023156938915c57d362fddde8fad2b052",
+    "release_boundary_evidence": [
+      {
+        "url": "https://raw.githubusercontent.com/torvalds/linux/v6.15/include/uapi/linux/dm-ioctl.h",
+        "DM_MPATH_PROBE_PATHS_present": false
+      },
+      {
+        "url": "https://raw.githubusercontent.com/torvalds/linux/v6.16/include/uapi/linux/dm-ioctl.h",
+        "DM_MPATH_PROBE_PATHS_present": true
+      }
+    ],
+    "v7_implementation_url": "https://github.com/torvalds/linux/blob/v7.0/drivers/md/dm-mpath.c#L1912",
+    "v7_uapi_url": "https://github.com/torvalds/linux/blob/v7.0/include/uapi/linux/dm-ioctl.h#L273",
+    "interface": "DM_MPATH_PROBE_PATHS",
+    "request_encoding": "_IO(DM_IOCTL, DM_MPATH_PROBE_PATHS_CMD); x86 ioctl value 0xfd12",
+    "target": "multipath block device file descriptor, not /dev/mapper/control",
+    "semantics": [
+      "Probes currently Active paths only in current path group, sequentially, reading sector 0 for one logical block on each selected underlying block device.",
+      "Marks a path failed only for statuses satisfying blk_path_error; does not compare returned contents or validate PV/VG/layout identity.",
+      "Uses submit_bio_wait and can block behind stalled underlying I/O; no independent hard completion deadline is provided by this routine.",
+      "Does not reinstate already failed paths. Does not automatically start a periodic monitoring task.",
+      "Returns -ENOTCONN when no valid paths remain globally; returns 0 if valid paths remain, including possible unprobed paths in other groups. Allocation errors may return -ENOMEM; oversized logical block check may return -EINVAL.",
+      "In v7.0 source the probe can skip I/O during some initialization/presuspend states. Thus return 0 is not a complete storage-health certificate.",
+      "Concurrent probes may wait for one probe and skip repeated probing if the current group is unchanged; group-switch messages may defer their effect until probing completes."
+    ]
+  },
+  "local_module_binary_inspection": {
+    "method": "Decompress existing .ko.zst in memory and search exact printable strings for symbol names; this is supporting binary evidence, not a runtime ioctl test or full ELF/disassembly proof.",
+    "modules": [
+      {
+        "path": "lab/work/rootfs/lib/modules/6.8.0-139-generic/kernel/drivers/md/dm-multipath.ko.zst",
+        "sha256": "4b17c29c4e727a9571d4fab61aedd8765974db456c334b7a04e0b1a98d0cf6e0",
+        "bytes": 20721,
+        "uncompressed_elf_sha256": "f05822ce94a0906d7e532b1bbd9f39a678f599ff843ebf6bebea5353c58774b6",
+        "kernel_vermagic": [
+          "vermagic=6.8.0-139-generic SMP preempt mod_unload modversions "
+        ],
+        "string_presence": {
+          "multipath_prepare_ioctl": true,
+          "probe_active_paths": false,
+          "probe_path": false,
+          "submit_bio_wait": false
+        }
+      },
+      {
+        "path": "lab/work/version-study/kernel7/extracted/lib/modules/7.0.0-34-generic/kernel/drivers/md/dm-multipath.ko.zst",
+        "sha256": "98605a1ebd6c61a061773239f004e31fbf83a8a8af7d3fa600a89f94aaa16297",
+        "bytes": 22399,
+        "uncompressed_elf_sha256": "3394f0c31e4e8961c3e42806d8949a675f8f3bb25bd1b89ce57f95fdd5152cc5",
+        "kernel_vermagic": [
+          "vermagic=7.0.0-34-generic SMP preempt mod_unload modversions "
+        ],
+        "string_presence": {
+          "multipath_prepare_ioctl": true,
+          "probe_active_paths": true,
+          "probe_path": false,
+          "submit_bio_wait": true
+        }
+      }
+    ]
+  },
+  "local_header_inspection": [
+    {
+      "path": "/usr/src/linux-hwe-7.0-headers-7.0.0-34/include/uapi/linux/dm-ioctl.h",
+      "sha256": "31b03523fec094e3980c52c7a09b0bb4e5cd18019aeea3ab5207b7162d98d7c1",
+      "bytes": 11749,
+      "relevant_lines": [
+        {
+          "line": 261,
+          "text": "DM_MPATH_PROBE_PATHS_CMD,"
+        },
+        {
+          "line": 291,
+          "text": "#define DM_MPATH_PROBE_PATHS _IO(DM_IOCTL, DM_MPATH_PROBE_PATHS_CMD)"
+        },
+        {
+          "line": 294,
+          "text": "#define DM_VERSION_MINOR\t50"
+        }
+      ]
+    },
+    {
+      "path": "/usr/include/linux/dm-ioctl.h",
+      "sha256": "cbaf7b6437235d348303bc1e0816d5ab984c0bfdcc5a2b65656d8fd4adee3942",
+      "bytes": 11598,
+      "relevant_lines": [
+        {
+          "line": 289,
+          "text": "#define DM_VERSION_MINOR\t48"
+        }
+      ]
+    }
+  ],
+  "public_summary": [
+    "Linux 7.0 includes an on-demand DM multipath active-path probe interface introduced in Linux 6.16.",
+    "The installed Ubuntu 7.0 kernel header defines it; the saved Ubuntu 7.0 multipath module contains probe-related symbol strings absent from the saved Ubuntu 6.8-139 module.",
+    "The fixed multipath-tools 0.15.0 source has no detected call to this interface; upgrading userspace to 0.15 alone is not evidence of using it.",
+    "It is a candidate backend for an optional, limited-frequency path probe, not a replacement for medium identity admission, transaction takeover, progress observation, or durability validation.",
+    "No runtime correctness, latency, CPU, or memory benefit of this interface has been measured in this project."
+  ],
+  "limitations": [
+    "The semantic reading uses upstream v7.0 source; local Ubuntu header/module inspection supports presence but is not a full Ubuntu source-patch audit.",
+    "Absence of a source token or binary string is bounded static evidence; it is not a direct runtime unsupported-ioctl observation on the old kernel.",
+    "A positive probe result covers neither all path groups nor data integrity or application survival."
+  ],
+  "multipath_tools_015_scan": {
+    "tag": "0.15.0",
+    "commit": "5a60a67d9f48ddff0d63b6e5d04c3a22764a0670",
+    "source_tar_sha256": "23e8500f7d12f1fbc571aafbcdaa4a07e9a1ec46920078ce92882ca6d71d45c7",
+    "c_and_h_files_scanned": 246,
+    "pattern": "DM_MPATH_PROBE|PROBE_PATHS|0xfd12|probe_active_paths",
+    "hits": []
+  },
+  "private_evidence": {
+    "path": "lab/work/host-upgrade-20260925/kernel-probe-evidence.json",
+    "sha256": "caebfd144aa478585e402101032499b25251c5a27dcabc3dff3828e9aad51100",
+    "includes": "Complete per-file source hash inventory and original inspected paths."
+  }
+}

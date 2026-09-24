@@ -12,7 +12,7 @@
 
 2026-09-25 的系统性调研、故障分类、组件选型和新增边界实验见 [技术路线报告](research/2026-09-25/TECHNICAL-ROUTE.md)。报告区分已测能力与待验证情形，不代表实机部署完成。
 
-后续已完成 Linux 6.8/7.0 与 multipath-tools 0.9.4/0.15 的隔离对照，包括新内核下完整 Ubuntu 根盘/Git 拔插测试及仍存在的故障边界，见 [版本对照](research/2026-09-25/VERSION-STUDY.md)。实机官方 HWE 7.0 已安装并启动，**初步启动与存储检查通过**，保留 6.8 回退；引导链和回退步骤见 [实机安装记录](research/2026-09-25/HOST-INSTALL.md)，日志提示与未完成的验收见 [首次启动记录](research/2026-09-25/HOST-POSTBOOT.md)。
+后续已完成 Linux 6.8/7.0 与 multipath-tools 0.9.4/0.15 的隔离对照，包括新内核下完整 Ubuntu 根盘/Git 拔插测试及仍存在的故障边界，见 [版本对照](research/2026-09-25/VERSION-STUDY.md)。实机官方 HWE 7.0 已启动，**初步启动与存储检查通过**，随后按用户要求清退旧 6.8，后续更新跟随 HWE；引导链和清退结果见 [实机安装记录](research/2026-09-25/HOST-INSTALL.md)，日志提示与未完成的验收见 [首次启动记录](research/2026-09-25/HOST-POSTBOOT.md)。
 
 ## 能力边界
 

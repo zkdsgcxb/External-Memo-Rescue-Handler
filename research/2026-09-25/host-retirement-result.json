@@ -1,0 +1,117 @@
+{
+  "observed_at": "2026-09-24T18:27:17.366598+00:00",
+  "scope": "User-requested retirement of installed Ubuntu 6.8 kernel after successful HWE 7.0 boot. Research VM artifacts retained.",
+  "result": {
+    "phase": "retired",
+    "running_kernel": "7.0.0-34-generic",
+    "requested_remove": [
+      "linux-generic",
+      "linux-image-generic",
+      "linux-headers-generic",
+      "linux-image-6.8.0-139-generic",
+      "linux-modules-6.8.0-139-generic",
+      "linux-modules-extra-6.8.0-139-generic",
+      "linux-headers-6.8.0-139",
+      "linux-headers-6.8.0-139-generic",
+      "linux-tools-6.8.0-139",
+      "linux-tools-6.8.0-139-generic"
+    ],
+    "broad_autoremove_used": false,
+    "reboot_requested": false,
+    "removed_package_metadata": [
+      {
+        "name": "linux-generic",
+        "version": "6.8.0-139.139",
+        "installed_kib": "18"
+      },
+      {
+        "name": "linux-headers-6.8.0-139",
+        "version": "6.8.0-139.139",
+        "installed_kib": "84246"
+      },
+      {
+        "name": "linux-headers-6.8.0-139-generic",
+        "version": "6.8.0-139.139",
+        "installed_kib": "28739"
+      },
+      {
+        "name": "linux-headers-generic",
+        "version": "6.8.0-139.139",
+        "installed_kib": "18"
+      },
+      {
+        "name": "linux-image-6.8.0-139-generic",
+        "version": "6.8.0-139.139",
+        "installed_kib": "14733"
+      },
+      {
+        "name": "linux-image-generic",
+        "version": "6.8.0-139.139",
+        "installed_kib": "18"
+      },
+      {
+        "name": "linux-modules-6.8.0-139-generic",
+        "version": "6.8.0-139.139",
+        "installed_kib": "38466"
+      },
+      {
+        "name": "linux-modules-extra-6.8.0-139-generic",
+        "version": "6.8.0-139.139",
+        "installed_kib": "109843"
+      },
+      {
+        "name": "linux-tools-6.8.0-139",
+        "version": "6.8.0-139.139",
+        "installed_kib": "19347"
+      },
+      {
+        "name": "linux-tools-6.8.0-139-generic",
+        "version": "6.8.0-139.139",
+        "installed_kib": "635"
+      }
+    ],
+    "package_installed_bytes_before": 303168512,
+    "generated_old_initramfs_bytes": 83112821,
+    "remaining_abi": "7.0.0-34-generic",
+    "removed_abi": "6.8.0-139-generic",
+    "hwe_packages_retained": [
+      "linux-generic-hwe-24.04",
+      "linux-image-generic-hwe-24.04",
+      "linux-headers-generic-hwe-24.04",
+      "linux-image-7.0.0-34-generic",
+      "linux-modules-7.0.0-34-generic",
+      "linux-headers-7.0.0-34-generic",
+      "linux-hwe-7.0-headers-7.0.0-34",
+      "linux-tools-7.0.0-34-generic",
+      "linux-hwe-7.0-tools-7.0.0-34"
+    ],
+    "current_boot_files_sha256": {
+      "/boot/vmlinuz-7.0.0-34-generic": "73d9c6e40b210deb638070d6af591a68bb6d7ff0280d0ec34c9ccf705a4f47ac",
+      "/boot/initrd.img-7.0.0-34-generic": "770b2b980acd02c686b29be097b31dffe867f690c4e7deafadb53107b3dc870d"
+    },
+    "grub_config_valid": true,
+    "old_grub_entries_absent": true,
+    "efi_boot_entries_unchanged": true,
+    "external_efi_files_unchanged": true,
+    "dpkg_audit_empty": true,
+    "boot_symlinks": {
+      "vmlinuz.old": "vmlinuz-7.0.0-34-generic",
+      "initrd.img": "initrd.img-7.0.0-34-generic",
+      "vmlinuz": "vmlinuz-7.0.0-34-generic",
+      "initrd.img.old": "initrd.img-7.0.0-34-generic"
+    }
+  },
+  "retained_general_packages": {
+    "linux-libc-dev:amd64": "6.8.0-139.139 installed",
+    "linux-tools-common": "6.8.0-139.139 installed"
+  },
+  "private_artifacts": "lab/work/host-upgrade-20260925/",
+  "artifact_sha256": {
+    "retire-old-kernel.py": "df9ffe91847984ab96f1bdad9f0b08065e309b5807aac79d658309dbb520de01",
+    "retire-old-kernel.log": "bb302fe2efce9117200b9c5f07e6f197064c677984dfd2ae89786ad860da536c",
+    "retirement-simulation.txt": "8de0b4631aec4620bb7cc082c25de9d9bfe9b59d947a38c9720a147dd0468582",
+    "retirement-result.json": "26630e77eba2824eafdbe1199f6383f12481b65de9874e427668fe0bd4e0e326",
+    "grub-before-retirement.cfg": "ba4326112a7d70779963b4499fb13c4304f0cddd0e8ec8b29084bf4b8fd08498",
+    "grub-after-retirement.cfg": "4c1fb1ca11d736dcb92bd25ed2d46e0a8fea78d4e163a3e3bcce79f5fd74c4f2"
+  }
+}
