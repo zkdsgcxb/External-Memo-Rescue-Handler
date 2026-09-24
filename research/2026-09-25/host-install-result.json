@@ -1,0 +1,86 @@
+{
+  "recorded_at": "2026-09-24T18:04:16.838232+00:00",
+  "scope": "Official Ubuntu HWE package installation completed; first physical-machine boot is pending.",
+  "result": {
+    "phase": "installed_pending_reboot",
+    "target": "7.0.0-34-generic",
+    "running_kernel": "6.8.0-139-generic",
+    "reboot_requested": false,
+    "refind_modification_requested": false,
+    "packages": {
+      "libllvm19": "1:19.1.1-1ubuntu1~24.04.2",
+      "linux-modules-7.0.0-34-generic": "7.0.0-34.34~24.04.1",
+      "linux-image-7.0.0-34-generic": "7.0.0-34.34~24.04.1",
+      "linux-image-generic-hwe-24.04": "7.0.0-34.34~24.04.1",
+      "linux-hwe-7.0-headers-7.0.0-34": "7.0.0-34.34~24.04.1",
+      "linux-headers-7.0.0-34-generic": "7.0.0-34.34~24.04.1",
+      "linux-headers-generic-hwe-24.04": "7.0.0-34.34~24.04.1",
+      "linux-generic-hwe-24.04": "7.0.0-34.34~24.04.1",
+      "linux-hwe-7.0-tools-7.0.0-34": "7.0.0-34.34~24.04.1",
+      "linux-tools-7.0.0-34-generic": "7.0.0-34.34~24.04.1"
+    },
+    "old_kernel_preserved": true,
+    "old_kernel_packages_manual": [
+      "linux-image-6.8.0-139-generic",
+      "linux-modules-6.8.0-139-generic",
+      "linux-modules-extra-6.8.0-139-generic"
+    ],
+    "default_menu_kernel": "7.0.0-34-generic",
+    "boot_files": {
+      "/boot/vmlinuz-6.8.0-139-generic": {
+        "size": 15059336,
+        "sha256": "0066409132868538bc0c9076f60131025775d5bbd8617df074d059f91b584918"
+      },
+      "/boot/initrd.img-6.8.0-139-generic": {
+        "size": 83112821,
+        "sha256": "04452b827c07ead845f9ba851f36d5d8f1da9243075713f788e873c2d4b140f5"
+      },
+      "/boot/vmlinuz-7.0.0-34-generic": {
+        "size": 17009032,
+        "sha256": "73d9c6e40b210deb638070d6af591a68bb6d7ff0280d0ec34c9ccf705a4f47ac"
+      },
+      "/boot/initrd.img-7.0.0-34-generic": {
+        "size": 89454550,
+        "sha256": "770b2b980acd02c686b29be097b31dffe867f690c4e7deafadb53107b3dc870d"
+      }
+    },
+    "visible_grub_menu_seconds": 10,
+    "initramfs_storage_checks_passed": true,
+    "efi_boot_entries_unchanged": true,
+    "external_efi_files_unchanged": true,
+    "internal_refind_and_ubuntu_unchanged": true
+  },
+  "boot_chain": {
+    "firmware_entry": "internal SSD rEFInd",
+    "saved_previous_choice": "Ubuntu grubx64.efi on external ESP labelled EFI",
+    "external_grub_points_to_current_lvm_root": true,
+    "stale_internal_ubuntu_entry_hidden": true
+  },
+  "changes": {
+    "new_packages": 10,
+    "upgraded_packages": 0,
+    "removed_packages": 0,
+    "grub_override": "/etc/default/grub.d/99-hwe-recovery.cfg",
+    "grub_override_contents": "# Keep a visible kernel selection menu for the HWE rollout.\nGRUB_TIMEOUT_STYLE=menu\nGRUB_TIMEOUT=10\n",
+    "needrestart_mode": "list only",
+    "services_restarted_by_needrestart": false
+  },
+  "verification": {
+    "dpkg_audit_empty": true,
+    "grub_script_check_passed": true,
+    "installed_kernel_matches_qemu_tested_image": true,
+    "real_boot_verified": false
+  },
+  "private_artifacts": "lab/work/host-upgrade-20260925/",
+  "artifact_sha256": {
+    "inspect.py": "738ed10e30062d151145c814e4d62d5b766178b997796e11cde5d111efed2a37",
+    "install.py": "3de02ac1e77676842b81a529c3d05860e84b457f89d26c6932c63b8c037b21ba",
+    "protected-inspection.json": "397f3c354000eb8418ccc59234dc844d14e09cc2df089891c8e9e4bf335e9463",
+    "boot-selection.json": "5b71ccfc0f8fb8c3f4d6ac2f7dea6c5ac6408f88852c9418ac0074524a0f1600",
+    "install-simulation.txt": "157233b7eeaa40ca56573d69295752fe58fef5abacdf7d023c022d4112c6ebf2",
+    "install.log": "2140ad06129465791f35a80dc3bd307e42424550902f3abc4046f749910a34bf",
+    "install-result.json": "d85c62a7290cfc1a8b6ef19b6653d9f56b84da6d1904d55e8ff6944ee539c17a",
+    "grub-after.cfg": "ba4326112a7d70779963b4499fb13c4304f0cddd0e8ec8b29084bf4b8fd08498",
+    "initramfs-files.txt": "6132dfe96a854419f0bfd07bd5da7629d9221fff772f858c9350590934037ee8"
+  }
+}
