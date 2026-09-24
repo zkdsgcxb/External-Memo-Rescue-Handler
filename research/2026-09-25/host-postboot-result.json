@@ -1,0 +1,116 @@
+{
+  "observed_at": "2026-09-24T18:14:49.628374+00:00",
+  "status": "initial_boot_checks_passed_with_logged_caveats",
+  "running_kernel": "7.0.0-34-generic",
+  "boot_started_local": "2026-09-25 02:11:12",
+  "user_report": "暂时正常",
+  "firmware_entry": "rEFInd (internal)",
+  "checks": {
+    "running_target_kernel": true,
+    "system_running": true,
+    "no_current_failed_system_units": true,
+    "no_current_failed_user_units": true,
+    "dpkg_audit_empty": true,
+    "network_connected_full": true,
+    "audio_services_active": true,
+    "root_io_verified": true,
+    "workspace_io_verified": true,
+    "ram_rescue_services_active": true,
+    "ram_rescue_tmpfs_noswap": true,
+    "old_kernel_packages_manual": true
+  },
+  "io_probes": {
+    "root": {
+      "bytes": 4096,
+      "write_fsync_directory_fsync_reopen_read": true,
+      "direct_read_verified": true,
+      "data_sha256": "1fbf329740ac5a38b417238bcfdb2b5b843f322ef2fda64bd2e67cb7aa905273",
+      "temporary_files_removed": true
+    },
+    "workspace": {
+      "bytes": 4096,
+      "write_fsync_directory_fsync_reopen_read": true,
+      "direct_read_verified": true,
+      "data_sha256": "b70473e0a222f349bd70a37ba7920f4665d1950b15ff632809a2021d5dbb742b",
+      "temporary_files_removed": true
+    }
+  },
+  "storage_log_pattern_counts": {
+    "block_io_error": 0,
+    "filesystem_error": 0,
+    "usb_disconnect": 0,
+    "uas_error_recovery": 0,
+    "kernel_lockup_or_oops": 0
+  },
+  "graphics": {
+    "integrated_driver": "i915",
+    "discrete_driver": "nouveau",
+    "session": "Wayland",
+    "internal_panel_active_on": "Intel i915",
+    "external_display_tested": false
+  },
+  "log_comparison": {
+    "nouveau_gsp_ctrl_errors_current": 64,
+    "nouveau_gsp_ctrl_errors_previous": 64,
+    "nouveau_gsp_intr_current": 1,
+    "nouveau_gsp_intr_previous": 0,
+    "current_uptime_at_comparison_seconds": 310.67,
+    "interpretation": "Major GSP control, ACPI and Bluetooth messages existed under 6.8. One GSP interrupt message was not seen in the previous retained boot; functional impact undetermined. Current nouveau errors were confined to early boot within this observation window. Different boot durations do not support a rate/performance comparison.",
+    "initial_sample_uptime_seconds": 261.18
+  },
+  "rescue_services": [
+    {
+      "Result": "success",
+      "Id": "ram-rescue-prepare.service",
+      "LoadState": "loaded",
+      "ActiveState": "active",
+      "SubState": "exited"
+    },
+    {
+      "Result": "success",
+      "Id": "ram-rescue-log.service",
+      "LoadState": "loaded",
+      "ActiveState": "active",
+      "SubState": "running"
+    },
+    {
+      "Result": "success",
+      "Id": "ram-rescue@tty9.service",
+      "LoadState": "loaded",
+      "ActiveState": "active",
+      "SubState": "running"
+    },
+    {
+      "Result": "success",
+      "Id": "ram-rescue@tty10.service",
+      "LoadState": "loaded",
+      "ActiveState": "active",
+      "SubState": "running"
+    }
+  ],
+  "manual_checks_pending": [
+    "suspend and resume",
+    "external displays",
+    "longer application and development workloads",
+    "physical old-kernel rollback boot",
+    "Bluetooth function: currently software blocked and Powered=false"
+  ],
+  "limits": [
+    "No physical unplug or suspend was injected.",
+    "Small file fsync and O_DIRECT read do not prove power-loss durability.",
+    "No current failed units does not mean there were no historical startup errors.",
+    "First boot success does not establish performance improvement or long-term stability."
+  ],
+  "private_artifacts": "lab/work/host-upgrade-20260925/",
+  "artifact_sha256": {
+    "postboot-check.json": "88dd67d47875b1a01745594b30d9ffdcd1366bd6dbde90f65816d8ad271ae82a",
+    "postboot-kernel.jsonl": "4b6ec714e7d6e5035161bffff9c39826455bdef4bc23c61a42c961bd7bcfcc33",
+    "postboot-log-comparison.json": "94fdad3f308469cf041caf13a5244a03db01285b5fad25d2985769b995b73667"
+  },
+  "bluetooth": {
+    "software_blocked": true,
+    "hardware_blocked": false,
+    "powered": false,
+    "functional_pairing_tested": false
+  }
+}
