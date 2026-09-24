@@ -43,7 +43,7 @@ def prepare():
     for name, command in services.items():
         (units/(name+'.service')).write_text('[Unit]\nDescription=USB lab RAM '+name+'\n'
             'After=systemd-remount-fs.service\n[Service]\nType=simple\nExecStart='+command+
-            '\nRestart=no\n' + ('StandardInput=tty\nStandardOutput=tty\nStandardError=tty\nTTYPath=/dev/ttyS2\n' if name=='lab-shell' else '') +
+            '\nRestart=no\n' + ('CPUAccounting=yes\nCPUQuota=20%\nCPUQuotaPeriodSec=20ms\n' if name=='lab-guard' else '') + ('StandardInput=tty\nStandardOutput=tty\nStandardError=tty\nTTYPath=/dev/ttyS2\n' if name=='lab-shell' else '') +
             '[Install]\nWantedBy=multi-user.target\n')
         (wants/(name+'.service')).symlink_to('../'+name+'.service')
     (units/'lab-workload.service').write_text('[Unit]\nDescription=USB root append/fsync workload\n'

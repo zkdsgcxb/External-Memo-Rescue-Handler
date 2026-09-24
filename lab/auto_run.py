@@ -35,6 +35,7 @@ def main():
     parser.add_argument('--guest', choices=['minimal','ubuntu'], default='minimal')
     parser.add_argument('--transport',choices=['uas','bot'],default='uas')
     parser.add_argument('--gap',type=float,default=0.2)
+    parser.add_argument('--same-port',action='store_true',help='Reuse virtual USB port 1 on every reconnect')
     parser.add_argument('--queue-seconds',type=int,default=8)
     parser.add_argument('--cycles',type=int,default=1)
     parser.add_argument('--reconnect',choices=['same','none','wrong','late'],default='same')
@@ -85,10 +86,11 @@ def main():
             stream.truncate((8 if ubuntu else 2)*1024**3)
     command=qemu_command(folder,args.transport,args.tcg,
         f'ram_rescue_mpath=1 ram_rescue_queue_seconds={args.queue_seconds}' +
-        (' ram_rescue_ubuntu=1 root=/dev/mapper/labrescue-ubuntu rw' if ubuntu else '') + (' ram_rescue_git=1' if git_clone else ''), ubuntu=ubuntu, git_source=git_clone)
+        (' ram_rescue_ubuntu=1 root=/dev/mapper/labrescue-ubuntu rw' if ubuntu else '') + (' ram_rescue_git=1' if git_clone else ''), ubuntu=ubuntu, git_source=git_clone, same_port=args.same_port)
     (folder/'command.json').write_text(json.dumps(command,indent=2)+'\n')
     report={'workload':args.workload, 'git_source':git_source, 'guest':args.guest, 'ubuntu_source':ubuntu_source, 'mode':'automatic-multipath','transport':args.transport,'gap':args.gap,
         'queue_seconds':args.queue_seconds,'reconnect':args.reconnect,
+        'same_port':args.same_port,
         'kill_manager':args.kill_manager,
         'build':json.loads((WORK/'build.json').read_text()),
         'runner_sha256':hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
@@ -174,12 +176,13 @@ def main():
                     try:
                         entry['reattach_request_host_time']=time.monotonic()
                         backend='usbdisk' if args.reconnect in ['same','late'] else 'decoydisk'
+                        port={'port':'1'} if args.same_port else {}
                         if args.transport=='uas':
-                            qmp.call('device_add',driver='usb-uas',bus='xhci.0',id='stick',serial='RAMRESCUE-LAB-001',attached=False)
+                            qmp.call('device_add',driver='usb-uas',bus='xhci.0',id='stick',serial='RAMRESCUE-LAB-001',attached=False,**port)
                             qmp.call('device_add',driver='scsi-hd',bus='stick.0',id='lun',drive=backend)
                             qmp.call('qom-set',path='/machine/peripheral/stick',property='attached',value=True)
                         else:
-                            qmp.call('device_add',driver='usb-storage',bus='xhci.0',id='stick',drive=backend,serial='RAMRESCUE-LAB-001')
+                            qmp.call('device_add',driver='usb-storage',bus='xhci.0',id='stick',drive=backend,serial='RAMRESCUE-LAB-001',**port)
                         entry['reattached_host_time']=time.monotonic()
                     except Exception as exc:
                         reconnect_errors.append(exc)

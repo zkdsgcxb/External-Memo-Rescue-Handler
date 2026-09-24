@@ -62,7 +62,8 @@ class Recovery:
                 break
         return found
 
-    def verify(self):
+    def candidate_node(self):
+        """Resolve the unique enrolled partition using sysfs only."""
         disks = self.candidates()
         if len(disks) != 1:
             raise Refuse(f"Expected ONE matching USB disk; found {len(disks)}. No changes made.")
@@ -74,6 +75,10 @@ class Recovery:
         if len(parts) != 1:
             raise Refuse("Expected partition not found uniquely.")
         node = str(self.dev / parts[0].name)
+        return node
+
+    def verify(self):
+        node = self.candidate_node()
         props = dict(line.split("=", 1) for line in
                      self.run(["/sbin/blkid", "-p", "-o", "export", node]).splitlines() if "=" in line)
         expected = {"TYPE": "LVM2_member", "UUID": self.c["pv_uuid"],

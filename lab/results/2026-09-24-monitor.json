@@ -1,0 +1,2302 @@
+{
+  "scope": "Event-driven Guard, libdevmapper status, bounded serial retries and CPU budget; fault predicates unchanged. VM-only, not deployed on host.",
+  "cpu": {
+    "pid": 464,
+    "cgroup": "/proc/1/root/sys/fs/cgroup/system.slice/lab-guard.service",
+    "cpu_max": "4000 20000",
+    "phases": [
+      {
+        "name": "idle",
+        "seconds": 30.21213735,
+        "mean_cpu_percent": 0.10426604260092179,
+        "peak_cpu_percent": 1.512332881138508,
+        "p95_cpu_percent": 0.9983320221509806,
+        "cpu_stat_before": {
+          "usage_usec": 62727,
+          "user_usec": 52148,
+          "system_usec": 10579,
+          "core_sched.force_idle_usec": 0,
+          "nr_periods": 41,
+          "nr_throttled": 2,
+          "throttled_usec": 9517,
+          "nr_bursts": 0,
+          "burst_usec": 0
+        },
+        "cpu_stat_after": {
+          "usage_usec": 94228,
+          "user_usec": 76292,
+          "system_usec": 17936,
+          "core_sched.force_idle_usec": 0,
+          "nr_periods": 83,
+          "nr_throttled": 2,
+          "throttled_usec": 9517,
+          "nr_bursts": 0,
+          "burst_usec": 0
+        },
+        "proc_before": {
+          "self_ticks": 6,
+          "child_ticks": 0,
+          "start_ticks": "1838",
+          "rss_bytes": 15335424
+        },
+        "proc_after": {
+          "self_ticks": 8,
+          "child_ticks": 0,
+          "start_ticks": "1838",
+          "rss_bytes": 15335424
+        },
+        "samples": [
+          {
+            "seconds": 0.10096902900000515,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10081318999999667,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10060198400000075,
+            "cpu_percent": 0.817081301299181
+          },
+          {
+            "seconds": 0.1006540429999987,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10080634399999866,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10062283999999977,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10053705400000013,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10075143299999922,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10051377300000297,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10060892399999943,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10064787000000308,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10061559399999709,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10074282299999737,
+            "cpu_percent": 0.960862492408045
+          },
+          {
+            "seconds": 0.10083248000000111,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10064411000000462,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10087461799999886,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10081830200000041,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10080358700000147,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10072889699999621,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10065628299999929,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10091284500000341,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10097858599999654,
+            "cpu_percent": 0.18518777832758168
+          },
+          {
+            "seconds": 0.1008654110000009,
+            "cpu_percent": 1.1857384886876525
+          },
+          {
+            "seconds": 0.10073071400000089,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10060932900000097,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10071374399999655,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10085461399999929,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10057522400000352,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.1006451410000011,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10093011400000051,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10069865499999509,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.1006503219999999,
+            "cpu_percent": 0.7858891897037356
+          },
+          {
+            "seconds": 0.10069094500000375,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10079207199999729,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10082679900000358,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10061019100000124,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10058964499999945,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10055150599999507,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10066154900000157,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10055694700000117,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10046744699999977,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10043378799999658,
+            "cpu_percent": 0.8503114509631252
+          },
+          {
+            "seconds": 0.10056338900000128,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10055453600000419,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10067718199999831,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10064170900000136,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.1006755079999948,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.100651139,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.100623707000004,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10074843900000019,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10066237099999853,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.1006311220000029,
+            "cpu_percent": 1.1457688010275457
+          },
+          {
+            "seconds": 0.10070609699999977,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10064908799999728,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10068154300000032,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10068154300000032,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10069985100000167,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10066517499999605,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.1006512980000025,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10058569800000328,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.1005624929999982,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10060869000000139,
+            "cpu_percent": 0.7573898437600067
+          },
+          {
+            "seconds": 0.1006855360000003,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10069144899999571,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10067813500000256,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10059695900000065,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10063660199999447,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.100717791000001,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10061683800000054,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10074381400000476,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10062367199999755,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10057723300000276,
+            "cpu_percent": 0.9624444530105271
+          },
+          {
+            "seconds": 0.10073590999999738,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10058842499999798,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.1007054000000025,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.1007347569999979,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10062389200000155,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10064445700000135,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10088235199999929,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10075971799999905,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10064197900000238,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10064011699999753,
+            "cpu_percent": 0.928059334430248
+          },
+          {
+            "seconds": 0.1007520779999993,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.1005968779999975,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10064871300000533,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10068081699999709,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10057083299999903,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10074422000000283,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.1005343359999955,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10060779400000541,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10069989699999837,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10065786100000196,
+            "cpu_percent": 0.9437911659974391
+          },
+          {
+            "seconds": 0.10078929699999861,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.1006797459999973,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10060007399999904,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10071937800000086,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10067670000000106,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10069390099999964,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10054011000000429,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10070830299999756,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.1005926699999975,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.1006130020000029,
+            "cpu_percent": 0.9094252053029624
+          },
+          {
+            "seconds": 0.10066674800000186,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10087854299999321,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10073446700000233,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10072342000000134,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10067055199999686,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10062741100000494,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10076699399999711,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10062742699999916,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10061943299999854,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10079215000000374,
+            "cpu_percent": 1.0328185280301703
+          },
+          {
+            "seconds": 0.10070385699999918,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10063689399999731,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10058694700000359,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10065061000000242,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10063653899999991,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10068655299999563,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10071309300000308,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10060436699999542,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10059213200000272,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10073243899999795,
+            "cpu_percent": 1.0751253625458448
+          },
+          {
+            "seconds": 0.10076666100000153,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10086329199999966,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10079881899999776,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10082520100000636,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.1008396099999942,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10095625000000297,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10068018199999784,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10069158800000366,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10080829099999988,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10093365000000176,
+            "cpu_percent": 1.3048175707506635
+          },
+          {
+            "seconds": 0.10083049899999708,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10065141999999838,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10072192399999835,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10074433200000499,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10062549899999595,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.1008883229999995,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10061611400000459,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10075295200000056,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10064544299999767,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10065680299999968,
+            "cpu_percent": 1.0669919647656636
+          },
+          {
+            "seconds": 0.10073610700000302,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10064506499999482,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10062952200000552,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10089435599999774,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10076198800000213,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10095021899999779,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10080412099999592,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10056030200000521,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10073697299999651,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.1005284080000024,
+            "cpu_percent": 1.135997299390211
+          },
+          {
+            "seconds": 0.10056245399999852,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10054335000000236,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10053749000000067,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10050440799999905,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.1005890619999974,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10075291999999791,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10097682100000327,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10065887100000026,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.1006104040000011,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10070806799999588,
+            "cpu_percent": 0.9701308141469263
+          },
+          {
+            "seconds": 0.10056135800000021,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10069719900000251,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10052361900000051,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10065572699999592,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10062737500000196,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10060753700000191,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10048651999999691,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10045395499999898,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10065474300000687,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10064084599999745,
+            "cpu_percent": 1.0135049937875382
+          },
+          {
+            "seconds": 0.10045760399999892,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.1005508519999978,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.1045594790000024,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.1007165119999982,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10044851399999999,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10057748900000263,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.1004907029999984,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10066928199999836,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10053678500000274,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10047042699999764,
+            "cpu_percent": 1.1515826443138608
+          },
+          {
+            "seconds": 0.10052857200000176,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10056421000000171,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10060580399999708,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10045239600000144,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.1005837800000009,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10060391199999685,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.1006848809999994,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10067498200000102,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.1006084670000007,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10068282699999997,
+            "cpu_percent": 0.9803062045526396
+          },
+          {
+            "seconds": 0.10064805500000062,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10062031900000079,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10070921199999816,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10065402200000051,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10068294799999933,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10061959800000153,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.100648139999997,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10058064700000102,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10062385100000171,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10060389600000263,
+            "cpu_percent": 1.022823211538421
+          },
+          {
+            "seconds": 0.10077414399999896,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10089957699999985,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10078267200000113,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10076770199999885,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10094276400000268,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10080362299999734,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10078323799999822,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10084948299999752,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10091249700000304,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10068264800000293,
+            "cpu_percent": 1.3319077583259045
+          },
+          {
+            "seconds": 0.10068917999999627,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10065151199999889,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.1007387200000025,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10061526599999837,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10061986699999892,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10079695800000366,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.1006658189999996,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10058211599999822,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10069788999999929,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10077146500000111,
+            "cpu_percent": 1.512332881138508
+          },
+          {
+            "seconds": 0.10058957999999762,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10072062500000101,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10065081100000128,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10062032900000162,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10071302099999713,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10065426199999905,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10061524300000002,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10069074600000505,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10056523999999456,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10071376700000201,
+            "cpu_percent": 0.948231834084789
+          },
+          {
+            "seconds": 0.10085424300000057,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10075433699999792,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10058703400000013,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10086527400000023,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10072314800000015,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.1011022369999992,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10060444800000568,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10071900499999487,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10074495799999994,
+            "cpu_percent": 0.9568717076640209
+          },
+          {
+            "seconds": 0.10084788300000014,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10063040700000414,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10062076899999539,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.1007849570000019,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10061918499999933,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10066812299999839,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10071464000000674,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.1006074939999948,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.1006370710000013,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.1007072299999976,
+            "cpu_percent": 1.0555349402421508
+          },
+          {
+            "seconds": 0.10059777200000042,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10082109200000389,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10078891799999923,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.1007157009999986,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10054689000000394,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10070670100000001,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.1007128119999976,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.1006056700000002,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10073760399999543,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10063382000000587,
+            "cpu_percent": 1.0185442627537544
+          },
+          {
+            "seconds": 0.10096055199999654,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10078102599999994,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10068971599999799,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.1008549480000056,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10079517899999502,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10071641000000398,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10084261699999786,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10080345299999749,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10090140000000503,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10086824599999744,
+            "cpu_percent": 0.9983320221509806
+          },
+          {
+            "seconds": 0.10074443200000616,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10076312900000062,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10087917399999924,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10086361899999474,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10093580400000235,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10086116600000139,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10092246699998952,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10086757800000612,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10089241299999685,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10109020200000884,
+            "cpu_percent": 1.2879586490487833
+          },
+          {
+            "seconds": 0.1007728509999879,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10055534300001057,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10063593600000331,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10057866799999715,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.1006569199999916,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10069941700000129,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10115455000000395,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10081003099999464,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10070661600001074,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.1006206989999896,
+            "cpu_percent": 0.9868744799716633
+          },
+          {
+            "seconds": 0.10070287400000666,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10072686699999167,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10063244000001248,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10086288099999763,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.1006587069999938,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10060204600000588,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10072391399999958,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10064868300000285,
+            "cpu_percent": 0.0
+          },
+          {
+            "seconds": 0.10058781699999031,
+            "cpu_percent": 0.0
+          }
+        ]
+      },
+      {
+        "name": "events_100_per_second",
+        "seconds": 10.221131191999987,
+        "mean_cpu_percent": 0.8890894588177017,
+        "peak_cpu_percent": 2.180764065263411,
+        "p95_cpu_percent": 1.3735025956163462,
+        "cpu_stat_before": {
+          "usage_usec": 94228,
+          "user_usec": 76292,
+          "system_usec": 17936,
+          "core_sched.force_idle_usec": 0,
+          "nr_periods": 83,
+          "nr_throttled": 2,
+          "throttled_usec": 9517,
+          "nr_bursts": 0,
+          "burst_usec": 0
+        },
+        "cpu_stat_after": {
+          "usage_usec": 185103,
+          "user_usec": 147230,
+          "system_usec": 37872,
+          "core_sched.force_idle_usec": 0,
+          "nr_periods": 219,
+          "nr_throttled": 2,
+          "throttled_usec": 9517,
+          "nr_bursts": 0,
+          "burst_usec": 0
+        },
+        "proc_before": {
+          "self_ticks": 8,
+          "child_ticks": 0,
+          "start_ticks": "1838",
+          "rss_bytes": 15335424
+        },
+        "proc_after": {
+          "self_ticks": 17,
+          "child_ticks": 0,
+          "start_ticks": "1838",
+          "rss_bytes": 15335424
+        },
+        "samples": [
+          {
+            "seconds": 0.1034041249999973,
+            "cpu_percent": 2.180764065263411
+          },
+          {
+            "seconds": 0.1018699990000016,
+            "cpu_percent": 1.1632472873588438
+          },
+          {
+            "seconds": 0.10264721400000099,
+            "cpu_percent": 1.0677347755390512
+          },
+          {
+            "seconds": 0.10182436099999848,
+            "cpu_percent": 1.1215390784529617
+          },
+          {
+            "seconds": 0.1018415389999916,
+            "cpu_percent": 1.1586627731539851
+          },
+          {
+            "seconds": 0.1035066980000039,
+            "cpu_percent": 1.1158698154973088
+          },
+          {
+            "seconds": 0.10180052699999464,
+            "cpu_percent": 0.9066750705524821
+          },
+          {
+            "seconds": 0.10181345400000907,
+            "cpu_percent": 1.1796083452781132
+          },
+          {
+            "seconds": 0.10168190099999208,
+            "cpu_percent": 1.1535976299263833
+          },
+          {
+            "seconds": 0.10165273399999819,
+            "cpu_percent": 1.1244163880530949
+          },
+          {
+            "seconds": 0.10185272200000384,
+            "cpu_percent": 1.1064996377808711
+          },
+          {
+            "seconds": 0.10189223000000425,
+            "cpu_percent": 1.123736324153424
+          },
+          {
+            "seconds": 0.10296409400000073,
+            "cpu_percent": 0.983838113507795
+          },
+          {
+            "seconds": 0.101523169999993,
+            "cpu_percent": 1.2125310901935833
+          },
+          {
+            "seconds": 0.10168201800000531,
+            "cpu_percent": 0.7759484081049205
+          },
+          {
+            "seconds": 0.10222431100000051,
+            "cpu_percent": 1.0075881069034496
+          },
+          {
+            "seconds": 0.10199580799999808,
+            "cpu_percent": 1.2108340766318781
+          },
+          {
+            "seconds": 0.10192440900000577,
+            "cpu_percent": 1.100815801639759
+          },
+          {
+            "seconds": 0.10192638799999543,
+            "cpu_percent": 0.650469434863158
+          },
+          {
+            "seconds": 0.10228032799999198,
+            "cpu_percent": 0.9444631425117015
+          },
+          {
+            "seconds": 0.10207288100001222,
+            "cpu_percent": 1.581223126248202
+          },
+          {
+            "seconds": 0.10498966799998755,
+            "cpu_percent": 0.9115182648259385
+          },
+          {
+            "seconds": 0.1018465759999998,
+            "cpu_percent": 0.905283256650672
+          },
+          {
+            "seconds": 0.10275067000000604,
+            "cpu_percent": 0.8029144724797915
+          },
+          {
+            "seconds": 0.10258753099999751,
+            "cpu_percent": 0.6550503686456947
+          },
+          {
+            "seconds": 0.10206443500000262,
+            "cpu_percent": 0.6907401192197673
+          },
+          {
+            "seconds": 0.1032656430000003,
+            "cpu_percent": 0.6749582724236735
+          },
+          {
+            "seconds": 0.10194520299999965,
+            "cpu_percent": 0.5944369937641911
+          },
+          {
+            "seconds": 0.10322627899999759,
+            "cpu_percent": 0.3371234567120337
+          },
+          {
+            "seconds": 0.10203969799999868,
+            "cpu_percent": 0.597806551720692
+          },
+          {
+            "seconds": 0.10242994100001113,
+            "cpu_percent": 0.4100363584119944
+          },
+          {
+            "seconds": 0.1022245220000002,
+            "cpu_percent": 0.49792358041057794
+          },
+          {
+            "seconds": 0.10180691899999772,
+            "cpu_percent": 0.2877996926711892
+          },
+          {
+            "seconds": 0.10197756699999161,
+            "cpu_percent": 0.30104660174921144
+          },
+          {
+            "seconds": 0.10298927200000207,
+            "cpu_percent": 0.45150333716310825
+          },
+          {
+            "seconds": 0.1030235750000088,
+            "cpu_percent": 0.3571997962601944
+          },
+          {
+            "seconds": 0.10239868199998625,
+            "cpu_percent": 0.31445717240778864
+          },
+          {
+            "seconds": 0.10182448900000907,
+            "cpu_percent": 0.27400088401128647
+          },
+          {
+            "seconds": 0.10316924199999278,
+            "cpu_percent": 0.27624512352239633
+          },
+          {
+            "seconds": 0.10210060400000032,
+            "cpu_percent": 0.3623876701062404
+          },
+          {
+            "seconds": 0.10178352100000154,
+            "cpu_percent": 0.2682163058595663
+          },
+          {
+            "seconds": 0.10189157700000351,
+            "cpu_percent": 0.2914863119647169
+          },
+          {
+            "seconds": 0.10338917800000047,
+            "cpu_percent": 0.4816751710706102
+          },
+          {
+            "seconds": 0.10189868700000204,
+            "cpu_percent": 0.2679131675170599
+          },
+          {
+            "seconds": 0.10196743000000197,
+            "cpu_percent": 0.33343980523976474
+          },
+          {
+            "seconds": 0.102300268999997,
+            "cpu_percent": 0.30498453528016545
+          },
+          {
+            "seconds": 0.1019043259999961,
+            "cpu_percent": 0.5083199313835016
+          },
+          {
+            "seconds": 0.10212154200000612,
+            "cpu_percent": 0.45533977542169524
+          },
+          {
+            "seconds": 0.10209426199999427,
+            "cpu_percent": 0.2918871189842351
+          },
+          {
+            "seconds": 0.10177991000000475,
+            "cpu_percent": 0.3723721115493051
+          },
+          {
+            "seconds": 0.10191645599999788,
+            "cpu_percent": 0.321832226976188
+          },
+          {
+            "seconds": 0.10182606399999372,
+            "cpu_percent": 0.46353554429839217
+          },
+          {
+            "seconds": 0.10182106900001031,
+            "cpu_percent": 0.5028428841185592
+          },
+          {
+            "seconds": 0.10217877899999905,
+            "cpu_percent": 0.6733296353052001
+          },
+          {
+            "seconds": 0.10216272799999615,
+            "cpu_percent": 0.6998638485848058
+          },
+          {
+            "seconds": 0.1020120280000043,
+            "cpu_percent": 0.8459786722404573
+          },
+          {
+            "seconds": 0.10180609399999696,
+            "cpu_percent": 0.9901175464015248
+          },
+          {
+            "seconds": 0.10186454700000525,
+            "cpu_percent": 0.6822785949266178
+          },
+          {
+            "seconds": 0.10201320999999552,
+            "cpu_percent": 0.8930215998497056
+          },
+          {
+            "seconds": 0.1017267219999951,
+            "cpu_percent": 0.8424531756759459
+          },
+          {
+            "seconds": 0.10307840299999782,
+            "cpu_percent": 0.5520069999532415
+          },
+          {
+            "seconds": 0.10339682100000402,
+            "cpu_percent": 0.9603776889813289
+          },
+          {
+            "seconds": 0.1027161370000016,
+            "cpu_percent": 1.039758728465405
+          },
+          {
+            "seconds": 0.10315600900000277,
+            "cpu_percent": 0.9897629909276274
+          },
+          {
+            "seconds": 0.10201813399999082,
+            "cpu_percent": 1.0645166279948794
+          },
+          {
+            "seconds": 0.10191173100000128,
+            "cpu_percent": 1.0195097166978617
+          },
+          {
+            "seconds": 0.10191875700000708,
+            "cpu_percent": 1.077328680529261
+          },
+          {
+            "seconds": 0.10331109599999877,
+            "cpu_percent": 1.0792645157883265
+          },
+          {
+            "seconds": 0.10194435299999327,
+            "cpu_percent": 1.1329710435261444
+          },
+          {
+            "seconds": 0.10211767300000929,
+            "cpu_percent": 1.0252877579769222
+          },
+          {
+            "seconds": 0.10207479799998964,
+            "cpu_percent": 1.3735025956163462
+          },
+          {
+            "seconds": 0.10187948900001231,
+            "cpu_percent": 0.9462159748365871
+          },
+          {
+            "seconds": 0.10190344000000096,
+            "cpu_percent": 1.2678669140119194
+          },
+          {
+            "seconds": 0.10199814799999274,
+            "cpu_percent": 0.9490368393748375
+          },
+          {
+            "seconds": 0.10216022100000544,
+            "cpu_percent": 1.6611162186110675
+          },
+          {
+            "seconds": 0.10173522699999182,
+            "cpu_percent": 1.8056675688158121
+          },
+          {
+            "seconds": 0.10175054100000125,
+            "cpu_percent": 1.1950796409033198
+          },
+          {
+            "seconds": 0.10419771000000821,
+            "cpu_percent": 1.2725807505749362
+          },
+          {
+            "seconds": 0.10329585299999167,
+            "cpu_percent": 1.1074984781819772
+          },
+          {
+            "seconds": 0.10165496999999846,
+            "cpu_percent": 1.1450497698243554
+          },
+          {
+            "seconds": 0.10183358100000817,
+            "cpu_percent": 1.2746286512303793
+          },
+          {
+            "seconds": 0.10176045800000111,
+            "cpu_percent": 1.1035720770832103
+          },
+          {
+            "seconds": 0.10191373499999656,
+            "cpu_percent": 1.1450860867772525
+          },
+          {
+            "seconds": 0.10376711499999658,
+            "cpu_percent": 1.11981527095558
+          },
+          {
+            "seconds": 0.10183320900000581,
+            "cpu_percent": 1.125369622791652
+          },
+          {
+            "seconds": 0.1018650569999977,
+            "cpu_percent": 1.0945853591384387
+          },
+          {
+            "seconds": 0.10318197099999793,
+            "cpu_percent": 1.4847555102431904
+          },
+          {
+            "seconds": 0.10220103899999344,
+            "cpu_percent": 1.1516516970048374
+          },
+          {
+            "seconds": 0.10215283600000191,
+            "cpu_percent": 0.9622836119791933
+          },
+          {
+            "seconds": 0.1019662160000081,
+            "cpu_percent": 1.108210193854708
+          },
+          {
+            "seconds": 0.10191245800000104,
+            "cpu_percent": 1.0391271300707803
+          },
+          {
+            "seconds": 0.10195104199999605,
+            "cpu_percent": 1.1005282319724046
+          },
+          {
+            "seconds": 0.1018815820000043,
+            "cpu_percent": 1.1847087337139592
+          },
+          {
+            "seconds": 0.10139596099999437,
+            "cpu_percent": 1.1726305350565849
+          },
+          {
+            "seconds": 0.10168722999999602,
+            "cpu_percent": 0.9696399439733372
+          },
+          {
+            "seconds": 0.10172019600000226,
+            "cpu_percent": 1.337984051859249
+          },
+          {
+            "seconds": 0.10171082700000511,
+            "cpu_percent": 0.896659703691087
+          },
+          {
+            "seconds": 0.10146879599999181,
+            "cpu_percent": 1.0791494953779568
+          },
+          {
+            "seconds": 0.10147031600000389,
+            "cpu_percent": 1.0633651717414172
+          },
+          {
+            "seconds": 0.10173822999999516,
+            "cpu_percent": 0.767656366736513
+          }
+        ]
+      }
+    ],
+    "guard_state": {
+      "time": 18.612657807,
+      "state": "ready",
+      "recoveries": 0,
+      "node": "/dev/sda1"
+    },
+    "run": "20260924-213739-guard-budget",
+    "build": {
+      "kernel_release": "6.8.0-139-generic",
+      "source_commit": "ae8446eb9bc0b5575672c9472275faaef668a0f6",
+      "source_sha256": {
+        "lab/build.py": "1df2c8e5508aa59d974287677a42396634dd18c06af4b9b073aefb9ddfacc58d",
+        "ram-rescue-demo/src/rescue.py": "c40649b895ba56ebecbac8a0192c30efbb4ec85bfb29adf36a4f07289f2b0a31",
+        "ram-rescue-demo/src/lvm.conf": "10708bf37ce4b01ec3e7e3e0d3d6394301f0bf3d4046fbd1da8521dad80d0cd3",
+        "lab/guest/agent.py": "3c0f06180aa71ecb508658f6af3fbc1eaca3bf1b217a405301f701153db9c805",
+        "lab/guest/dm_monitor.py": "da64d2011514ecad4e708ad6d1eb1f5dc0104de8eba097ec96fb5ca762298378",
+        "lab/guest/git_workload.py": "c61d4c440a44cdb263f247e868292cea4270a78d59dd537706090909cd7c0538",
+        "lab/guest/init.sh": "3b723182e22b3c2678d770827ffe3bb3f0d13b12c07f86c85f152a6ee83dfee4",
+        "lab/guest/path_guard.py": "8251b0995d72e17100131d8a88d6f2009213b7c9a7c0580a2e7c4fe3e11e68fb",
+        "lab/guest/root-init.sh": "078ec84bb1f502fc2b80b99b4eef2ee4a40432ccb9a476bf7757952547ca57d9",
+        "lab/guest/ubuntu.py": "224aada1ec5efbd05a1bd6a622a617a911f61760141dce73078553d66923aeb6",
+        "lab/guest/ubuntu_workload.py": "2cb4f4a137fa6b6e8b99d87c29efe89c2dbcc7d7cc7ee814b736a193f667a890",
+        "lab/guest/wire.py": "66180734f19432381ff6fbd3b8853c536d083ee3c681e52864902a91efafe87e",
+        "lab/guest/workload.py": "15d8e159ab16b2e7786aeee10d4be861a6b1cf448bf3ddf16b6a8c64ab72ad2c"
+      },
+      "kernel_sha256": "0066409132868538bc0c9076f60131025775d5bbd8617df074d059f91b584918",
+      "initramfs_sha256": "e759143e51fcf9247b5a03757a47506e9be49171d9e4e3bfd19c85046986d740",
+      "note": "guest payload copied from working tree; no host identities or passwords"
+    },
+    "scope": "100 percent = one vCPU; cgroup includes all guard children; sampler is outside cgroup; nominal 100 ms windows; no fault injected",
+    "passed": true
+  },
+  "experiments": [
+    {
+      "build": {
+        "kernel_release": "6.8.0-139-generic",
+        "source_commit": "ae8446eb9bc0b5575672c9472275faaef668a0f6",
+        "source_sha256": {
+          "lab/build.py": "1df2c8e5508aa59d974287677a42396634dd18c06af4b9b073aefb9ddfacc58d",
+          "ram-rescue-demo/src/rescue.py": "c40649b895ba56ebecbac8a0192c30efbb4ec85bfb29adf36a4f07289f2b0a31",
+          "ram-rescue-demo/src/lvm.conf": "10708bf37ce4b01ec3e7e3e0d3d6394301f0bf3d4046fbd1da8521dad80d0cd3",
+          "lab/guest/agent.py": "3c0f06180aa71ecb508658f6af3fbc1eaca3bf1b217a405301f701153db9c805",
+          "lab/guest/dm_monitor.py": "da64d2011514ecad4e708ad6d1eb1f5dc0104de8eba097ec96fb5ca762298378",
+          "lab/guest/git_workload.py": "c61d4c440a44cdb263f247e868292cea4270a78d59dd537706090909cd7c0538",
+          "lab/guest/init.sh": "3b723182e22b3c2678d770827ffe3bb3f0d13b12c07f86c85f152a6ee83dfee4",
+          "lab/guest/path_guard.py": "8251b0995d72e17100131d8a88d6f2009213b7c9a7c0580a2e7c4fe3e11e68fb",
+          "lab/guest/root-init.sh": "078ec84bb1f502fc2b80b99b4eef2ee4a40432ccb9a476bf7757952547ca57d9",
+          "lab/guest/ubuntu.py": "224aada1ec5efbd05a1bd6a622a617a911f61760141dce73078553d66923aeb6",
+          "lab/guest/ubuntu_workload.py": "2cb4f4a137fa6b6e8b99d87c29efe89c2dbcc7d7cc7ee814b736a193f667a890",
+          "lab/guest/wire.py": "66180734f19432381ff6fbd3b8853c536d083ee3c681e52864902a91efafe87e",
+          "lab/guest/workload.py": "15d8e159ab16b2e7786aeee10d4be861a6b1cf448bf3ddf16b6a8c64ab72ad2c"
+        },
+        "kernel_sha256": "0066409132868538bc0c9076f60131025775d5bbd8617df074d059f91b584918",
+        "initramfs_sha256": "e759143e51fcf9247b5a03757a47506e9be49171d9e4e3bfd19c85046986d740",
+        "note": "guest payload copied from working tree; no host identities or passwords"
+      },
+      "runner_sha256": "9a25735e41cfb0c719f24d528cd70df25b8227417081c114cdbceb1a774ce791",
+      "qemu_runner_sha256": "1443a50d1da7d09dae3740a2eeb6943b5027f271a86ac0016b6c2aa6b65cdc48",
+      "guest": "ubuntu",
+      "workload": "git-clone",
+      "transport": "uas",
+      "queue_seconds": 8,
+      "reconnect": "same",
+      "kill_manager": false,
+      "checks": {
+        "ram_heartbeat": true,
+        "ram_shell": true,
+        "stable_upper_mappings": true,
+        "same_process_alive": true,
+        "automatic_recovery": true,
+        "zero_application_errors": true,
+        "writes_continued": true,
+        "block_read": true,
+        "root_read": true,
+        "filesystem_writable": true,
+        "no_journal_abort": true,
+        "ubuntu_systemd": true,
+        "same_boot": true,
+        "services_survived": true,
+        "no_failed_units": true,
+        "acknowledged_data_present": true,
+        "git_clone_succeeded": true,
+        "same_git_process": true,
+        "git_active_during_fault": true,
+        "git_integrity": true
+      },
+      "passed": true,
+      "successful_writes": 223,
+      "failed_writes": 0,
+      "max_write_latency": 1.197216939999997,
+      "max_heartbeat_gap": 0.8041528240000844,
+      "run": "20260924-123058-auto-25297",
+      "raw_report_sha256": "d5ffc81a91ed8c91107453aadf3585e8cbc3033d24bc31ac9b6f6a1b98c09ac3",
+      "path_events": [
+        {
+          "time": 18.737504316,
+          "state": "ready",
+          "recoveries": 0,
+          "node": "/dev/sda1"
+        },
+        {
+          "time": 54.129433654,
+          "state": "waiting",
+          "recoveries": 0,
+          "old_node": "/dev/sda1",
+          "deadline": 62.129282756
+        },
+        {
+          "time": 54.139346526,
+          "state": "rejected",
+          "recoveries": 0,
+          "reason": "Expected ONE matching USB disk; found 0. No changes made."
+        },
+        {
+          "time": 55.155460574,
+          "state": "verified",
+          "recoveries": 0,
+          "node": "/dev/sdb1"
+        },
+        {
+          "time": 55.177515011,
+          "state": "ready",
+          "recoveries": 1,
+          "node": "/dev/sdb1"
+        },
+        {
+          "time": 56.465487213,
+          "state": "waiting",
+          "recoveries": 1,
+          "old_node": "/dev/sdb1",
+          "deadline": 64.465364858
+        },
+        {
+          "time": 56.467876733,
+          "state": "rejected",
+          "recoveries": 1,
+          "reason": "Expected ONE matching USB disk; found 0. No changes made."
+        },
+        {
+          "time": 57.617045321,
+          "state": "verified",
+          "recoveries": 1,
+          "node": "/dev/sda1"
+        },
+        {
+          "time": 57.636595751,
+          "state": "ready",
+          "recoveries": 2,
+          "node": "/dev/sda1"
+        },
+        {
+          "time": 58.840571192,
+          "state": "waiting",
+          "recoveries": 2,
+          "old_node": "/dev/sda1",
+          "deadline": 66.840445014
+        },
+        {
+          "time": 58.843893741,
+          "state": "rejected",
+          "recoveries": 2,
+          "reason": "Expected ONE matching USB disk; found 0. No changes made."
+        },
+        {
+          "time": 59.764097125,
+          "state": "verified",
+          "recoveries": 2,
+          "node": "/dev/sdb1"
+        },
+        {
+          "time": 59.829926924,
+          "state": "ready",
+          "recoveries": 3,
+          "node": "/dev/sdb1"
+        }
+      ],
+      "git_validation": {
+        "head": "e8f897f4afef0031fe618a8e94127a0934896aba",
+        "expected_head": "e8f897f4afef0031fe618a8e94127a0934896aba",
+        "head_matches": true,
+        "fsck_passed": true,
+        "fsck_output": "",
+        "worktree_clean": true,
+        "tracked_files": 83475,
+        "source": {
+          "url": "https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git",
+          "ref": "v6.8",
+          "commit": "e8f897f4afef0031fe618a8e94127a0934896aba",
+          "history": "depth 1",
+          "tracked_files": 83475,
+          "object_disk_bytes": 260778158
+        }
+      }
+    },
+    {
+      "build": {
+        "kernel_release": "6.8.0-139-generic",
+        "source_commit": "ae8446eb9bc0b5575672c9472275faaef668a0f6",
+        "source_sha256": {
+          "lab/build.py": "1df2c8e5508aa59d974287677a42396634dd18c06af4b9b073aefb9ddfacc58d",
+          "ram-rescue-demo/src/rescue.py": "c40649b895ba56ebecbac8a0192c30efbb4ec85bfb29adf36a4f07289f2b0a31",
+          "ram-rescue-demo/src/lvm.conf": "10708bf37ce4b01ec3e7e3e0d3d6394301f0bf3d4046fbd1da8521dad80d0cd3",
+          "lab/guest/agent.py": "3c0f06180aa71ecb508658f6af3fbc1eaca3bf1b217a405301f701153db9c805",
+          "lab/guest/dm_monitor.py": "da64d2011514ecad4e708ad6d1eb1f5dc0104de8eba097ec96fb5ca762298378",
+          "lab/guest/git_workload.py": "c61d4c440a44cdb263f247e868292cea4270a78d59dd537706090909cd7c0538",
+          "lab/guest/init.sh": "3b723182e22b3c2678d770827ffe3bb3f0d13b12c07f86c85f152a6ee83dfee4",
+          "lab/guest/path_guard.py": "8251b0995d72e17100131d8a88d6f2009213b7c9a7c0580a2e7c4fe3e11e68fb",
+          "lab/guest/root-init.sh": "078ec84bb1f502fc2b80b99b4eef2ee4a40432ccb9a476bf7757952547ca57d9",
+          "lab/guest/ubuntu.py": "224aada1ec5efbd05a1bd6a622a617a911f61760141dce73078553d66923aeb6",
+          "lab/guest/ubuntu_workload.py": "2cb4f4a137fa6b6e8b99d87c29efe89c2dbcc7d7cc7ee814b736a193f667a890",
+          "lab/guest/wire.py": "66180734f19432381ff6fbd3b8853c536d083ee3c681e52864902a91efafe87e",
+          "lab/guest/workload.py": "15d8e159ab16b2e7786aeee10d4be861a6b1cf448bf3ddf16b6a8c64ab72ad2c"
+        },
+        "kernel_sha256": "0066409132868538bc0c9076f60131025775d5bbd8617df074d059f91b584918",
+        "initramfs_sha256": "e759143e51fcf9247b5a03757a47506e9be49171d9e4e3bfd19c85046986d740",
+        "note": "guest payload copied from working tree; no host identities or passwords"
+      },
+      "runner_sha256": "9a25735e41cfb0c719f24d528cd70df25b8227417081c114cdbceb1a774ce791",
+      "qemu_runner_sha256": "1443a50d1da7d09dae3740a2eeb6943b5027f271a86ac0016b6c2aa6b65cdc48",
+      "guest": "minimal",
+      "workload": "fsync",
+      "transport": "uas",
+      "queue_seconds": 4,
+      "reconnect": "none",
+      "kill_manager": false,
+      "checks": {
+        "ram_heartbeat": true,
+        "ram_shell": true,
+        "stable_upper_mappings": true,
+        "same_process_alive": true,
+        "deadline_released_queue": true,
+        "no_recovery_after_failure": true,
+        "bounded_wait": true
+      },
+      "passed": true,
+      "successful_writes": 11,
+      "failed_writes": 23,
+      "max_write_latency": 4.012914351,
+      "max_heartbeat_gap": 0.6014934249997168,
+      "run": "20260924-123058-auto-25298",
+      "raw_report_sha256": "f4bb602d08df39ff5121b1e21e0d813ab1228cf8cf1929d620875f3bd5ac7296",
+      "path_events": [
+        {
+          "time": 2.651171012,
+          "state": "ready",
+          "recoveries": 0,
+          "node": "/dev/sda1"
+        },
+        {
+          "time": 4.281780815,
+          "state": "waiting",
+          "recoveries": 0,
+          "old_node": "/dev/sda1",
+          "deadline": 8.281650133
+        },
+        {
+          "time": 4.283285666,
+          "state": "rejected",
+          "recoveries": 0,
+          "reason": "Expected ONE matching USB disk; found 0. No changes made."
+        },
+        {
+          "time": 8.31732651,
+          "state": "expired",
+          "recoveries": 0,
+          "reason": "queue deadline exceeded; I/O now fails rather than waiting forever"
+        }
+      ]
+    },
+    {
+      "build": {
+        "kernel_release": "6.8.0-139-generic",
+        "source_commit": "ae8446eb9bc0b5575672c9472275faaef668a0f6",
+        "source_sha256": {
+          "lab/build.py": "1df2c8e5508aa59d974287677a42396634dd18c06af4b9b073aefb9ddfacc58d",
+          "ram-rescue-demo/src/rescue.py": "c40649b895ba56ebecbac8a0192c30efbb4ec85bfb29adf36a4f07289f2b0a31",
+          "ram-rescue-demo/src/lvm.conf": "10708bf37ce4b01ec3e7e3e0d3d6394301f0bf3d4046fbd1da8521dad80d0cd3",
+          "lab/guest/agent.py": "3c0f06180aa71ecb508658f6af3fbc1eaca3bf1b217a405301f701153db9c805",
+          "lab/guest/dm_monitor.py": "da64d2011514ecad4e708ad6d1eb1f5dc0104de8eba097ec96fb5ca762298378",
+          "lab/guest/git_workload.py": "c61d4c440a44cdb263f247e868292cea4270a78d59dd537706090909cd7c0538",
+          "lab/guest/init.sh": "3b723182e22b3c2678d770827ffe3bb3f0d13b12c07f86c85f152a6ee83dfee4",
+          "lab/guest/path_guard.py": "8251b0995d72e17100131d8a88d6f2009213b7c9a7c0580a2e7c4fe3e11e68fb",
+          "lab/guest/root-init.sh": "078ec84bb1f502fc2b80b99b4eef2ee4a40432ccb9a476bf7757952547ca57d9",
+          "lab/guest/ubuntu.py": "224aada1ec5efbd05a1bd6a622a617a911f61760141dce73078553d66923aeb6",
+          "lab/guest/ubuntu_workload.py": "2cb4f4a137fa6b6e8b99d87c29efe89c2dbcc7d7cc7ee814b736a193f667a890",
+          "lab/guest/wire.py": "66180734f19432381ff6fbd3b8853c536d083ee3c681e52864902a91efafe87e",
+          "lab/guest/workload.py": "15d8e159ab16b2e7786aeee10d4be861a6b1cf448bf3ddf16b6a8c64ab72ad2c"
+        },
+        "kernel_sha256": "0066409132868538bc0c9076f60131025775d5bbd8617df074d059f91b584918",
+        "initramfs_sha256": "e759143e51fcf9247b5a03757a47506e9be49171d9e4e3bfd19c85046986d740",
+        "note": "guest payload copied from working tree; no host identities or passwords"
+      },
+      "runner_sha256": "9a25735e41cfb0c719f24d528cd70df25b8227417081c114cdbceb1a774ce791",
+      "qemu_runner_sha256": "1443a50d1da7d09dae3740a2eeb6943b5027f271a86ac0016b6c2aa6b65cdc48",
+      "guest": "minimal",
+      "workload": "fsync",
+      "transport": "uas",
+      "queue_seconds": 4,
+      "reconnect": "wrong",
+      "kill_manager": false,
+      "checks": {
+        "ram_heartbeat": true,
+        "ram_shell": true,
+        "stable_upper_mappings": true,
+        "same_process_alive": true,
+        "deadline_released_queue": true,
+        "no_recovery_after_failure": true,
+        "bounded_wait": true,
+        "wrong_pv_rejected": true
+      },
+      "passed": true,
+      "successful_writes": 11,
+      "failed_writes": 22,
+      "max_write_latency": 4.024098212000001,
+      "max_heartbeat_gap": 0.585056719000022,
+      "run": "20260924-123217-auto-25535",
+      "raw_report_sha256": "76d80e71fa4b0259bdb4ae439cfef13b0b3d4900aa0c185e1d9bec093bde1113",
+      "path_events": [
+        {
+          "time": 2.468487092,
+          "state": "ready",
+          "recoveries": 0,
+          "node": "/dev/sda1"
+        },
+        {
+          "time": 6.124926873,
+          "state": "waiting",
+          "recoveries": 0,
+          "old_node": "/dev/sda1",
+          "deadline": 10.124367683
+        },
+        {
+          "time": 6.130082661,
+          "state": "rejected",
+          "recoveries": 0,
+          "reason": "Expected ONE matching USB disk; found 0. No changes made."
+        },
+        {
+          "time": 6.892475095,
+          "state": "rejected",
+          "recoveries": 0,
+          "reason": "UUID does not match the enrolled disk. No changes made."
+        },
+        {
+          "time": 10.127690026,
+          "state": "expired",
+          "recoveries": 0,
+          "reason": "queue deadline exceeded; I/O now fails rather than waiting forever"
+        }
+      ]
+    },
+    {
+      "build": {
+        "kernel_release": "6.8.0-139-generic",
+        "source_commit": "ae8446eb9bc0b5575672c9472275faaef668a0f6",
+        "source_sha256": {
+          "lab/build.py": "1df2c8e5508aa59d974287677a42396634dd18c06af4b9b073aefb9ddfacc58d",
+          "ram-rescue-demo/src/rescue.py": "c40649b895ba56ebecbac8a0192c30efbb4ec85bfb29adf36a4f07289f2b0a31",
+          "ram-rescue-demo/src/lvm.conf": "10708bf37ce4b01ec3e7e3e0d3d6394301f0bf3d4046fbd1da8521dad80d0cd3",
+          "lab/guest/agent.py": "3c0f06180aa71ecb508658f6af3fbc1eaca3bf1b217a405301f701153db9c805",
+          "lab/guest/dm_monitor.py": "da64d2011514ecad4e708ad6d1eb1f5dc0104de8eba097ec96fb5ca762298378",
+          "lab/guest/git_workload.py": "c61d4c440a44cdb263f247e868292cea4270a78d59dd537706090909cd7c0538",
+          "lab/guest/init.sh": "3b723182e22b3c2678d770827ffe3bb3f0d13b12c07f86c85f152a6ee83dfee4",
+          "lab/guest/path_guard.py": "8251b0995d72e17100131d8a88d6f2009213b7c9a7c0580a2e7c4fe3e11e68fb",
+          "lab/guest/root-init.sh": "078ec84bb1f502fc2b80b99b4eef2ee4a40432ccb9a476bf7757952547ca57d9",
+          "lab/guest/ubuntu.py": "224aada1ec5efbd05a1bd6a622a617a911f61760141dce73078553d66923aeb6",
+          "lab/guest/ubuntu_workload.py": "2cb4f4a137fa6b6e8b99d87c29efe89c2dbcc7d7cc7ee814b736a193f667a890",
+          "lab/guest/wire.py": "66180734f19432381ff6fbd3b8853c536d083ee3c681e52864902a91efafe87e",
+          "lab/guest/workload.py": "15d8e159ab16b2e7786aeee10d4be861a6b1cf448bf3ddf16b6a8c64ab72ad2c"
+        },
+        "kernel_sha256": "0066409132868538bc0c9076f60131025775d5bbd8617df074d059f91b584918",
+        "initramfs_sha256": "e759143e51fcf9247b5a03757a47506e9be49171d9e4e3bfd19c85046986d740",
+        "note": "guest payload copied from working tree; no host identities or passwords"
+      },
+      "runner_sha256": "9a25735e41cfb0c719f24d528cd70df25b8227417081c114cdbceb1a774ce791",
+      "qemu_runner_sha256": "1443a50d1da7d09dae3740a2eeb6943b5027f271a86ac0016b6c2aa6b65cdc48",
+      "guest": "minimal",
+      "workload": "fsync",
+      "transport": "uas",
+      "queue_seconds": 4,
+      "reconnect": "none",
+      "kill_manager": true,
+      "checks": {
+        "ram_heartbeat": true,
+        "ram_shell": true,
+        "stable_upper_mappings": true,
+        "same_process_alive": true,
+        "deadline_released_queue": true,
+        "no_recovery_after_failure": true,
+        "bounded_wait": true
+      },
+      "passed": true,
+      "successful_writes": 10,
+      "failed_writes": 33,
+      "max_write_latency": 6.1905770449999995,
+      "max_heartbeat_gap": 0.5806937639999887,
+      "run": "20260924-213933-auto-7101",
+      "raw_report_sha256": "75f1bcd7557b65a2c64b93997b70ee3c0fb061c1770f00f9a37526bd2a57bcb3",
+      "path_events": [
+        {
+          "time": 2.412076635,
+          "state": "ready",
+          "recoveries": 0,
+          "node": "/dev/sda1"
+        },
+        {
+          "time": 4.103772143,
+          "state": "waiting",
+          "recoveries": 0,
+          "old_node": "/dev/sda1",
+          "deadline": 8.103565288
+        },
+        {
+          "time": 4.23594349,
+          "state": "rejected",
+          "recoveries": 0,
+          "reason": "Expected ONE matching USB disk; found 0. No changes made."
+        }
+      ]
+    },
+    {
+      "build": {
+        "kernel_release": "6.8.0-139-generic",
+        "source_commit": "ae8446eb9bc0b5575672c9472275faaef668a0f6",
+        "source_sha256": {
+          "lab/build.py": "1df2c8e5508aa59d974287677a42396634dd18c06af4b9b073aefb9ddfacc58d",
+          "ram-rescue-demo/src/rescue.py": "c40649b895ba56ebecbac8a0192c30efbb4ec85bfb29adf36a4f07289f2b0a31",
+          "ram-rescue-demo/src/lvm.conf": "10708bf37ce4b01ec3e7e3e0d3d6394301f0bf3d4046fbd1da8521dad80d0cd3",
+          "lab/guest/agent.py": "3c0f06180aa71ecb508658f6af3fbc1eaca3bf1b217a405301f701153db9c805",
+          "lab/guest/dm_monitor.py": "da64d2011514ecad4e708ad6d1eb1f5dc0104de8eba097ec96fb5ca762298378",
+          "lab/guest/git_workload.py": "c61d4c440a44cdb263f247e868292cea4270a78d59dd537706090909cd7c0538",
+          "lab/guest/init.sh": "3b723182e22b3c2678d770827ffe3bb3f0d13b12c07f86c85f152a6ee83dfee4",
+          "lab/guest/path_guard.py": "8251b0995d72e17100131d8a88d6f2009213b7c9a7c0580a2e7c4fe3e11e68fb",
+          "lab/guest/root-init.sh": "078ec84bb1f502fc2b80b99b4eef2ee4a40432ccb9a476bf7757952547ca57d9",
+          "lab/guest/ubuntu.py": "224aada1ec5efbd05a1bd6a622a617a911f61760141dce73078553d66923aeb6",
+          "lab/guest/ubuntu_workload.py": "2cb4f4a137fa6b6e8b99d87c29efe89c2dbcc7d7cc7ee814b736a193f667a890",
+          "lab/guest/wire.py": "66180734f19432381ff6fbd3b8853c536d083ee3c681e52864902a91efafe87e",
+          "lab/guest/workload.py": "15d8e159ab16b2e7786aeee10d4be861a6b1cf448bf3ddf16b6a8c64ab72ad2c"
+        },
+        "kernel_sha256": "0066409132868538bc0c9076f60131025775d5bbd8617df074d059f91b584918",
+        "initramfs_sha256": "e759143e51fcf9247b5a03757a47506e9be49171d9e4e3bfd19c85046986d740",
+        "note": "guest payload copied from working tree; no host identities or passwords"
+      },
+      "runner_sha256": "9a25735e41cfb0c719f24d528cd70df25b8227417081c114cdbceb1a774ce791",
+      "qemu_runner_sha256": "1443a50d1da7d09dae3740a2eeb6943b5027f271a86ac0016b6c2aa6b65cdc48",
+      "guest": "minimal",
+      "workload": "fsync",
+      "transport": "bot",
+      "queue_seconds": 8,
+      "reconnect": "same",
+      "kill_manager": false,
+      "checks": {
+        "ram_heartbeat": true,
+        "ram_shell": true,
+        "stable_upper_mappings": true,
+        "same_process_alive": true,
+        "automatic_recovery": true,
+        "zero_application_errors": true,
+        "writes_continued": true,
+        "block_read": true,
+        "root_read": true,
+        "filesystem_writable": true,
+        "no_journal_abort": true,
+        "acknowledged_data_present": true
+      },
+      "passed": true,
+      "successful_writes": 67,
+      "failed_writes": 0,
+      "max_write_latency": 1.840285722,
+      "max_heartbeat_gap": 0.5870161500000108,
+      "run": "20260924-213934-auto-7112",
+      "raw_report_sha256": "e4b3dc127c985562e33b8475b88cc13b578b08d17062cdbc2eb78ea3f411402e",
+      "path_events": [
+        {
+          "time": 3.768129457,
+          "state": "ready",
+          "recoveries": 0,
+          "node": "/dev/sda1"
+        },
+        {
+          "time": 5.488351898,
+          "state": "waiting",
+          "recoveries": 0,
+          "old_node": "/dev/sda1",
+          "deadline": 13.488157335
+        },
+        {
+          "time": 5.491794593,
+          "state": "rejected",
+          "recoveries": 0,
+          "reason": "Expected ONE matching USB disk; found 0. No changes made."
+        },
+        {
+          "time": 7.212236409,
+          "state": "verified",
+          "recoveries": 0,
+          "node": "/dev/sdb1"
+        },
+        {
+          "time": 7.278640136,
+          "state": "ready",
+          "recoveries": 1,
+          "node": "/dev/sdb1"
+        },
+        {
+          "time": 8.530430718,
+          "state": "waiting",
+          "recoveries": 1,
+          "old_node": "/dev/sdb1",
+          "deadline": 16.530277953000002
+        },
+        {
+          "time": 8.532308041,
+          "state": "rejected",
+          "recoveries": 1,
+          "reason": "Expected ONE matching USB disk; found 0. No changes made."
+        },
+        {
+          "time": 10.248272482,
+          "state": "verified",
+          "recoveries": 1,
+          "node": "/dev/sda1"
+        },
+        {
+          "time": 10.280347291,
+          "state": "ready",
+          "recoveries": 2,
+          "node": "/dev/sda1"
+        },
+        {
+          "time": 11.648555861,
+          "state": "waiting",
+          "recoveries": 2,
+          "old_node": "/dev/sda1",
+          "deadline": 19.648212077
+        },
+        {
+          "time": 11.666535463,
+          "state": "rejected",
+          "recoveries": 2,
+          "reason": "Expected ONE matching USB disk; found 0. No changes made."
+        },
+        {
+          "time": 13.319081069,
+          "state": "verified",
+          "recoveries": 2,
+          "node": "/dev/sdb1"
+        },
+        {
+          "time": 13.343289526,
+          "state": "ready",
+          "recoveries": 3,
+          "node": "/dev/sdb1"
+        }
+      ]
+    }
+  ],
+  "limitations": [
+    "CPU samples are nominal 100 ms windows in a single KVM guest; not instantaneous or bare-metal guarantees.",
+    "CPU cgroup covers Guard and children, not kernel worker threads or applications.",
+    "Kernel events are hints; a one-second periodic reconciliation remains.",
+    "No claim to cover all USB teardown races."
+  ],
+  "final_init_cgroup_fail_closed_regression": {
+    "build": {
+      "kernel_release": "6.8.0-139-generic",
+      "source_commit": "ae8446eb9bc0b5575672c9472275faaef668a0f6",
+      "source_sha256": {
+        "lab/build.py": "1df2c8e5508aa59d974287677a42396634dd18c06af4b9b073aefb9ddfacc58d",
+        "ram-rescue-demo/src/rescue.py": "c40649b895ba56ebecbac8a0192c30efbb4ec85bfb29adf36a4f07289f2b0a31",
+        "ram-rescue-demo/src/lvm.conf": "10708bf37ce4b01ec3e7e3e0d3d6394301f0bf3d4046fbd1da8521dad80d0cd3",
+        "lab/guest/agent.py": "3c0f06180aa71ecb508658f6af3fbc1eaca3bf1b217a405301f701153db9c805",
+        "lab/guest/dm_monitor.py": "da64d2011514ecad4e708ad6d1eb1f5dc0104de8eba097ec96fb5ca762298378",
+        "lab/guest/git_workload.py": "c61d4c440a44cdb263f247e868292cea4270a78d59dd537706090909cd7c0538",
+        "lab/guest/init.sh": "7fc37f2d3a97d0489ef534a37ef1a612bee40f1c9c6b62d4d5cba7e6170bf75f",
+        "lab/guest/path_guard.py": "8251b0995d72e17100131d8a88d6f2009213b7c9a7c0580a2e7c4fe3e11e68fb",
+        "lab/guest/root-init.sh": "078ec84bb1f502fc2b80b99b4eef2ee4a40432ccb9a476bf7757952547ca57d9",
+        "lab/guest/ubuntu.py": "224aada1ec5efbd05a1bd6a622a617a911f61760141dce73078553d66923aeb6",
+        "lab/guest/ubuntu_workload.py": "2cb4f4a137fa6b6e8b99d87c29efe89c2dbcc7d7cc7ee814b736a193f667a890",
+        "lab/guest/wire.py": "66180734f19432381ff6fbd3b8853c536d083ee3c681e52864902a91efafe87e",
+        "lab/guest/workload.py": "15d8e159ab16b2e7786aeee10d4be861a6b1cf448bf3ddf16b6a8c64ab72ad2c"
+      },
+      "kernel_sha256": "0066409132868538bc0c9076f60131025775d5bbd8617df074d059f91b584918",
+      "initramfs_sha256": "bc2efe6bbf60be49264936c750655e941b75195db75a4a80f9f722d0658ebe6a",
+      "note": "guest payload copied from working tree; no host identities or passwords"
+    },
+    "checks": {
+      "ram_heartbeat": true,
+      "ram_shell": true,
+      "stable_upper_mappings": true,
+      "same_process_alive": true,
+      "automatic_recovery": true,
+      "zero_application_errors": true,
+      "writes_continued": true,
+      "block_read": true,
+      "root_read": true,
+      "filesystem_writable": true,
+      "no_journal_abort": true,
+      "acknowledged_data_present": true
+    },
+    "passed": true,
+    "successful_writes": 42,
+    "failed_writes": 0,
+    "max_write_latency": 1.694290916,
+    "run": "20260924-214243-auto-7793",
+    "raw_report_sha256": "c1cf963fee1f5e67eb4d408326a1483d2411a910c4c9575aa385e32577670167"
+  }
+}

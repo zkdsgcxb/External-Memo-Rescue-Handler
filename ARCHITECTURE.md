@@ -15,7 +15,7 @@
 1. **故障前准备工具。** `build.py` 收集 BusyBox、Python、LVM 等二进制及依赖，生成工具包。`prepare.sh` 将包展开到 `tmpfs,noswap`，接入 `/dev`、`/proc`、`/sys` 和共享 LVM 锁目录。systemd 提前启动终端与日志。这样救援命令不必临时从故障根盘加载；RAM 环境仍共用原内核，chroot 只是改变进程看到的根目录。
 2. **自动实验额外准备稳定设备。** 在激活 LV、挂载根目录之前，建立 `lab-path` DM multipath 设备，让 LVM 使用它承载 PV。实际请求由内核从 LV 转发到 lab-path，再转发到 USB 分区；每次读写不经过 Python。
 3. **USB 路径失效。** 驱动将路径故障报告给上层，dm-multipath 对适用请求执行无路径排队。应用可能阻塞在读写/fsync 上，但不必立刻收到 EIO。排队不是把写入提前当作成功，也不是对任何类型错误都有效。
-4. **后台找回原盘。** `path_guard.py` 轮询 sysfs 和 DM 状态，调用 `Recovery.verify()` 检查 USB 身份、容量、分区 UUID、PV/VG；随后比较 LV 段布局。它可以接受从 sda1 变成 sdb1 的原盘，但拒绝只是盘符或序列号碰巧相同的另一块盘。
+4. **后台找回原盘。** `path_guard.py` 由内核块设备/DM 事件唤醒并每秒复核 sysfs 和 DM 状态，调用 `Recovery.verify()` 检查 USB 身份、容量、分区 UUID、PV/VG；随后比较 LV 段布局。它可以接受从 sda1 变成 sdb1 的原盘，但拒绝只是盘符或序列号碰巧相同的另一块盘。
 5. **切换后端并继续 I/O。** 持有候选设备描述符、再次核验后，通过 `dmsetup load → suspend --noflush --nolockfs → resume` 替换稳定设备的后端。暂停发生在故障之后，用于表切换，并非预知拔盘。上层 LV 和挂载保持，内核继续处理请求；尚存活的原进程继续执行，不涉及进程重建。
 6. **失败分支。** 找不到正确盘或超过等待窗口时，管理程序改为 `fail_if_no_path` 并进入终止状态；内核另有无路径超时作为补充退路。错误可能继续传播到文件系统和应用，此后保留 RAM 救援，而不宣称完整恢复。
 
@@ -47,7 +47,7 @@ flowchart TD
 | USB / SCSI 驱动 | 枚举设备、提交请求、报告路径故障 | Linux xHCI、UAS、usb-storage、SCSI 块设备驱动 | 选择 guest 模块、制造协议对照；未修改驱动 |
 | Device Mapper 核心 | 提供稳定虚拟块设备、映射表及切换机制 | Linux DM；LVM2 的 dmsetup / libdevmapper | 编排建表、核验、加载和切换；没有自写块设备框架 |
 | I/O 排队层 | 路径失效时暂存适用的请求，恢复后重试或超时报错 | Linux dm-multipath，BIO 模式、queue_if_no_path、内核无路径超时 | 选定单路径布局、配置等待策略、验证 USB 分区后端；`lab/guest/path_guard.py` 与 `agent.py` |
-| 路径管理程序 | 发现失效、寻找重连盘、决定是否接回、超时终止 | 调用 sysfs、blkid、LVM 和 dmsetup | 我们编写的 `Guard` 状态机、二次核验、布局比较、事件记录、路径切换；`lab/guest/path_guard.py` |
+| 路径管理程序 | 发现失效、寻找重连盘、决定是否接回、超时终止 | 调用 sysfs、libdevmapper、blkid、LVM 和 dmsetup | 我们编写的 `Guard` 状态机、二次核验、布局比较、事件记录、路径切换；`lab/guest/path_guard.py` |
 | 设备身份核验 | 避免只因新盘符或序列号相同就接入 | Linux sysfs、util-linux blkid、LVM 元数据解析工具 | 登记字段、唯一候选要求、USB/容量/分区/PV/VG 比较和拒绝策略；`ram-rescue-demo/src/rescue.py` |
 | LVM 卷管理 | PV/VG/LV 管理、LV 到物理范围的映射 | LVM2 用户态工具、Linux DM linear | 手动恢复的限制、确认流程、再次核验及结果检查；`Recovery.refresh()`；修正真实 lvs JSON 的 seg 键解析 |
 | 文件系统 | 文件、目录、journal、fsync、错误处理 | Linux ext4/JBD2；e2fsprogs 提供 mkfs/e2fsck | 检查可读、可写和 journal 状态；未修改 ext4，也未实现或自动运行修复算法 |
@@ -77,8 +77,8 @@ LVM 是管理和构造卷映射的工具；运行中的每次块 I/O 由内核 D
 |---|---|---|---|
 | Python Guard / Recovery | 用 Rust/C/Go 重写，或先把策略和设备访问接口拆开 | RAM 中可运行；唯一身份、布局检查、再次核验、有限等待、失败终态、可审计事件 | 最适合先做；可保持数据路径不变 |
 | 当前自写路径管理 | 评估 multipathd，或基于它补充登记核验与策略 | 验证单 USB/分区后端、设备身份、根盘启动、RAM 依赖及超时语义；不能让两个管理者同时修改同一张表 | 中等到高；不是安装软件就能等价替换 |
-| subprocess 调 dmsetup | 经语言绑定/封装使用 libdevmapper | 保持同样的加载、暂停、恢复、失败处理和观测顺序 | 中等；减少文本命令接口，不会自动改变内核排队能力 |
-| 轮询发现设备变化 | 增加内核事件/udev 通知，保留状态复核 | 事件只负责唤醒；接盘前仍完整核验；不要让救援依赖故障根盘上的普通服务 | 中等；改变控制响应，不替代内核 I/O 排队 |
+| 路径切换时 subprocess 调 dmsetup（健康查询已用 libdevmapper） | 将剩余变更操作也迁移到 libdevmapper | 保持同样的加载、暂停、恢复、失败处理和观测顺序 | 中等；减少文本命令接口，不会自动改变内核排队能力 |
+| 已实现内核事件加每秒复核 | 可进一步收窄事件过滤范围 | 事件只负责唤醒；接盘前仍完整核验；不要让救援依赖故障根盘上的普通服务 | 中等；改变控制响应，不替代内核 I/O 排队 |
 | BusyBox 登录和 shell | 其他登录工具、shell、文本 UI；以后增加状态提示 | 工具及依赖提前在 RAM；认证可用；保留独立终端 | 较低到中等；弹窗不应成为恢复必经步骤 |
 | systemd 与打包方式 | 其他 supervisor、initramfs 集成、不同镜像制作方案 | 控制程序在故障前就绪；所需依赖不再读故障盘；稳定映射在根 LV 挂载前建立 | 救援服务替换中等；真实根启动集成更高且尚未完成 |
 | 日志和通知 | RAM 环形缓冲、独立盘、远程接收端 | 写日志失败不阻塞恢复；接收路径不依赖同一故障盘 | 较低到中等；当前没有远程日志或通知服务 |

@@ -1,0 +1,60 @@
+{
+  "pid": 467,
+  "hz": 100,
+  "samples": [
+    {
+      "seconds": 10.002894733999995,
+      "self_cpu_percent": 1.7994790986670808,
+      "children_cpu_percent": 3.7989003194082818,
+      "rss_bytes": 13893632,
+      "same_process": true
+    },
+    {
+      "seconds": 10.000568063000003,
+      "self_cpu_percent": 1.7998977544681896,
+      "children_cpu_percent": 3.9997727877070886,
+      "rss_bytes": 13893632,
+      "same_process": true
+    },
+    {
+      "seconds": 10.000722186999994,
+      "self_cpu_percent": 1.7998700157272962,
+      "children_cpu_percent": 3.6997328101061093,
+      "rss_bytes": 13893632,
+      "same_process": true
+    }
+  ],
+  "guard_state": "{\"time\": 18.11125323, \"state\": \"ready\", \"recoveries\": 0, \"node\": \"/dev/sda1\"}",
+  "run": "20260924-113329-guard-cpu",
+  "scope": "Ubuntu guest healthy path; three consecutive 10-second windows; 100 percent is one guest vCPU",
+  "vcpu_count": 2,
+  "mean_cpu_percent": 5.632547595947726,
+  "measurement": "Guest /proc/PID/stat utime+stime and cutime+cstime deltas, CLK_TCK=100. Child CPU includes reaped dmsetup subprocesses. RSS is parent only.",
+  "limitations": [
+    "Thirty-second single-VM sample, not a bare-metal guarantee.",
+    "Excludes I/O-path overhead of DM, other kernel workers, and transient child RSS.",
+    "No disconnection injected in CPU measurement.",
+    "Measurement completed; host wrapper timed out because shell prompt preceded result marker. Report extracted from preserved output."
+  ],
+  "build": {
+    "kernel_release": "6.8.0-139-generic",
+    "source_commit": "acbd979f12e513474257890edb342531d3653525",
+    "source_sha256": {
+      "lab/build.py": "1df2c8e5508aa59d974287677a42396634dd18c06af4b9b073aefb9ddfacc58d",
+      "ram-rescue-demo/src/rescue.py": "79d5f850f191f227bf52f9195b8b6845e82d9f4ec5bd978e96c5f479c0d2e97f",
+      "ram-rescue-demo/src/lvm.conf": "10708bf37ce4b01ec3e7e3e0d3d6394301f0bf3d4046fbd1da8521dad80d0cd3",
+      "lab/guest/agent.py": "3c0f06180aa71ecb508658f6af3fbc1eaca3bf1b217a405301f701153db9c805",
+      "lab/guest/git_workload.py": "c61d4c440a44cdb263f247e868292cea4270a78d59dd537706090909cd7c0538",
+      "lab/guest/init.sh": "1daefd2151e6782c3f57cb69555cf511de0985f94000fdad753b8bdb9a00f293",
+      "lab/guest/path_guard.py": "e95c382ce684398436e2d40fb46bb354882911458ad72b891ea3df27a11b94dd",
+      "lab/guest/root-init.sh": "078ec84bb1f502fc2b80b99b4eef2ee4a40432ccb9a476bf7757952547ca57d9",
+      "lab/guest/ubuntu.py": "61ade71d1f8f3da7433f086b0501b2c0dc75fb613b408a17609406de526150b2",
+      "lab/guest/ubuntu_workload.py": "2cb4f4a137fa6b6e8b99d87c29efe89c2dbcc7d7cc7ee814b736a193f667a890",
+      "lab/guest/wire.py": "66180734f19432381ff6fbd3b8853c536d083ee3c681e52864902a91efafe87e",
+      "lab/guest/workload.py": "15d8e159ab16b2e7786aeee10d4be861a6b1cf448bf3ddf16b6a8c64ab72ad2c"
+    },
+    "kernel_sha256": "0066409132868538bc0c9076f60131025775d5bbd8617df074d059f91b584918",
+    "initramfs_sha256": "2050c59dfb29426d30a61c94d1417ea393588e82109ab66f7b78429089511823",
+    "note": "guest payload copied from working tree; no host identities or passwords"
+  }
+}

@@ -8,6 +8,7 @@ import subprocess
 import time
 
 from rescue import Recovery, command, rows
+from dm_monitor import DeviceMapper, Events, Schedule
 
 NAME = 'lab-path'
 UUID = 'mpath-RAMRESCUE-LAB'
@@ -59,6 +60,7 @@ class Guard:
         self.recoveries=0
         self.last_rejection=None
         self.suspended=False
+        self.mapper=DeviceMapper()
 
     def event(self, state, **details):
         entry={'time':time.monotonic(),'state':state,'recoveries':self.recoveries,**details}
@@ -78,7 +80,7 @@ class Guard:
         self.event('expired',reason='queue deadline exceeded; I/O now fails rather than waiting forever')
 
     def check_map(self):
-        if dm('info','-c','--noheadings','-o','uuid',NAME).strip()!=UUID:
+        if self.mapper.query(NAME)[0]!=UUID:
             raise RuntimeError('Unexpected stable map identity')
 
     def step(self):
@@ -91,12 +93,18 @@ class Guard:
         path=Path('/sys/class/block')/Path(self.current).name
         # No pre-unplug notification from host: first notice the old sysfs object disappearing.
         if self.deadline is None:
-            failed_path=re.search(r'\b\d+:\d+ F \d+\b',dm('status',NAME))
+            map_uuid,targets=self.mapper.query(NAME)
+            if map_uuid!=UUID or len(targets)!=1 or targets[0][0]!='multipath':
+                raise RuntimeError('Unexpected stable map identity or target')
+            failed_path=re.search(r'\b\d+:\d+ F \d+\b',targets[0][1])
             if path.exists() and str(path.resolve())==self.current_sys and not failed_path:
                 return
             self.deadline=now+self.config['queue_seconds']
             self.event('waiting',old_node=self.current,deadline=self.deadline)
         try:
+            # Cheap sysfs readiness gate; no blkid/LVM until one partition exists.
+            if not Path(self.recovery.candidate_node()).exists():
+                raise RuntimeError("Candidate device node is not ready")
             node=self.recovery.verify()
             sys_path=Path('/sys/class/block')/Path(node).name
             if int((sys_path/'size').read_text())!=self.config['partition_sectors']:
@@ -153,9 +161,28 @@ def main():
     manager.check_map()
     Path('/run/path-guard.pid').write_text(str(os.getpid()))
     manager.event('ready',node=manager.current)
-    while True:
-        manager.step()
-        time.sleep(0.1)
+    events=Events()
+    schedule=Schedule(time.monotonic())
+    try:
+        pending=False
+        while manager.state!='expired':
+            now=time.monotonic()
+            if schedule.due(now,pending) or manager.deadline is not None and now>=manager.deadline:
+                manager.step()
+                schedule.completed(time.monotonic(),manager.deadline is not None)
+                pending=False
+            wake=schedule.next_check
+            if pending:
+                wake=min(wake,schedule.event_after)
+            if manager.deadline is not None:
+                wake=min(wake,manager.deadline)
+            # Do not drain an event storm in a busy loop. Every batch is coalesced.
+            if time.monotonic()<schedule.event_after and pending:
+                time.sleep(max(0,min(wake,schedule.event_after)-time.monotonic()))
+            else:
+                pending=events.wait(wake-time.monotonic()) or pending
+    finally:
+        events.close()
 
 
 if __name__=='__main__':

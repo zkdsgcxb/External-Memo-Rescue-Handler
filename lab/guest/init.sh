@@ -24,7 +24,12 @@ mount --bind /run /run/rescue/run
 if ! grep -qw ram_rescue_ubuntu=1 /proc/cmdline; then
 chroot /run/rescue python3 /opt/lab/agent.py &
 if [ -f /run/rescue/etc/rescue/path-guard.json ]; then
-    chroot /run/rescue python3 /opt/lab/path_guard.py &
+    mkdir -p /sys/fs/cgroup
+    mount -t cgroup2 none /sys/fs/cgroup
+    echo +cpu > /sys/fs/cgroup/cgroup.subtree_control
+    mkdir /sys/fs/cgroup/lab-guard
+    echo "4000 20000" > /sys/fs/cgroup/lab-guard/cpu.max
+    chroot /run/rescue /bin/sh -c 'echo $$ > /proc/1/root/sys/fs/cgroup/lab-guard/cgroup.procs && exec python3 /opt/lab/path_guard.py' &
 fi
 chroot /run/rescue /bin/sh -c 'exec /bin/setsid /bin/sh -i </dev/ttyS2 >/dev/ttyS2 2>&1' &
 fi

@@ -1,0 +1,715 @@
+{
+  "scope": "Ubuntu Server root on USB -> DM multipath -> LVM -> ext4, three unexpected removals during Git clone plus fsync per run",
+  "limitations": [
+    "QMP timing is not physical USB timing.",
+    "Mount continuity is checked at recorded observation points.",
+    "Old gendisk final release and in-flight completion overlap were not instrumented; these tests do not prove all teardown races covered.",
+    "Protected layout is prepared before faults; ordinary LVM alone does not provide this queue."
+  ],
+  "runs": [
+    {
+      "guest": "ubuntu",
+      "workload": "git-clone",
+      "transport": "uas",
+      "gap": 0.0,
+      "build": {
+        "kernel_release": "6.8.0-139-generic",
+        "source_commit": "acbd979f12e513474257890edb342531d3653525",
+        "source_sha256": {
+          "lab/build.py": "1df2c8e5508aa59d974287677a42396634dd18c06af4b9b073aefb9ddfacc58d",
+          "ram-rescue-demo/src/rescue.py": "79d5f850f191f227bf52f9195b8b6845e82d9f4ec5bd978e96c5f479c0d2e97f",
+          "ram-rescue-demo/src/lvm.conf": "10708bf37ce4b01ec3e7e3e0d3d6394301f0bf3d4046fbd1da8521dad80d0cd3",
+          "lab/guest/agent.py": "3c0f06180aa71ecb508658f6af3fbc1eaca3bf1b217a405301f701153db9c805",
+          "lab/guest/git_workload.py": "c61d4c440a44cdb263f247e868292cea4270a78d59dd537706090909cd7c0538",
+          "lab/guest/init.sh": "1daefd2151e6782c3f57cb69555cf511de0985f94000fdad753b8bdb9a00f293",
+          "lab/guest/path_guard.py": "e95c382ce684398436e2d40fb46bb354882911458ad72b891ea3df27a11b94dd",
+          "lab/guest/root-init.sh": "078ec84bb1f502fc2b80b99b4eef2ee4a40432ccb9a476bf7757952547ca57d9",
+          "lab/guest/ubuntu.py": "61ade71d1f8f3da7433f086b0501b2c0dc75fb613b408a17609406de526150b2",
+          "lab/guest/ubuntu_workload.py": "2cb4f4a137fa6b6e8b99d87c29efe89c2dbcc7d7cc7ee814b736a193f667a890",
+          "lab/guest/wire.py": "66180734f19432381ff6fbd3b8853c536d083ee3c681e52864902a91efafe87e",
+          "lab/guest/workload.py": "15d8e159ab16b2e7786aeee10d4be861a6b1cf448bf3ddf16b6a8c64ab72ad2c"
+        },
+        "kernel_sha256": "0066409132868538bc0c9076f60131025775d5bbd8617df074d059f91b584918",
+        "initramfs_sha256": "2050c59dfb29426d30a61c94d1417ea393588e82109ab66f7b78429089511823",
+        "note": "guest payload copied from working tree; no host identities or passwords"
+      },
+      "runner_sha256": "61e2342729201a9f1f631a205f2926a10908e334ee3f2161d51189cf09cbde15",
+      "qemu_runner_sha256": "b39137e46f11e44b8cb1a317304cb50ad32ad326fda07640628bfaae0c6a9d03",
+      "checks": {
+        "ram_heartbeat": true,
+        "ram_shell": true,
+        "stable_upper_mappings": true,
+        "same_process_alive": true,
+        "automatic_recovery": true,
+        "zero_application_errors": true,
+        "writes_continued": true,
+        "block_read": true,
+        "root_read": true,
+        "filesystem_writable": true,
+        "no_journal_abort": true,
+        "ubuntu_systemd": true,
+        "same_boot": true,
+        "services_survived": true,
+        "no_failed_units": true,
+        "acknowledged_data_present": true,
+        "git_clone_succeeded": true,
+        "same_git_process": true,
+        "git_active_during_fault": true,
+        "git_integrity": true
+      },
+      "passed": true,
+      "successful_writes": 416,
+      "failed_writes": 0,
+      "max_write_latency": 1.2173123830000065,
+      "max_heartbeat_gap": 0.8263998570000695,
+      "git_validation": {
+        "head": "e8f897f4afef0031fe618a8e94127a0934896aba",
+        "expected_head": "e8f897f4afef0031fe618a8e94127a0934896aba",
+        "head_matches": true,
+        "fsck_passed": true,
+        "fsck_output": "",
+        "worktree_clean": true,
+        "tracked_files": 83475,
+        "source": {
+          "url": "https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git",
+          "ref": "v6.8",
+          "commit": "e8f897f4afef0031fe618a8e94127a0934896aba",
+          "history": "depth 1",
+          "tracked_files": 83475,
+          "object_disk_bytes": 260778158
+        }
+      },
+      "ubuntu_before": {
+        "os_release": "PRETTY_NAME=\"Ubuntu 24.04.5 LTS\"\nNAME=\"Ubuntu\"\nVERSION_ID=\"24.04\"\nVERSION=\"24.04.5 LTS (Noble Numbat)\"\nVERSION_CODENAME=noble\nID=ubuntu\nID_LIKE=debian\nHOME_URL=\"https://www.ubuntu.com/\"\nSUPPORT_URL=\"https://help.ubuntu.com/\"\nBUG_REPORT_URL=\"https://bugs.launchpad.net/ubuntu/\"\nPRIVACY_POLICY_URL=\"https://www.ubuntu.com/legal/terms-and-policies/privacy-policy\"\nUBUNTU_CODENAME=noble\nLOGO=ubuntu-logo\n",
+        "pid1_comm": "systemd",
+        "pid1_start_ticks": "16",
+        "boot_id": "e4f2de4b-0d42-457a-89de-6addf845846d",
+        "services": {
+          "systemd-journald": {
+            "MainPID": "193",
+            "NRestarts": "0",
+            "ActiveState": "active",
+            "SubState": "running",
+            "start_ticks": "2869"
+          },
+          "dbus": {
+            "MainPID": "467",
+            "NRestarts": "0",
+            "ActiveState": "active",
+            "SubState": "running",
+            "start_ticks": "3072"
+          },
+          "lab-agent": {
+            "MainPID": "470",
+            "NRestarts": "0",
+            "ActiveState": "active",
+            "SubState": "running",
+            "start_ticks": "3078"
+          },
+          "lab-guard": {
+            "MainPID": "473",
+            "NRestarts": "0",
+            "ActiveState": "active",
+            "SubState": "running",
+            "start_ticks": "3081"
+          },
+          "lab-shell": {
+            "MainPID": "475",
+            "NRestarts": "0",
+            "ActiveState": "active",
+            "SubState": "running",
+            "start_ticks": "3082"
+          },
+          "lab-workload": {
+            "MainPID": "2248",
+            "NRestarts": "0",
+            "ActiveState": "active",
+            "SubState": "running",
+            "start_ticks": "6457"
+          }
+        },
+        "failed_units": "",
+        "multi_user": "active",
+        "installed_packages": 603
+      },
+      "ubuntu_after": {
+        "os_release": "PRETTY_NAME=\"Ubuntu 24.04.5 LTS\"\nNAME=\"Ubuntu\"\nVERSION_ID=\"24.04\"\nVERSION=\"24.04.5 LTS (Noble Numbat)\"\nVERSION_CODENAME=noble\nID=ubuntu\nID_LIKE=debian\nHOME_URL=\"https://www.ubuntu.com/\"\nSUPPORT_URL=\"https://help.ubuntu.com/\"\nBUG_REPORT_URL=\"https://bugs.launchpad.net/ubuntu/\"\nPRIVACY_POLICY_URL=\"https://www.ubuntu.com/legal/terms-and-policies/privacy-policy\"\nUBUNTU_CODENAME=noble\nLOGO=ubuntu-logo\n",
+        "pid1_comm": "systemd",
+        "pid1_start_ticks": "16",
+        "boot_id": "e4f2de4b-0d42-457a-89de-6addf845846d",
+        "services": {
+          "systemd-journald": {
+            "MainPID": "193",
+            "NRestarts": "0",
+            "ActiveState": "active",
+            "SubState": "running",
+            "start_ticks": "2869"
+          },
+          "dbus": {
+            "MainPID": "467",
+            "NRestarts": "0",
+            "ActiveState": "active",
+            "SubState": "running",
+            "start_ticks": "3072"
+          },
+          "lab-agent": {
+            "MainPID": "470",
+            "NRestarts": "0",
+            "ActiveState": "active",
+            "SubState": "running",
+            "start_ticks": "3078"
+          },
+          "lab-guard": {
+            "MainPID": "473",
+            "NRestarts": "0",
+            "ActiveState": "active",
+            "SubState": "running",
+            "start_ticks": "3081"
+          },
+          "lab-shell": {
+            "MainPID": "475",
+            "NRestarts": "0",
+            "ActiveState": "active",
+            "SubState": "running",
+            "start_ticks": "3082"
+          },
+          "lab-workload": {
+            "MainPID": "2248",
+            "NRestarts": "0",
+            "ActiveState": "active",
+            "SubState": "running",
+            "start_ticks": "6457"
+          }
+        },
+        "failed_units": "",
+        "multi_user": "active",
+        "installed_packages": 603
+      },
+      "run": "20260924-012804-auto-21661",
+      "raw_report_sha256": "330237c45edb0e212c061b30fecf5a661f070b5d04e6dc3ac0f5d80f6d6ee68c",
+      "same_port": false,
+      "root_mount_observations": [
+        [
+          "27 1 252:1 / / rw,relatime shared:1 - ext4 /dev/labrescue/ubuntu rw,errors=remount-ro"
+        ],
+        [
+          "27 1 252:1 / / rw,relatime shared:1 - ext4 /dev/labrescue/ubuntu rw,errors=remount-ro"
+        ],
+        [
+          "27 1 252:1 / / rw,relatime shared:1 - ext4 /dev/labrescue/ubuntu rw,errors=remount-ro"
+        ],
+        [
+          "27 1 252:1 / / rw,relatime shared:1 - ext4 /dev/labrescue/ubuntu rw,errors=remount-ro"
+        ],
+        [
+          "27 1 252:1 / / rw,relatime shared:1 - ext4 /dev/labrescue/ubuntu rw,errors=remount-ro"
+        ],
+        [
+          "27 1 252:1 / / rw,relatime shared:1 - ext4 /dev/labrescue/ubuntu rw,errors=remount-ro"
+        ],
+        [
+          "27 1 252:1 / / rw,relatime shared:1 - ext4 /dev/labrescue/ubuntu rw,errors=remount-ro"
+        ],
+        [
+          "27 1 252:1 / / rw,relatime shared:1 - ext4 /dev/labrescue/ubuntu rw,errors=remount-ro"
+        ]
+      ],
+      "root_mount_unchanged_at_observations": true,
+      "dm_table_before": "lab-path: 0 16775168 multipath 4 queue_if_no_path retain_attached_hw_handler queue_mode bio 0 1 1 round-robin 0 1 1 8:1 1 \nlabrescue-shared: 0 524288 linear 252:0 12584960\nlabrescue-ubuntu: 0 12582912 linear 252:0 2048\n",
+      "dm_table_after": "lab-path: 0 16775168 multipath 4 queue_if_no_path retain_attached_hw_handler queue_mode bio 0 1 1 round-robin 0 1 1 8:17 1 \nlabrescue-shared: 0 524288 linear 252:0 12584960\nlabrescue-ubuntu: 0 12582912 linear 252:0 2048\n",
+      "path_events": [
+        {
+          "time": 30.959376511,
+          "state": "ready",
+          "recoveries": 0,
+          "node": "/dev/sda1"
+        },
+        {
+          "time": 67.702055309,
+          "state": "waiting",
+          "recoveries": 0,
+          "old_node": "/dev/sda1",
+          "deadline": 75.697949403
+        },
+        {
+          "time": 67.704927129,
+          "state": "rejected",
+          "recoveries": 0,
+          "reason": "Expected ONE matching USB disk; found 0. No changes made."
+        },
+        {
+          "time": 68.650204374,
+          "state": "verified",
+          "recoveries": 0,
+          "node": "/dev/sdb1"
+        },
+        {
+          "time": 68.746438591,
+          "state": "ready",
+          "recoveries": 1,
+          "node": "/dev/sdb1"
+        },
+        {
+          "time": 70.365948915,
+          "state": "waiting",
+          "recoveries": 1,
+          "old_node": "/dev/sdb1",
+          "deadline": 78.363598544
+        },
+        {
+          "time": 70.368991257,
+          "state": "rejected",
+          "recoveries": 1,
+          "reason": "Expected ONE matching USB disk; found 0. No changes made."
+        },
+        {
+          "time": 71.312289142,
+          "state": "verified",
+          "recoveries": 1,
+          "node": "/dev/sda1"
+        },
+        {
+          "time": 71.343389793,
+          "state": "ready",
+          "recoveries": 2,
+          "node": "/dev/sda1"
+        },
+        {
+          "time": 72.821326737,
+          "state": "waiting",
+          "recoveries": 2,
+          "old_node": "/dev/sda1",
+          "deadline": 80.815566769
+        },
+        {
+          "time": 72.831315955,
+          "state": "rejected",
+          "recoveries": 2,
+          "reason": "Expected ONE matching USB disk; found 0. No changes made."
+        },
+        {
+          "time": 73.659178709,
+          "state": "verified",
+          "recoveries": 2,
+          "node": "/dev/sdb1"
+        },
+        {
+          "time": 73.71084764,
+          "state": "ready",
+          "recoveries": 3,
+          "node": "/dev/sdb1"
+        }
+      ],
+      "kernel_events": [
+        "[    1.978418] usb 2-1: new SuperSpeed USB device number 2 using xhci_hcd",
+        "[    2.015777] sd 0:0:0:0: [sda] Attached SCSI disk",
+        "[    2.908319] EXT4-fs (dm-1): mounted filesystem 538db3b6-b4c6-4807-9ddf-df178197e097 r/w with ordered data mode. Quota mode: none.",
+        "[   26.747394] EXT4-fs (vdb): mounted filesystem c36e1bfc-7318-4bc6-86e2-58b0a7c3c5d5 ro with ordered data mode. Quota mode: none.",
+        "[   26.757175] EXT4-fs (dm-2): mounted filesystem 2779077e-81a4-4c84-989b-6014d5be1dbc r/w with ordered data mode. Quota mode: none.",
+        "[   29.101096] EXT4-fs (dm-1): re-mounted 538db3b6-b4c6-4807-9ddf-df178197e097.",
+        "[   67.787461] usb 2-1: USB disconnect, device number 2",
+        "[   67.831069] device-mapper: multipath: 252:0: Failing path 8:1.",
+        "[   68.255132] usb 2-2: new SuperSpeed USB device number 3 using xhci_hcd",
+        "[   68.388712] sd 1:0:0:0: [sdb] Attached SCSI disk",
+        "[   70.433826] usb 2-2: USB disconnect, device number 3",
+        "[   70.505656] device-mapper: multipath: 252:0: Failing path 8:17.",
+        "[   70.928022] usb 2-3: new SuperSpeed USB device number 4 using xhci_hcd",
+        "[   71.074482] sd 0:0:0:0: [sda] Attached SCSI disk",
+        "[   72.848678] usb 2-3: USB disconnect, device number 4",
+        "[   72.867145] device-mapper: multipath: 252:0: Failing path 8:1.",
+        "[   73.342081] usb 2-4: new SuperSpeed USB device number 5 using xhci_hcd",
+        "[   73.381029] sd 1:0:0:0: [sdb] Attached SCSI disk"
+      ],
+      "cycles": [
+        {
+          "index": 1,
+          "fault_host_time": 3811.31522872,
+          "deleted_host_time": 3811.495110865,
+          "reattach_request_host_time": 3811.495774807,
+          "reattached_host_time": 3811.611134948,
+          "outcome_host_time": 3812.962875167,
+          "shell_completed_before_reattach": false,
+          "request_delay_seconds": 0.0006639420003011764,
+          "qmp_complete_delay_seconds": 0.11602408300041134
+        },
+        {
+          "index": 2,
+          "fault_host_time": 3813.963131072,
+          "deleted_host_time": 3814.14125509,
+          "reattach_request_host_time": 3814.141755325,
+          "reattached_host_time": 3814.257927966,
+          "outcome_host_time": 3815.390163652,
+          "shell_completed_before_reattach": false,
+          "request_delay_seconds": 0.000500234999890381,
+          "qmp_complete_delay_seconds": 0.1166728759999387
+        },
+        {
+          "index": 3,
+          "fault_host_time": 3816.390255026,
+          "deleted_host_time": 3816.556431785,
+          "reattach_request_host_time": 3816.556816791,
+          "reattached_host_time": 3816.673509889,
+          "outcome_host_time": 3817.793175931,
+          "shell_completed_before_reattach": false,
+          "request_delay_seconds": 0.00038500600021507125,
+          "qmp_complete_delay_seconds": 0.11707810400002927
+        }
+      ]
+    },
+    {
+      "guest": "ubuntu",
+      "workload": "git-clone",
+      "transport": "uas",
+      "gap": 0.0,
+      "build": {
+        "kernel_release": "6.8.0-139-generic",
+        "source_commit": "acbd979f12e513474257890edb342531d3653525",
+        "source_sha256": {
+          "lab/build.py": "1df2c8e5508aa59d974287677a42396634dd18c06af4b9b073aefb9ddfacc58d",
+          "ram-rescue-demo/src/rescue.py": "79d5f850f191f227bf52f9195b8b6845e82d9f4ec5bd978e96c5f479c0d2e97f",
+          "ram-rescue-demo/src/lvm.conf": "10708bf37ce4b01ec3e7e3e0d3d6394301f0bf3d4046fbd1da8521dad80d0cd3",
+          "lab/guest/agent.py": "3c0f06180aa71ecb508658f6af3fbc1eaca3bf1b217a405301f701153db9c805",
+          "lab/guest/git_workload.py": "c61d4c440a44cdb263f247e868292cea4270a78d59dd537706090909cd7c0538",
+          "lab/guest/init.sh": "1daefd2151e6782c3f57cb69555cf511de0985f94000fdad753b8bdb9a00f293",
+          "lab/guest/path_guard.py": "e95c382ce684398436e2d40fb46bb354882911458ad72b891ea3df27a11b94dd",
+          "lab/guest/root-init.sh": "078ec84bb1f502fc2b80b99b4eef2ee4a40432ccb9a476bf7757952547ca57d9",
+          "lab/guest/ubuntu.py": "61ade71d1f8f3da7433f086b0501b2c0dc75fb613b408a17609406de526150b2",
+          "lab/guest/ubuntu_workload.py": "2cb4f4a137fa6b6e8b99d87c29efe89c2dbcc7d7cc7ee814b736a193f667a890",
+          "lab/guest/wire.py": "66180734f19432381ff6fbd3b8853c536d083ee3c681e52864902a91efafe87e",
+          "lab/guest/workload.py": "15d8e159ab16b2e7786aeee10d4be861a6b1cf448bf3ddf16b6a8c64ab72ad2c"
+        },
+        "kernel_sha256": "0066409132868538bc0c9076f60131025775d5bbd8617df074d059f91b584918",
+        "initramfs_sha256": "2050c59dfb29426d30a61c94d1417ea393588e82109ab66f7b78429089511823",
+        "note": "guest payload copied from working tree; no host identities or passwords"
+      },
+      "runner_sha256": "9a25735e41cfb0c719f24d528cd70df25b8227417081c114cdbceb1a774ce791",
+      "qemu_runner_sha256": "1443a50d1da7d09dae3740a2eeb6943b5027f271a86ac0016b6c2aa6b65cdc48",
+      "checks": {
+        "ram_heartbeat": true,
+        "ram_shell": true,
+        "stable_upper_mappings": true,
+        "same_process_alive": true,
+        "automatic_recovery": true,
+        "zero_application_errors": true,
+        "writes_continued": true,
+        "block_read": true,
+        "root_read": true,
+        "filesystem_writable": true,
+        "no_journal_abort": true,
+        "ubuntu_systemd": true,
+        "same_boot": true,
+        "services_survived": true,
+        "no_failed_units": true,
+        "acknowledged_data_present": true,
+        "git_clone_succeeded": true,
+        "same_git_process": true,
+        "git_active_during_fault": true,
+        "git_integrity": true
+      },
+      "passed": true,
+      "successful_writes": 449,
+      "failed_writes": 0,
+      "max_write_latency": 0.8973774450000036,
+      "max_heartbeat_gap": 0.7618812169998819,
+      "git_validation": {
+        "head": "e8f897f4afef0031fe618a8e94127a0934896aba",
+        "expected_head": "e8f897f4afef0031fe618a8e94127a0934896aba",
+        "head_matches": true,
+        "fsck_passed": true,
+        "fsck_output": "",
+        "worktree_clean": true,
+        "tracked_files": 83475,
+        "source": {
+          "url": "https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git",
+          "ref": "v6.8",
+          "commit": "e8f897f4afef0031fe618a8e94127a0934896aba",
+          "history": "depth 1",
+          "tracked_files": 83475,
+          "object_disk_bytes": 260778158
+        }
+      },
+      "ubuntu_before": {
+        "os_release": "PRETTY_NAME=\"Ubuntu 24.04.5 LTS\"\nNAME=\"Ubuntu\"\nVERSION_ID=\"24.04\"\nVERSION=\"24.04.5 LTS (Noble Numbat)\"\nVERSION_CODENAME=noble\nID=ubuntu\nID_LIKE=debian\nHOME_URL=\"https://www.ubuntu.com/\"\nSUPPORT_URL=\"https://help.ubuntu.com/\"\nBUG_REPORT_URL=\"https://bugs.launchpad.net/ubuntu/\"\nPRIVACY_POLICY_URL=\"https://www.ubuntu.com/legal/terms-and-policies/privacy-policy\"\nUBUNTU_CODENAME=noble\nLOGO=ubuntu-logo\n",
+        "pid1_comm": "systemd",
+        "pid1_start_ticks": "16",
+        "boot_id": "586721e0-183d-40fa-9136-45019df2093f",
+        "services": {
+          "systemd-journald": {
+            "MainPID": "193",
+            "NRestarts": "0",
+            "ActiveState": "active",
+            "SubState": "running",
+            "start_ticks": "2935"
+          },
+          "dbus": {
+            "MainPID": "468",
+            "NRestarts": "0",
+            "ActiveState": "active",
+            "SubState": "running",
+            "start_ticks": "3111"
+          },
+          "lab-agent": {
+            "MainPID": "471",
+            "NRestarts": "0",
+            "ActiveState": "active",
+            "SubState": "running",
+            "start_ticks": "3114"
+          },
+          "lab-guard": {
+            "MainPID": "474",
+            "NRestarts": "0",
+            "ActiveState": "active",
+            "SubState": "running",
+            "start_ticks": "3116"
+          },
+          "lab-shell": {
+            "MainPID": "475",
+            "NRestarts": "0",
+            "ActiveState": "active",
+            "SubState": "running",
+            "start_ticks": "3119"
+          },
+          "lab-workload": {
+            "MainPID": "2152",
+            "NRestarts": "0",
+            "ActiveState": "active",
+            "SubState": "running",
+            "start_ticks": "6492"
+          }
+        },
+        "failed_units": "",
+        "multi_user": "active",
+        "installed_packages": 603
+      },
+      "ubuntu_after": {
+        "os_release": "PRETTY_NAME=\"Ubuntu 24.04.5 LTS\"\nNAME=\"Ubuntu\"\nVERSION_ID=\"24.04\"\nVERSION=\"24.04.5 LTS (Noble Numbat)\"\nVERSION_CODENAME=noble\nID=ubuntu\nID_LIKE=debian\nHOME_URL=\"https://www.ubuntu.com/\"\nSUPPORT_URL=\"https://help.ubuntu.com/\"\nBUG_REPORT_URL=\"https://bugs.launchpad.net/ubuntu/\"\nPRIVACY_POLICY_URL=\"https://www.ubuntu.com/legal/terms-and-policies/privacy-policy\"\nUBUNTU_CODENAME=noble\nLOGO=ubuntu-logo\n",
+        "pid1_comm": "systemd",
+        "pid1_start_ticks": "16",
+        "boot_id": "586721e0-183d-40fa-9136-45019df2093f",
+        "services": {
+          "systemd-journald": {
+            "MainPID": "193",
+            "NRestarts": "0",
+            "ActiveState": "active",
+            "SubState": "running",
+            "start_ticks": "2935"
+          },
+          "dbus": {
+            "MainPID": "468",
+            "NRestarts": "0",
+            "ActiveState": "active",
+            "SubState": "running",
+            "start_ticks": "3111"
+          },
+          "lab-agent": {
+            "MainPID": "471",
+            "NRestarts": "0",
+            "ActiveState": "active",
+            "SubState": "running",
+            "start_ticks": "3114"
+          },
+          "lab-guard": {
+            "MainPID": "474",
+            "NRestarts": "0",
+            "ActiveState": "active",
+            "SubState": "running",
+            "start_ticks": "3116"
+          },
+          "lab-shell": {
+            "MainPID": "475",
+            "NRestarts": "0",
+            "ActiveState": "active",
+            "SubState": "running",
+            "start_ticks": "3119"
+          },
+          "lab-workload": {
+            "MainPID": "2152",
+            "NRestarts": "0",
+            "ActiveState": "active",
+            "SubState": "running",
+            "start_ticks": "6492"
+          }
+        },
+        "failed_units": "",
+        "multi_user": "active",
+        "installed_packages": 603
+      },
+      "run": "20260924-013054-auto-23194",
+      "raw_report_sha256": "3ad09f2c01b71ea9758b6783aded1cd34e49f7b9590e6c4a50c8ad8c0fd71852",
+      "same_port": true,
+      "root_mount_observations": [
+        [
+          "27 1 252:1 / / rw,relatime shared:1 - ext4 /dev/labrescue/ubuntu rw,errors=remount-ro"
+        ],
+        [
+          "27 1 252:1 / / rw,relatime shared:1 - ext4 /dev/labrescue/ubuntu rw,errors=remount-ro"
+        ],
+        [
+          "27 1 252:1 / / rw,relatime shared:1 - ext4 /dev/labrescue/ubuntu rw,errors=remount-ro"
+        ],
+        [
+          "27 1 252:1 / / rw,relatime shared:1 - ext4 /dev/labrescue/ubuntu rw,errors=remount-ro"
+        ],
+        [
+          "27 1 252:1 / / rw,relatime shared:1 - ext4 /dev/labrescue/ubuntu rw,errors=remount-ro"
+        ],
+        [
+          "27 1 252:1 / / rw,relatime shared:1 - ext4 /dev/labrescue/ubuntu rw,errors=remount-ro"
+        ],
+        [
+          "27 1 252:1 / / rw,relatime shared:1 - ext4 /dev/labrescue/ubuntu rw,errors=remount-ro"
+        ],
+        [
+          "27 1 252:1 / / rw,relatime shared:1 - ext4 /dev/labrescue/ubuntu rw,errors=remount-ro"
+        ]
+      ],
+      "root_mount_unchanged_at_observations": true,
+      "dm_table_before": "lab-path: 0 16775168 multipath 4 queue_if_no_path retain_attached_hw_handler queue_mode bio 0 1 1 round-robin 0 1 1 8:1 1 \nlabrescue-shared: 0 524288 linear 252:0 12584960\nlabrescue-ubuntu: 0 12582912 linear 252:0 2048\n",
+      "dm_table_after": "lab-path: 0 16775168 multipath 4 queue_if_no_path retain_attached_hw_handler queue_mode bio 0 1 1 round-robin 0 1 1 8:17 1 \nlabrescue-shared: 0 524288 linear 252:0 12584960\nlabrescue-ubuntu: 0 12582912 linear 252:0 2048\n",
+      "path_events": [
+        {
+          "time": 31.33730318,
+          "state": "ready",
+          "recoveries": 0,
+          "node": "/dev/sda1"
+        },
+        {
+          "time": 68.120578758,
+          "state": "waiting",
+          "recoveries": 0,
+          "old_node": "/dev/sda1",
+          "deadline": 76.117958692
+        },
+        {
+          "time": 68.12366574,
+          "state": "rejected",
+          "recoveries": 0,
+          "reason": "Expected ONE matching USB disk; found 0. No changes made."
+        },
+        {
+          "time": 69.06196588,
+          "state": "verified",
+          "recoveries": 0,
+          "node": "/dev/sdb1"
+        },
+        {
+          "time": 69.082291877,
+          "state": "ready",
+          "recoveries": 1,
+          "node": "/dev/sdb1"
+        },
+        {
+          "time": 70.481776471,
+          "state": "waiting",
+          "recoveries": 1,
+          "old_node": "/dev/sdb1",
+          "deadline": 78.477024262
+        },
+        {
+          "time": 70.488313279,
+          "state": "rejected",
+          "recoveries": 1,
+          "reason": "Expected ONE matching USB disk; found 0. No changes made."
+        },
+        {
+          "time": 71.218239327,
+          "state": "verified",
+          "recoveries": 1,
+          "node": "/dev/sda1"
+        },
+        {
+          "time": 71.283029202,
+          "state": "ready",
+          "recoveries": 2,
+          "node": "/dev/sda1"
+        },
+        {
+          "time": 73.061275948,
+          "state": "waiting",
+          "recoveries": 2,
+          "old_node": "/dev/sda1",
+          "deadline": 81.053646654
+        },
+        {
+          "time": 73.065591006,
+          "state": "rejected",
+          "recoveries": 2,
+          "reason": "Expected ONE matching USB disk; found 0. No changes made."
+        },
+        {
+          "time": 73.447806168,
+          "state": "rejected",
+          "recoveries": 2,
+          "reason": "Expected partition not found uniquely."
+        },
+        {
+          "time": 73.765490601,
+          "state": "verified",
+          "recoveries": 2,
+          "node": "/dev/sdb1"
+        },
+        {
+          "time": 73.886623829,
+          "state": "ready",
+          "recoveries": 3,
+          "node": "/dev/sdb1"
+        }
+      ],
+      "kernel_events": [
+        "[    1.973396] usb 2-1: new SuperSpeed USB device number 2 using xhci_hcd",
+        "[    2.001087] sd 0:0:0:0: [sda] Attached SCSI disk",
+        "[    2.747868] EXT4-fs (dm-1): mounted filesystem 752c72fc-8b74-4b69-a4db-a00bbe8f82f1 r/w with ordered data mode. Quota mode: none.",
+        "[   27.996044] EXT4-fs (vdb): mounted filesystem c36e1bfc-7318-4bc6-86e2-58b0a7c3c5d5 ro with ordered data mode. Quota mode: none.",
+        "[   28.176248] EXT4-fs (dm-2): mounted filesystem 3a93027a-84af-4ae4-b3ec-82fade6a274e r/w with ordered data mode. Quota mode: none.",
+        "[   29.644274] EXT4-fs (dm-1): re-mounted 752c72fc-8b74-4b69-a4db-a00bbe8f82f1.",
+        "[   68.198748] usb 2-1: USB disconnect, device number 2",
+        "[   68.296376] device-mapper: multipath: 252:0: Failing path 8:1.",
+        "[   68.652754] usb 2-1: new SuperSpeed USB device number 3 using xhci_hcd",
+        "[   68.761345] sd 1:0:0:0: [sdb] Attached SCSI disk",
+        "[   70.502990] usb 2-1: USB disconnect, device number 3",
+        "[   70.524890] device-mapper: multipath: 252:0: Failing path 8:17.",
+        "[   70.982913] usb 2-1: new SuperSpeed USB device number 4 using xhci_hcd",
+        "[   71.024386] sd 0:0:0:0: [sda] Attached SCSI disk",
+        "[   73.063164] usb 2-1: USB disconnect, device number 4",
+        "[   73.163472] device-mapper: multipath: 252:0: Failing path 8:1.",
+        "[   73.520378] usb 2-1: new SuperSpeed USB device number 5 using xhci_hcd",
+        "[   73.574254] sd 1:0:0:0: [sdb] Attached SCSI disk"
+      ],
+      "cycles": [
+        {
+          "index": 1,
+          "fault_host_time": 3981.716729479,
+          "deleted_host_time": 3981.885818667,
+          "reattach_request_host_time": 3981.886244098,
+          "reattached_host_time": 3982.001567614,
+          "outcome_host_time": 3983.023906938,
+          "shell_completed_before_reattach": false,
+          "request_delay_seconds": 0.0004254310001670092,
+          "qmp_complete_delay_seconds": 0.11574894700015648
+        },
+        {
+          "index": 2,
+          "fault_host_time": 3984.024128328,
+          "deleted_host_time": 3984.1900888,
+          "reattach_request_host_time": 3984.190726339,
+          "reattached_host_time": 3984.30577363,
+          "outcome_host_time": 3985.580128883,
+          "shell_completed_before_reattach": false,
+          "request_delay_seconds": 0.0006375389998538594,
+          "qmp_complete_delay_seconds": 0.11568483000019114
+        },
+        {
+          "index": 3,
+          "fault_host_time": 3986.58020984,
+          "deleted_host_time": 3986.750298693,
+          "reattach_request_host_time": 3986.750786618,
+          "reattached_host_time": 3986.866813261,
+          "outcome_host_time": 3987.940037214,
+          "shell_completed_before_reattach": false,
+          "request_delay_seconds": 0.00048792500001582084,
+          "qmp_complete_delay_seconds": 0.11651456800018423
+        }
+      ]
+    }
+  ]
+}

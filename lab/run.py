@@ -98,7 +98,7 @@ class Channel:
         raise TimeoutError(action)
 
 
-def qemu_command(run_dir, transport='uas', tcg=False, extra_kernel_args='', ubuntu=False, git_source=False):
+def qemu_command(run_dir, transport='uas', tcg=False, extra_kernel_args='', ubuntu=False, git_source=False, same_port=False):
     command = ['qemu-system-x86_64','-machine','q35','-accel','tcg' if tcg else 'kvm',
                '-m','3072' if ubuntu else '1536','-smp','2','-display','none','-nodefaults','-no-reboot','-nic','none',
                '-smbios','type=1,product=RAMRescueLab',
@@ -112,11 +112,12 @@ def qemu_command(run_dir, transport='uas', tcg=False, extra_kernel_args='', ubun
     for name,node in [('usb.raw','usbdisk'),('decoy.raw','decoydisk')]:
         command += ['-blockdev',json.dumps({'driver':'raw','node-name':node,
                     'file':{'driver':'file','filename':str(run_dir/name)}})]
+    port = ',port=1' if same_port else ''
     if transport == 'uas':
-        command += ['-device','usb-uas,bus=xhci.0,id=stick,serial=RAMRESCUE-LAB-001',
+        command += ['-device','usb-uas,bus=xhci.0,id=stick,serial=RAMRESCUE-LAB-001'+port,
                     '-device','scsi-hd,bus=stick.0,id=lun,drive=usbdisk']
     else:
-        command += ['-device','usb-storage,bus=xhci.0,id=stick,drive=usbdisk,serial=RAMRESCUE-LAB-001']
+        command += ['-device','usb-storage,bus=xhci.0,id=stick,drive=usbdisk,serial=RAMRESCUE-LAB-001'+port]
     if ubuntu:
         command += ['-blockdev',json.dumps({'driver':'raw','node-name':'ubuntu-seed',
             'read-only':True,'file':{'driver':'file','filename':str(WORK/'ubuntu/rootfs.raw')}}),

@@ -93,6 +93,12 @@ class RecoveryTests(unittest.TestCase):
         with self.assertRaises(mod.Refuse): self.r.verify()
         self.assertEqual(self.calls, [])
 
+    def test_partition_not_ready_never_probes_disk(self):
+        shutil.rmtree(self.sys / 'class/block/sdc/sdc3')
+        with self.assertRaises(mod.Refuse):
+            self.r.verify()
+        self.assertEqual(self.calls, [])
+
     def test_wrong_serial_refuses(self):
         self.c['usb_serial'] = 'different'
         with self.assertRaises(mod.Refuse): self.r.verify()
