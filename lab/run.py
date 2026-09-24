@@ -98,11 +98,12 @@ class Channel:
         raise TimeoutError(action)
 
 
-def qemu_command(run_dir, transport='uas', tcg=False, extra_kernel_args='', ubuntu=False, git_source=False, same_port=False):
+def qemu_command(run_dir, transport='uas', tcg=False, extra_kernel_args='', ubuntu=False, git_source=False, same_port=False,
+                 kernel=None, initramfs=None):
     command = ['qemu-system-x86_64','-machine','q35','-accel','tcg' if tcg else 'kvm',
                '-m','3072' if ubuntu else '1536','-smp','2','-display','none','-nodefaults','-no-reboot','-nic','none',
                '-smbios','type=1,product=RAMRescueLab',
-               '-kernel',str(WORK/'vmlinuz'),'-initrd',str(WORK/'initramfs.cpio.gz'),
+               '-kernel',str(kernel or WORK/'vmlinuz'),'-initrd',str(initramfs or WORK/'initramfs.cpio.gz'),
                '-append','console=ttyS0 rdinit=/init ram_rescue_lab=1 panic=-1 '+extra_kernel_args,
                '-serial','file:'+str(run_dir/'console.log'),
                '-serial','unix:'+str(run_dir/'agent.sock')+',server=on,wait=off',

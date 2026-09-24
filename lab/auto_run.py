@@ -41,6 +41,7 @@ def main():
     parser.add_argument('--reconnect',choices=['same','none','wrong','late'],default='same')
     parser.add_argument('--tcg',action='store_true')
     parser.add_argument('--kill-manager',action='store_true',help='Test kernel queue timeout with userspace guard killed')
+    parser.add_argument('--build-dir',type=Path,default=WORK,help='Select an isolated kernel/initramfs/build.json')
     args=parser.parse_args()
     if os.geteuid()==0:
         parser.error('run as a normal user')
@@ -53,7 +54,7 @@ def main():
     if args.kill_manager and args.reconnect!='none':
         parser.error('--kill-manager requires --reconnect none')
     for name in ['vmlinuz','initramfs.cpio.gz','build.json']:
-        if not (WORK/name).is_file():
+        if not (args.build_dir/name).is_file():
             parser.error('build the guest first')
     git_clone=args.workload=='git-clone'
     if git_clone and (args.guest!='ubuntu' or args.reconnect!='same'):
@@ -86,13 +87,14 @@ def main():
             stream.truncate((8 if ubuntu else 2)*1024**3)
     command=qemu_command(folder,args.transport,args.tcg,
         f'ram_rescue_mpath=1 ram_rescue_queue_seconds={args.queue_seconds}' +
-        (' ram_rescue_ubuntu=1 root=/dev/mapper/labrescue-ubuntu rw' if ubuntu else '') + (' ram_rescue_git=1' if git_clone else ''), ubuntu=ubuntu, git_source=git_clone, same_port=args.same_port)
+        (' ram_rescue_ubuntu=1 root=/dev/mapper/labrescue-ubuntu rw' if ubuntu else '') + (' ram_rescue_git=1' if git_clone else ''), ubuntu=ubuntu, git_source=git_clone, same_port=args.same_port,
+        kernel=args.build_dir/'vmlinuz',initramfs=args.build_dir/'initramfs.cpio.gz')
     (folder/'command.json').write_text(json.dumps(command,indent=2)+'\n')
     report={'workload':args.workload, 'git_source':git_source, 'guest':args.guest, 'ubuntu_source':ubuntu_source, 'mode':'automatic-multipath','transport':args.transport,'gap':args.gap,
         'queue_seconds':args.queue_seconds,'reconnect':args.reconnect,
         'same_port':args.same_port,
         'kill_manager':args.kill_manager,
-        'build':json.loads((WORK/'build.json').read_text()),
+        'build':json.loads((args.build_dir/'build.json').read_text()),
         'runner_sha256':hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
         'qemu_runner_sha256':hashlib.sha256((Path(__file__).parent/'run.py').read_bytes()).hexdigest(),
         'cycles':[]}

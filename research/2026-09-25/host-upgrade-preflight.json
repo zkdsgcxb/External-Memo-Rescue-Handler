@@ -1,0 +1,522 @@
+{
+  "observed_at": "2026-09-24T17:33:58.290843+00:00",
+  "scope": "read-only host preflight; private signed Ubuntu package index refreshed on 2026-09-25; no host index refresh, installation, configuration change or reboot",
+  "apt_options": [
+    "-o",
+    "Dir::State::lists=/workspace/Project/External-Memo-Rescue-Handler/lab/work/version-study/apt/lists",
+    "-o",
+    "Dir::Etc::sourcelist=/workspace/Project/External-Memo-Rescue-Handler/lab/work/version-study/apt/sources.list",
+    "-o",
+    "Dir::Etc::sourceparts=-"
+  ],
+  "cases": [
+    {
+      "requested_packages": [
+        "linux-generic-hwe-24.04"
+      ],
+      "metadata": "private refreshed noble main/restricted/universe + updates/security",
+      "summary": "0 upgraded, 10 newly installed, 0 to remove and 34 not upgraded.",
+      "packages": [
+        {
+          "package": "libllvm19",
+          "version": "1:19.1.1-1ubuntu1~24.04.2",
+          "old_version": null,
+          "download_bytes": 28737618,
+          "installed_bytes": 129000448,
+          "old_installed_bytes": 0
+        },
+        {
+          "package": "linux-modules-7.0.0-34-generic",
+          "version": "7.0.0-34.34~24.04.1",
+          "old_version": null,
+          "download_bytes": 168222912,
+          "installed_bytes": 166257664,
+          "old_installed_bytes": 0
+        },
+        {
+          "package": "linux-image-7.0.0-34-generic",
+          "version": "7.0.0-34.34~24.04.1",
+          "old_version": null,
+          "download_bytes": 16723096,
+          "installed_bytes": 17028096,
+          "old_installed_bytes": 0
+        },
+        {
+          "package": "linux-image-generic-hwe-24.04",
+          "version": "7.0.0-34.34~24.04.1",
+          "old_version": null,
+          "download_bytes": 2484,
+          "installed_bytes": 9216,
+          "old_installed_bytes": 0
+        },
+        {
+          "package": "linux-hwe-7.0-headers-7.0.0-34",
+          "version": "7.0.0-34.34~24.04.1",
+          "old_version": null,
+          "download_bytes": 14858694,
+          "installed_bytes": 94587904,
+          "old_installed_bytes": 0
+        },
+        {
+          "package": "linux-headers-7.0.0-34-generic",
+          "version": "7.0.0-34.34~24.04.1",
+          "old_version": null,
+          "download_bytes": 4168328,
+          "installed_bytes": 32010240,
+          "old_installed_bytes": 0
+        },
+        {
+          "package": "linux-headers-generic-hwe-24.04",
+          "version": "7.0.0-34.34~24.04.1",
+          "old_version": null,
+          "download_bytes": 2328,
+          "installed_bytes": 9216,
+          "old_installed_bytes": 0
+        },
+        {
+          "package": "linux-generic-hwe-24.04",
+          "version": "7.0.0-34.34~24.04.1",
+          "old_version": null,
+          "download_bytes": 1730,
+          "installed_bytes": 9216,
+          "old_installed_bytes": 0
+        },
+        {
+          "package": "linux-hwe-7.0-tools-7.0.0-34",
+          "version": "7.0.0-34.34~24.04.1",
+          "old_version": null,
+          "download_bytes": 9272846,
+          "installed_bytes": 42825728,
+          "old_installed_bytes": 0
+        },
+        {
+          "package": "linux-tools-7.0.0-34-generic",
+          "version": "7.0.0-34.34~24.04.1",
+          "old_version": null,
+          "download_bytes": 1638,
+          "installed_bytes": 121856,
+          "old_installed_bytes": 0
+        }
+      ],
+      "download_bytes": 241991674,
+      "net_package_disk_bytes": 481859584,
+      "removed": [],
+      "apt_simulation_stdout": "NOTE: This is only a simulation!\n      apt-get needs root privileges for real execution.\n      Keep also in mind that locking is deactivated,\n      so don't depend on the relevance to the real current situation!\nReading package lists...\nBuilding dependency tree...\nReading state information...\nThe following additional packages will be installed:\n  libllvm19 linux-headers-7.0.0-34-generic linux-headers-generic-hwe-24.04\n  linux-hwe-7.0-headers-7.0.0-34 linux-hwe-7.0-tools-7.0.0-34\n  linux-image-7.0.0-34-generic linux-image-generic-hwe-24.04\n  linux-modules-7.0.0-34-generic linux-tools-7.0.0-34-generic\nSuggested packages:\n  linux-hwe-7.0-tools\nThe following NEW packages will be installed:\n  libllvm19 linux-generic-hwe-24.04 linux-headers-7.0.0-34-generic\n  linux-headers-generic-hwe-24.04 linux-hwe-7.0-headers-7.0.0-34\n  linux-hwe-7.0-tools-7.0.0-34 linux-image-7.0.0-34-generic\n  linux-image-generic-hwe-24.04 linux-modules-7.0.0-34-generic\n  linux-tools-7.0.0-34-generic\n0 upgraded, 10 newly installed, 0 to remove and 34 not upgraded.\nInst libllvm19 (1:19.1.1-1ubuntu1~24.04.2 Ubuntu:24.04/noble-updates, Ubuntu:24.04/noble-security [amd64])\nInst linux-modules-7.0.0-34-generic (7.0.0-34.34~24.04.1 Ubuntu:24.04/noble-updates, Ubuntu:24.04/noble-security [amd64])\nInst linux-image-7.0.0-34-generic (7.0.0-34.34~24.04.1 Ubuntu:24.04/noble-updates, Ubuntu:24.04/noble-security [amd64])\nInst linux-image-generic-hwe-24.04 (7.0.0-34.34~24.04.1 Ubuntu:24.04/noble-updates, Ubuntu:24.04/noble-security [amd64])\nInst linux-hwe-7.0-headers-7.0.0-34 (7.0.0-34.34~24.04.1 Ubuntu:24.04/noble-updates, Ubuntu:24.04/noble-security [all])\nInst linux-headers-7.0.0-34-generic (7.0.0-34.34~24.04.1 Ubuntu:24.04/noble-updates, Ubuntu:24.04/noble-security [amd64])\nInst linux-headers-generic-hwe-24.04 (7.0.0-34.34~24.04.1 Ubuntu:24.04/noble-updates, Ubuntu:24.04/noble-security [amd64])\nInst linux-generic-hwe-24.04 (7.0.0-34.34~24.04.1 Ubuntu:24.04/noble-updates, Ubuntu:24.04/noble-security [amd64])\nInst linux-hwe-7.0-tools-7.0.0-34 (7.0.0-34.34~24.04.1 Ubuntu:24.04/noble-updates, Ubuntu:24.04/noble-security [amd64])\nInst linux-tools-7.0.0-34-generic (7.0.0-34.34~24.04.1 Ubuntu:24.04/noble-updates, Ubuntu:24.04/noble-security [amd64])\nConf libllvm19 (1:19.1.1-1ubuntu1~24.04.2 Ubuntu:24.04/noble-updates, Ubuntu:24.04/noble-security [amd64])\nConf linux-modules-7.0.0-34-generic (7.0.0-34.34~24.04.1 Ubuntu:24.04/noble-updates, Ubuntu:24.04/noble-security [amd64])\nConf linux-image-7.0.0-34-generic (7.0.0-34.34~24.04.1 Ubuntu:24.04/noble-updates, Ubuntu:24.04/noble-security [amd64])\nConf linux-image-generic-hwe-24.04 (7.0.0-34.34~24.04.1 Ubuntu:24.04/noble-updates, Ubuntu:24.04/noble-security [amd64])\nConf linux-hwe-7.0-headers-7.0.0-34 (7.0.0-34.34~24.04.1 Ubuntu:24.04/noble-updates, Ubuntu:24.04/noble-security [all])\nConf linux-headers-7.0.0-34-generic (7.0.0-34.34~24.04.1 Ubuntu:24.04/noble-updates, Ubuntu:24.04/noble-security [amd64])\nConf linux-headers-generic-hwe-24.04 (7.0.0-34.34~24.04.1 Ubuntu:24.04/noble-updates, Ubuntu:24.04/noble-security [amd64])\nConf linux-generic-hwe-24.04 (7.0.0-34.34~24.04.1 Ubuntu:24.04/noble-updates, Ubuntu:24.04/noble-security [amd64])\nConf linux-hwe-7.0-tools-7.0.0-34 (7.0.0-34.34~24.04.1 Ubuntu:24.04/noble-updates, Ubuntu:24.04/noble-security [amd64])\nConf linux-tools-7.0.0-34-generic (7.0.0-34.34~24.04.1 Ubuntu:24.04/noble-updates, Ubuntu:24.04/noble-security [amd64])\n"
+    },
+    {
+      "requested_packages": [
+        "linux-generic"
+      ],
+      "metadata": "private refreshed noble main/restricted/universe + updates/security",
+      "summary": "5 upgraded, 7 newly installed, 0 to remove and 29 not upgraded.",
+      "packages": [
+        {
+          "package": "linux-modules-6.8.0-142-generic",
+          "version": "6.8.0-142.142",
+          "old_version": null,
+          "download_bytes": 39116992,
+          "installed_bytes": 39383040,
+          "old_installed_bytes": 0
+        },
+        {
+          "package": "linux-image-6.8.0-142-generic",
+          "version": "6.8.0-142.142",
+          "old_version": null,
+          "download_bytes": 14822202,
+          "installed_bytes": 15090688,
+          "old_installed_bytes": 0
+        },
+        {
+          "package": "linux-modules-extra-6.8.0-142-generic",
+          "version": "6.8.0-142.142",
+          "old_version": null,
+          "download_bytes": 113397952,
+          "installed_bytes": 112540672,
+          "old_installed_bytes": 0
+        },
+        {
+          "package": "linux-generic",
+          "version": "6.8.0-142.142",
+          "old_version": "6.8.0-139.139",
+          "download_bytes": 1700,
+          "installed_bytes": 18432,
+          "old_installed_bytes": 18432
+        },
+        {
+          "package": "linux-image-generic",
+          "version": "6.8.0-142.142",
+          "old_version": "6.8.0-139.139",
+          "download_bytes": 11564,
+          "installed_bytes": 18432,
+          "old_installed_bytes": 18432
+        },
+        {
+          "package": "linux-headers-6.8.0-142",
+          "version": "6.8.0-142.142",
+          "old_version": null,
+          "download_bytes": 13605274,
+          "installed_bytes": 86272000,
+          "old_installed_bytes": 0
+        },
+        {
+          "package": "linux-headers-6.8.0-142-generic",
+          "version": "6.8.0-142.142",
+          "old_version": null,
+          "download_bytes": 3760730,
+          "installed_bytes": 29429760,
+          "old_installed_bytes": 0
+        },
+        {
+          "package": "linux-headers-generic",
+          "version": "6.8.0-142.142",
+          "old_version": "6.8.0-139.139",
+          "download_bytes": 11386,
+          "installed_bytes": 18432,
+          "old_installed_bytes": 18432
+        },
+        {
+          "package": "linux-libc-dev",
+          "version": "6.8.0-142.142",
+          "old_version": "6.8.0-139.139",
+          "download_bytes": 1527736,
+          "installed_bytes": 7774208,
+          "old_installed_bytes": 7773184
+        },
+        {
+          "package": "linux-tools-common",
+          "version": "6.8.0-142.142",
+          "old_version": "6.8.0-139.139",
+          "download_bytes": 368030,
+          "installed_bytes": 973824,
+          "old_installed_bytes": 972800
+        },
+        {
+          "package": "linux-tools-6.8.0-142",
+          "version": "6.8.0-142.142",
+          "old_version": null,
+          "download_bytes": 5250466,
+          "installed_bytes": 19812352,
+          "old_installed_bytes": 0
+        },
+        {
+          "package": "linux-tools-6.8.0-142-generic",
+          "version": "6.8.0-142.142",
+          "old_version": null,
+          "download_bytes": 1814,
+          "installed_bytes": 651264,
+          "old_installed_bytes": 0
+        }
+      ],
+      "download_bytes": 191875846,
+      "net_package_disk_bytes": 303181824,
+      "removed": [],
+      "apt_simulation_stdout": "NOTE: This is only a simulation!\n      apt-get needs root privileges for real execution.\n      Keep also in mind that locking is deactivated,\n      so don't depend on the relevance to the real current situation!\nReading package lists...\nBuilding dependency tree...\nReading state information...\nThe following additional packages will be installed:\n  linux-headers-6.8.0-142 linux-headers-6.8.0-142-generic\n  linux-headers-generic linux-image-6.8.0-142-generic linux-image-generic\n  linux-libc-dev linux-modules-6.8.0-142-generic\n  linux-modules-extra-6.8.0-142-generic linux-tools-6.8.0-142\n  linux-tools-6.8.0-142-generic linux-tools-common\nSuggested packages:\n  fdutils linux-tools\nThe following NEW packages will be installed:\n  linux-headers-6.8.0-142 linux-headers-6.8.0-142-generic\n  linux-image-6.8.0-142-generic linux-modules-6.8.0-142-generic\n  linux-modules-extra-6.8.0-142-generic linux-tools-6.8.0-142\n  linux-tools-6.8.0-142-generic\nThe following packages will be upgraded:\n  linux-generic linux-headers-generic linux-image-generic linux-libc-dev\n  linux-tools-common\n5 upgraded, 7 newly installed, 0 to remove and 29 not upgraded.\nInst linux-modules-6.8.0-142-generic (6.8.0-142.142 Ubuntu:24.04/noble-updates, Ubuntu:24.04/noble-security [amd64])\nInst linux-image-6.8.0-142-generic (6.8.0-142.142 Ubuntu:24.04/noble-updates, Ubuntu:24.04/noble-security [amd64])\nInst linux-modules-extra-6.8.0-142-generic (6.8.0-142.142 Ubuntu:24.04/noble-updates, Ubuntu:24.04/noble-security [amd64])\nInst linux-generic [6.8.0-139.139] (6.8.0-142.142 Ubuntu:24.04/noble-updates, Ubuntu:24.04/noble-security [amd64]) []\nInst linux-image-generic [6.8.0-139.139] (6.8.0-142.142 Ubuntu:24.04/noble-updates, Ubuntu:24.04/noble-security [amd64]) []\nInst linux-headers-6.8.0-142 (6.8.0-142.142 Ubuntu:24.04/noble-updates, Ubuntu:24.04/noble-security [all]) []\nInst linux-headers-6.8.0-142-generic (6.8.0-142.142 Ubuntu:24.04/noble-updates, Ubuntu:24.04/noble-security [amd64]) []\nInst linux-headers-generic [6.8.0-139.139] (6.8.0-142.142 Ubuntu:24.04/noble-updates, Ubuntu:24.04/noble-security [amd64])\nInst linux-libc-dev [6.8.0-139.139] (6.8.0-142.142 Ubuntu:24.04/noble-updates, Ubuntu:24.04/noble-security [amd64])\nInst linux-tools-common [6.8.0-139.139] (6.8.0-142.142 Ubuntu:24.04/noble-updates, Ubuntu:24.04/noble-security [all])\nInst linux-tools-6.8.0-142 (6.8.0-142.142 Ubuntu:24.04/noble-updates, Ubuntu:24.04/noble-security [amd64])\nInst linux-tools-6.8.0-142-generic (6.8.0-142.142 Ubuntu:24.04/noble-updates, Ubuntu:24.04/noble-security [amd64])\nConf linux-modules-6.8.0-142-generic (6.8.0-142.142 Ubuntu:24.04/noble-updates, Ubuntu:24.04/noble-security [amd64])\nConf linux-image-6.8.0-142-generic (6.8.0-142.142 Ubuntu:24.04/noble-updates, Ubuntu:24.04/noble-security [amd64])\nConf linux-modules-extra-6.8.0-142-generic (6.8.0-142.142 Ubuntu:24.04/noble-updates, Ubuntu:24.04/noble-security [amd64])\nConf linux-generic (6.8.0-142.142 Ubuntu:24.04/noble-updates, Ubuntu:24.04/noble-security [amd64])\nConf linux-image-generic (6.8.0-142.142 Ubuntu:24.04/noble-updates, Ubuntu:24.04/noble-security [amd64])\nConf linux-headers-6.8.0-142 (6.8.0-142.142 Ubuntu:24.04/noble-updates, Ubuntu:24.04/noble-security [all])\nConf linux-headers-6.8.0-142-generic (6.8.0-142.142 Ubuntu:24.04/noble-updates, Ubuntu:24.04/noble-security [amd64])\nConf linux-headers-generic (6.8.0-142.142 Ubuntu:24.04/noble-updates, Ubuntu:24.04/noble-security [amd64])\nConf linux-libc-dev (6.8.0-142.142 Ubuntu:24.04/noble-updates, Ubuntu:24.04/noble-security [amd64])\nConf linux-tools-common (6.8.0-142.142 Ubuntu:24.04/noble-updates, Ubuntu:24.04/noble-security [all])\nConf linux-tools-6.8.0-142 (6.8.0-142.142 Ubuntu:24.04/noble-updates, Ubuntu:24.04/noble-security [amd64])\nConf linux-tools-6.8.0-142-generic (6.8.0-142.142 Ubuntu:24.04/noble-updates, Ubuntu:24.04/noble-security [amd64])\n"
+    }
+  ],
+  "optional_gpu_case": {
+    "requested_packages": [
+      "linux-generic-hwe-24.04",
+      "linux-modules-nvidia-595-open-generic-hwe-24.04",
+      "nvidia-driver-595-open"
+    ],
+    "summary": "0 upgraded, 32 newly installed, 0 to remove and 15 not upgraded.",
+    "packages": [
+      {
+        "package": "libllvm19",
+        "version": "1:19.1.1-1ubuntu1~24.04.2",
+        "old_version": null,
+        "download_bytes": 28737618,
+        "installed_bytes": 129000448,
+        "old_installed_bytes": 0
+      },
+      {
+        "package": "nvidia-firmware-595-595.91.07",
+        "version": "595.91.07-0ubuntu0.24.04.1",
+        "old_version": null,
+        "download_bytes": 74975180,
+        "installed_bytes": 102992896,
+        "old_installed_bytes": 0
+      },
+      {
+        "package": "nvidia-kernel-common-595",
+        "version": "595.91.07-0ubuntu0.24.04.1",
+        "old_version": null,
+        "download_bytes": 823900,
+        "installed_bytes": 2956288,
+        "old_installed_bytes": 0
+      },
+      {
+        "package": "libnvidia-cfg1-595",
+        "version": "595.91.07-0ubuntu0.24.04.1",
+        "old_version": null,
+        "download_bytes": 158634,
+        "installed_bytes": 436224,
+        "old_installed_bytes": 0
+      },
+      {
+        "package": "libnvidia-common-595",
+        "version": "595.91.07-0ubuntu0.24.04.1",
+        "old_version": null,
+        "download_bytes": 18360,
+        "installed_bytes": 90112,
+        "old_installed_bytes": 0
+      },
+      {
+        "package": "libnvidia-compute-595",
+        "version": "595.91.07-0ubuntu0.24.04.1",
+        "old_version": null,
+        "download_bytes": 85956302,
+        "installed_bytes": 426469376,
+        "old_installed_bytes": 0
+      },
+      {
+        "package": "libnvidia-decode-595",
+        "version": "595.91.07-0ubuntu0.24.04.1",
+        "old_version": null,
+        "download_bytes": 3070392,
+        "installed_bytes": 25926656,
+        "old_installed_bytes": 0
+      },
+      {
+        "package": "libnvidia-egl-wayland1",
+        "version": "1:1.1.13-1ubuntu0.1",
+        "old_version": null,
+        "download_bytes": 30832,
+        "installed_bytes": 93184,
+        "old_installed_bytes": 0
+      },
+      {
+        "package": "libnvidia-encode-595",
+        "version": "595.91.07-0ubuntu0.24.04.1",
+        "old_version": null,
+        "download_bytes": 118704,
+        "installed_bytes": 333824,
+        "old_installed_bytes": 0
+      },
+      {
+        "package": "libnvidia-extra-595",
+        "version": "595.91.07-0ubuntu0.24.04.1",
+        "old_version": null,
+        "download_bytes": 77334,
+        "installed_bytes": 216064,
+        "old_installed_bytes": 0
+      },
+      {
+        "package": "libnvidia-fbc1-595",
+        "version": "595.91.07-0ubuntu0.24.04.1",
+        "old_version": null,
+        "download_bytes": 94224,
+        "installed_bytes": 289792,
+        "old_installed_bytes": 0
+      },
+      {
+        "package": "libnvidia-gl-595",
+        "version": "595.91.07-0ubuntu0.24.04.1",
+        "old_version": null,
+        "download_bytes": 139192764,
+        "installed_bytes": 373995520,
+        "old_installed_bytes": 0
+      },
+      {
+        "package": "libxnvctrl0",
+        "version": "510.47.03-0ubuntu4.24.04.1",
+        "old_version": null,
+        "download_bytes": 12696,
+        "installed_bytes": 58368,
+        "old_installed_bytes": 0
+      },
+      {
+        "package": "linux-modules-7.0.0-34-generic",
+        "version": "7.0.0-34.34~24.04.1",
+        "old_version": null,
+        "download_bytes": 168222912,
+        "installed_bytes": 166257664,
+        "old_installed_bytes": 0
+      },
+      {
+        "package": "linux-image-7.0.0-34-generic",
+        "version": "7.0.0-34.34~24.04.1",
+        "old_version": null,
+        "download_bytes": 16723096,
+        "installed_bytes": 17028096,
+        "old_installed_bytes": 0
+      },
+      {
+        "package": "linux-image-generic-hwe-24.04",
+        "version": "7.0.0-34.34~24.04.1",
+        "old_version": null,
+        "download_bytes": 2484,
+        "installed_bytes": 9216,
+        "old_installed_bytes": 0
+      },
+      {
+        "package": "linux-hwe-7.0-headers-7.0.0-34",
+        "version": "7.0.0-34.34~24.04.1",
+        "old_version": null,
+        "download_bytes": 14858694,
+        "installed_bytes": 94587904,
+        "old_installed_bytes": 0
+      },
+      {
+        "package": "linux-headers-7.0.0-34-generic",
+        "version": "7.0.0-34.34~24.04.1",
+        "old_version": null,
+        "download_bytes": 4168328,
+        "installed_bytes": 32010240,
+        "old_installed_bytes": 0
+      },
+      {
+        "package": "linux-headers-generic-hwe-24.04",
+        "version": "7.0.0-34.34~24.04.1",
+        "old_version": null,
+        "download_bytes": 2328,
+        "installed_bytes": 9216,
+        "old_installed_bytes": 0
+      },
+      {
+        "package": "linux-generic-hwe-24.04",
+        "version": "7.0.0-34.34~24.04.1",
+        "old_version": null,
+        "download_bytes": 1730,
+        "installed_bytes": 9216,
+        "old_installed_bytes": 0
+      },
+      {
+        "package": "linux-hwe-7.0-tools-7.0.0-34",
+        "version": "7.0.0-34.34~24.04.1",
+        "old_version": null,
+        "download_bytes": 9272846,
+        "installed_bytes": 42825728,
+        "old_installed_bytes": 0
+      },
+      {
+        "package": "linux-modules-nvidia-595-open-7.0.0-34-generic",
+        "version": "7.0.0-34.34~24.04.1+1",
+        "old_version": null,
+        "download_bytes": 8322606,
+        "installed_bytes": 28167168,
+        "old_installed_bytes": 0
+      },
+      {
+        "package": "linux-modules-nvidia-595-open-generic-hwe-24.04",
+        "version": "7.0.0-34.34~24.04.1+1",
+        "old_version": null,
+        "download_bytes": 6348,
+        "installed_bytes": 18432,
+        "old_installed_bytes": 0
+      },
+      {
+        "package": "linux-tools-7.0.0-34-generic",
+        "version": "7.0.0-34.34~24.04.1",
+        "old_version": null,
+        "download_bytes": 1638,
+        "installed_bytes": 121856,
+        "old_installed_bytes": 0
+      },
+      {
+        "package": "nvidia-compute-utils-595",
+        "version": "595.91.07-0ubuntu0.24.04.1",
+        "old_version": null,
+        "download_bytes": 135022,
+        "installed_bytes": 398336,
+        "old_installed_bytes": 0
+      },
+      {
+        "package": "nvidia-kernel-source-595-open",
+        "version": "595.91.07-0ubuntu0.24.04.1",
+        "old_version": null,
+        "download_bytes": 8362488,
+        "installed_bytes": 29665280,
+        "old_installed_bytes": 0
+      },
+      {
+        "package": "nvidia-utils-595",
+        "version": "595.91.07-0ubuntu0.24.04.1",
+        "old_version": null,
+        "download_bytes": 609398,
+        "installed_bytes": 1787904,
+        "old_installed_bytes": 0
+      },
+      {
+        "package": "xserver-xorg-video-nvidia-595",
+        "version": "595.91.07-0ubuntu0.24.04.1",
+        "old_version": null,
+        "download_bytes": 1207652,
+        "installed_bytes": 3689472,
+        "old_installed_bytes": 0
+      },
+      {
+        "package": "nvidia-driver-595-open",
+        "version": "595.91.07-0ubuntu0.24.04.1",
+        "old_version": null,
+        "download_bytes": 14014,
+        "installed_bytes": 37888,
+        "old_installed_bytes": 0
+      },
+      {
+        "package": "nvidia-prime",
+        "version": "0.8.17.2",
+        "old_version": null,
+        "download_bytes": 10390,
+        "installed_bytes": 50176,
+        "old_installed_bytes": 0
+      },
+      {
+        "package": "screen-resolution-extra",
+        "version": "0.18.3ubuntu0.24.04.1",
+        "old_version": null,
+        "download_bytes": 4192,
+        "installed_bytes": 24576,
+        "old_installed_bytes": 0
+      },
+      {
+        "package": "nvidia-settings",
+        "version": "510.47.03-0ubuntu4.24.04.1",
+        "old_version": null,
+        "download_bytes": 898172,
+        "installed_bytes": 2935808,
+        "old_installed_bytes": 0
+      }
+    ],
+    "download_bytes": 566091278,
+    "net_package_disk_bytes": 1482492928,
+    "removed": [],
+    "apt_simulation_stdout": "NOTE: This is only a simulation!\n      apt-get needs root privileges for real execution.\n      Keep also in mind that locking is deactivated,\n      so don't depend on the relevance to the real current situation!\nReading package lists...\nBuilding dependency tree...\nReading state information...\nThe following additional packages will be installed:\n  libllvm19 libnvidia-cfg1-595 libnvidia-common-595 libnvidia-compute-595\n  libnvidia-decode-595 libnvidia-egl-wayland1 libnvidia-encode-595\n  libnvidia-extra-595 libnvidia-fbc1-595 libnvidia-gl-595 libxnvctrl0\n  linux-headers-7.0.0-34-generic linux-headers-generic-hwe-24.04\n  linux-hwe-7.0-headers-7.0.0-34 linux-hwe-7.0-tools-7.0.0-34\n  linux-image-7.0.0-34-generic linux-image-generic-hwe-24.04\n  linux-modules-7.0.0-34-generic\n  linux-modules-nvidia-595-open-7.0.0-34-generic linux-tools-7.0.0-34-generic\n  nvidia-compute-utils-595 nvidia-firmware-595-595.91.07\n  nvidia-kernel-common-595 nvidia-kernel-source-595-open nvidia-prime\n  nvidia-settings nvidia-utils-595 screen-resolution-extra\n  xserver-xorg-video-nvidia-595\nSuggested packages:\n  linux-hwe-7.0-tools nvidia-driver-595\nRecommended packages:\n  libnvidia-compute-595:i386 libnvidia-decode-595:i386\n  libnvidia-encode-595:i386 libnvidia-fbc1-595:i386 libnvidia-gl-595:i386\nThe following NEW packages will be installed:\n  libllvm19 libnvidia-cfg1-595 libnvidia-common-595 libnvidia-compute-595\n  libnvidia-decode-595 libnvidia-egl-wayland1 libnvidia-encode-595\n  libnvidia-extra-595 libnvidia-fbc1-595 libnvidia-gl-595 libxnvctrl0\n  linux-generic-hwe-24.04 linux-headers-7.0.0-34-generic\n  linux-headers-generic-hwe-24.04 linux-hwe-7.0-headers-7.0.0-34\n  linux-hwe-7.0-tools-7.0.0-34 linux-image-7.0.0-34-generic\n  linux-image-generic-hwe-24.04 linux-modules-7.0.0-34-generic\n  linux-modules-nvidia-595-open-7.0.0-34-generic\n  linux-modules-nvidia-595-open-generic-hwe-24.04 linux-tools-7.0.0-34-generic\n  nvidia-compute-utils-595 nvidia-driver-595-open\n  nvidia-firmware-595-595.91.07 nvidia-kernel-common-595\n  nvidia-kernel-source-595-open nvidia-prime nvidia-settings nvidia-utils-595\n  screen-resolution-extra xserver-xorg-video-nvidia-595\n0 upgraded, 32 newly installed, 0 to remove and 15 not upgraded.\nInst libllvm19 (1:19.1.1-1ubuntu1~24.04.2 Ubuntu:24.04/noble-updates, Ubuntu:24.04/noble-security [amd64])\nInst nvidia-firmware-595-595.91.07 (595.91.07-0ubuntu0.24.04.1 Ubuntu:24.04/noble-updates [amd64])\nInst nvidia-kernel-common-595 (595.91.07-0ubuntu0.24.04.1 Ubuntu:24.04/noble-updates [amd64])\nInst libnvidia-cfg1-595 (595.91.07-0ubuntu0.24.04.1 Ubuntu:24.04/noble-updates [amd64])\nInst libnvidia-common-595 (595.91.07-0ubuntu0.24.04.1 Ubuntu:24.04/noble-updates [amd64])\nInst libnvidia-compute-595 (595.91.07-0ubuntu0.24.04.1 Ubuntu:24.04/noble-updates [amd64])\nInst libnvidia-decode-595 (595.91.07-0ubuntu0.24.04.1 Ubuntu:24.04/noble-updates [amd64])\nInst libnvidia-egl-wayland1 (1:1.1.13-1ubuntu0.1 Ubuntu:24.04/noble-updates [amd64])\nInst libnvidia-encode-595 (595.91.07-0ubuntu0.24.04.1 Ubuntu:24.04/noble-updates [amd64])\nInst libnvidia-extra-595 (595.91.07-0ubuntu0.24.04.1 Ubuntu:24.04/noble-updates [amd64])\nInst libnvidia-fbc1-595 (595.91.07-0ubuntu0.24.04.1 Ubuntu:24.04/noble-updates [amd64])\nInst libnvidia-gl-595 (595.91.07-0ubuntu0.24.04.1 Ubuntu:24.04/noble-updates [amd64])\nInst libxnvctrl0 (510.47.03-0ubuntu4.24.04.1 Ubuntu:24.04/noble-updates [amd64])\nInst linux-modules-7.0.0-34-generic (7.0.0-34.34~24.04.1 Ubuntu:24.04/noble-updates [amd64])\nInst linux-image-7.0.0-34-generic (7.0.0-34.34~24.04.1 Ubuntu:24.04/noble-updates [amd64])\nInst linux-image-generic-hwe-24.04 (7.0.0-34.34~24.04.1 Ubuntu:24.04/noble-updates [amd64])\nInst linux-hwe-7.0-headers-7.0.0-34 (7.0.0-34.34~24.04.1 Ubuntu:24.04/noble-updates [all])\nInst linux-headers-7.0.0-34-generic (7.0.0-34.34~24.04.1 Ubuntu:24.04/noble-updates [amd64])\nInst linux-headers-generic-hwe-24.04 (7.0.0-34.34~24.04.1 Ubuntu:24.04/noble-updates [amd64])\nInst linux-generic-hwe-24.04 (7.0.0-34.34~24.04.1 Ubuntu:24.04/noble-updates [amd64])\nInst linux-hwe-7.0-tools-7.0.0-34 (7.0.0-34.34~24.04.1 Ubuntu:24.04/noble-updates [amd64])\nInst linux-modules-nvidia-595-open-7.0.0-34-generic (7.0.0-34.34~24.04.1+1 Ubuntu:24.04/noble-updates [amd64])\nInst linux-modules-nvidia-595-open-generic-hwe-24.04 (7.0.0-34.34~24.04.1+1 Ubuntu:24.04/noble-updates [amd64])\nInst linux-tools-7.0.0-34-generic (7.0.0-34.34~24.04.1 Ubuntu:24.04/noble-updates [amd64])\nInst nvidia-compute-utils-595 (595.91.07-0ubuntu0.24.04.1 Ubuntu:24.04/noble-updates [amd64])\nInst nvidia-kernel-source-595-open (595.91.07-0ubuntu0.24.04.1 Ubuntu:24.04/noble-updates [amd64])\nInst nvidia-utils-595 (595.91.07-0ubuntu0.24.04.1 Ubuntu:24.04/noble-updates [amd64])\nInst xserver-xorg-video-nvidia-595 (595.91.07-0ubuntu0.24.04.1 Ubuntu:24.04/noble-updates [amd64])\nInst nvidia-driver-595-open (595.91.07-0ubuntu0.24.04.1 Ubuntu:24.04/noble-updates [amd64])\nInst nvidia-prime (0.8.17.2 Ubuntu:24.04/noble [all])\nInst screen-resolution-extra (0.18.3ubuntu0.24.04.1 Ubuntu:24.04/noble-updates [all])\nInst nvidia-settings (510.47.03-0ubuntu4.24.04.1 Ubuntu:24.04/noble-updates [amd64])\nConf libllvm19 (1:19.1.1-1ubuntu1~24.04.2 Ubuntu:24.04/noble-updates, Ubuntu:24.04/noble-security [amd64])\nConf nvidia-firmware-595-595.91.07 (595.91.07-0ubuntu0.24.04.1 Ubuntu:24.04/noble-updates [amd64])\nConf nvidia-kernel-common-595 (595.91.07-0ubuntu0.24.04.1 Ubuntu:24.04/noble-updates [amd64])\nConf libnvidia-cfg1-595 (595.91.07-0ubuntu0.24.04.1 Ubuntu:24.04/noble-updates [amd64])\nConf libnvidia-common-595 (595.91.07-0ubuntu0.24.04.1 Ubuntu:24.04/noble-updates [amd64])\nConf libnvidia-compute-595 (595.91.07-0ubuntu0.24.04.1 Ubuntu:24.04/noble-updates [amd64])\nConf libnvidia-decode-595 (595.91.07-0ubuntu0.24.04.1 Ubuntu:24.04/noble-updates [amd64])\nConf libnvidia-egl-wayland1 (1:1.1.13-1ubuntu0.1 Ubuntu:24.04/noble-updates [amd64])\nConf libnvidia-encode-595 (595.91.07-0ubuntu0.24.04.1 Ubuntu:24.04/noble-updates [amd64])\nConf libnvidia-extra-595 (595.91.07-0ubuntu0.24.04.1 Ubuntu:24.04/noble-updates [amd64])\nConf libnvidia-fbc1-595 (595.91.07-0ubuntu0.24.04.1 Ubuntu:24.04/noble-updates [amd64])\nConf libnvidia-gl-595 (595.91.07-0ubuntu0.24.04.1 Ubuntu:24.04/noble-updates [amd64])\nConf libxnvctrl0 (510.47.03-0ubuntu4.24.04.1 Ubuntu:24.04/noble-updates [amd64])\nConf linux-modules-7.0.0-34-generic (7.0.0-34.34~24.04.1 Ubuntu:24.04/noble-updates [amd64])\nConf linux-image-7.0.0-34-generic (7.0.0-34.34~24.04.1 Ubuntu:24.04/noble-updates [amd64])\nConf linux-image-generic-hwe-24.04 (7.0.0-34.34~24.04.1 Ubuntu:24.04/noble-updates [amd64])\nConf linux-hwe-7.0-headers-7.0.0-34 (7.0.0-34.34~24.04.1 Ubuntu:24.04/noble-updates [all])\nConf linux-headers-7.0.0-34-generic (7.0.0-34.34~24.04.1 Ubuntu:24.04/noble-updates [amd64])\nConf linux-headers-generic-hwe-24.04 (7.0.0-34.34~24.04.1 Ubuntu:24.04/noble-updates [amd64])\nConf linux-generic-hwe-24.04 (7.0.0-34.34~24.04.1 Ubuntu:24.04/noble-updates [amd64])\nConf linux-hwe-7.0-tools-7.0.0-34 (7.0.0-34.34~24.04.1 Ubuntu:24.04/noble-updates [amd64])\nConf linux-modules-nvidia-595-open-7.0.0-34-generic (7.0.0-34.34~24.04.1+1 Ubuntu:24.04/noble-updates [amd64])\nConf linux-modules-nvidia-595-open-generic-hwe-24.04 (7.0.0-34.34~24.04.1+1 Ubuntu:24.04/noble-updates [amd64])\nConf linux-tools-7.0.0-34-generic (7.0.0-34.34~24.04.1 Ubuntu:24.04/noble-updates [amd64])\nConf nvidia-compute-utils-595 (595.91.07-0ubuntu0.24.04.1 Ubuntu:24.04/noble-updates [amd64])\nConf nvidia-kernel-source-595-open (595.91.07-0ubuntu0.24.04.1 Ubuntu:24.04/noble-updates [amd64])\nConf nvidia-utils-595 (595.91.07-0ubuntu0.24.04.1 Ubuntu:24.04/noble-updates [amd64])\nConf xserver-xorg-video-nvidia-595 (595.91.07-0ubuntu0.24.04.1 Ubuntu:24.04/noble-updates [amd64])\nConf nvidia-driver-595-open (595.91.07-0ubuntu0.24.04.1 Ubuntu:24.04/noble-updates [amd64])\nConf nvidia-prime (0.8.17.2 Ubuntu:24.04/noble [all])\nConf screen-resolution-extra (0.18.3ubuntu0.24.04.1 Ubuntu:24.04/noble-updates [all])\nConf nvidia-settings (510.47.03-0ubuntu4.24.04.1 Ubuntu:24.04/noble-updates [amd64])\n",
+    "metadata": "Existing host apt lists, noble-updates InRelease mtime 2026-09-23 12:43:13 +0800. Includes multiverse, which private refresh intentionally omitted. Optional GPU change, not part of recommended first kernel step."
+  },
+  "host": {
+    "os": "Ubuntu 24.04.5 LTS",
+    "running_kernel": "6.8.0-139-generic",
+    "installed_kernel_abis": [
+      "6.8.0-139-generic"
+    ],
+    "cpu": "Intel Core i9-13900H",
+    "graphics": [
+      {
+        "device": "Intel Raptor Lake-P UHD Graphics",
+        "driver": "i915"
+      },
+      {
+        "device": "NVIDIA RTX 4060 Laptop",
+        "driver": "nouveau"
+      }
+    ],
+    "secure_boot": "disabled",
+    "dkms_command_available": false,
+    "nvidia_smi_available": false,
+    "root_free_gib_approx": 82,
+    "boot_on_root_lv": true,
+    "esp_free_gib_approx": 2,
+    "current_firmware_boot_label": "rEFInd (internal)",
+    "firmware_entry_refind_esp": "internal NVMe partition, unmounted; later chainloading and final active config unverified",
+    "mounted_boot_efi": "external USB ESP, different from firmware-entry rEFInd ESP",
+    "grub_defaults": {
+      "timeout_style": "hidden",
+      "timeout": 0
+    },
+    "root_grub_cfg_readable_without_root": false,
+    "current_initramfs_usb_lvm_checked": true,
+    "root_stack_has_multipath": false,
+    "root_stack": "LVM root -> partition -> USB disk, from lsblk --inverse"
+  }
+}

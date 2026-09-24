@@ -35,13 +35,15 @@ def ram_python(folder,code,timeout=15):
 def main():
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument('scenario',choices=['slow-backend','suspended-manager-death'])
+    parser.add_argument('--build-dir',type=Path,default=WORK,help='Select an isolated kernel/initramfs/build.json')
     args=parser.parse_args()
     folder=WORK/(time.strftime('%Y%m%d-%H%M%S')+'-probe-'+('stall' if args.scenario=='slow-backend' else 'suspend'))
     folder.mkdir(mode=0o700)
     for name in ['usb.raw','decoy.raw']:
         with (folder/name).open('xb') as f:f.truncate(2*1024**3)
-    command=qemu_command(folder,extra_kernel_args='ram_rescue_mpath=1 ram_rescue_queue_seconds=4',same_port=True)
-    report={'scenario':args.scenario,'build':json.loads((WORK/'build.json').read_text()),'command':command,'runner_sha256':hashlib.sha256(Path(__file__).read_bytes()).hexdigest()}
+    command=qemu_command(folder,extra_kernel_args='ram_rescue_mpath=1 ram_rescue_queue_seconds=4',same_port=True,
+        kernel=args.build_dir/'vmlinuz',initramfs=args.build_dir/'initramfs.cpio.gz')
+    report={'scenario':args.scenario,'build':json.loads((args.build_dir/'build.json').read_text()),'command':command,'runner_sha256':hashlib.sha256(Path(__file__).read_bytes()).hexdigest()}
     print(folder,flush=True)
     channels=[]
     with (folder/'qemu.log').open('w') as log,(folder/'qmp.jsonl').open('w') as qlog,(folder/'agent.jsonl').open('w') as alog:

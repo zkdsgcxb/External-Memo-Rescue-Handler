@@ -20,11 +20,22 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--kernel', type=Path, required=True, help='Readable guest vmlinuz')
     parser.add_argument('--release', default=os.uname().release)
+    parser.add_argument('--module-root', type=Path, default=Path('/'),
+                        help='Root containing lib/modules, including privately extracted kernel packages')
+    parser.add_argument('--work-dir', type=Path, default=WORK,
+                        help='Build directory under lab/work; leaves other builds unchanged')
     args = parser.parse_args()
     if not args.kernel.is_file():
         parser.error('kernel must be a regular file')
-    WORK.mkdir(exist_ok=True)
-    root = WORK / 'rootfs'
+    work = args.work_dir.resolve()
+    if not work.is_relative_to(WORK.resolve()):
+        parser.error('work-dir must be inside lab/work')
+    module_root = args.module_root.resolve()
+    module_dir = module_root / 'lib/modules' / args.release
+    if not module_dir.is_dir():
+        parser.error('module-root must contain lib/modules for the requested release')
+    work.mkdir(parents=True, exist_ok=True)
+    root = work / 'rootfs'
     if root.exists():
         shutil.rmtree(root)
     root.mkdir()
@@ -50,14 +61,16 @@ def main():
     for so in (root / 'usr/lib/python3.12').rglob('*.so'):
         payload.with_libs('/' + str(so.relative_to(root)))
     for module in MODULES:
-        deps = subprocess.check_output(['modprobe', '-S', args.release, '--show-depends', module], text=True)
+        deps = subprocess.check_output(['modprobe', '-d', str(module_root), '-S', args.release,
+                                        '--show-depends', module], text=True)
         for line in deps.splitlines():
             if line.startswith('insmod '):
-                payload.copy_file(line.split()[1])
-    module_dir = Path('/lib/modules') / args.release
+                source = Path(line.split()[1]).resolve()
+                relative = source.relative_to(module_dir.resolve())
+                payload.copy_file(source, Path('/lib/modules') / args.release / relative)
     for name in ['modules.builtin', 'modules.builtin.modinfo', 'modules.order']:
         if (module_dir / name).exists():
-            payload.copy_file(module_dir / name)
+            payload.copy_file(module_dir / name, Path('/lib/modules') / args.release / name)
     subprocess.run(['depmod', '-b', str(root), args.release], check=True)
     for directory in ['dev', 'proc', 'sys', 'run', 'tmp', 'newroot', 'etc/lvm', 'etc/rescue', 'opt/lab', 'var/log', 'root', 'shared']:
         (root / directory).mkdir(parents=True, exist_ok=True)
@@ -78,20 +91,21 @@ def main():
         with subprocess.Popen(['cpio', '--null', '-o', '-H', 'newc', '--owner=0:0'], cwd=root,
                               stdin=find.stdout, stdout=subprocess.PIPE) as cpio:
             find.stdout.close()
-            with gzip.open(WORK / 'initramfs.cpio.gz', 'wb', compresslevel=3) as out:
+            with gzip.open(work / 'initramfs.cpio.gz', 'wb', compresslevel=3) as out:
                 shutil.copyfileobj(cpio.stdout, out)
             if cpio.wait() or find.wait():
                 raise RuntimeError('initramfs creation failed')
-    shutil.copyfile(args.kernel, WORK / 'vmlinuz')
-    (WORK / 'build.json').write_text(json.dumps({'kernel_release': args.release,
+    shutil.copyfile(args.kernel, work / 'vmlinuz')
+    (work / 'build.json').write_text(json.dumps({'kernel_release': args.release,
+        'module_root': str(module_root),
         'source_commit': subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=PROJECT, text=True).strip(),
         'source_sha256': {str(p.relative_to(PROJECT)):hashlib.sha256(p.read_bytes()).hexdigest()
             for p in [BASE/'build.py', PROJECT/'ram-rescue-demo/src/rescue.py', PROJECT/'ram-rescue-demo/src/lvm.conf',
                       *sorted(p for p in (BASE/'guest').iterdir() if p.is_file())]},
-        'kernel_sha256': hashlib.sha256((WORK/'vmlinuz').read_bytes()).hexdigest(),
-        'initramfs_sha256': hashlib.sha256((WORK/'initramfs.cpio.gz').read_bytes()).hexdigest(),
+        'kernel_sha256': hashlib.sha256((work/'vmlinuz').read_bytes()).hexdigest(),
+        'initramfs_sha256': hashlib.sha256((work/'initramfs.cpio.gz').read_bytes()).hexdigest(),
         'note': 'guest payload copied from working tree; no host identities or passwords'}, indent=2)+'\n')
-    print('Guest ready:', WORK / 'initramfs.cpio.gz')
+    print('Guest ready:', work / 'initramfs.cpio.gz')
 
 
 if __name__ == '__main__':

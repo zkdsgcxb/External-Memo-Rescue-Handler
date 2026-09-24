@@ -1,0 +1,714 @@
+{
+  "date": "2026-09-25",
+  "source_build": "new-version-build.json",
+  "script": "version_probe.py",
+  "scope": "Unprivileged host, private file-backed QEMU. RAM root and LVM/ext4 data workload; not complete Ubuntu root-disk recovery. Online prefix validation is not cold-crash durability.",
+  "measurement_limits": [
+    "Single small sample per case, 3 correct replug cycles or 1 wrong disk cycle; not broad fault coverage.",
+    "CPU from 10-second daemon utime+stime ticks, excludes child processes and cannot measure spikes.",
+    "Parallel host VM work and differing snapshots/builds prevent claiming a version speedup.",
+    "Explicit scsi_id and Ubuntu DM udev rules retained; not full 0.15.0 package integration."
+  ],
+  "cases": [
+    {
+      "id": "20260925-013152",
+      "raw_report": "lab/work/version-study/20260925-013152/report.json",
+      "raw_report_sha256": "e281ce2c08a8424fbbf9ab3105acccd040ba768a0a8e69e5ad7c31d5e8d1c22b",
+      "scope": "RAM root, version-selected multipathd, whole USB disk -> kpartx -> LVM -> ext4 data workload; not Ubuntu root recovery",
+      "kernel": "6.8.0-139-generic",
+      "version": "multipath-tools v0.15.0 (07/13, 2026)",
+      "deny_rt": true,
+      "sched_policy": 0,
+      "sched_priority": 0,
+      "inherited_rtprio_limit": [
+        0,
+        0
+      ],
+      "wrong_disk": false,
+      "continuity_oracle_passed": true,
+      "harness_error": null,
+      "validation": {
+        "id": 6,
+        "validated": true,
+        "records": 238
+      },
+      "initial_workload_ok": 1,
+      "last_snapshot_ok": 236,
+      "last_snapshot_errors": [],
+      "max_write_fsync_seconds": 0.43177470000000184,
+      "last_snapshot_memory": {
+        "VmLck": "412648 kB",
+        "VmRSS": "20200 kB",
+        "Threads": "8"
+      },
+      "healthy_daemon_cpu_single_core_percent": 0.0,
+      "cpu_measurement_seconds": 10.000103802000012,
+      "cpu_clock_ticks_per_second": 100,
+      "daemon_sha256": "5f275e7639e9370c6b60b5f6e8fff26fabd2faa45ed633d7541d1c1cef6904c4",
+      "wwid": "0QEMU_QEMU_HARDDISK_UPSTREAM-SCSI-001",
+      "effective_defaults": "defaults {\n\tverbosity 3\n\tpolling_interval 1\n\tmax_polling_interval 4\n\treassign_maps \"no\"\n\tpath_selector \"round-robin 0\"\n\tpath_grouping_policy \"failover\"\n\tuid_attribute \"ID_SERIAL\"\n\tprio \"const\"\n\tprio_args \"\"\n\tfeatures \"0\"\n\tpath_checker \"tur\"\n\talias_prefix \"mpath\"\n\tfailback \"manual\"\n\tmax_fds \"max\"\n\tno_path_retry 8\n\tqueue_without_daemon \"no\"\n\tallow_usb_devices \"yes\"\n\tflush_on_last_del \"never\"\n\tuser_friendly_names \"no\"\n\tfast_io_fail_tmo 5\n\tlog_checker_err \"always\"\n\tall_tg_pt \"no\"\n\tretain_attached_hw_handler \"yes\"\n\tdetect_prio \"no\"\n\tdetect_checker \"yes\"\n\tdetect_pgpolicy \"yes\"\n\tdetect_pgpolicy_use_tpg \"no\"\n\tforce_sync \"no\"\n\tstrict_timing \"no\"\n\tdeferred_remove \"no\"\n\tdelay_watch_checks \"no\"\n\tdelay_wait_checks \"no\"\n\tsan_path_err_threshold \"no\"\n\tsan_path_err_forget_rate \"no\"\n\tsan_path_err_recovery_time \"no\"\n\tmarginal_path_err_sample_time \"no\"\n\tmarginal_path_err_rate_threshold \"no\"\n\tmarginal_path_err_recheck_gap_time \"no\"\n\tmarginal_path_double_failed_time \"no\"\n\tfind_multipaths \"strict\"\n\tuxsock_timeout 4000\n\tretrigger_tries 3\n\tretrigger_delay 10\n\tmissing_uev_wait_timeout 30\n\tskip_kpartx \"no\"\n\tpurge_disconnected \"no\"\n\tremove_retries 0\n\tghost_delay \"no\"\n\tauto_resize \"never\"\n\tfind_multipaths_timeout -10\n\tenable_foreign \"NONE\"\n\tmarginal_pathgroups \"off\"\n\trecheck_wwid \"yes\"\n}\n",
+      "effective_config_sha256": "8e20ac38785658baba105ba2d32670393b904bf167d1417af8963364486b8f89",
+      "cycles": [
+        {
+          "host_request_to_reattach_seconds": 0.17659165599980042,
+          "guest_snapshot_clock_ok": 143,
+          "dm_status": "mpstudy-data: 0 524288 linear \nprobe: 0 2097152 multipath 2 0 0 0 1 1 A 0 1 0 8:0 A 0 \nprobe1: 0 2093056 linear \n",
+          "maps": "mpstudy-data: 0 524288 linear 252:1 2048\nprobe: 0 2097152 multipath 1 queue_if_no_path 0 1 1 round-robin 0 1 1 8:0 1 \nprobe1: 0 2093056 linear 252:0 2048\n",
+          "topology": "probe (0QEMU_QEMU_HARDDISK_UPSTREAM-SCSI-001) dm-0 QEMU,QEMU HARDDISK\nsize=1.0G features='1 queue_if_no_path' hwhandler='0' wp=rw\n`-+- policy='round-robin 0' prio=1 status=active\n  `- 0:0:0:0 sda 8:0 active ready running\n"
+        },
+        {
+          "host_request_to_reattach_seconds": 0.17325236199940264,
+          "guest_snapshot_clock_ok": 191,
+          "dm_status": "mpstudy-data: 0 524288 linear \nprobe: 0 2097152 multipath 2 0 0 0 1 1 A 0 1 0 8:0 A 0 \nprobe1: 0 2093056 linear \n",
+          "maps": "mpstudy-data: 0 524288 linear 252:1 2048\nprobe: 0 2097152 multipath 1 queue_if_no_path 0 1 1 round-robin 0 1 1 8:0 1 \nprobe1: 0 2093056 linear 252:0 2048\n",
+          "topology": "probe (0QEMU_QEMU_HARDDISK_UPSTREAM-SCSI-001) dm-0 QEMU,QEMU HARDDISK\nsize=1.0G features='1 queue_if_no_path' hwhandler='0' wp=rw\n`-+- policy='round-robin 0' prio=1 status=active\n  `- 0:0:0:0 sda 8:0 active ready running\n"
+        },
+        {
+          "host_request_to_reattach_seconds": 0.179600194998784,
+          "guest_snapshot_clock_ok": 236,
+          "dm_status": "mpstudy-data: 0 524288 linear \nprobe: 0 2097152 multipath 2 0 0 0 1 1 A 0 1 0 8:0 A 0 \nprobe1: 0 2093056 linear \n",
+          "maps": "mpstudy-data: 0 524288 linear 252:1 2048\nprobe: 0 2097152 multipath 1 queue_if_no_path 0 1 1 round-robin 0 1 1 8:0 1 \nprobe1: 0 2093056 linear 252:0 2048\n",
+          "topology": "probe (0QEMU_QEMU_HARDDISK_UPSTREAM-SCSI-001) dm-0 QEMU,QEMU HARDDISK\nsize=1.0G features='1 queue_if_no_path' hwhandler='0' wp=rw\n`-+- policy='round-robin 0' prio=1 status=active\n  `- 0:0:0:0 sda 8:0 active ready running\n"
+        }
+      ],
+      "raw_artifacts_sha256": {
+        "console.log": "eecd5a3b2fbe90cf84f58898088cb742dccdb33932869dbec3bde534f439a08e",
+        "qmp.jsonl": "f2640de696746450eafd1368185ffab361dcec7bff117f8fc4baf20459f928e0",
+        "agent.jsonl": "8b64b9d00d224f1d0eb99eb6d30a862600651af27b6e976dfcc0ac5527263970"
+      },
+      "command": [
+        "qemu-system-x86_64",
+        "-machine",
+        "q35",
+        "-accel",
+        "kvm",
+        "-m",
+        "1024",
+        "-smp",
+        "2",
+        "-display",
+        "none",
+        "-nodefaults",
+        "-no-reboot",
+        "-nic",
+        "none",
+        "-kernel",
+        "/workspace/Project/External-Memo-Rescue-Handler/lab/work/vmlinuz",
+        "-initrd",
+        "/workspace/Project/External-Memo-Rescue-Handler/lab/work/version-study/20260925-013152/initramfs.cpio.gz",
+        "-append",
+        "console=ttyS0 rdinit=/init panic=-1 probe_deny_rt=1",
+        "-serial",
+        "file:/workspace/Project/External-Memo-Rescue-Handler/lab/work/version-study/20260925-013152/console.log",
+        "-serial",
+        "unix:/workspace/Project/External-Memo-Rescue-Handler/lab/work/version-study/20260925-013152/agent.sock,server=on,wait=off",
+        "-qmp",
+        "unix:/workspace/Project/External-Memo-Rescue-Handler/lab/work/version-study/20260925-013152/qmp.sock,server=on,wait=off",
+        "-device",
+        "qemu-xhci,id=xhci",
+        "-blockdev",
+        "{\"driver\": \"raw\", \"node-name\": \"disk\", \"file\": {\"driver\": \"file\", \"filename\": \"/workspace/Project/External-Memo-Rescue-Handler/lab/work/version-study/20260925-013152/disk.raw\"}}",
+        "-device",
+        "usb-uas,bus=xhci.0,id=stick,serial=UPSTREAM-USB-001,port=1",
+        "-device",
+        "scsi-hd,bus=stick.0,id=lun,drive=disk,serial=UPSTREAM-SCSI-001",
+        "-blockdev",
+        "{\"driver\": \"raw\", \"node-name\": \"wrong\", \"file\": {\"driver\": \"file\", \"filename\": \"/workspace/Project/External-Memo-Rescue-Handler/lab/work/version-study/20260925-013152/wrong.raw\"}}"
+      ],
+      "script_sha256": "1016030fd4dc8fc07176d6ecf8bb330a9d727c030b87dfdc99d1d70aa97b16c3",
+      "baseline_script_sha256": "67d72f30d4d86cb2985d7c071e17b15e8b3e2d936991ce724e15454e74f4e645",
+      "guest_sha256": "c78d90c57d1b2d0d5b270a44d236bf2c07f7aa19156b603e264d9d21c13fe71a",
+      "kernel_sha256": "0066409132868538bc0c9076f60131025775d5bbd8617df074d059f91b584918",
+      "base_initramfs_sha256": "bc2efe6bbf60be49264936c750655e941b75195db75a4a80f9f722d0658ebe6a",
+      "initramfs_sha256": "bfc73840f2e718ff2303c6cf8b4c26ff872897844fe34c9bbc5dbfedf98f12b5",
+      "daemon_startup_version_lines": [
+        "1.451089 | multipathd v0.15.0: start up"
+      ]
+    },
+    {
+      "id": "20260925-013240",
+      "raw_report": "lab/work/version-study/20260925-013240/report.json",
+      "raw_report_sha256": "ebf28ce64bc9a76abed98eab91dbc2d146b5bda166c4eec3b92e9f3463382a4c",
+      "scope": "RAM root, version-selected multipathd, whole USB disk -> kpartx -> LVM -> ext4 data workload; not Ubuntu root recovery",
+      "kernel": "6.8.0-139-generic",
+      "version": "multipath-tools v0.15.0 (07/13, 2026)",
+      "deny_rt": true,
+      "sched_policy": 0,
+      "sched_priority": 0,
+      "inherited_rtprio_limit": [
+        0,
+        0
+      ],
+      "wrong_disk": true,
+      "continuity_oracle_passed": false,
+      "harness_error": null,
+      "validation": {
+        "id": 4,
+        "validated": false,
+        "records": 141
+      },
+      "initial_workload_ok": 0,
+      "last_snapshot_ok": 139,
+      "last_snapshot_errors": [],
+      "max_write_fsync_seconds": 0.38117689600000126,
+      "last_snapshot_memory": {
+        "VmLck": "412648 kB",
+        "VmRSS": "20200 kB",
+        "Threads": "8"
+      },
+      "healthy_daemon_cpu_single_core_percent": 0.0,
+      "cpu_measurement_seconds": 10.000193548001334,
+      "cpu_clock_ticks_per_second": 100,
+      "daemon_sha256": "5f275e7639e9370c6b60b5f6e8fff26fabd2faa45ed633d7541d1c1cef6904c4",
+      "wwid": "0QEMU_QEMU_HARDDISK_UPSTREAM-SCSI-001",
+      "effective_defaults": "defaults {\n\tverbosity 3\n\tpolling_interval 1\n\tmax_polling_interval 4\n\treassign_maps \"no\"\n\tpath_selector \"round-robin 0\"\n\tpath_grouping_policy \"failover\"\n\tuid_attribute \"ID_SERIAL\"\n\tprio \"const\"\n\tprio_args \"\"\n\tfeatures \"0\"\n\tpath_checker \"tur\"\n\talias_prefix \"mpath\"\n\tfailback \"manual\"\n\tmax_fds \"max\"\n\tno_path_retry 8\n\tqueue_without_daemon \"no\"\n\tallow_usb_devices \"yes\"\n\tflush_on_last_del \"never\"\n\tuser_friendly_names \"no\"\n\tfast_io_fail_tmo 5\n\tlog_checker_err \"always\"\n\tall_tg_pt \"no\"\n\tretain_attached_hw_handler \"yes\"\n\tdetect_prio \"no\"\n\tdetect_checker \"yes\"\n\tdetect_pgpolicy \"yes\"\n\tdetect_pgpolicy_use_tpg \"no\"\n\tforce_sync \"no\"\n\tstrict_timing \"no\"\n\tdeferred_remove \"no\"\n\tdelay_watch_checks \"no\"\n\tdelay_wait_checks \"no\"\n\tsan_path_err_threshold \"no\"\n\tsan_path_err_forget_rate \"no\"\n\tsan_path_err_recovery_time \"no\"\n\tmarginal_path_err_sample_time \"no\"\n\tmarginal_path_err_rate_threshold \"no\"\n\tmarginal_path_err_recheck_gap_time \"no\"\n\tmarginal_path_double_failed_time \"no\"\n\tfind_multipaths \"strict\"\n\tuxsock_timeout 4000\n\tretrigger_tries 3\n\tretrigger_delay 10\n\tmissing_uev_wait_timeout 30\n\tskip_kpartx \"no\"\n\tpurge_disconnected \"no\"\n\tremove_retries 0\n\tghost_delay \"no\"\n\tauto_resize \"never\"\n\tfind_multipaths_timeout -10\n\tenable_foreign \"NONE\"\n\tmarginal_pathgroups \"off\"\n\trecheck_wwid \"yes\"\n}\n",
+      "effective_config_sha256": "8e20ac38785658baba105ba2d32670393b904bf167d1417af8963364486b8f89",
+      "cycles": [
+        {
+          "host_request_to_reattach_seconds": 0.17884458700063988,
+          "guest_snapshot_clock_ok": 139,
+          "dm_status": "mpstudy-data: 0 524288 linear \nprobe: 0 2097152 multipath 2 0 0 0 1 1 A 0 1 0 8:0 A 0 \nprobe1: 0 2093056 linear \n",
+          "maps": "mpstudy-data: 0 524288 linear 252:1 2048\nprobe: 0 2097152 multipath 1 queue_if_no_path 0 1 1 round-robin 0 1 1 8:0 1 \nprobe1: 0 2093056 linear 252:0 2048\n",
+          "topology": "probe (0QEMU_QEMU_HARDDISK_UPSTREAM-SCSI-001) dm-0 QEMU,QEMU HARDDISK\nsize=1.0G features='1 queue_if_no_path' hwhandler='0' wp=rw\n`-+- policy='round-robin 0' prio=1 status=active\n  `- 0:0:0:0 sda 8:0 active ready running\n"
+        }
+      ],
+      "raw_artifacts_sha256": {
+        "console.log": "27c107afcebdfda8ebc18a9577a04349ae6cb5f6952a57ec2d15f6fe137b5979",
+        "qmp.jsonl": "21b13001bf5502b3ba2d0c6cd9f5bcee079fbbf823a2fcb3d96a7662e4f848e9",
+        "agent.jsonl": "5bb0a79efbdec8723f136628143fa6b5433c8374ae0723a34f75e2bbb03ca099"
+      },
+      "command": [
+        "qemu-system-x86_64",
+        "-machine",
+        "q35",
+        "-accel",
+        "kvm",
+        "-m",
+        "1024",
+        "-smp",
+        "2",
+        "-display",
+        "none",
+        "-nodefaults",
+        "-no-reboot",
+        "-nic",
+        "none",
+        "-kernel",
+        "/workspace/Project/External-Memo-Rescue-Handler/lab/work/vmlinuz",
+        "-initrd",
+        "/workspace/Project/External-Memo-Rescue-Handler/lab/work/version-study/20260925-013240/initramfs.cpio.gz",
+        "-append",
+        "console=ttyS0 rdinit=/init panic=-1 probe_deny_rt=1",
+        "-serial",
+        "file:/workspace/Project/External-Memo-Rescue-Handler/lab/work/version-study/20260925-013240/console.log",
+        "-serial",
+        "unix:/workspace/Project/External-Memo-Rescue-Handler/lab/work/version-study/20260925-013240/agent.sock,server=on,wait=off",
+        "-qmp",
+        "unix:/workspace/Project/External-Memo-Rescue-Handler/lab/work/version-study/20260925-013240/qmp.sock,server=on,wait=off",
+        "-device",
+        "qemu-xhci,id=xhci",
+        "-blockdev",
+        "{\"driver\": \"raw\", \"node-name\": \"disk\", \"file\": {\"driver\": \"file\", \"filename\": \"/workspace/Project/External-Memo-Rescue-Handler/lab/work/version-study/20260925-013240/disk.raw\"}}",
+        "-device",
+        "usb-uas,bus=xhci.0,id=stick,serial=UPSTREAM-USB-001,port=1",
+        "-device",
+        "scsi-hd,bus=stick.0,id=lun,drive=disk,serial=UPSTREAM-SCSI-001",
+        "-blockdev",
+        "{\"driver\": \"raw\", \"node-name\": \"wrong\", \"file\": {\"driver\": \"file\", \"filename\": \"/workspace/Project/External-Memo-Rescue-Handler/lab/work/version-study/20260925-013240/wrong.raw\"}}"
+      ],
+      "script_sha256": "1016030fd4dc8fc07176d6ecf8bb330a9d727c030b87dfdc99d1d70aa97b16c3",
+      "baseline_script_sha256": "67d72f30d4d86cb2985d7c071e17b15e8b3e2d936991ce724e15454e74f4e645",
+      "guest_sha256": "c78d90c57d1b2d0d5b270a44d236bf2c07f7aa19156b603e264d9d21c13fe71a",
+      "kernel_sha256": "0066409132868538bc0c9076f60131025775d5bbd8617df074d059f91b584918",
+      "base_initramfs_sha256": "bc2efe6bbf60be49264936c750655e941b75195db75a4a80f9f722d0658ebe6a",
+      "initramfs_sha256": "a22bb177081c3830eec7c18a1ce483c73b2a5cf78d1a89ddce07cdd793c39edb",
+      "wrong_initial_allocated_bytes": 0,
+      "wrong_allocated_bytes": 1318912,
+      "wrong_disk_contents": {
+        "allocated_bytes": 1318912,
+        "data_ranges": [
+          [
+            138731520,
+            139862016
+          ],
+          [
+            153612288,
+            153800704
+          ]
+        ],
+        "records": [
+          {
+            "offset": 153612288,
+            "number": 95,
+            "sha256": "47abafe5e93d141993898db8198e652b563d562ea2c154e49d61d27da03f935e"
+          },
+          {
+            "offset": 153616384,
+            "number": 96,
+            "sha256": "4271cc786533d6a9ff4b6992b41ba68c08a1c0ae6462c21db090ccf77d7f2fe6"
+          },
+          {
+            "offset": 153620480,
+            "number": 97,
+            "sha256": "f6eb0dd5c9fe638c4c294bc1525e43ca8baf9855eebad0ea37018d9620afd21d"
+          },
+          {
+            "offset": 153624576,
+            "number": 98,
+            "sha256": "d1fed8f79054a8b274ef73d724c3119590870ab31b521b471ab4d004cbd0d4db"
+          },
+          {
+            "offset": 153628672,
+            "number": 99,
+            "sha256": "e9748b8802bdf6cae9e3d21ea051c1ea07928d10333432ad97abd81a2f107392"
+          },
+          {
+            "offset": 153632768,
+            "number": 100,
+            "sha256": "abff1ea14fc902de3e992c6a270cb632aaf37d9b6dca82a681de34d7a9c495e0"
+          },
+          {
+            "offset": 153636864,
+            "number": 101,
+            "sha256": "f4cafc6ee454d92a9c2d419d31e767277c25c7ee2d60d65769eb71f90219ab79"
+          },
+          {
+            "offset": 153640960,
+            "number": 102,
+            "sha256": "7626f7d6ba785a6473673ec9b540093d0c985671f1433365d635b132920bc927"
+          },
+          {
+            "offset": 153645056,
+            "number": 103,
+            "sha256": "084402cb2f57eeb229e126a0c672d9dc9d6d5bb60cd5473a72d03979286b54a4"
+          },
+          {
+            "offset": 153649152,
+            "number": 104,
+            "sha256": "cffdfa7ace8110d1d477d21722799ef1a0a156050f2f9fd943ba3643d6c6b9c9"
+          },
+          {
+            "offset": 153653248,
+            "number": 105,
+            "sha256": "f8c7ea7a57ab63c6b8eac100bbec75f83f92d96c8a0439291d27976817a4577a"
+          },
+          {
+            "offset": 153657344,
+            "number": 106,
+            "sha256": "7ac3c1cd08e871af9a92d1d1d017077ecc078ef25fcf991e29f3d4b2c2d6fb0a"
+          },
+          {
+            "offset": 153661440,
+            "number": 107,
+            "sha256": "a421b2025888ef702624c25526b05a9fd6feed459f390e68f8319daa46dabb2c"
+          },
+          {
+            "offset": 153665536,
+            "number": 108,
+            "sha256": "8aeb3c644e9054bea27875c24877a06a36c9ac8941d12ea178e6db9341eca475"
+          },
+          {
+            "offset": 153669632,
+            "number": 109,
+            "sha256": "8a1860fafc9e7a953a4aac57d540fc5103c92ca3fdd9861dda72a79dc04b6fae"
+          },
+          {
+            "offset": 153673728,
+            "number": 110,
+            "sha256": "e400d27ffc9c55be1b52469230f68e73402f9c9dc4d03a26d56ea3d944548a38"
+          },
+          {
+            "offset": 153677824,
+            "number": 111,
+            "sha256": "ce04518bdb31fc32d193ad641711e719bae09bb481399773a7dca1f5b916efa8"
+          },
+          {
+            "offset": 153681920,
+            "number": 112,
+            "sha256": "31c2bf44acbba3a4091cc824d94c40dc035f77e742edc6f7e979f5944be4e640"
+          },
+          {
+            "offset": 153686016,
+            "number": 113,
+            "sha256": "24305e664060602fce97c57dd6715d849e83594f261e980515329f8220cefc5b"
+          },
+          {
+            "offset": 153690112,
+            "number": 114,
+            "sha256": "cebeb23ee7fcdd9f2b34de5bcc3a7b57058c9bdffbceeb2927459c85739d376c"
+          },
+          {
+            "offset": 153694208,
+            "number": 115,
+            "sha256": "95d05aadf2778ceedecb80b211fa06576e6d731578eaa5aa04fdb1e1036285e1"
+          },
+          {
+            "offset": 153698304,
+            "number": 116,
+            "sha256": "6e4d15b70a1be2b3a19bef800d35144b005227eaee8bd68858362bb95e41b1a0"
+          },
+          {
+            "offset": 153702400,
+            "number": 117,
+            "sha256": "32ca665353be23c1450d869ba324c529fe760ccdd39e2541c77cc8ea46ef5898"
+          },
+          {
+            "offset": 153706496,
+            "number": 118,
+            "sha256": "b2ea05de95d2eaeb56771a3b5b6b8814d5a32ea9f9c24c290d1bfe9ba3ac7225"
+          },
+          {
+            "offset": 153710592,
+            "number": 119,
+            "sha256": "1ae8c9005d78639398fd129d6ce577340c13c1885966dc3aa1f98fd0aec67a2f"
+          },
+          {
+            "offset": 153714688,
+            "number": 120,
+            "sha256": "e39818499458bed2786df2720ba84f9ffd6f8b1599603e20bc7f0218d8064f5c"
+          },
+          {
+            "offset": 153718784,
+            "number": 121,
+            "sha256": "67c7dd19d51ff4759c2d38a09a88a1060da817aa73ad1171a53a85bf85ad5f04"
+          },
+          {
+            "offset": 153722880,
+            "number": 122,
+            "sha256": "2345b7c03f71e1ebfa22f8e88571119ed3a5ba10db8fff8b5ab4dc84736ad9d5"
+          },
+          {
+            "offset": 153726976,
+            "number": 123,
+            "sha256": "d1a19013c13a9178b88964f2edf1307829863e64ff86509a3d61e9816612ca47"
+          },
+          {
+            "offset": 153731072,
+            "number": 124,
+            "sha256": "64138d075829231380589fc119c1a140360fcb4a4bb6288e77ba32dc07cffc9a"
+          },
+          {
+            "offset": 153735168,
+            "number": 125,
+            "sha256": "3e6b21adca9a85bee4be4ec183b36836e68423689401365dec38f6481100a051"
+          },
+          {
+            "offset": 153739264,
+            "number": 126,
+            "sha256": "d0547455f6c5e32bca812486514c79d986aac89d5289f49a3a613642adbd1804"
+          },
+          {
+            "offset": 153743360,
+            "number": 127,
+            "sha256": "d2a211e406097ba314a7dfaa23c0c4b1a84574ddec5ae9f30ae46488d80f40db"
+          },
+          {
+            "offset": 153747456,
+            "number": 128,
+            "sha256": "8f6f108624d77f66a496247c30b222f3e59fa951ab5e9aec214d4e95de597bcc"
+          },
+          {
+            "offset": 153751552,
+            "number": 129,
+            "sha256": "811df0e8e6faa7d16a105c0ae30b44d72a47c28205d6d2cd90fbd879e31dbdd3"
+          },
+          {
+            "offset": 153755648,
+            "number": 130,
+            "sha256": "9228ef758ed7df7a8c4df4484b64988fcc752add80b6b8e5fd8a00659c069d5f"
+          },
+          {
+            "offset": 153759744,
+            "number": 131,
+            "sha256": "ac52c5c6bbad36a66c9a53d5d854eec15d2a6966d633e6e7019721d042dd2cf0"
+          },
+          {
+            "offset": 153763840,
+            "number": 132,
+            "sha256": "f7ad31a72177342fec8c4809791817b5e2382659ece6355a4f48731ac377ca94"
+          },
+          {
+            "offset": 153767936,
+            "number": 133,
+            "sha256": "a3c2e99a83dcf5163b2bad740ca3ed1d6dbfd55a450bfc9a15ae33e5ca0d7c75"
+          },
+          {
+            "offset": 153772032,
+            "number": 134,
+            "sha256": "e82a84b8db502d2aceea335c812af2875c50e70852b5d2a182276337266cb7a5"
+          },
+          {
+            "offset": 153776128,
+            "number": 135,
+            "sha256": "f730e2c28a506b43f9fae11c1b016b6c1dac4546b774d912142a4e8267294f92"
+          },
+          {
+            "offset": 153780224,
+            "number": 136,
+            "sha256": "652d7ac1266eeace12dd345c91bc42b1134d15ad14627adf9e4f24f9c0444aab"
+          },
+          {
+            "offset": 153784320,
+            "number": 137,
+            "sha256": "819a714a58cd2cceb65aa05a9a919db91a5d3b0275146068cfa51484d031d358"
+          },
+          {
+            "offset": 153788416,
+            "number": 138,
+            "sha256": "5c790cc9250035f4a99037a3a7144fa962480d743bafd040d1262a76c1046590"
+          },
+          {
+            "offset": 153792512,
+            "number": 139,
+            "sha256": "ba025c44d05e36e6f2bcef162eeee997b818ce20a6010e195060e8c0ed991ece"
+          },
+          {
+            "offset": 153796608,
+            "number": 140,
+            "sha256": "4b6c3ba89dd20c770425eb9813315ebe3a37d302710a83dbd96f3c0141f3997b"
+          }
+        ]
+      },
+      "interpretation": "Expected admission-policy counterexample reproduced: same WWID blank disk accepted, actual records reached it; false continuity oracle is not a harness failure.",
+      "daemon_startup_version_lines": [
+        "1.458811 | multipathd v0.15.0: start up"
+      ]
+    },
+    {
+      "id": "20260925-013306",
+      "raw_report": "lab/work/version-study/20260925-013306/report.json",
+      "raw_report_sha256": "f02e4ba7e21aee910911bd39b7936bbe7536e3cb61af51d10d42fae63e36c286",
+      "scope": "RAM root, version-selected multipathd, whole USB disk -> kpartx -> LVM -> ext4 data workload; not Ubuntu root recovery",
+      "kernel": "6.8.0-139-generic",
+      "version": "multipath-tools v0.15.0 (07/13, 2026)",
+      "deny_rt": false,
+      "sched_policy": 0,
+      "sched_priority": 0,
+      "inherited_rtprio_limit": [
+        0,
+        0
+      ],
+      "wrong_disk": false,
+      "continuity_oracle_passed": true,
+      "harness_error": null,
+      "validation": {
+        "id": 6,
+        "validated": true,
+        "records": 236
+      },
+      "initial_workload_ok": 1,
+      "last_snapshot_ok": 235,
+      "last_snapshot_errors": [],
+      "max_write_fsync_seconds": 0.42902686199999884,
+      "last_snapshot_memory": {
+        "VmLck": "412648 kB",
+        "VmRSS": "20200 kB",
+        "Threads": "8"
+      },
+      "healthy_daemon_cpu_single_core_percent": 0.09999870949665955,
+      "cpu_measurement_seconds": 10.000129051999465,
+      "cpu_clock_ticks_per_second": 100,
+      "daemon_sha256": "5f275e7639e9370c6b60b5f6e8fff26fabd2faa45ed633d7541d1c1cef6904c4",
+      "wwid": "0QEMU_QEMU_HARDDISK_UPSTREAM-SCSI-001",
+      "effective_defaults": "defaults {\n\tverbosity 3\n\tpolling_interval 1\n\tmax_polling_interval 4\n\treassign_maps \"no\"\n\tpath_selector \"round-robin 0\"\n\tpath_grouping_policy \"failover\"\n\tuid_attribute \"ID_SERIAL\"\n\tprio \"const\"\n\tprio_args \"\"\n\tfeatures \"0\"\n\tpath_checker \"tur\"\n\talias_prefix \"mpath\"\n\tfailback \"manual\"\n\tmax_fds \"max\"\n\tno_path_retry 8\n\tqueue_without_daemon \"no\"\n\tallow_usb_devices \"yes\"\n\tflush_on_last_del \"never\"\n\tuser_friendly_names \"no\"\n\tfast_io_fail_tmo 5\n\tlog_checker_err \"always\"\n\tall_tg_pt \"no\"\n\tretain_attached_hw_handler \"yes\"\n\tdetect_prio \"no\"\n\tdetect_checker \"yes\"\n\tdetect_pgpolicy \"yes\"\n\tdetect_pgpolicy_use_tpg \"no\"\n\tforce_sync \"no\"\n\tstrict_timing \"no\"\n\tdeferred_remove \"no\"\n\tdelay_watch_checks \"no\"\n\tdelay_wait_checks \"no\"\n\tsan_path_err_threshold \"no\"\n\tsan_path_err_forget_rate \"no\"\n\tsan_path_err_recovery_time \"no\"\n\tmarginal_path_err_sample_time \"no\"\n\tmarginal_path_err_rate_threshold \"no\"\n\tmarginal_path_err_recheck_gap_time \"no\"\n\tmarginal_path_double_failed_time \"no\"\n\tfind_multipaths \"strict\"\n\tuxsock_timeout 4000\n\tretrigger_tries 3\n\tretrigger_delay 10\n\tmissing_uev_wait_timeout 30\n\tskip_kpartx \"no\"\n\tpurge_disconnected \"no\"\n\tremove_retries 0\n\tghost_delay \"no\"\n\tauto_resize \"never\"\n\tfind_multipaths_timeout -10\n\tenable_foreign \"NONE\"\n\tmarginal_pathgroups \"off\"\n\trecheck_wwid \"yes\"\n}\n",
+      "effective_config_sha256": "8e20ac38785658baba105ba2d32670393b904bf167d1417af8963364486b8f89",
+      "cycles": [
+        {
+          "host_request_to_reattach_seconds": 0.17745701300009387,
+          "guest_snapshot_clock_ok": 144,
+          "dm_status": "mpstudy-data: 0 524288 linear \nprobe: 0 2097152 multipath 2 0 0 0 1 1 A 0 1 0 8:0 A 0 \nprobe1: 0 2093056 linear \n",
+          "maps": "mpstudy-data: 0 524288 linear 252:1 2048\nprobe: 0 2097152 multipath 1 queue_if_no_path 0 1 1 round-robin 0 1 1 8:0 1 \nprobe1: 0 2093056 linear 252:0 2048\n",
+          "topology": "probe (0QEMU_QEMU_HARDDISK_UPSTREAM-SCSI-001) dm-0 QEMU,QEMU HARDDISK\nsize=1.0G features='1 queue_if_no_path' hwhandler='0' wp=rw\n`-+- policy='round-robin 0' prio=1 status=active\n  `- 0:0:0:0 sda 8:0 active ready running\n"
+        },
+        {
+          "host_request_to_reattach_seconds": 0.17413375599971914,
+          "guest_snapshot_clock_ok": 189,
+          "dm_status": "mpstudy-data: 0 524288 linear \nprobe: 0 2097152 multipath 2 0 0 0 1 1 A 0 1 0 8:0 A 0 \nprobe1: 0 2093056 linear \n",
+          "maps": "mpstudy-data: 0 524288 linear 252:1 2048\nprobe: 0 2097152 multipath 1 queue_if_no_path 0 1 1 round-robin 0 1 1 8:0 1 \nprobe1: 0 2093056 linear 252:0 2048\n",
+          "topology": "probe (0QEMU_QEMU_HARDDISK_UPSTREAM-SCSI-001) dm-0 QEMU,QEMU HARDDISK\nsize=1.0G features='1 queue_if_no_path' hwhandler='0' wp=rw\n`-+- policy='round-robin 0' prio=1 status=active\n  `- 0:0:0:0 sda 8:0 active ready running\n"
+        },
+        {
+          "host_request_to_reattach_seconds": 0.17433914499997627,
+          "guest_snapshot_clock_ok": 235,
+          "dm_status": "mpstudy-data: 0 524288 linear \nprobe: 0 2097152 multipath 2 0 0 0 1 1 A 0 1 0 8:0 A 0 \nprobe1: 0 2093056 linear \n",
+          "maps": "mpstudy-data: 0 524288 linear 252:1 2048\nprobe: 0 2097152 multipath 1 queue_if_no_path 0 1 1 round-robin 0 1 1 8:0 1 \nprobe1: 0 2093056 linear 252:0 2048\n",
+          "topology": "probe (0QEMU_QEMU_HARDDISK_UPSTREAM-SCSI-001) dm-0 QEMU,QEMU HARDDISK\nsize=1.0G features='1 queue_if_no_path' hwhandler='0' wp=rw\n`-+- policy='round-robin 0' prio=1 status=active\n  `- 0:0:0:0 sda 8:0 active ready running\n"
+        }
+      ],
+      "raw_artifacts_sha256": {
+        "console.log": "a749c3d7c2f3c48da65f2194194fd858762997853082a43f26ffaa26982c1c71",
+        "qmp.jsonl": "024f4b882ea5c6658d03fd76d39cfe2484fc63a82156df77bab645c7af1a86b6",
+        "agent.jsonl": "3e0584ed19744330b76645a2ecaace9536a690cb72a796ff4eb760076b0bda02"
+      },
+      "command": [
+        "qemu-system-x86_64",
+        "-machine",
+        "q35",
+        "-accel",
+        "kvm",
+        "-m",
+        "1024",
+        "-smp",
+        "2",
+        "-display",
+        "none",
+        "-nodefaults",
+        "-no-reboot",
+        "-nic",
+        "none",
+        "-kernel",
+        "/workspace/Project/External-Memo-Rescue-Handler/lab/work/vmlinuz",
+        "-initrd",
+        "/workspace/Project/External-Memo-Rescue-Handler/lab/work/version-study/20260925-013306/initramfs.cpio.gz",
+        "-append",
+        "console=ttyS0 rdinit=/init panic=-1",
+        "-serial",
+        "file:/workspace/Project/External-Memo-Rescue-Handler/lab/work/version-study/20260925-013306/console.log",
+        "-serial",
+        "unix:/workspace/Project/External-Memo-Rescue-Handler/lab/work/version-study/20260925-013306/agent.sock,server=on,wait=off",
+        "-qmp",
+        "unix:/workspace/Project/External-Memo-Rescue-Handler/lab/work/version-study/20260925-013306/qmp.sock,server=on,wait=off",
+        "-device",
+        "qemu-xhci,id=xhci",
+        "-blockdev",
+        "{\"driver\": \"raw\", \"node-name\": \"disk\", \"file\": {\"driver\": \"file\", \"filename\": \"/workspace/Project/External-Memo-Rescue-Handler/lab/work/version-study/20260925-013306/disk.raw\"}}",
+        "-device",
+        "usb-uas,bus=xhci.0,id=stick,serial=UPSTREAM-USB-001,port=1",
+        "-device",
+        "scsi-hd,bus=stick.0,id=lun,drive=disk,serial=UPSTREAM-SCSI-001",
+        "-blockdev",
+        "{\"driver\": \"raw\", \"node-name\": \"wrong\", \"file\": {\"driver\": \"file\", \"filename\": \"/workspace/Project/External-Memo-Rescue-Handler/lab/work/version-study/20260925-013306/wrong.raw\"}}"
+      ],
+      "script_sha256": "1016030fd4dc8fc07176d6ecf8bb330a9d727c030b87dfdc99d1d70aa97b16c3",
+      "baseline_script_sha256": "67d72f30d4d86cb2985d7c071e17b15e8b3e2d936991ce724e15454e74f4e645",
+      "guest_sha256": "c78d90c57d1b2d0d5b270a44d236bf2c07f7aa19156b603e264d9d21c13fe71a",
+      "kernel_sha256": "0066409132868538bc0c9076f60131025775d5bbd8617df074d059f91b584918",
+      "base_initramfs_sha256": "bc2efe6bbf60be49264936c750655e941b75195db75a4a80f9f722d0658ebe6a",
+      "initramfs_sha256": "86ee791bde958a744d6b4b834f06f2d7ba53eace1a50cc6821f79ef454573a61",
+      "daemon_startup_version_lines": [
+        "1.451716 | multipathd v0.15.0: start up"
+      ]
+    },
+    {
+      "id": "20260925-013427",
+      "raw_report": "lab/work/version-study/20260925-013427/report.json",
+      "raw_report_sha256": "22a85b376cd9b8a4dcff170f0a0e1295a9dbed8bcc41d4e8b7937575343bc1f0",
+      "scope": "RAM root, version-selected multipathd, whole USB disk -> kpartx -> LVM -> ext4 data workload; not Ubuntu root recovery",
+      "kernel": "7.0.0-34-generic",
+      "version": "multipath-tools v0.15.0 (07/13, 2026)",
+      "deny_rt": true,
+      "sched_policy": 0,
+      "sched_priority": 0,
+      "inherited_rtprio_limit": [
+        0,
+        0
+      ],
+      "wrong_disk": false,
+      "continuity_oracle_passed": true,
+      "harness_error": null,
+      "validation": {
+        "id": 6,
+        "validated": true,
+        "records": 239
+      },
+      "initial_workload_ok": 1,
+      "last_snapshot_ok": 237,
+      "last_snapshot_errors": [],
+      "max_write_fsync_seconds": 0.5895833660000029,
+      "last_snapshot_memory": {
+        "VmLck": "412648 kB",
+        "VmRSS": "20200 kB",
+        "Threads": "8"
+      },
+      "healthy_daemon_cpu_single_core_percent": 0.0,
+      "cpu_measurement_seconds": 10.00023260800117,
+      "cpu_clock_ticks_per_second": 100,
+      "daemon_sha256": "5f275e7639e9370c6b60b5f6e8fff26fabd2faa45ed633d7541d1c1cef6904c4",
+      "wwid": "0QEMU_QEMU_HARDDISK_UPSTREAM-SCSI-001",
+      "effective_defaults": "defaults {\n\tverbosity 3\n\tpolling_interval 1\n\tmax_polling_interval 4\n\treassign_maps \"no\"\n\tpath_selector \"round-robin 0\"\n\tpath_grouping_policy \"failover\"\n\tuid_attribute \"ID_SERIAL\"\n\tprio \"const\"\n\tprio_args \"\"\n\tfeatures \"0\"\n\tpath_checker \"tur\"\n\talias_prefix \"mpath\"\n\tfailback \"manual\"\n\tmax_fds \"max\"\n\tno_path_retry 8\n\tqueue_without_daemon \"no\"\n\tallow_usb_devices \"yes\"\n\tflush_on_last_del \"never\"\n\tuser_friendly_names \"no\"\n\tfast_io_fail_tmo 5\n\tlog_checker_err \"always\"\n\tall_tg_pt \"no\"\n\tretain_attached_hw_handler \"yes\"\n\tdetect_prio \"no\"\n\tdetect_checker \"yes\"\n\tdetect_pgpolicy \"yes\"\n\tdetect_pgpolicy_use_tpg \"no\"\n\tforce_sync \"no\"\n\tstrict_timing \"no\"\n\tdeferred_remove \"no\"\n\tdelay_watch_checks \"no\"\n\tdelay_wait_checks \"no\"\n\tsan_path_err_threshold \"no\"\n\tsan_path_err_forget_rate \"no\"\n\tsan_path_err_recovery_time \"no\"\n\tmarginal_path_err_sample_time \"no\"\n\tmarginal_path_err_rate_threshold \"no\"\n\tmarginal_path_err_recheck_gap_time \"no\"\n\tmarginal_path_double_failed_time \"no\"\n\tfind_multipaths \"strict\"\n\tuxsock_timeout 4000\n\tretrigger_tries 3\n\tretrigger_delay 10\n\tmissing_uev_wait_timeout 30\n\tskip_kpartx \"no\"\n\tpurge_disconnected \"no\"\n\tremove_retries 0\n\tghost_delay \"no\"\n\tauto_resize \"never\"\n\tfind_multipaths_timeout -10\n\tenable_foreign \"NONE\"\n\tmarginal_pathgroups \"off\"\n\trecheck_wwid \"yes\"\n}\n",
+      "effective_config_sha256": "8e20ac38785658baba105ba2d32670393b904bf167d1417af8963364486b8f89",
+      "cycles": [
+        {
+          "host_request_to_reattach_seconds": 0.18016372399870306,
+          "guest_snapshot_clock_ok": 143,
+          "dm_status": "mpstudy-data: 0 524288 linear \nprobe: 0 2097152 multipath 2 0 0 0 1 1 A 0 1 0 8:0 A 0 \nprobe1: 0 2093056 linear \n",
+          "maps": "mpstudy-data: 0 524288 linear 252:1 2048\nprobe: 0 2097152 multipath 1 queue_if_no_path 0 1 1 round-robin 0 1 1 8:0 1 \nprobe1: 0 2093056 linear 252:0 2048\n",
+          "topology": "probe (0QEMU_QEMU_HARDDISK_UPSTREAM-SCSI-001) dm-0 QEMU,QEMU HARDDISK\nsize=1.0G features='1 queue_if_no_path' hwhandler='0' wp=rw\n`-+- policy='round-robin 0' prio=1 status=active\n  `- 0:0:0:0 sda 8:0 active ready running\n"
+        },
+        {
+          "host_request_to_reattach_seconds": 0.18005163999987417,
+          "guest_snapshot_clock_ok": 189,
+          "dm_status": "mpstudy-data: 0 524288 linear \nprobe: 0 2097152 multipath 2 0 0 0 1 1 A 0 1 0 8:0 A 0 \nprobe1: 0 2093056 linear \n",
+          "maps": "mpstudy-data: 0 524288 linear 252:1 2048\nprobe: 0 2097152 multipath 1 queue_if_no_path 0 1 1 round-robin 0 1 1 8:0 1 \nprobe1: 0 2093056 linear 252:0 2048\n",
+          "topology": "probe (0QEMU_QEMU_HARDDISK_UPSTREAM-SCSI-001) dm-0 QEMU,QEMU HARDDISK\nsize=1.0G features='1 queue_if_no_path' hwhandler='0' wp=rw\n`-+- policy='round-robin 0' prio=1 status=active\n  `- 0:0:0:0 sda 8:0 active ready running\n"
+        },
+        {
+          "host_request_to_reattach_seconds": 0.18060835799951747,
+          "guest_snapshot_clock_ok": 237,
+          "dm_status": "mpstudy-data: 0 524288 linear \nprobe: 0 2097152 multipath 2 0 0 0 1 1 A 0 1 0 8:0 A 0 \nprobe1: 0 2093056 linear \n",
+          "maps": "mpstudy-data: 0 524288 linear 252:1 2048\nprobe: 0 2097152 multipath 1 queue_if_no_path 0 1 1 round-robin 0 1 1 8:0 1 \nprobe1: 0 2093056 linear 252:0 2048\n",
+          "topology": "probe (0QEMU_QEMU_HARDDISK_UPSTREAM-SCSI-001) dm-0 QEMU,QEMU HARDDISK\nsize=1.0G features='1 queue_if_no_path' hwhandler='0' wp=rw\n`-+- policy='round-robin 0' prio=1 status=active\n  `- 0:0:0:0 sda 8:0 active ready running\n"
+        }
+      ],
+      "raw_artifacts_sha256": {
+        "console.log": "fbd4d37469fbd0e128866a2ee52445715b57ac72a1e762ff265032da3d02d40d",
+        "qmp.jsonl": "26a306211b8a334738f8e2319160019677c671ea1b00bdc6caa20c51febb2cff",
+        "agent.jsonl": "f3cb0203cd1afd04210408a2630c6d8ae6a06647df5bc0e6be53e3b3e7444282"
+      },
+      "command": [
+        "qemu-system-x86_64",
+        "-machine",
+        "q35",
+        "-accel",
+        "kvm",
+        "-m",
+        "1024",
+        "-smp",
+        "2",
+        "-display",
+        "none",
+        "-nodefaults",
+        "-no-reboot",
+        "-nic",
+        "none",
+        "-kernel",
+        "/workspace/Project/External-Memo-Rescue-Handler/lab/work/version-study/kernel7/guest/vmlinuz",
+        "-initrd",
+        "/workspace/Project/External-Memo-Rescue-Handler/lab/work/version-study/20260925-013427/initramfs.cpio.gz",
+        "-append",
+        "console=ttyS0 rdinit=/init panic=-1 probe_deny_rt=1",
+        "-serial",
+        "file:/workspace/Project/External-Memo-Rescue-Handler/lab/work/version-study/20260925-013427/console.log",
+        "-serial",
+        "unix:/workspace/Project/External-Memo-Rescue-Handler/lab/work/version-study/20260925-013427/agent.sock,server=on,wait=off",
+        "-qmp",
+        "unix:/workspace/Project/External-Memo-Rescue-Handler/lab/work/version-study/20260925-013427/qmp.sock,server=on,wait=off",
+        "-device",
+        "qemu-xhci,id=xhci",
+        "-blockdev",
+        "{\"driver\": \"raw\", \"node-name\": \"disk\", \"file\": {\"driver\": \"file\", \"filename\": \"/workspace/Project/External-Memo-Rescue-Handler/lab/work/version-study/20260925-013427/disk.raw\"}}",
+        "-device",
+        "usb-uas,bus=xhci.0,id=stick,serial=UPSTREAM-USB-001,port=1",
+        "-device",
+        "scsi-hd,bus=stick.0,id=lun,drive=disk,serial=UPSTREAM-SCSI-001",
+        "-blockdev",
+        "{\"driver\": \"raw\", \"node-name\": \"wrong\", \"file\": {\"driver\": \"file\", \"filename\": \"/workspace/Project/External-Memo-Rescue-Handler/lab/work/version-study/20260925-013427/wrong.raw\"}}"
+      ],
+      "script_sha256": "1016030fd4dc8fc07176d6ecf8bb330a9d727c030b87dfdc99d1d70aa97b16c3",
+      "baseline_script_sha256": "67d72f30d4d86cb2985d7c071e17b15e8b3e2d936991ce724e15454e74f4e645",
+      "guest_sha256": "c78d90c57d1b2d0d5b270a44d236bf2c07f7aa19156b603e264d9d21c13fe71a",
+      "kernel_sha256": "73d9c6e40b210deb638070d6af591a68bb6d7ff0280d0ec34c9ccf705a4f47ac",
+      "base_initramfs_sha256": "6f4c6d30d627ae5ff204572e3cdfc472b273ce1238c7c1abffb9e7f8f2e2dcf1",
+      "initramfs_sha256": "314a98da71363e2aa6ba32fcf90f3f0971ed483697bface34015a780fa612022",
+      "daemon_startup_version_lines": [
+        "1.437270 | multipathd v0.15.0: start up"
+      ]
+    }
+  ],
+  "post_run_runner_cleanup": {
+    "executed_sha256": "1016030fd4dc8fc07176d6ecf8bb330a9d727c030b87dfdc99d1d70aa97b16c3",
+    "committed_sha256": "3e6a7a187a33f166090781edabf7f590911d6be93ef4f3f9279fbeef90acad87",
+    "change": "Removed one trailing ASCII space from line 49; no executable token changed. Raw reports retain the executed source hash.",
+    "reconstruct_executed_source": "Insert one ASCII space before the newline on line 49 of version_probe.py."
+  }
+}

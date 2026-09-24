@@ -1,0 +1,797 @@
+{
+  "date": "2026-09-25",
+  "kernel_packages": {
+    "packages": [
+      {
+        "package": "linux-image-7.0.0-34-generic",
+        "version": "7.0.0-34.34~24.04.1",
+        "sha256": "2bd0e1fa6fd72b00041f4523b97b730c94a9c14198a8f07231d24d49d334bd37",
+        "bytes": 16723096
+      },
+      {
+        "package": "linux-modules-7.0.0-34-generic",
+        "version": "7.0.0-34.34~24.04.1",
+        "sha256": "e81f48d95ef2ee583b342836491cc77c7fe3fbe62735b3283bc43aec5d1c7e8c",
+        "bytes": 168222912
+      }
+    ],
+    "verification": "apt metadata refreshed in private lists with Ubuntu archive keyring; downloaded SHA256 matched metadata; extracted only, not installed"
+  },
+  "runs": [
+    {
+      "run": "version-study/20260925-013302",
+      "raw_report_sha256": "f8e9db3312b76e1945aea68f71255a7f75c04e8129c8bf61963033c227e0eb1c",
+      "command": [
+        "qemu-system-x86_64",
+        "-machine",
+        "q35",
+        "-accel",
+        "kvm",
+        "-m",
+        "1024",
+        "-smp",
+        "2",
+        "-display",
+        "none",
+        "-nodefaults",
+        "-no-reboot",
+        "-nic",
+        "none",
+        "-kernel",
+        "/workspace/Project/External-Memo-Rescue-Handler/lab/work/version-study/kernel7/guest/vmlinuz",
+        "-initrd",
+        "/workspace/Project/External-Memo-Rescue-Handler/lab/work/version-study/20260925-013302/initramfs.cpio.gz",
+        "-append",
+        "console=ttyS0 rdinit=/init panic=-1",
+        "-serial",
+        "file:/workspace/Project/External-Memo-Rescue-Handler/lab/work/version-study/20260925-013302/console.log",
+        "-serial",
+        "unix:/workspace/Project/External-Memo-Rescue-Handler/lab/work/version-study/20260925-013302/agent.sock,server=on,wait=off",
+        "-qmp",
+        "unix:/workspace/Project/External-Memo-Rescue-Handler/lab/work/version-study/20260925-013302/qmp.sock,server=on,wait=off",
+        "-device",
+        "qemu-xhci,id=xhci",
+        "-blockdev",
+        "{\"driver\": \"raw\", \"node-name\": \"disk\", \"file\": {\"driver\": \"file\", \"filename\": \"/workspace/Project/External-Memo-Rescue-Handler/lab/work/version-study/20260925-013302/disk.raw\"}}",
+        "-device",
+        "usb-uas,bus=xhci.0,id=stick,serial=UPSTREAM-USB-001,port=1",
+        "-device",
+        "scsi-hd,bus=stick.0,id=lun,drive=disk,serial=UPSTREAM-SCSI-001",
+        "-blockdev",
+        "{\"driver\": \"raw\", \"node-name\": \"wrong\", \"file\": {\"driver\": \"file\", \"filename\": \"/workspace/Project/External-Memo-Rescue-Handler/lab/work/version-study/20260925-013302/wrong.raw\"}}"
+      ],
+      "build": null,
+      "runner_sha256": "1016030fd4dc8fc07176d6ecf8bb330a9d727c030b87dfdc99d1d70aa97b16c3",
+      "passed": true,
+      "scope": "RAM root, version-selected multipathd, whole USB disk -> kpartx -> LVM -> ext4 data workload; not Ubuntu root recovery",
+      "scenario": "stock-old-multipath-new-kernel",
+      "deny_rt": false,
+      "validation": {
+        "id": 6,
+        "validated": true,
+        "records": 241
+      },
+      "kernel_sha256": "73d9c6e40b210deb638070d6af591a68bb6d7ff0280d0ec34c9ccf705a4f47ac",
+      "base_initramfs_sha256": "6f4c6d30d627ae5ff204572e3cdfc472b273ce1238c7c1abffb9e7f8f2e2dcf1",
+      "guest_sha256": "241cd6299e02846d4431f5d6ef62678afb70b1ce01d24921b2c2ee81276b1867",
+      "before": {
+        "kernel": "7.0.0-34-generic",
+        "daemon_sha256": "ce0e8e17791e20e0f99379f8fa5efdbcdf7805936429c169719764398ef84576",
+        "version_output": "multipath-tools v0.9.4 (12/19, 2022)\nUsage:\n  /usr/sbin/multipath [-v level] [-B|-d|-i|-q|-r] [-b file] [-p policy] [device]\n  /usr/sbin/multipath [-v level] [-R retries] -f device\n  /usr/sbin/multipath [-v level] [-R retries] -F\n  /usr/sbin/multipath [-v level] [-l|-ll] [device]\n  /usr/sbin/multipath [-v level] [-a|-w] device\n  /usr/sbin/multipath [-v level] -W\n  /usr/sbin/multipath [-v level] [-i] [-c|-C] device\n  /usr/sbin/multipath [-v level] [-i] [-u|-U]\n  /usr/sbin/multipath [-h|-t|-T]\n\nWhere:\n  -h      print this usage text\n  -l      show multipath topology (sysfs and DM info)\n  -ll     show multipath topology (maximum info)\n  -e      enable foreign libraries with -l/-ll\n  -f      flush a multipath device map\n  -F      flush all multipath device maps\n  -a      add a device wwid to the wwids file\n  -c      check if a device should be a path in a multipath device\n  -C      check if a multipath device has usable paths\n  -q      allow queue_if_no_path when multipathd is not running\n  -d      dry run, do not create or update devmaps\n  -t      display the currently used multipathd configuration\n  -T      display the multipathd configuration without builtin defaults\n  -r      force devmap reload\n  -i      ignore wwids file\n  -B      treat the bindings file as read only\n  -b fil  bindings file location\n  -w      remove a device from the wwids file\n  -W      reset the wwids file include only the current devices\n  -R num  number of times to retry removes of in-use devices\n  -u      check if the device specified in the program environment should be a\n          path in a multipath device\n  -U      check if the device specified in the program environment is a\n          multipath device with usable paths, see -C flag\n  -p pol  force all maps to specified path grouping policy:\n          . failover            one path per priority group\n          . multibus            all paths in one priority group\n          . group_by_serial     one priority group per serial\n          . group_by_prio       one priority group per priority lvl\n          . group_by_node_name  one priority group per target node\n  -v lvl  verbosity level:\n          . 0 no output\n          . 1 print created devmap names only\n          . 2 default verbosity\n          . 3 print debug information\n  device  action limited to:\n          . multipath named 'device' (ex: mpath0)\n          . multipath whose wwid is 'device' (ex: 60051...)\n          . multipath including the path named 'device' (ex: /dev/sda or\n            /dev/dm-0)\n          . multipath including the path with maj:min 'device' (ex: 8:0)\n",
+        "sched_policy": 2,
+        "sched_priority": 99,
+        "daemon_status": "Name:\tmultipathd\nUmask:\t0077\nState:\tS (sleeping)\nTgid:\t114\nNgid:\t0\nPid:\t114\nPPid:\t112\nTracerPid:\t0\nUid:\t0\t0\t0\t0\nGid:\t0\t0\t0\t0\nFDSize:\t64\nGroups:\t \nNStgid:\t114\nNSpid:\t114\nNSpgid:\t0\nNSsid:\t0\nKthread:\t0\nVmPeak:\t  485764 kB\nVmSize:\t  420228 kB\nVmLck:\t  420196 kB\nVmPin:\t       0 kB\nVmHWM:\t   27748 kB\nVmRSS:\t   27748 kB\nRssAnon:\t   18980 kB\nRssFile:\t       8 kB\nRssShmem:\t    8760 kB\nVmData:\t   18676 kB\nVmStk:\t     132 kB\nVmExe:\t      88 kB\nVmLib:\t    6280 kB\nVmPTE:\t     120 kB\nVmSwap:\t       0 kB\nHugetlbPages:\t       0 kB\nCoreDumping:\t0\nTHP_enabled:\t1\nuntag_mask:\t0xffffffffffffffff\nThreads:\t7\nSigQ:\t3/1842\nSigPnd:\t0000000000000000\nShdPnd:\t0000000000000000\nSigBlk:\tfffffffe7ffbeeff\nSigIgn:\t0000000000000000\nSigCgt:\t0000000180005a03\nCapInh:\t0000000000000000\nCapPrm:\t000001ffffffffff\nCapEff:\t000001ffffffffff\nCapBnd:\t000001ffffffffff\nCapAmb:\t0000000000000000\nNoNewPrivs:\t0\nSeccomp:\t0\nSeccomp_filters:\t0\nSpeculation_Store_Bypass:\tvulnerable\nSpeculationIndirectBranch:\talways enabled\nCpus_allowed:\t3\nCpus_allowed_list:\t0-1\nMems_allowed:\t00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000001\nMems_allowed_list:\t0\nvoluntary_ctxt_switches:\t15\nnonvoluntary_ctxt_switches:\t0\nx86_Thread_features:\t\nx86_Thread_features_locked:\t\n",
+        "maps": "mpstudy-data: 0 524288 linear 252:1 2048\nprobe: 0 2097152 multipath 1 queue_if_no_path 0 1 1 round-robin 0 1 1 8:0 1 \nprobe1: 0 2093056 linear 252:0 2048\n",
+        "status": "mpstudy-data: 0 524288 linear \nprobe: 0 2097152 multipath 2 0 0 0 1 1 A 0 1 0 8:0 A 0 \nprobe1: 0 2093056 linear \n",
+        "ok": 1,
+        "errors": [],
+        "max_seconds": 0.0026318809999998916,
+        "rtprio_limit": [
+          0,
+          0
+        ]
+      },
+      "healthy_end": {
+        "kernel": "7.0.0-34-generic",
+        "daemon_sha256": "ce0e8e17791e20e0f99379f8fa5efdbcdf7805936429c169719764398ef84576",
+        "version_output": "multipath-tools v0.9.4 (12/19, 2022)\nUsage:\n  /usr/sbin/multipath [-v level] [-B|-d|-i|-q|-r] [-b file] [-p policy] [device]\n  /usr/sbin/multipath [-v level] [-R retries] -f device\n  /usr/sbin/multipath [-v level] [-R retries] -F\n  /usr/sbin/multipath [-v level] [-l|-ll] [device]\n  /usr/sbin/multipath [-v level] [-a|-w] device\n  /usr/sbin/multipath [-v level] -W\n  /usr/sbin/multipath [-v level] [-i] [-c|-C] device\n  /usr/sbin/multipath [-v level] [-i] [-u|-U]\n  /usr/sbin/multipath [-h|-t|-T]\n\nWhere:\n  -h      print this usage text\n  -l      show multipath topology (sysfs and DM info)\n  -ll     show multipath topology (maximum info)\n  -e      enable foreign libraries with -l/-ll\n  -f      flush a multipath device map\n  -F      flush all multipath device maps\n  -a      add a device wwid to the wwids file\n  -c      check if a device should be a path in a multipath device\n  -C      check if a multipath device has usable paths\n  -q      allow queue_if_no_path when multipathd is not running\n  -d      dry run, do not create or update devmaps\n  -t      display the currently used multipathd configuration\n  -T      display the multipathd configuration without builtin defaults\n  -r      force devmap reload\n  -i      ignore wwids file\n  -B      treat the bindings file as read only\n  -b fil  bindings file location\n  -w      remove a device from the wwids file\n  -W      reset the wwids file include only the current devices\n  -R num  number of times to retry removes of in-use devices\n  -u      check if the device specified in the program environment should be a\n          path in a multipath device\n  -U      check if the device specified in the program environment is a\n          multipath device with usable paths, see -C flag\n  -p pol  force all maps to specified path grouping policy:\n          . failover            one path per priority group\n          . multibus            all paths in one priority group\n          . group_by_serial     one priority group per serial\n          . group_by_prio       one priority group per priority lvl\n          . group_by_node_name  one priority group per target node\n  -v lvl  verbosity level:\n          . 0 no output\n          . 1 print created devmap names only\n          . 2 default verbosity\n          . 3 print debug information\n  device  action limited to:\n          . multipath named 'device' (ex: mpath0)\n          . multipath whose wwid is 'device' (ex: 60051...)\n          . multipath including the path named 'device' (ex: /dev/sda or\n            /dev/dm-0)\n          . multipath including the path with maj:min 'device' (ex: 8:0)\n",
+        "sched_policy": 2,
+        "sched_priority": 99,
+        "daemon_status": "Name:\tmultipathd\nUmask:\t0077\nState:\tS (sleeping)\nTgid:\t114\nNgid:\t0\nPid:\t114\nPPid:\t112\nTracerPid:\t0\nUid:\t0\t0\t0\t0\nGid:\t0\t0\t0\t0\nFDSize:\t64\nGroups:\t \nNStgid:\t114\nNSpid:\t114\nNSpgid:\t0\nNSsid:\t0\nKthread:\t0\nVmPeak:\t  485764 kB\nVmSize:\t  420228 kB\nVmLck:\t  420196 kB\nVmPin:\t       0 kB\nVmHWM:\t   27748 kB\nVmRSS:\t   27748 kB\nRssAnon:\t   18980 kB\nRssFile:\t       8 kB\nRssShmem:\t    8760 kB\nVmData:\t   18676 kB\nVmStk:\t     132 kB\nVmExe:\t      88 kB\nVmLib:\t    6280 kB\nVmPTE:\t     120 kB\nVmSwap:\t       0 kB\nHugetlbPages:\t       0 kB\nCoreDumping:\t0\nTHP_enabled:\t1\nuntag_mask:\t0xffffffffffffffff\nThreads:\t7\nSigQ:\t1/1842\nSigPnd:\t0000000000000000\nShdPnd:\t0000000000000000\nSigBlk:\tfffffffe7ffbeeff\nSigIgn:\t0000000000000000\nSigCgt:\t0000000180005a03\nCapInh:\t0000000000000000\nCapPrm:\t000001ffffffffff\nCapEff:\t000001ffffffffff\nCapBnd:\t000001ffffffffff\nCapAmb:\t0000000000000000\nNoNewPrivs:\t0\nSeccomp:\t0\nSeccomp_filters:\t0\nSpeculation_Store_Bypass:\tvulnerable\nSpeculationIndirectBranch:\talways enabled\nCpus_allowed:\t3\nCpus_allowed_list:\t0-1\nMems_allowed:\t00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000001\nMems_allowed_list:\t0\nvoluntary_ctxt_switches:\t28\nnonvoluntary_ctxt_switches:\t0\nx86_Thread_features:\t\nx86_Thread_features_locked:\t\n",
+        "maps": "mpstudy-data: 0 524288 linear 252:1 2048\nprobe: 0 2097152 multipath 1 queue_if_no_path 0 1 1 round-robin 0 1 1 8:0 1 \nprobe1: 0 2093056 linear 252:0 2048\n",
+        "status": "mpstudy-data: 0 524288 linear \nprobe: 0 2097152 multipath 2 0 0 0 1 1 A 0 1 0 8:0 A 0 \nprobe1: 0 2093056 linear \n",
+        "ok": 96,
+        "errors": [],
+        "max_seconds": 0.20028172399999988,
+        "rtprio_limit": [
+          0,
+          0
+        ]
+      },
+      "cycles": [
+        {
+          "start": 14289.548689064,
+          "deleted": 14289.610189986,
+          "reattached": 14289.725038628,
+          "after": {
+            "kernel": "7.0.0-34-generic",
+            "sched_policy": 2,
+            "sched_priority": 99,
+            "maps": "mpstudy-data: 0 524288 linear 252:1 2048\nprobe: 0 2097152 multipath 1 queue_if_no_path 0 1 1 round-robin 0 1 1 8:0 1 \nprobe1: 0 2093056 linear 252:0 2048\n",
+            "status": "mpstudy-data: 0 524288 linear \nprobe: 0 2097152 multipath 2 0 0 0 1 1 A 0 1 0 8:0 A 0 \nprobe1: 0 2093056 linear \n",
+            "ok": 143,
+            "errors": [],
+            "max_seconds": 0.45380601799999987
+          }
+        },
+        {
+          "start": 14295.021143459,
+          "deleted": 14295.082800229,
+          "reattached": 14295.195853771,
+          "after": {
+            "kernel": "7.0.0-34-generic",
+            "sched_policy": 2,
+            "sched_priority": 99,
+            "maps": "mpstudy-data: 0 524288 linear 252:1 2048\nprobe: 0 2097152 multipath 1 queue_if_no_path 0 1 1 round-robin 0 1 1 8:0 1 \nprobe1: 0 2093056 linear 252:0 2048\n",
+            "status": "mpstudy-data: 0 524288 linear \nprobe: 0 2097152 multipath 2 0 0 0 1 1 A 0 1 0 8:0 A 0 \nprobe1: 0 2093056 linear \n",
+            "ok": 192,
+            "errors": [],
+            "max_seconds": 0.45380601799999987
+          }
+        },
+        {
+          "start": 14300.496041558,
+          "deleted": 14300.5576657,
+          "reattached": 14300.670849718,
+          "after": {
+            "kernel": "7.0.0-34-generic",
+            "sched_policy": 2,
+            "sched_priority": 99,
+            "maps": "mpstudy-data: 0 524288 linear 252:1 2048\nprobe: 0 2097152 multipath 1 queue_if_no_path 0 1 1 round-robin 0 1 1 8:0 1 \nprobe1: 0 2093056 linear 252:0 2048\n",
+            "status": "mpstudy-data: 0 524288 linear \nprobe: 0 2097152 multipath 2 0 0 0 1 1 A 0 1 0 8:0 A 0 \nprobe1: 0 2093056 linear \n",
+            "ok": 238,
+            "errors": [],
+            "max_seconds": 0.45380601799999987
+          }
+        }
+      ]
+    },
+    {
+      "run": "version-study/20260925-013541",
+      "raw_report_sha256": "ca2f35f85bd3aea471f26fc26358f1b32cf3b6c1a9b07b36c098ba387f5df346",
+      "command": [
+        "qemu-system-x86_64",
+        "-machine",
+        "q35",
+        "-accel",
+        "kvm",
+        "-m",
+        "1024",
+        "-smp",
+        "2",
+        "-display",
+        "none",
+        "-nodefaults",
+        "-no-reboot",
+        "-nic",
+        "none",
+        "-kernel",
+        "/workspace/Project/External-Memo-Rescue-Handler/lab/work/version-study/kernel7/guest/vmlinuz",
+        "-initrd",
+        "/workspace/Project/External-Memo-Rescue-Handler/lab/work/version-study/20260925-013541/initramfs.cpio.gz",
+        "-append",
+        "console=ttyS0 rdinit=/init panic=-1 probe_deny_rt=1",
+        "-serial",
+        "file:/workspace/Project/External-Memo-Rescue-Handler/lab/work/version-study/20260925-013541/console.log",
+        "-serial",
+        "unix:/workspace/Project/External-Memo-Rescue-Handler/lab/work/version-study/20260925-013541/agent.sock,server=on,wait=off",
+        "-qmp",
+        "unix:/workspace/Project/External-Memo-Rescue-Handler/lab/work/version-study/20260925-013541/qmp.sock,server=on,wait=off",
+        "-device",
+        "qemu-xhci,id=xhci",
+        "-blockdev",
+        "{\"driver\": \"raw\", \"node-name\": \"disk\", \"file\": {\"driver\": \"file\", \"filename\": \"/workspace/Project/External-Memo-Rescue-Handler/lab/work/version-study/20260925-013541/disk.raw\"}}",
+        "-device",
+        "usb-uas,bus=xhci.0,id=stick,serial=UPSTREAM-USB-001,port=1",
+        "-device",
+        "scsi-hd,bus=stick.0,id=lun,drive=disk,serial=UPSTREAM-SCSI-001",
+        "-blockdev",
+        "{\"driver\": \"raw\", \"node-name\": \"wrong\", \"file\": {\"driver\": \"file\", \"filename\": \"/workspace/Project/External-Memo-Rescue-Handler/lab/work/version-study/20260925-013541/wrong.raw\"}}"
+      ],
+      "build": null,
+      "runner_sha256": "1016030fd4dc8fc07176d6ecf8bb330a9d727c030b87dfdc99d1d70aa97b16c3",
+      "passed": true,
+      "scope": "RAM root, version-selected multipathd, whole USB disk -> kpartx -> LVM -> ext4 data workload; not Ubuntu root recovery",
+      "scenario": "stock-old-multipath-new-kernel",
+      "deny_rt": true,
+      "validation": {
+        "id": 6,
+        "validated": true,
+        "records": 241
+      },
+      "kernel_sha256": "73d9c6e40b210deb638070d6af591a68bb6d7ff0280d0ec34c9ccf705a4f47ac",
+      "base_initramfs_sha256": "6f4c6d30d627ae5ff204572e3cdfc472b273ce1238c7c1abffb9e7f8f2e2dcf1",
+      "guest_sha256": "241cd6299e02846d4431f5d6ef62678afb70b1ce01d24921b2c2ee81276b1867",
+      "before": {
+        "kernel": "7.0.0-34-generic",
+        "daemon_sha256": "ce0e8e17791e20e0f99379f8fa5efdbcdf7805936429c169719764398ef84576",
+        "version_output": "multipath-tools v0.9.4 (12/19, 2022)\nUsage:\n  /usr/sbin/multipath [-v level] [-B|-d|-i|-q|-r] [-b file] [-p policy] [device]\n  /usr/sbin/multipath [-v level] [-R retries] -f device\n  /usr/sbin/multipath [-v level] [-R retries] -F\n  /usr/sbin/multipath [-v level] [-l|-ll] [device]\n  /usr/sbin/multipath [-v level] [-a|-w] device\n  /usr/sbin/multipath [-v level] -W\n  /usr/sbin/multipath [-v level] [-i] [-c|-C] device\n  /usr/sbin/multipath [-v level] [-i] [-u|-U]\n  /usr/sbin/multipath [-h|-t|-T]\n\nWhere:\n  -h      print this usage text\n  -l      show multipath topology (sysfs and DM info)\n  -ll     show multipath topology (maximum info)\n  -e      enable foreign libraries with -l/-ll\n  -f      flush a multipath device map\n  -F      flush all multipath device maps\n  -a      add a device wwid to the wwids file\n  -c      check if a device should be a path in a multipath device\n  -C      check if a multipath device has usable paths\n  -q      allow queue_if_no_path when multipathd is not running\n  -d      dry run, do not create or update devmaps\n  -t      display the currently used multipathd configuration\n  -T      display the multipathd configuration without builtin defaults\n  -r      force devmap reload\n  -i      ignore wwids file\n  -B      treat the bindings file as read only\n  -b fil  bindings file location\n  -w      remove a device from the wwids file\n  -W      reset the wwids file include only the current devices\n  -R num  number of times to retry removes of in-use devices\n  -u      check if the device specified in the program environment should be a\n          path in a multipath device\n  -U      check if the device specified in the program environment is a\n          multipath device with usable paths, see -C flag\n  -p pol  force all maps to specified path grouping policy:\n          . failover            one path per priority group\n          . multibus            all paths in one priority group\n          . group_by_serial     one priority group per serial\n          . group_by_prio       one priority group per priority lvl\n          . group_by_node_name  one priority group per target node\n  -v lvl  verbosity level:\n          . 0 no output\n          . 1 print created devmap names only\n          . 2 default verbosity\n          . 3 print debug information\n  device  action limited to:\n          . multipath named 'device' (ex: mpath0)\n          . multipath whose wwid is 'device' (ex: 60051...)\n          . multipath including the path named 'device' (ex: /dev/sda or\n            /dev/dm-0)\n          . multipath including the path with maj:min 'device' (ex: 8:0)\n",
+        "sched_policy": 0,
+        "sched_priority": 0,
+        "daemon_status": "Name:\tmultipathd\nUmask:\t0077\nState:\tS (sleeping)\nTgid:\t114\nNgid:\t0\nPid:\t114\nPPid:\t112\nTracerPid:\t0\nUid:\t0\t0\t0\t0\nGid:\t0\t0\t0\t0\nFDSize:\t64\nGroups:\t \nNStgid:\t114\nNSpid:\t114\nNSpgid:\t0\nNSsid:\t0\nKthread:\t0\nVmPeak:\t  485764 kB\nVmSize:\t  420228 kB\nVmLck:\t  420196 kB\nVmPin:\t       0 kB\nVmHWM:\t   27748 kB\nVmRSS:\t   27748 kB\nRssAnon:\t   18980 kB\nRssFile:\t       8 kB\nRssShmem:\t    8760 kB\nVmData:\t   18676 kB\nVmStk:\t     132 kB\nVmExe:\t      88 kB\nVmLib:\t    6280 kB\nVmPTE:\t     120 kB\nVmSwap:\t       0 kB\nHugetlbPages:\t       0 kB\nCoreDumping:\t0\nTHP_enabled:\t1\nuntag_mask:\t0xffffffffffffffff\nThreads:\t7\nSigQ:\t2/1842\nSigPnd:\t0000000000000000\nShdPnd:\t0000000000000000\nSigBlk:\tfffffffe7ffbeeff\nSigIgn:\t0000000000000000\nSigCgt:\t0000000180005a03\nCapInh:\t0000000000000000\nCapPrm:\t000001ffff7fffff\nCapEff:\t000001ffff7fffff\nCapBnd:\t000001ffff7fffff\nCapAmb:\t0000000000000000\nNoNewPrivs:\t0\nSeccomp:\t0\nSeccomp_filters:\t0\nSpeculation_Store_Bypass:\tvulnerable\nSpeculationIndirectBranch:\talways enabled\nCpus_allowed:\t3\nCpus_allowed_list:\t0-1\nMems_allowed:\t00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000001\nMems_allowed_list:\t0\nvoluntary_ctxt_switches:\t15\nnonvoluntary_ctxt_switches:\t4\nx86_Thread_features:\t\nx86_Thread_features_locked:\t\n",
+        "maps": "mpstudy-data: 0 524288 linear 252:1 2048\nprobe: 0 2097152 multipath 1 queue_if_no_path 0 1 1 round-robin 0 1 1 8:0 1 \nprobe1: 0 2093056 linear 252:0 2048\n",
+        "status": "mpstudy-data: 0 524288 linear \nprobe: 0 2097152 multipath 2 0 0 0 1 1 A 0 1 0 8:0 A 0 \nprobe1: 0 2093056 linear \n",
+        "ok": 1,
+        "errors": [],
+        "max_seconds": 0.0016939879999999796,
+        "rtprio_limit": [
+          0,
+          0
+        ]
+      },
+      "healthy_end": {
+        "kernel": "7.0.0-34-generic",
+        "daemon_sha256": "ce0e8e17791e20e0f99379f8fa5efdbcdf7805936429c169719764398ef84576",
+        "version_output": "multipath-tools v0.9.4 (12/19, 2022)\nUsage:\n  /usr/sbin/multipath [-v level] [-B|-d|-i|-q|-r] [-b file] [-p policy] [device]\n  /usr/sbin/multipath [-v level] [-R retries] -f device\n  /usr/sbin/multipath [-v level] [-R retries] -F\n  /usr/sbin/multipath [-v level] [-l|-ll] [device]\n  /usr/sbin/multipath [-v level] [-a|-w] device\n  /usr/sbin/multipath [-v level] -W\n  /usr/sbin/multipath [-v level] [-i] [-c|-C] device\n  /usr/sbin/multipath [-v level] [-i] [-u|-U]\n  /usr/sbin/multipath [-h|-t|-T]\n\nWhere:\n  -h      print this usage text\n  -l      show multipath topology (sysfs and DM info)\n  -ll     show multipath topology (maximum info)\n  -e      enable foreign libraries with -l/-ll\n  -f      flush a multipath device map\n  -F      flush all multipath device maps\n  -a      add a device wwid to the wwids file\n  -c      check if a device should be a path in a multipath device\n  -C      check if a multipath device has usable paths\n  -q      allow queue_if_no_path when multipathd is not running\n  -d      dry run, do not create or update devmaps\n  -t      display the currently used multipathd configuration\n  -T      display the multipathd configuration without builtin defaults\n  -r      force devmap reload\n  -i      ignore wwids file\n  -B      treat the bindings file as read only\n  -b fil  bindings file location\n  -w      remove a device from the wwids file\n  -W      reset the wwids file include only the current devices\n  -R num  number of times to retry removes of in-use devices\n  -u      check if the device specified in the program environment should be a\n          path in a multipath device\n  -U      check if the device specified in the program environment is a\n          multipath device with usable paths, see -C flag\n  -p pol  force all maps to specified path grouping policy:\n          . failover            one path per priority group\n          . multibus            all paths in one priority group\n          . group_by_serial     one priority group per serial\n          . group_by_prio       one priority group per priority lvl\n          . group_by_node_name  one priority group per target node\n  -v lvl  verbosity level:\n          . 0 no output\n          . 1 print created devmap names only\n          . 2 default verbosity\n          . 3 print debug information\n  device  action limited to:\n          . multipath named 'device' (ex: mpath0)\n          . multipath whose wwid is 'device' (ex: 60051...)\n          . multipath including the path named 'device' (ex: /dev/sda or\n            /dev/dm-0)\n          . multipath including the path with maj:min 'device' (ex: 8:0)\n",
+        "sched_policy": 0,
+        "sched_priority": 0,
+        "daemon_status": "Name:\tmultipathd\nUmask:\t0077\nState:\tS (sleeping)\nTgid:\t114\nNgid:\t0\nPid:\t114\nPPid:\t112\nTracerPid:\t0\nUid:\t0\t0\t0\t0\nGid:\t0\t0\t0\t0\nFDSize:\t64\nGroups:\t \nNStgid:\t114\nNSpid:\t114\nNSpgid:\t0\nNSsid:\t0\nKthread:\t0\nVmPeak:\t  485764 kB\nVmSize:\t  420228 kB\nVmLck:\t  420196 kB\nVmPin:\t       0 kB\nVmHWM:\t   27748 kB\nVmRSS:\t   27748 kB\nRssAnon:\t   18980 kB\nRssFile:\t       8 kB\nRssShmem:\t    8760 kB\nVmData:\t   18676 kB\nVmStk:\t     132 kB\nVmExe:\t      88 kB\nVmLib:\t    6280 kB\nVmPTE:\t     120 kB\nVmSwap:\t       0 kB\nHugetlbPages:\t       0 kB\nCoreDumping:\t0\nTHP_enabled:\t1\nuntag_mask:\t0xffffffffffffffff\nThreads:\t7\nSigQ:\t1/1842\nSigPnd:\t0000000000000000\nShdPnd:\t0000000000000000\nSigBlk:\tfffffffe7ffbeeff\nSigIgn:\t0000000000000000\nSigCgt:\t0000000180005a03\nCapInh:\t0000000000000000\nCapPrm:\t000001ffff7fffff\nCapEff:\t000001ffff7fffff\nCapBnd:\t000001ffff7fffff\nCapAmb:\t0000000000000000\nNoNewPrivs:\t0\nSeccomp:\t0\nSeccomp_filters:\t0\nSpeculation_Store_Bypass:\tvulnerable\nSpeculationIndirectBranch:\talways enabled\nCpus_allowed:\t3\nCpus_allowed_list:\t0-1\nMems_allowed:\t00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000001\nMems_allowed_list:\t0\nvoluntary_ctxt_switches:\t28\nnonvoluntary_ctxt_switches:\t4\nx86_Thread_features:\t\nx86_Thread_features_locked:\t\n",
+        "maps": "mpstudy-data: 0 524288 linear 252:1 2048\nprobe: 0 2097152 multipath 1 queue_if_no_path 0 1 1 round-robin 0 1 1 8:0 1 \nprobe1: 0 2093056 linear 252:0 2048\n",
+        "status": "mpstudy-data: 0 524288 linear \nprobe: 0 2097152 multipath 2 0 0 0 1 1 A 0 1 0 8:0 A 0 \nprobe1: 0 2093056 linear \n",
+        "ok": 98,
+        "errors": [],
+        "max_seconds": 0.010829592000000332,
+        "rtprio_limit": [
+          0,
+          0
+        ]
+      },
+      "cycles": [
+        {
+          "start": 14449.202935098,
+          "deleted": 14449.263953887,
+          "reattached": 14449.380500622,
+          "after": {
+            "kernel": "7.0.0-34-generic",
+            "sched_policy": 0,
+            "sched_priority": 0,
+            "maps": "mpstudy-data: 0 524288 linear 252:1 2048\nprobe: 0 2097152 multipath 1 queue_if_no_path 0 1 1 round-robin 0 1 1 8:0 1 \nprobe1: 0 2093056 linear 252:0 2048\n",
+            "status": "mpstudy-data: 0 524288 linear \nprobe: 0 2097152 multipath 2 0 0 0 1 1 A 0 1 0 8:0 A 0 \nprobe1: 0 2093056 linear \n",
+            "ok": 144,
+            "errors": [],
+            "max_seconds": 0.36637707999999947
+          }
+        },
+        {
+          "start": 14454.676119749,
+          "deleted": 14454.737366628,
+          "reattached": 14454.853718641,
+          "after": {
+            "kernel": "7.0.0-34-generic",
+            "sched_policy": 0,
+            "sched_priority": 0,
+            "maps": "mpstudy-data: 0 524288 linear 252:1 2048\nprobe: 0 2097152 multipath 1 queue_if_no_path 0 1 1 round-robin 0 1 1 8:0 1 \nprobe1: 0 2093056 linear 252:0 2048\n",
+            "status": "mpstudy-data: 0 524288 linear \nprobe: 0 2097152 multipath 2 0 0 0 1 1 A 0 1 0 8:0 A 0 \nprobe1: 0 2093056 linear \n",
+            "ok": 192,
+            "errors": [],
+            "max_seconds": 0.3915053999999998
+          }
+        },
+        {
+          "start": 14460.173579057,
+          "deleted": 14460.235528621,
+          "reattached": 14460.352058309,
+          "after": {
+            "kernel": "7.0.0-34-generic",
+            "sched_policy": 0,
+            "sched_priority": 0,
+            "maps": "mpstudy-data: 0 524288 linear 252:1 2048\nprobe: 0 2097152 multipath 1 queue_if_no_path 0 1 1 round-robin 0 1 1 8:0 1 \nprobe1: 0 2093056 linear 252:0 2048\n",
+            "status": "mpstudy-data: 0 524288 linear \nprobe: 0 2097152 multipath 2 0 0 0 1 1 A 0 1 0 8:0 A 0 \nprobe1: 0 2093056 linear \n",
+            "ok": 240,
+            "errors": [],
+            "max_seconds": 0.46876473700000076
+          }
+        }
+      ]
+    },
+    {
+      "run": "20260925-013321-auto-50752",
+      "raw_report_sha256": "fb18fcb2436a81f1444396b37e73e2e10697f202889cce667a22b4ab7f644bfe",
+      "command": [
+        "qemu-system-x86_64",
+        "-machine",
+        "q35",
+        "-accel",
+        "kvm",
+        "-m",
+        "3072",
+        "-smp",
+        "2",
+        "-display",
+        "none",
+        "-nodefaults",
+        "-no-reboot",
+        "-nic",
+        "none",
+        "-smbios",
+        "type=1,product=RAMRescueLab",
+        "-kernel",
+        "lab/work/version-study/kernel7/guest/vmlinuz",
+        "-initrd",
+        "lab/work/version-study/kernel7/guest/initramfs.cpio.gz",
+        "-append",
+        "console=ttyS0 rdinit=/init ram_rescue_lab=1 panic=-1 ram_rescue_mpath=1 ram_rescue_queue_seconds=8 ram_rescue_ubuntu=1 root=/dev/mapper/labrescue-ubuntu rw ram_rescue_git=1",
+        "-serial",
+        "file:/workspace/Project/External-Memo-Rescue-Handler/lab/work/20260925-013321-auto-50752/console.log",
+        "-serial",
+        "unix:/workspace/Project/External-Memo-Rescue-Handler/lab/work/20260925-013321-auto-50752/agent.sock,server=on,wait=off",
+        "-serial",
+        "unix:/workspace/Project/External-Memo-Rescue-Handler/lab/work/20260925-013321-auto-50752/rescue.sock,server=on,wait=off",
+        "-qmp",
+        "unix:/workspace/Project/External-Memo-Rescue-Handler/lab/work/20260925-013321-auto-50752/qmp.sock,server=on,wait=off",
+        "-device",
+        "qemu-xhci,id=xhci",
+        "-blockdev",
+        "{\"driver\": \"raw\", \"node-name\": \"usbdisk\", \"file\": {\"driver\": \"file\", \"filename\": \"/workspace/Project/External-Memo-Rescue-Handler/lab/work/20260925-013321-auto-50752/usb.raw\"}}",
+        "-blockdev",
+        "{\"driver\": \"raw\", \"node-name\": \"decoydisk\", \"file\": {\"driver\": \"file\", \"filename\": \"/workspace/Project/External-Memo-Rescue-Handler/lab/work/20260925-013321-auto-50752/decoy.raw\"}}",
+        "-device",
+        "usb-uas,bus=xhci.0,id=stick,serial=RAMRESCUE-LAB-001,port=1",
+        "-device",
+        "scsi-hd,bus=stick.0,id=lun,drive=usbdisk",
+        "-blockdev",
+        "{\"driver\": \"raw\", \"node-name\": \"ubuntu-seed\", \"read-only\": true, \"file\": {\"driver\": \"file\", \"filename\": \"/workspace/Project/External-Memo-Rescue-Handler/lab/work/ubuntu/rootfs.raw\"}}",
+        "-device",
+        "virtio-blk-pci,drive=ubuntu-seed,serial=UBUNTU-ROOTFS-SEED",
+        "-blockdev",
+        "{\"driver\": \"raw\", \"node-name\": \"git-seed\", \"read-only\": true, \"file\": {\"driver\": \"file\", \"filename\": \"/workspace/Project/External-Memo-Rescue-Handler/lab/work/git-source.raw\"}}",
+        "-device",
+        "virtio-blk-pci,drive=git-seed,serial=LINUX-GIT-SOURCE"
+      ],
+      "build": {
+        "kernel_release": "7.0.0-34-generic",
+        "module_root": "/workspace/Project/External-Memo-Rescue-Handler/lab/work/version-study/kernel7/extracted",
+        "source_commit": "511ef0d176fe7da50fdec2448211738dd2cb6af6",
+        "source_sha256": {
+          "lab/build.py": "b77347cf135399f6febeaac272f85528ba95f217e4375786fae85325f2f85ae5",
+          "ram-rescue-demo/src/rescue.py": "c40649b895ba56ebecbac8a0192c30efbb4ec85bfb29adf36a4f07289f2b0a31",
+          "ram-rescue-demo/src/lvm.conf": "10708bf37ce4b01ec3e7e3e0d3d6394301f0bf3d4046fbd1da8521dad80d0cd3",
+          "lab/guest/agent.py": "3c0f06180aa71ecb508658f6af3fbc1eaca3bf1b217a405301f701153db9c805",
+          "lab/guest/dm_monitor.py": "da64d2011514ecad4e708ad6d1eb1f5dc0104de8eba097ec96fb5ca762298378",
+          "lab/guest/git_workload.py": "c61d4c440a44cdb263f247e868292cea4270a78d59dd537706090909cd7c0538",
+          "lab/guest/init.sh": "7fc37f2d3a97d0489ef534a37ef1a612bee40f1c9c6b62d4d5cba7e6170bf75f",
+          "lab/guest/path_guard.py": "8251b0995d72e17100131d8a88d6f2009213b7c9a7c0580a2e7c4fe3e11e68fb",
+          "lab/guest/root-init.sh": "078ec84bb1f502fc2b80b99b4eef2ee4a40432ccb9a476bf7757952547ca57d9",
+          "lab/guest/ubuntu.py": "224aada1ec5efbd05a1bd6a622a617a911f61760141dce73078553d66923aeb6",
+          "lab/guest/ubuntu_workload.py": "2cb4f4a137fa6b6e8b99d87c29efe89c2dbcc7d7cc7ee814b736a193f667a890",
+          "lab/guest/wire.py": "66180734f19432381ff6fbd3b8853c536d083ee3c681e52864902a91efafe87e",
+          "lab/guest/workload.py": "15d8e159ab16b2e7786aeee10d4be861a6b1cf448bf3ddf16b6a8c64ab72ad2c"
+        },
+        "kernel_sha256": "73d9c6e40b210deb638070d6af591a68bb6d7ff0280d0ec34c9ccf705a4f47ac",
+        "initramfs_sha256": "6f4c6d30d627ae5ff204572e3cdfc472b273ce1238c7c1abffb9e7f8f2e2dcf1",
+        "note": "guest payload copied from working tree; no host identities or passwords"
+      },
+      "runner_sha256": "2de4fdb0abd7ba4a99dc59a26f494961bdc0e40ce8188f1878cc3fb02bea441d",
+      "passed": true,
+      "scenario": "full-ubuntu-git-guard-new-kernel",
+      "scope": "Full Ubuntu Server systemd root on USB/LVM/ext4 with existing BIO Guard, Linux v6.8 source shallow Git clone; guest kernel 7.0.0-34-generic",
+      "guest": "ubuntu",
+      "workload": "git-clone",
+      "transport": "uas",
+      "gap": 0.0,
+      "same_port": true,
+      "queue_seconds": 8,
+      "checks": {
+        "ram_heartbeat": true,
+        "ram_shell": true,
+        "stable_upper_mappings": true,
+        "same_process_alive": true,
+        "automatic_recovery": true,
+        "zero_application_errors": true,
+        "writes_continued": true,
+        "block_read": true,
+        "root_read": true,
+        "filesystem_writable": true,
+        "no_journal_abort": true,
+        "ubuntu_systemd": true,
+        "same_boot": true,
+        "services_survived": true,
+        "no_failed_units": true,
+        "acknowledged_data_present": true,
+        "git_clone_succeeded": true,
+        "same_git_process": true,
+        "git_active_during_fault": true,
+        "git_integrity": true
+      },
+      "ubuntu_source": {
+        "distribution": "Ubuntu Server 24.04 LTS",
+        "image_build": "20260911",
+        "url": "https://cloud-images.ubuntu.com/noble/20260911/noble-server-cloudimg-amd64-root.tar.xz",
+        "archive_sha256": "2ea580b9dd2d0e97ba9047798becc63a94427679876dec193221e345a6e0cdc9",
+        "seed_sha256": "8ae5beb36209e924b04612f7347babac8a7930947411aba353ae03aa8f956bbb",
+        "signed_checksums_sha256": "86919782a8b9e4dbd9478f00f8fda31da67af11facfc4408138a487d20bbff33",
+        "signature_verified": true
+      },
+      "git_source": {
+        "url": "https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git",
+        "ref": "v6.8",
+        "commit": "e8f897f4afef0031fe618a8e94127a0934896aba",
+        "history": "depth 1",
+        "tracked_files": 83475,
+        "object_disk_bytes": 260778158,
+        "image_sha256": "5e8efa55f6603982383be11a9e57842923fa845a121a4f79bae9cea5f014d6b4"
+      },
+      "git_validation": {
+        "head": "e8f897f4afef0031fe618a8e94127a0934896aba",
+        "expected_head": "e8f897f4afef0031fe618a8e94127a0934896aba",
+        "head_matches": true,
+        "fsck_passed": true,
+        "fsck_output": "",
+        "worktree_clean": true,
+        "tracked_files": 83475,
+        "source": {
+          "url": "https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git",
+          "ref": "v6.8",
+          "commit": "e8f897f4afef0031fe618a8e94127a0934896aba",
+          "history": "depth 1",
+          "tracked_files": 83475,
+          "object_disk_bytes": 260778158
+        }
+      },
+      "data_audit": {
+        "id": 284,
+        "ok": true,
+        "result": {
+          "acknowledged_records": 213,
+          "confirmed_bytes": 873192,
+          "prefix_matches": true
+        },
+        "output": ""
+      },
+      "successful_writes": 209,
+      "failed_writes": 0,
+      "max_write_latency": 1.4445337490000014,
+      "max_heartbeat_gap": 0.7604933719994733,
+      "block_after": {
+        "id": 281,
+        "ok": true,
+        "result": {
+          "bytes": 4096,
+          "ext4_magic": "53ef"
+        },
+        "output": ""
+      },
+      "root_after": {
+        "id": 282,
+        "ok": true,
+        "result": "RAM rescue lab sentinel\n",
+        "output": ""
+      },
+      "filesystem_after": {
+        "id": 283,
+        "ok": true,
+        "result": {
+          "statvfs_readonly": false,
+          "write_fsync_ok": true
+        },
+        "output": ""
+      },
+      "observed_kernel_first_line": "[    0.000000] Linux version 7.0.0-34-generic (buildd@lcy02-amd64-117) (x86_64-linux-gnu-gcc-13 (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0, GNU ld (GNU Binutils for Ubuntu) 2.42) #34~24.04.1-Ubuntu SMP PREEMPT_DYNAMIC Fri Sep  4 15:38:29 UTC 2 (Ubuntu 7.0.0-34.34~24.04.1-generic 7.0.14)",
+      "supplemental_checks": {
+        "exact_block_bytes_and_ext4_magic": true,
+        "sentinel_contents_match": true,
+        "ext4_jbd2_error_patterns_absent_in_captured_log": true
+      },
+      "supplemental_check_limit": "Captured log pattern absence is not a complete filesystem health or persistence proof; workload remained active during prefix audit."
+    },
+    {
+      "run": "20260925-013541-probe-stall",
+      "raw_report_sha256": "1e6bf32ff41527ca9803a75cdc1142c0c7a993772ed6b02c631f22579aa4f401",
+      "command": [
+        "qemu-system-x86_64",
+        "-machine",
+        "q35",
+        "-accel",
+        "kvm",
+        "-m",
+        "1536",
+        "-smp",
+        "2",
+        "-display",
+        "none",
+        "-nodefaults",
+        "-no-reboot",
+        "-nic",
+        "none",
+        "-smbios",
+        "type=1,product=RAMRescueLab",
+        "-kernel",
+        "lab/work/version-study/kernel7/guest/vmlinuz",
+        "-initrd",
+        "lab/work/version-study/kernel7/guest/initramfs.cpio.gz",
+        "-append",
+        "console=ttyS0 rdinit=/init ram_rescue_lab=1 panic=-1 ram_rescue_mpath=1 ram_rescue_queue_seconds=4",
+        "-serial",
+        "file:/workspace/Project/External-Memo-Rescue-Handler/lab/work/20260925-013541-probe-stall/console.log",
+        "-serial",
+        "unix:/workspace/Project/External-Memo-Rescue-Handler/lab/work/20260925-013541-probe-stall/agent.sock,server=on,wait=off",
+        "-serial",
+        "unix:/workspace/Project/External-Memo-Rescue-Handler/lab/work/20260925-013541-probe-stall/rescue.sock,server=on,wait=off",
+        "-qmp",
+        "unix:/workspace/Project/External-Memo-Rescue-Handler/lab/work/20260925-013541-probe-stall/qmp.sock,server=on,wait=off",
+        "-device",
+        "qemu-xhci,id=xhci",
+        "-blockdev",
+        "{\"driver\": \"raw\", \"node-name\": \"usbdisk\", \"file\": {\"driver\": \"file\", \"filename\": \"/workspace/Project/External-Memo-Rescue-Handler/lab/work/20260925-013541-probe-stall/usb.raw\"}}",
+        "-blockdev",
+        "{\"driver\": \"raw\", \"node-name\": \"decoydisk\", \"file\": {\"driver\": \"file\", \"filename\": \"/workspace/Project/External-Memo-Rescue-Handler/lab/work/20260925-013541-probe-stall/decoy.raw\"}}",
+        "-device",
+        "usb-uas,bus=xhci.0,id=stick,serial=RAMRESCUE-LAB-001,port=1",
+        "-device",
+        "scsi-hd,bus=stick.0,id=lun,drive=usbdisk"
+      ],
+      "build": {
+        "kernel_release": "7.0.0-34-generic",
+        "module_root": "/workspace/Project/External-Memo-Rescue-Handler/lab/work/version-study/kernel7/extracted",
+        "source_commit": "511ef0d176fe7da50fdec2448211738dd2cb6af6",
+        "source_sha256": {
+          "lab/build.py": "b77347cf135399f6febeaac272f85528ba95f217e4375786fae85325f2f85ae5",
+          "ram-rescue-demo/src/rescue.py": "c40649b895ba56ebecbac8a0192c30efbb4ec85bfb29adf36a4f07289f2b0a31",
+          "ram-rescue-demo/src/lvm.conf": "10708bf37ce4b01ec3e7e3e0d3d6394301f0bf3d4046fbd1da8521dad80d0cd3",
+          "lab/guest/agent.py": "3c0f06180aa71ecb508658f6af3fbc1eaca3bf1b217a405301f701153db9c805",
+          "lab/guest/dm_monitor.py": "da64d2011514ecad4e708ad6d1eb1f5dc0104de8eba097ec96fb5ca762298378",
+          "lab/guest/git_workload.py": "c61d4c440a44cdb263f247e868292cea4270a78d59dd537706090909cd7c0538",
+          "lab/guest/init.sh": "7fc37f2d3a97d0489ef534a37ef1a612bee40f1c9c6b62d4d5cba7e6170bf75f",
+          "lab/guest/path_guard.py": "8251b0995d72e17100131d8a88d6f2009213b7c9a7c0580a2e7c4fe3e11e68fb",
+          "lab/guest/root-init.sh": "078ec84bb1f502fc2b80b99b4eef2ee4a40432ccb9a476bf7757952547ca57d9",
+          "lab/guest/ubuntu.py": "224aada1ec5efbd05a1bd6a622a617a911f61760141dce73078553d66923aeb6",
+          "lab/guest/ubuntu_workload.py": "2cb4f4a137fa6b6e8b99d87c29efe89c2dbcc7d7cc7ee814b736a193f667a890",
+          "lab/guest/wire.py": "66180734f19432381ff6fbd3b8853c536d083ee3c681e52864902a91efafe87e",
+          "lab/guest/workload.py": "15d8e159ab16b2e7786aeee10d4be861a6b1cf448bf3ddf16b6a8c64ab72ad2c"
+        },
+        "kernel_sha256": "73d9c6e40b210deb638070d6af591a68bb6d7ff0280d0ec34c9ccf705a4f47ac",
+        "initramfs_sha256": "6f4c6d30d627ae5ff204572e3cdfc472b273ce1238c7c1abffb9e7f8f2e2dcf1",
+        "note": "guest payload copied from working tree; no host identities or passwords"
+      },
+      "runner_sha256": "13138dc7b01472c935c9ad9f2307011a0d77beebf43251cedd492be6eb4af66d",
+      "passed": true,
+      "scenario": "slow-backend",
+      "scope": "Minimal userspace USB/LVM/ext4 root; limitation observation, not successful recovery",
+      "checks": {
+        "stall_exceeded_kernel_nopath_timeout": true,
+        "no_completions_during_stall": true,
+        "guard_still_ready": true,
+        "dm_path_still_active": true,
+        "same_application_process": true,
+        "writes_resumed_without_errors": true,
+        "ram_shell": true
+      },
+      "injection_kind": "QEMU backend throttled to 1 byte/s; not a physical USB unplug or exact driver hang",
+      "stall_host_seconds": 12.275815368999247,
+      "max_write_latency": 12.179267475,
+      "shell_stalled": true,
+      "pre_fault": {
+        "guest_time": 4.04274272,
+        "path_guard": {
+          "time": 2.758666095,
+          "state": "ready",
+          "recoveries": 0,
+          "node": "/dev/sda1"
+        },
+        "dm_status": "lab-path: 0 4192256 multipath 2 0 0 0 1 1 A 0 1 0 8:1 A 0 \nlabrescue-shared: 0 524288 linear \nlabrescue-ubuntu: 0 2097152 linear \n",
+        "dm_table": "lab-path: 0 4192256 multipath 3 queue_if_no_path queue_mode bio 0 1 1 round-robin 0 1 1 8:1 1 \nlabrescue-shared: 0 524288 linear 252:0 2099200\nlabrescue-ubuntu: 0 2097152 linear 252:0 2048\n",
+        "kernel_queue_timeout_seconds": "6",
+        "workload_process": {
+          "pid": 174,
+          "exit_code": null,
+          "start_ticks": "304"
+        },
+        "workload": "{\"seq\": 1, \"start\": 3.058962782, \"ok\": true, \"elapsed\": 0.006254348000000132}\n{\"seq\": 2, \"start\": 3.165417979, \"ok\": true, \"elapsed\": 0.0026052650000001343}\n{\"seq\": 3, \"start\": 3.268192423, \"ok\": true, \"elapsed\": 0.0024062090000001035}\n{\"seq\": 4, \"start\": 3.370796709, \"ok\": true, \"elapsed\": 0.003858210000000195}\n{\"seq\": 5, \"start\": 3.474849634, \"ok\": true, \"elapsed\": 0.002273889000000029}\n{\"seq\": 6, \"start\": 3.577321688, \"ok\": true, \"elapsed\": 0.004139310999999868}\n{\"seq\": 7, \"start\": 3.681628207, \"ok\": true, \"elapsed\": 0.002893000999999895}\n{\"seq\": 8, \"start\": 3.784689691, \"ok\": true, \"elapsed\": 0.005857473999999918}\n{\"seq\": 9, \"start\": 3.890762097, \"ok\": true, \"elapsed\": 0.0039052809999997606}\n{\"seq\": 10, \"start\": 3.994935115, \"ok\": true, \"elapsed\": 0.004838550999999747}\n"
+      },
+      "stalled_early": {
+        "guest_time": 6.166581341,
+        "path_guard": {
+          "time": 2.758666095,
+          "state": "ready",
+          "recoveries": 0,
+          "node": "/dev/sda1"
+        },
+        "dm_status": "lab-path: 0 4192256 multipath 2 0 0 0 1 1 A 0 1 0 8:1 A 0 \nlabrescue-shared: 0 524288 linear \nlabrescue-ubuntu: 0 2097152 linear \n",
+        "dm_table": "lab-path: 0 4192256 multipath 3 queue_if_no_path queue_mode bio 0 1 1 round-robin 0 1 1 8:1 1 \nlabrescue-shared: 0 524288 linear 252:0 2099200\nlabrescue-ubuntu: 0 2097152 linear 252:0 2048\n",
+        "kernel_queue_timeout_seconds": "6",
+        "workload_process": {
+          "pid": 174,
+          "exit_code": null,
+          "start_ticks": "304"
+        },
+        "workload": "{\"seq\": 1, \"start\": 3.058962782, \"ok\": true, \"elapsed\": 0.006254348000000132}\n{\"seq\": 2, \"start\": 3.165417979, \"ok\": true, \"elapsed\": 0.0026052650000001343}\n{\"seq\": 3, \"start\": 3.268192423, \"ok\": true, \"elapsed\": 0.0024062090000001035}\n{\"seq\": 4, \"start\": 3.370796709, \"ok\": true, \"elapsed\": 0.003858210000000195}\n{\"seq\": 5, \"start\": 3.474849634, \"ok\": true, \"elapsed\": 0.002273889000000029}\n{\"seq\": 6, \"start\": 3.577321688, \"ok\": true, \"elapsed\": 0.004139310999999868}\n{\"seq\": 7, \"start\": 3.681628207, \"ok\": true, \"elapsed\": 0.002893000999999895}\n{\"seq\": 8, \"start\": 3.784689691, \"ok\": true, \"elapsed\": 0.005857473999999918}\n{\"seq\": 9, \"start\": 3.890762097, \"ok\": true, \"elapsed\": 0.0039052809999997606}\n{\"seq\": 10, \"start\": 3.994935115, \"ok\": true, \"elapsed\": 0.004838550999999747}\n{\"seq\": 11, \"start\": 4.118637965, \"ok\": true, \"elapsed\": 0.045619899000000075}\n"
+      },
+      "stalled_late": {
+        "guest_time": 16.302845573,
+        "path_guard": {
+          "time": 2.758666095,
+          "state": "ready",
+          "recoveries": 0,
+          "node": "/dev/sda1"
+        },
+        "dm_status": "lab-path: 0 4192256 multipath 2 0 0 0 1 1 A 0 1 0 8:1 A 0 \nlabrescue-shared: 0 524288 linear \nlabrescue-ubuntu: 0 2097152 linear \n",
+        "dm_table": "lab-path: 0 4192256 multipath 3 queue_if_no_path queue_mode bio 0 1 1 round-robin 0 1 1 8:1 1 \nlabrescue-shared: 0 524288 linear 252:0 2099200\nlabrescue-ubuntu: 0 2097152 linear 252:0 2048\n",
+        "kernel_queue_timeout_seconds": "6",
+        "workload_process": {
+          "pid": 174,
+          "exit_code": null,
+          "start_ticks": "304"
+        },
+        "workload": "{\"seq\": 1, \"start\": 3.058962782, \"ok\": true, \"elapsed\": 0.006254348000000132}\n{\"seq\": 2, \"start\": 3.165417979, \"ok\": true, \"elapsed\": 0.0026052650000001343}\n{\"seq\": 3, \"start\": 3.268192423, \"ok\": true, \"elapsed\": 0.0024062090000001035}\n{\"seq\": 4, \"start\": 3.370796709, \"ok\": true, \"elapsed\": 0.003858210000000195}\n{\"seq\": 5, \"start\": 3.474849634, \"ok\": true, \"elapsed\": 0.002273889000000029}\n{\"seq\": 6, \"start\": 3.577321688, \"ok\": true, \"elapsed\": 0.004139310999999868}\n{\"seq\": 7, \"start\": 3.681628207, \"ok\": true, \"elapsed\": 0.002893000999999895}\n{\"seq\": 8, \"start\": 3.784689691, \"ok\": true, \"elapsed\": 0.005857473999999918}\n{\"seq\": 9, \"start\": 3.890762097, \"ok\": true, \"elapsed\": 0.0039052809999997606}\n{\"seq\": 10, \"start\": 3.994935115, \"ok\": true, \"elapsed\": 0.004838550999999747}\n{\"seq\": 11, \"start\": 4.118637965, \"ok\": true, \"elapsed\": 0.045619899000000075}\n"
+      },
+      "after": {
+        "guest_time": 17.55728444,
+        "path_guard": {
+          "time": 2.758666095,
+          "state": "ready",
+          "recoveries": 0,
+          "node": "/dev/sda1"
+        },
+        "dm_status": "lab-path: 0 4192256 multipath 2 0 0 0 1 1 A 0 1 0 8:1 A 0 \nlabrescue-shared: 0 524288 linear \nlabrescue-ubuntu: 0 2097152 linear \n",
+        "dm_table": "lab-path: 0 4192256 multipath 3 queue_if_no_path queue_mode bio 0 1 1 round-robin 0 1 1 8:1 1 \nlabrescue-shared: 0 524288 linear 252:0 2099200\nlabrescue-ubuntu: 0 2097152 linear 252:0 2048\n",
+        "kernel_queue_timeout_seconds": "6",
+        "workload_process": {
+          "pid": 174,
+          "exit_code": null,
+          "start_ticks": "304"
+        },
+        "workload": "{\"seq\": 1, \"start\": 3.058962782, \"ok\": true, \"elapsed\": 0.006254348000000132}\n{\"seq\": 2, \"start\": 3.165417979, \"ok\": true, \"elapsed\": 0.0026052650000001343}\n{\"seq\": 3, \"start\": 3.268192423, \"ok\": true, \"elapsed\": 0.0024062090000001035}\n{\"seq\": 4, \"start\": 3.370796709, \"ok\": true, \"elapsed\": 0.003858210000000195}\n{\"seq\": 5, \"start\": 3.474849634, \"ok\": true, \"elapsed\": 0.002273889000000029}\n{\"seq\": 6, \"start\": 3.577321688, \"ok\": true, \"elapsed\": 0.004139310999999868}\n{\"seq\": 7, \"start\": 3.681628207, \"ok\": true, \"elapsed\": 0.002893000999999895}\n{\"seq\": 8, \"start\": 3.784689691, \"ok\": true, \"elapsed\": 0.005857473999999918}\n{\"seq\": 9, \"start\": 3.890762097, \"ok\": true, \"elapsed\": 0.0039052809999997606}\n{\"seq\": 10, \"start\": 3.994935115, \"ok\": true, \"elapsed\": 0.004838550999999747}\n{\"seq\": 11, \"start\": 4.118637965, \"ok\": true, \"elapsed\": 0.045619899000000075}\n{\"seq\": 12, \"start\": 4.264512549, \"ok\": true, \"elapsed\": 12.179267475}\n{\"seq\": 13, \"start\": 16.543922381, \"ok\": true, \"elapsed\": 0.005341479999998455}\n{\"seq\": 14, \"start\": 16.649509394, \"ok\": true, \"elapsed\": 0.007091970000001169}\n{\"seq\": 15, \"start\": 16.756913521, \"ok\": true, \"elapsed\": 0.005931580999998687}\n{\"seq\": 16, \"start\": 16.863115947, \"ok\": true, \"elapsed\": 0.006937090000000978}\n{\"seq\": 17, \"start\": 16.970509697, \"ok\": true, \"elapsed\": 0.006924433999998314}\n{\"seq\": 18, \"start\": 17.077756083, \"ok\": true, \"elapsed\": 0.005970573999999118}\n{\"seq\": 19, \"start\": 17.184079938, \"ok\": true, \"elapsed\": 0.005456742999999875}\n{\"seq\": 20, \"start\": 17.289789905, \"ok\": true, \"elapsed\": 0.005460954000000129}\n{\"seq\": 21, \"start\": 17.395519119, \"ok\": true, \"elapsed\": 0.00685535100000223}\n{\"seq\": 22, \"start\": 17.505368411, \"ok\": true, \"elapsed\": 0.00882897199999988}\n"
+      }
+    },
+    {
+      "run": "20260925-013541-probe-suspend",
+      "raw_report_sha256": "3a014e2c1e3883afd21a0c24de78367e317424123ac806b88c46b442cad42643",
+      "command": [
+        "qemu-system-x86_64",
+        "-machine",
+        "q35",
+        "-accel",
+        "kvm",
+        "-m",
+        "1536",
+        "-smp",
+        "2",
+        "-display",
+        "none",
+        "-nodefaults",
+        "-no-reboot",
+        "-nic",
+        "none",
+        "-smbios",
+        "type=1,product=RAMRescueLab",
+        "-kernel",
+        "lab/work/version-study/kernel7/guest/vmlinuz",
+        "-initrd",
+        "lab/work/version-study/kernel7/guest/initramfs.cpio.gz",
+        "-append",
+        "console=ttyS0 rdinit=/init ram_rescue_lab=1 panic=-1 ram_rescue_mpath=1 ram_rescue_queue_seconds=4",
+        "-serial",
+        "file:/workspace/Project/External-Memo-Rescue-Handler/lab/work/20260925-013541-probe-suspend/console.log",
+        "-serial",
+        "unix:/workspace/Project/External-Memo-Rescue-Handler/lab/work/20260925-013541-probe-suspend/agent.sock,server=on,wait=off",
+        "-serial",
+        "unix:/workspace/Project/External-Memo-Rescue-Handler/lab/work/20260925-013541-probe-suspend/rescue.sock,server=on,wait=off",
+        "-qmp",
+        "unix:/workspace/Project/External-Memo-Rescue-Handler/lab/work/20260925-013541-probe-suspend/qmp.sock,server=on,wait=off",
+        "-device",
+        "qemu-xhci,id=xhci",
+        "-blockdev",
+        "{\"driver\": \"raw\", \"node-name\": \"usbdisk\", \"file\": {\"driver\": \"file\", \"filename\": \"/workspace/Project/External-Memo-Rescue-Handler/lab/work/20260925-013541-probe-suspend/usb.raw\"}}",
+        "-blockdev",
+        "{\"driver\": \"raw\", \"node-name\": \"decoydisk\", \"file\": {\"driver\": \"file\", \"filename\": \"/workspace/Project/External-Memo-Rescue-Handler/lab/work/20260925-013541-probe-suspend/decoy.raw\"}}",
+        "-device",
+        "usb-uas,bus=xhci.0,id=stick,serial=RAMRESCUE-LAB-001,port=1",
+        "-device",
+        "scsi-hd,bus=stick.0,id=lun,drive=usbdisk"
+      ],
+      "build": {
+        "kernel_release": "7.0.0-34-generic",
+        "module_root": "/workspace/Project/External-Memo-Rescue-Handler/lab/work/version-study/kernel7/extracted",
+        "source_commit": "511ef0d176fe7da50fdec2448211738dd2cb6af6",
+        "source_sha256": {
+          "lab/build.py": "b77347cf135399f6febeaac272f85528ba95f217e4375786fae85325f2f85ae5",
+          "ram-rescue-demo/src/rescue.py": "c40649b895ba56ebecbac8a0192c30efbb4ec85bfb29adf36a4f07289f2b0a31",
+          "ram-rescue-demo/src/lvm.conf": "10708bf37ce4b01ec3e7e3e0d3d6394301f0bf3d4046fbd1da8521dad80d0cd3",
+          "lab/guest/agent.py": "3c0f06180aa71ecb508658f6af3fbc1eaca3bf1b217a405301f701153db9c805",
+          "lab/guest/dm_monitor.py": "da64d2011514ecad4e708ad6d1eb1f5dc0104de8eba097ec96fb5ca762298378",
+          "lab/guest/git_workload.py": "c61d4c440a44cdb263f247e868292cea4270a78d59dd537706090909cd7c0538",
+          "lab/guest/init.sh": "7fc37f2d3a97d0489ef534a37ef1a612bee40f1c9c6b62d4d5cba7e6170bf75f",
+          "lab/guest/path_guard.py": "8251b0995d72e17100131d8a88d6f2009213b7c9a7c0580a2e7c4fe3e11e68fb",
+          "lab/guest/root-init.sh": "078ec84bb1f502fc2b80b99b4eef2ee4a40432ccb9a476bf7757952547ca57d9",
+          "lab/guest/ubuntu.py": "224aada1ec5efbd05a1bd6a622a617a911f61760141dce73078553d66923aeb6",
+          "lab/guest/ubuntu_workload.py": "2cb4f4a137fa6b6e8b99d87c29efe89c2dbcc7d7cc7ee814b736a193f667a890",
+          "lab/guest/wire.py": "66180734f19432381ff6fbd3b8853c536d083ee3c681e52864902a91efafe87e",
+          "lab/guest/workload.py": "15d8e159ab16b2e7786aeee10d4be861a6b1cf448bf3ddf16b6a8c64ab72ad2c"
+        },
+        "kernel_sha256": "73d9c6e40b210deb638070d6af591a68bb6d7ff0280d0ec34c9ccf705a4f47ac",
+        "initramfs_sha256": "6f4c6d30d627ae5ff204572e3cdfc472b273ce1238c7c1abffb9e7f8f2e2dcf1",
+        "note": "guest payload copied from working tree; no host identities or passwords"
+      },
+      "runner_sha256": "13138dc7b01472c935c9ad9f2307011a0d77beebf43251cedd492be6eb4af66d",
+      "passed": true,
+      "scenario": "suspended-manager-death",
+      "scope": "Minimal userspace USB/LVM/ext4 root; limitation observation, not successful recovery",
+      "checks": {
+        "still_suspended_beyond_kernel_timeout": true,
+        "no_completions_during_suspend": true,
+        "ram_shell": true
+      },
+      "injection_kind": "Guest-side fault schedule reproduces manager death after noflush suspend; not randomized crash inside Guard",
+      "dm_suspended": {
+        "suspended": "Suspended"
+      },
+      "shell_stalled": true,
+      "stop_guard": {
+        "stopped": true
+      },
+      "suspend_and_kill": {
+        "suspended_then_killed": true
+      },
+      "pre_fault": {
+        "guest_time": 4.698575533,
+        "path_guard": {
+          "time": 3.47052274,
+          "state": "ready",
+          "recoveries": 0,
+          "node": "/dev/sda1"
+        },
+        "dm_status": "lab-path: 0 4192256 multipath 2 0 0 0 1 1 A 0 1 0 8:1 A 0 \nlabrescue-shared: 0 524288 linear \nlabrescue-ubuntu: 0 2097152 linear \n",
+        "dm_table": "lab-path: 0 4192256 multipath 3 queue_if_no_path queue_mode bio 0 1 1 round-robin 0 1 1 8:1 1 \nlabrescue-shared: 0 524288 linear 252:0 2099200\nlabrescue-ubuntu: 0 2097152 linear 252:0 2048\n",
+        "kernel_queue_timeout_seconds": "6",
+        "workload_process": {
+          "pid": 187,
+          "exit_code": null,
+          "start_ticks": "369"
+        },
+        "workload": "{\"seq\": 1, \"start\": 3.715289886, \"ok\": true, \"elapsed\": 0.005025223000000079}\n{\"seq\": 2, \"start\": 3.820610981, \"ok\": true, \"elapsed\": 0.0065605129999997125}\n{\"seq\": 3, \"start\": 3.927431924, \"ok\": true, \"elapsed\": 0.007109192000000153}\n{\"seq\": 4, \"start\": 4.034826618, \"ok\": true, \"elapsed\": 0.006467991000000062}\n{\"seq\": 5, \"start\": 4.141536668, \"ok\": true, \"elapsed\": 0.0024278049999999496}\n{\"seq\": 6, \"start\": 4.244462194, \"ok\": true, \"elapsed\": 0.006262209000000851}\n{\"seq\": 7, \"start\": 4.351032617, \"ok\": true, \"elapsed\": 0.007157141999999617}\n{\"seq\": 8, \"start\": 4.458577544, \"ok\": true, \"elapsed\": 0.007413398000000626}\n{\"seq\": 9, \"start\": 4.566303739, \"ok\": true, \"elapsed\": 0.0074395749999993654}\n{\"seq\": 10, \"start\": 4.674050297, \"ok\": true, \"elapsed\": 0.005761213999999626}\n"
+      },
+      "suspended_early": {
+        "guest_time": 5.882116619,
+        "path_guard": {
+          "time": 3.47052274,
+          "state": "ready",
+          "recoveries": 0,
+          "node": "/dev/sda1"
+        },
+        "dm_status": "lab-path: 0 4192256 multipath 2 0 0 0 1 1 E 0 1 0 8:1 F 1 \nlabrescue-shared: 0 524288 linear \nlabrescue-ubuntu: 0 2097152 linear \n",
+        "dm_table": "lab-path: 0 4192256 multipath 2 queue_mode bio 0 1 1 round-robin 0 1 1 8:1 1 \nlabrescue-shared: 0 524288 linear 252:0 2099200\nlabrescue-ubuntu: 0 2097152 linear 252:0 2048\n",
+        "kernel_queue_timeout_seconds": "6",
+        "workload_process": {
+          "pid": 187,
+          "exit_code": null,
+          "start_ticks": "369"
+        },
+        "workload": "{\"seq\": 1, \"start\": 3.715289886, \"ok\": true, \"elapsed\": 0.005025223000000079}\n{\"seq\": 2, \"start\": 3.820610981, \"ok\": true, \"elapsed\": 0.0065605129999997125}\n{\"seq\": 3, \"start\": 3.927431924, \"ok\": true, \"elapsed\": 0.007109192000000153}\n{\"seq\": 4, \"start\": 4.034826618, \"ok\": true, \"elapsed\": 0.006467991000000062}\n{\"seq\": 5, \"start\": 4.141536668, \"ok\": true, \"elapsed\": 0.0024278049999999496}\n{\"seq\": 6, \"start\": 4.244462194, \"ok\": true, \"elapsed\": 0.006262209000000851}\n{\"seq\": 7, \"start\": 4.351032617, \"ok\": true, \"elapsed\": 0.007157141999999617}\n{\"seq\": 8, \"start\": 4.458577544, \"ok\": true, \"elapsed\": 0.007413398000000626}\n{\"seq\": 9, \"start\": 4.566303739, \"ok\": true, \"elapsed\": 0.0074395749999993654}\n{\"seq\": 10, \"start\": 4.674050297, \"ok\": true, \"elapsed\": 0.005761213999999626}\n{\"seq\": 11, \"start\": 4.78241597, \"ok\": true, \"elapsed\": 0.003619452000000578}\n{\"seq\": 12, \"start\": 4.886361613, \"ok\": true, \"elapsed\": 0.006768899999999967}\n{\"seq\": 13, \"start\": 4.993413225, \"ok\": true, \"elapsed\": 0.01371130400000009}\n"
+      },
+      "suspended_late": {
+        "guest_time": 14.983402966,
+        "path_guard": {
+          "time": 3.47052274,
+          "state": "ready",
+          "recoveries": 0,
+          "node": "/dev/sda1"
+        },
+        "dm_status": "lab-path: 0 4192256 multipath 2 0 0 0 1 1 E 0 1 0 8:1 F 1 \nlabrescue-shared: 0 524288 linear \nlabrescue-ubuntu: 0 2097152 linear \n",
+        "dm_table": "lab-path: 0 4192256 multipath 2 queue_mode bio 0 1 1 round-robin 0 1 1 8:1 1 \nlabrescue-shared: 0 524288 linear 252:0 2099200\nlabrescue-ubuntu: 0 2097152 linear 252:0 2048\n",
+        "kernel_queue_timeout_seconds": "6",
+        "workload_process": {
+          "pid": 187,
+          "exit_code": null,
+          "start_ticks": "369"
+        },
+        "workload": "{\"seq\": 1, \"start\": 3.715289886, \"ok\": true, \"elapsed\": 0.005025223000000079}\n{\"seq\": 2, \"start\": 3.820610981, \"ok\": true, \"elapsed\": 0.0065605129999997125}\n{\"seq\": 3, \"start\": 3.927431924, \"ok\": true, \"elapsed\": 0.007109192000000153}\n{\"seq\": 4, \"start\": 4.034826618, \"ok\": true, \"elapsed\": 0.006467991000000062}\n{\"seq\": 5, \"start\": 4.141536668, \"ok\": true, \"elapsed\": 0.0024278049999999496}\n{\"seq\": 6, \"start\": 4.244462194, \"ok\": true, \"elapsed\": 0.006262209000000851}\n{\"seq\": 7, \"start\": 4.351032617, \"ok\": true, \"elapsed\": 0.007157141999999617}\n{\"seq\": 8, \"start\": 4.458577544, \"ok\": true, \"elapsed\": 0.007413398000000626}\n{\"seq\": 9, \"start\": 4.566303739, \"ok\": true, \"elapsed\": 0.0074395749999993654}\n{\"seq\": 10, \"start\": 4.674050297, \"ok\": true, \"elapsed\": 0.005761213999999626}\n{\"seq\": 11, \"start\": 4.78241597, \"ok\": true, \"elapsed\": 0.003619452000000578}\n{\"seq\": 12, \"start\": 4.886361613, \"ok\": true, \"elapsed\": 0.006768899999999967}\n{\"seq\": 13, \"start\": 4.993413225, \"ok\": true, \"elapsed\": 0.01371130400000009}\n"
+      }
+    }
+  ],
+  "notes": [
+    "No host kernel package installed; image and modules extracted privately.",
+    "Boundary probe passed means the predicted limitation is observed.",
+    "These concurrent and short samples are not a controlled performance benchmark.",
+    "Existing 6.8 results correspond to earlier source commits; new runner/build hashes preserve provenance."
+  ]
+}
