@@ -1,0 +1,23 @@
+{
+  "date": "2026-09-25",
+  "kernel": "6.8.0-139-generic",
+  "observed_read_only": true,
+  "storage": {
+    "usb_disk": "sda",
+    "root": "sda3 -> vgportable-ubuntu (ext4)",
+    "workspace": "sda3 -> vgportable-shared (ext4)",
+    "other_mounted_partitions": [
+      "sda1 vfat /boot/efi",
+      "sda2 exfat EXCHANGE"
+    ],
+    "swap": "/swap.img: 8 GiB active, 0 used at observation; stored on root",
+    "usb_transport": "uas; observed under xhci root port, distinct from separately listed external hub"
+  },
+  "versions": {
+    "qemu": "8.2.2 (Ubuntu 1:8.2.2+ds-0ubuntu1.18)",
+    "multipath-tools": "0.9.4-5ubuntu8.2",
+    "lvm2": "2.03.16-3ubuntu3.2",
+    "libdevmapper": "1.02.185-3ubuntu3.2"
+  },
+  "privacy": "Serials, UUIDs, host identity and unrelated disk inventory intentionally not included."
+}

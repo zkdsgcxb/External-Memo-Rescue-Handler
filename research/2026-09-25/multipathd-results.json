@@ -1,0 +1,983 @@
+{
+  "date": "2026-09-25",
+  "packages": {
+    "multipath-tools": "0.9.4-5ubuntu8.2",
+    "lvm2": "2.03.16-3ubuntu3.2",
+    "libdevmapper": "2:1.02.185-3ubuntu3.2"
+  },
+  "kernel": "6.8.0-139-generic",
+  "runs": [
+    {
+      "run_id": "20260925-005100",
+      "raw_report": "lab/work/upstream-study/20260925-005100/report.json",
+      "raw_report_sha256": "a319e4a747057d4ba94484ed4b7db17d451844f727e080f983f38f880d421537",
+      "original_runner_sha256": "3e36be811666528834eab8b0c38f2064b7035761163f2fea494eb98ef039f3d0",
+      "initramfs_sha256": "bbd533afaac42df6c20861c3d122f8277b94a9da279a65aa1212c2e8d546185f",
+      "base_initramfs_sha256": "bc2efe6bbf60be49264936c750655e941b75195db75a4a80f9f722d0658ebe6a",
+      "scope": "RAM root, stock multipathd, whole USB disk -> kpartx -> LVM -> ext4 data workload; not Ubuntu root recovery",
+      "deny_rt": false,
+      "wrong_disk": false,
+      "recovery_passed": true,
+      "cpu_measurement": {
+        "sample_seconds": 10.000087963999249,
+        "clock_ticks_per_second": 100,
+        "daemon_cpu_ticks": 1,
+        "cpu_percent_of_one_core": 0.09999912036774511,
+        "scope": "process aggregate ticks include daemon threads; 10s coarse sample; excludes udevd and all other processes; no subsecond peak claim"
+      },
+      "before": {
+        "pid": 117,
+        "wwid": "0QEMU_QEMU_HARDDISK_UPSTREAM-SCSI-001",
+        "daemon_stat": "117 (multipathd) S 112 0 0 0 -1 4194560 4967 0 0 0 0 0 0 0 -100 0 7 0 140 430305280 6912 18446744073709551615 97279898324992 97279898412961 140736125848032 0 0 0 2147217151 0 23043 0 0 0 17 1 99 2 0 0 0 97279898440560 97279898443872 97280561692672 140736125849476 140736125849504 140736125849504 140736125849571 0\n",
+        "daemon_status": "Name:\tmultipathd\nUmask:\t0077\nState:\tS (sleeping)\nTgid:\t117\nNgid:\t0\nPid:\t117\nPPid:\t112\nTracerPid:\t0\nUid:\t0\t0\t0\t0\nGid:\t0\t0\t0\t0\nFDSize:\t64\nGroups:\t \nNStgid:\t117\nNSpid:\t117\nNSpgid:\t0\nNSsid:\t0\nKthread:\t0\nVmPeak:\t  485756 kB\nVmSize:\t  420220 kB\nVmLck:\t  420196 kB\nVmPin:\t       0 kB\nVmHWM:\t   27748 kB\nVmRSS:\t   27748 kB\nRssAnon:\t   18980 kB\nRssFile:\t       8 kB\nRssShmem:\t    8760 kB\nVmData:\t   18676 kB\nVmStk:\t     132 kB\nVmExe:\t      88 kB\nVmLib:\t    6280 kB\nVmPTE:\t     120 kB\nVmSwap:\t       0 kB\nHugetlbPages:\t       0 kB\nCoreDumping:\t0\nTHP_enabled:\t1\nuntag_mask:\t0xffffffffffffffff\nThreads:\t7\nSigQ:\t2/3664\nSigPnd:\t0000000000000000\nShdPnd:\t0000000000000000\nSigBlk:\tfffffffe7ffbeeff\nSigIgn:\t0000000000000000\nSigCgt:\t0000000180005a03\nCapInh:\t0000000000000000\nCapPrm:\t000001ffffffffff\nCapEff:\t000001ffffffffff\nCapBnd:\t000001ffffffffff\nCapAmb:\t0000000000000000\nNoNewPrivs:\t0\nSeccomp:\t0\nSeccomp_filters:\t0\nSpeculation_Store_Bypass:\tvulnerable\nSpeculationIndirectBranch:\talways enabled\nCpus_allowed:\t3\nCpus_allowed_list:\t0-1\nMems_allowed:\t00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000001\nMems_allowed_list:\t0\nvoluntary_ctxt_switches:\t15\nnonvoluntary_ctxt_switches:\t0\nx86_Thread_features:\t\nx86_Thread_features_locked:\t\n",
+        "sched_policy": 2,
+        "sched_priority": 99,
+        "maps": "mpstudy-data: 0 524288 linear 252:1 2048\nprobe: 0 2097152 multipath 1 queue_if_no_path 0 1 1 round-robin 0 1 1 8:0 1 \nprobe1: 0 2093056 linear 252:0 2048\n",
+        "status": "mpstudy-data: 0 524288 linear \nprobe: 0 2097152 multipath 2 0 0 0 1 1 A 0 1 0 8:0 A 0 \nprobe1: 0 2093056 linear \n",
+        "topology": "create: probe (0QEMU_QEMU_HARDDISK_UPSTREAM-SCSI-001) dm-0 QEMU,QEMU HARDDISK\nsize=1.0G features='1 queue_if_no_path' hwhandler='0' wp=rw\n`-+- policy='round-robin 0' prio=1 status=active\n  `- 0:0:0:0 sda 8:0 active ready running\n",
+        "ok": 1
+      },
+      "cycles": [
+        {
+          "deleted_host_time": 11767.036400593,
+          "reattached_host_time": 11767.152511025,
+          "qmp_reattach_seconds": 0.116110431999914,
+          "snapshot": {
+            "pid": 117,
+            "wwid": "0QEMU_QEMU_HARDDISK_UPSTREAM-SCSI-001",
+            "daemon_stat": "117 (multipathd) S 112 0 0 0 -1 4194560 4967 0 0 0 1 1 0 0 -100 0 7 0 140 430305280 6912 18446744073709551615 97279898324992 97279898412961 140736125848032 0 0 0 2147217151 0 23043 0 0 0 17 1 99 2 0 0 0 97279898440560 97279898443872 97280561692672 140736125849476 140736125849504 140736125849504 140736125849571 0\n",
+            "daemon_status": "Name:\tmultipathd\nUmask:\t0077\nState:\tS (sleeping)\nTgid:\t117\nNgid:\t0\nPid:\t117\nPPid:\t112\nTracerPid:\t0\nUid:\t0\t0\t0\t0\nGid:\t0\t0\t0\t0\nFDSize:\t64\nGroups:\t \nNStgid:\t117\nNSpid:\t117\nNSpgid:\t0\nNSsid:\t0\nKthread:\t0\nVmPeak:\t  485756 kB\nVmSize:\t  420220 kB\nVmLck:\t  420196 kB\nVmPin:\t       0 kB\nVmHWM:\t   27748 kB\nVmRSS:\t   27748 kB\nRssAnon:\t   18980 kB\nRssFile:\t       8 kB\nRssShmem:\t    8760 kB\nVmData:\t   18676 kB\nVmStk:\t     132 kB\nVmExe:\t      88 kB\nVmLib:\t    6280 kB\nVmPTE:\t     120 kB\nVmSwap:\t       0 kB\nHugetlbPages:\t       0 kB\nCoreDumping:\t0\nTHP_enabled:\t1\nuntag_mask:\t0xffffffffffffffff\nThreads:\t7\nSigQ:\t1/3664\nSigPnd:\t0000000000000000\nShdPnd:\t0000000000000000\nSigBlk:\tfffffffe7ffbeeff\nSigIgn:\t0000000000000000\nSigCgt:\t0000000180005a03\nCapInh:\t0000000000000000\nCapPrm:\t000001ffffffffff\nCapEff:\t000001ffffffffff\nCapBnd:\t000001ffffffffff\nCapAmb:\t0000000000000000\nNoNewPrivs:\t0\nSeccomp:\t0\nSeccomp_filters:\t0\nSpeculation_Store_Bypass:\tvulnerable\nSpeculationIndirectBranch:\talways enabled\nCpus_allowed:\t3\nCpus_allowed_list:\t0-1\nMems_allowed:\t00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000001\nMems_allowed_list:\t0\nvoluntary_ctxt_switches:\t40\nnonvoluntary_ctxt_switches:\t0\nx86_Thread_features:\t\nx86_Thread_features_locked:\t\n",
+            "sched_policy": 2,
+            "sched_priority": 99,
+            "maps": "mpstudy-data: 0 524288 linear 252:1 2048\nprobe: 0 2097152 multipath 1 queue_if_no_path 0 1 1 round-robin 0 1 1 8:0 1 \nprobe1: 0 2093056 linear 252:0 2048\n",
+            "status": "mpstudy-data: 0 524288 linear \nprobe: 0 2097152 multipath 2 0 0 0 1 1 A 0 1 0 8:0 A 0 \nprobe1: 0 2093056 linear \n",
+            "topology": "probe (0QEMU_QEMU_HARDDISK_UPSTREAM-SCSI-001) dm-0 QEMU,QEMU HARDDISK\nsize=1.0G features='1 queue_if_no_path' hwhandler='0' wp=rw\n`-+- policy='round-robin 0' prio=1 status=active\n  `- 0:0:0:0 sda 8:0 active ready running\n",
+            "ok": 142,
+            "errors": [],
+            "max_seconds": 0.4132530870000011
+          }
+        },
+        {
+          "deleted_host_time": 11772.343964672,
+          "reattached_host_time": 11772.458949237,
+          "qmp_reattach_seconds": 0.11498456499975873,
+          "snapshot": {
+            "pid": 117,
+            "wwid": "0QEMU_QEMU_HARDDISK_UPSTREAM-SCSI-001",
+            "daemon_stat": "117 (multipathd) S 112 0 0 0 -1 4194560 4967 0 0 0 1 2 0 0 -100 0 7 0 140 430305280 6912 18446744073709551615 97279898324992 97279898412961 140736125848032 0 0 0 2147217151 0 23043 0 0 0 17 1 99 2 0 0 0 97279898440560 97279898443872 97280561692672 140736125849476 140736125849504 140736125849504 140736125849571 0\n",
+            "daemon_status": "Name:\tmultipathd\nUmask:\t0077\nState:\tS (sleeping)\nTgid:\t117\nNgid:\t0\nPid:\t117\nPPid:\t112\nTracerPid:\t0\nUid:\t0\t0\t0\t0\nGid:\t0\t0\t0\t0\nFDSize:\t64\nGroups:\t \nNStgid:\t117\nNSpid:\t117\nNSpgid:\t0\nNSsid:\t0\nKthread:\t0\nVmPeak:\t  485756 kB\nVmSize:\t  420220 kB\nVmLck:\t  420196 kB\nVmPin:\t       0 kB\nVmHWM:\t   27748 kB\nVmRSS:\t   27748 kB\nRssAnon:\t   18980 kB\nRssFile:\t       8 kB\nRssShmem:\t    8760 kB\nVmData:\t   18676 kB\nVmStk:\t     132 kB\nVmExe:\t      88 kB\nVmLib:\t    6280 kB\nVmPTE:\t     120 kB\nVmSwap:\t       0 kB\nHugetlbPages:\t       0 kB\nCoreDumping:\t0\nTHP_enabled:\t1\nuntag_mask:\t0xffffffffffffffff\nThreads:\t7\nSigQ:\t1/3664\nSigPnd:\t0000000000000000\nShdPnd:\t0000000000000000\nSigBlk:\tfffffffe7ffbeeff\nSigIgn:\t0000000000000000\nSigCgt:\t0000000180005a03\nCapInh:\t0000000000000000\nCapPrm:\t000001ffffffffff\nCapEff:\t000001ffffffffff\nCapBnd:\t000001ffffffffff\nCapAmb:\t0000000000000000\nNoNewPrivs:\t0\nSeccomp:\t0\nSeccomp_filters:\t0\nSpeculation_Store_Bypass:\tvulnerable\nSpeculationIndirectBranch:\talways enabled\nCpus_allowed:\t3\nCpus_allowed_list:\t0-1\nMems_allowed:\t00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000001\nMems_allowed_list:\t0\nvoluntary_ctxt_switches:\t49\nnonvoluntary_ctxt_switches:\t0\nx86_Thread_features:\t\nx86_Thread_features_locked:\t\n",
+            "sched_policy": 2,
+            "sched_priority": 99,
+            "maps": "mpstudy-data: 0 524288 linear 252:1 2048\nprobe: 0 2097152 multipath 1 queue_if_no_path 0 1 1 round-robin 0 1 1 8:0 1 \nprobe1: 0 2093056 linear 252:0 2048\n",
+            "status": "mpstudy-data: 0 524288 linear \nprobe: 0 2097152 multipath 2 0 0 0 1 1 A 0 1 0 8:0 A 0 \nprobe1: 0 2093056 linear \n",
+            "topology": "probe (0QEMU_QEMU_HARDDISK_UPSTREAM-SCSI-001) dm-0 QEMU,QEMU HARDDISK\nsize=1.0G features='1 queue_if_no_path' hwhandler='0' wp=rw\n`-+- policy='round-robin 0' prio=1 status=active\n  `- 0:0:0:0 sda 8:0 active ready running\n",
+            "ok": 187,
+            "errors": [],
+            "max_seconds": 0.4590395479999998
+          }
+        },
+        {
+          "deleted_host_time": 11777.659857761,
+          "reattached_host_time": 11777.777378795,
+          "qmp_reattach_seconds": 0.11752103399885527,
+          "snapshot": {
+            "pid": 117,
+            "wwid": "0QEMU_QEMU_HARDDISK_UPSTREAM-SCSI-001",
+            "daemon_stat": "117 (multipathd) S 112 0 0 0 -1 4194560 4967 0 0 0 2 2 0 0 -100 0 7 0 140 430305280 6912 18446744073709551615 97279898324992 97279898412961 140736125848032 0 0 0 2147217151 0 23043 0 0 0 17 1 99 2 0 0 0 97279898440560 97279898443872 97280561692672 140736125849476 140736125849504 140736125849504 140736125849571 0\n",
+            "daemon_status": "Name:\tmultipathd\nUmask:\t0077\nState:\tS (sleeping)\nTgid:\t117\nNgid:\t0\nPid:\t117\nPPid:\t112\nTracerPid:\t0\nUid:\t0\t0\t0\t0\nGid:\t0\t0\t0\t0\nFDSize:\t64\nGroups:\t \nNStgid:\t117\nNSpid:\t117\nNSpgid:\t0\nNSsid:\t0\nKthread:\t0\nVmPeak:\t  485756 kB\nVmSize:\t  420220 kB\nVmLck:\t  420196 kB\nVmPin:\t       0 kB\nVmHWM:\t   27748 kB\nVmRSS:\t   27748 kB\nRssAnon:\t   18980 kB\nRssFile:\t       8 kB\nRssShmem:\t    8760 kB\nVmData:\t   18676 kB\nVmStk:\t     132 kB\nVmExe:\t      88 kB\nVmLib:\t    6280 kB\nVmPTE:\t     120 kB\nVmSwap:\t       0 kB\nHugetlbPages:\t       0 kB\nCoreDumping:\t0\nTHP_enabled:\t1\nuntag_mask:\t0xffffffffffffffff\nThreads:\t7\nSigQ:\t1/3664\nSigPnd:\t0000000000000000\nShdPnd:\t0000000000000000\nSigBlk:\tfffffffe7ffbeeff\nSigIgn:\t0000000000000000\nSigCgt:\t0000000180005a03\nCapInh:\t0000000000000000\nCapPrm:\t000001ffffffffff\nCapEff:\t000001ffffffffff\nCapBnd:\t000001ffffffffff\nCapAmb:\t0000000000000000\nNoNewPrivs:\t0\nSeccomp:\t0\nSeccomp_filters:\t0\nSpeculation_Store_Bypass:\tvulnerable\nSpeculationIndirectBranch:\talways enabled\nCpus_allowed:\t3\nCpus_allowed_list:\t0-1\nMems_allowed:\t00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000001\nMems_allowed_list:\t0\nvoluntary_ctxt_switches:\t60\nnonvoluntary_ctxt_switches:\t0\nx86_Thread_features:\t\nx86_Thread_features_locked:\t\n",
+            "sched_policy": 2,
+            "sched_priority": 99,
+            "maps": "mpstudy-data: 0 524288 linear 252:1 2048\nprobe: 0 2097152 multipath 1 queue_if_no_path 0 1 1 round-robin 0 1 1 8:0 1 \nprobe1: 0 2093056 linear 252:0 2048\n",
+            "status": "mpstudy-data: 0 524288 linear \nprobe: 0 2097152 multipath 2 0 0 0 1 1 A 0 1 0 8:0 A 0 \nprobe1: 0 2093056 linear \n",
+            "topology": "probe (0QEMU_QEMU_HARDDISK_UPSTREAM-SCSI-001) dm-0 QEMU,QEMU HARDDISK\nsize=1.0G features='1 queue_if_no_path' hwhandler='0' wp=rw\n`-+- policy='round-robin 0' prio=1 status=active\n  `- 0:0:0:0 sda 8:0 active ready running\n",
+            "ok": 231,
+            "errors": [],
+            "max_seconds": 0.5115900139999994
+          }
+        }
+      ],
+      "validation": {
+        "id": 6,
+        "validated": true,
+        "records": 233
+      },
+      "qemu_command": [
+        "qemu-system-x86_64",
+        "-machine",
+        "q35",
+        "-accel",
+        "kvm",
+        "-m",
+        "1024",
+        "-smp",
+        "2",
+        "-display",
+        "none",
+        "-nodefaults",
+        "-no-reboot",
+        "-nic",
+        "none",
+        "-kernel",
+        "/workspace/Project/External-Memo-Rescue-Handler/lab/work/vmlinuz",
+        "-initrd",
+        "/workspace/Project/External-Memo-Rescue-Handler/lab/work/upstream-study/20260925-005100/initramfs.cpio.gz",
+        "-append",
+        "console=ttyS0 rdinit=/init panic=-1",
+        "-serial",
+        "file:/workspace/Project/External-Memo-Rescue-Handler/lab/work/upstream-study/20260925-005100/console.log",
+        "-serial",
+        "unix:/workspace/Project/External-Memo-Rescue-Handler/lab/work/upstream-study/20260925-005100/agent.sock,server=on,wait=off",
+        "-qmp",
+        "unix:/workspace/Project/External-Memo-Rescue-Handler/lab/work/upstream-study/20260925-005100/qmp.sock,server=on,wait=off",
+        "-device",
+        "qemu-xhci,id=xhci",
+        "-blockdev",
+        "{\"driver\": \"raw\", \"node-name\": \"disk\", \"file\": {\"driver\": \"file\", \"filename\": \"/workspace/Project/External-Memo-Rescue-Handler/lab/work/upstream-study/20260925-005100/disk.raw\"}}",
+        "-device",
+        "usb-uas,bus=xhci.0,id=stick,serial=UPSTREAM-USB-001,port=1",
+        "-device",
+        "scsi-hd,bus=stick.0,id=lun,drive=disk,serial=UPSTREAM-SCSI-001"
+      ],
+      "guest_payload_sha256": "381c0a115f2102510fdb03a0e7c4f2dc072e6316f9f0703f69d624afab08a90d",
+      "configuration": "defaults { allow_usb_devices yes; find_multipaths strict; polling_interval 1; max_polling_interval 4; path_checker tur; detect_prio no; prio const; path_selector \"round-robin 0\"; no_path_retry 8; flush_on_last_del no; recheck_wwid yes; user_friendly_names no; } blacklist { wwid \".*\"; } blacklist_exceptions { property \"^ID_SERIAL$\"; wwid \"0QEMU_QEMU_HARDDISK_UPSTREAM-SCSI-001\"; } multipaths { multipath { wwid \"0QEMU_QEMU_HARDDISK_UPSTREAM-SCSI-001\"; alias probe; } }",
+      "configuration_note": "Semicolons here separate lines for display; generated multipath.conf uses newlines. wwids file contains only the enrolled WWID. Exact template is in probe source.",
+      "command": "python3 research/2026-09-25/multipathd_probe.py"
+    },
+    {
+      "run_id": "20260925-005151",
+      "raw_report": "lab/work/upstream-study/20260925-005151/report.json",
+      "raw_report_sha256": "6c0d45022e6d3a16c8bc4abe7f31b555a396120c146756be900e5130c8bf1dd7",
+      "original_runner_sha256": "6f84a34e97118dce841e9c0c0c453e6244ea2e604dfd0d33dd11da40278d47cb",
+      "initramfs_sha256": "69ae6ca4b779c25a06de3908e3b075960567a85c5df202823821bc8199f8eab4",
+      "base_initramfs_sha256": "bc2efe6bbf60be49264936c750655e941b75195db75a4a80f9f722d0658ebe6a",
+      "scope": "RAM root, stock multipathd, whole USB disk -> kpartx -> LVM -> ext4 data workload; not Ubuntu root recovery",
+      "deny_rt": true,
+      "wrong_disk": false,
+      "recovery_passed": true,
+      "cpu_measurement": {
+        "sample_seconds": 10.00010474300143,
+        "clock_ticks_per_second": 100,
+        "daemon_cpu_ticks": 1,
+        "cpu_percent_of_one_core": 0.09999895258095669,
+        "scope": "process aggregate ticks include daemon threads; 10s coarse sample; excludes udevd and all other processes; no subsecond peak claim"
+      },
+      "before": {
+        "pid": 117,
+        "wwid": "0QEMU_QEMU_HARDDISK_UPSTREAM-SCSI-001",
+        "daemon_stat": "117 (multipathd) S 112 0 0 0 -1 4194560 5039 0 0 0 0 0 0 0 20 0 7 0 142 430305280 6880 18446744073709551615 95334026682368 95334026770337 140731557998016 0 0 0 2147217151 0 23043 0 0 0 17 0 0 0 0 0 0 95334026797936 95334026801248 95334947561472 140731558006644 140731558006672 140731558006672 140731558006755 0\n",
+        "daemon_status": "Name:\tmultipathd\nUmask:\t0077\nState:\tS (sleeping)\nTgid:\t117\nNgid:\t0\nPid:\t117\nPPid:\t112\nTracerPid:\t0\nUid:\t0\t0\t0\t0\nGid:\t0\t0\t0\t0\nFDSize:\t64\nGroups:\t \nNStgid:\t117\nNSpid:\t117\nNSpgid:\t0\nNSsid:\t0\nKthread:\t0\nVmPeak:\t  485756 kB\nVmSize:\t  420220 kB\nVmLck:\t  420196 kB\nVmPin:\t       0 kB\nVmHWM:\t   27748 kB\nVmRSS:\t   27748 kB\nRssAnon:\t   18980 kB\nRssFile:\t       8 kB\nRssShmem:\t    8760 kB\nVmData:\t   18676 kB\nVmStk:\t     132 kB\nVmExe:\t      88 kB\nVmLib:\t    6280 kB\nVmPTE:\t     124 kB\nVmSwap:\t       0 kB\nHugetlbPages:\t       0 kB\nCoreDumping:\t0\nTHP_enabled:\t1\nuntag_mask:\t0xffffffffffffffff\nThreads:\t7\nSigQ:\t2/3664\nSigPnd:\t0000000000000000\nShdPnd:\t0000000000000000\nSigBlk:\tfffffffe7ffbeeff\nSigIgn:\t0000000000000000\nSigCgt:\t0000000180005a03\nCapInh:\t0000000000000000\nCapPrm:\t000001ffff7fffff\nCapEff:\t000001ffff7fffff\nCapBnd:\t000001ffff7fffff\nCapAmb:\t0000000000000000\nNoNewPrivs:\t0\nSeccomp:\t0\nSeccomp_filters:\t0\nSpeculation_Store_Bypass:\tvulnerable\nSpeculationIndirectBranch:\talways enabled\nCpus_allowed:\t3\nCpus_allowed_list:\t0-1\nMems_allowed:\t00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000001\nMems_allowed_list:\t0\nvoluntary_ctxt_switches:\t14\nnonvoluntary_ctxt_switches:\t2\nx86_Thread_features:\t\nx86_Thread_features_locked:\t\n",
+        "sched_policy": 0,
+        "sched_priority": 0,
+        "maps": "mpstudy-data: 0 524288 linear 252:1 2048\nprobe: 0 2097152 multipath 1 queue_if_no_path 0 1 1 round-robin 0 1 1 8:0 1 \nprobe1: 0 2093056 linear 252:0 2048\n",
+        "status": "mpstudy-data: 0 524288 linear \nprobe: 0 2097152 multipath 2 0 0 0 1 1 A 0 1 0 8:0 A 0 \nprobe1: 0 2093056 linear \n",
+        "topology": "create: probe (0QEMU_QEMU_HARDDISK_UPSTREAM-SCSI-001) dm-0 QEMU,QEMU HARDDISK\nsize=1.0G features='1 queue_if_no_path' hwhandler='0' wp=rw\n`-+- policy='round-robin 0' prio=1 status=active\n  `- 0:0:0:0 sda 8:0 active ready running\n",
+        "ok": 1
+      },
+      "cycles": [
+        {
+          "deleted_host_time": 11818.670253948,
+          "reattached_host_time": 11818.783990452,
+          "qmp_reattach_seconds": 0.11373650400128099,
+          "snapshot": {
+            "pid": 117,
+            "wwid": "0QEMU_QEMU_HARDDISK_UPSTREAM-SCSI-001",
+            "daemon_stat": "117 (multipathd) S 112 0 0 0 -1 4194560 5039 0 0 0 0 1 0 0 20 0 7 0 142 430305280 6880 18446744073709551615 95334026682368 95334026770337 140731557998016 0 0 0 2147217151 0 23043 0 0 0 17 0 0 0 0 0 0 95334026797936 95334026801248 95334947561472 140731558006644 140731558006672 140731558006672 140731558006755 0\n",
+            "daemon_status": "Name:\tmultipathd\nUmask:\t0077\nState:\tS (sleeping)\nTgid:\t117\nNgid:\t0\nPid:\t117\nPPid:\t112\nTracerPid:\t0\nUid:\t0\t0\t0\t0\nGid:\t0\t0\t0\t0\nFDSize:\t64\nGroups:\t \nNStgid:\t117\nNSpid:\t117\nNSpgid:\t0\nNSsid:\t0\nKthread:\t0\nVmPeak:\t  485756 kB\nVmSize:\t  420220 kB\nVmLck:\t  420196 kB\nVmPin:\t       0 kB\nVmHWM:\t   27748 kB\nVmRSS:\t   27748 kB\nRssAnon:\t   18980 kB\nRssFile:\t       8 kB\nRssShmem:\t    8760 kB\nVmData:\t   18676 kB\nVmStk:\t     132 kB\nVmExe:\t      88 kB\nVmLib:\t    6280 kB\nVmPTE:\t     124 kB\nVmSwap:\t       0 kB\nHugetlbPages:\t       0 kB\nCoreDumping:\t0\nTHP_enabled:\t1\nuntag_mask:\t0xffffffffffffffff\nThreads:\t7\nSigQ:\t1/3664\nSigPnd:\t0000000000000000\nShdPnd:\t0000000000000000\nSigBlk:\tfffffffe7ffbeeff\nSigIgn:\t0000000000000000\nSigCgt:\t0000000180005a03\nCapInh:\t0000000000000000\nCapPrm:\t000001ffff7fffff\nCapEff:\t000001ffff7fffff\nCapBnd:\t000001ffff7fffff\nCapAmb:\t0000000000000000\nNoNewPrivs:\t0\nSeccomp:\t0\nSeccomp_filters:\t0\nSpeculation_Store_Bypass:\tvulnerable\nSpeculationIndirectBranch:\talways enabled\nCpus_allowed:\t3\nCpus_allowed_list:\t0-1\nMems_allowed:\t00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000001\nMems_allowed_list:\t0\nvoluntary_ctxt_switches:\t34\nnonvoluntary_ctxt_switches:\t2\nx86_Thread_features:\t\nx86_Thread_features_locked:\t\n",
+            "sched_policy": 0,
+            "sched_priority": 0,
+            "maps": "mpstudy-data: 0 524288 linear 252:1 2048\nprobe: 0 2097152 multipath 1 queue_if_no_path 0 1 1 round-robin 0 1 1 8:0 1 \nprobe1: 0 2093056 linear 252:0 2048\n",
+            "status": "mpstudy-data: 0 524288 linear \nprobe: 0 2097152 multipath 2 0 0 0 1 1 A 0 1 0 8:0 A 0 \nprobe1: 0 2093056 linear \n",
+            "topology": "probe (0QEMU_QEMU_HARDDISK_UPSTREAM-SCSI-001) dm-0 QEMU,QEMU HARDDISK\nsize=1.0G features='1 queue_if_no_path' hwhandler='0' wp=rw\n`-+- policy='round-robin 0' prio=1 status=active\n  `- 0:0:0:0 sda 8:0 active ready running\n",
+            "ok": 140,
+            "errors": [],
+            "max_seconds": 0.50076009
+          }
+        },
+        {
+          "deleted_host_time": 11823.960220726,
+          "reattached_host_time": 11824.077489168,
+          "qmp_reattach_seconds": 0.11726844199984043,
+          "snapshot": {
+            "pid": 117,
+            "wwid": "0QEMU_QEMU_HARDDISK_UPSTREAM-SCSI-001",
+            "daemon_stat": "117 (multipathd) S 112 0 0 0 -1 4194560 5039 0 0 0 1 2 0 0 20 0 7 0 142 430305280 6880 18446744073709551615 95334026682368 95334026770337 140731557998016 0 0 0 2147217151 0 23043 0 0 0 17 0 0 0 0 0 0 95334026797936 95334026801248 95334947561472 140731558006644 140731558006672 140731558006672 140731558006755 0\n",
+            "daemon_status": "Name:\tmultipathd\nUmask:\t0077\nState:\tS (sleeping)\nTgid:\t117\nNgid:\t0\nPid:\t117\nPPid:\t112\nTracerPid:\t0\nUid:\t0\t0\t0\t0\nGid:\t0\t0\t0\t0\nFDSize:\t64\nGroups:\t \nNStgid:\t117\nNSpid:\t117\nNSpgid:\t0\nNSsid:\t0\nKthread:\t0\nVmPeak:\t  485756 kB\nVmSize:\t  420220 kB\nVmLck:\t  420196 kB\nVmPin:\t       0 kB\nVmHWM:\t   27748 kB\nVmRSS:\t   27748 kB\nRssAnon:\t   18980 kB\nRssFile:\t       8 kB\nRssShmem:\t    8760 kB\nVmData:\t   18676 kB\nVmStk:\t     132 kB\nVmExe:\t      88 kB\nVmLib:\t    6280 kB\nVmPTE:\t     124 kB\nVmSwap:\t       0 kB\nHugetlbPages:\t       0 kB\nCoreDumping:\t0\nTHP_enabled:\t1\nuntag_mask:\t0xffffffffffffffff\nThreads:\t7\nSigQ:\t1/3664\nSigPnd:\t0000000000000000\nShdPnd:\t0000000000000000\nSigBlk:\tfffffffe7ffbeeff\nSigIgn:\t0000000000000000\nSigCgt:\t0000000180005a03\nCapInh:\t0000000000000000\nCapPrm:\t000001ffff7fffff\nCapEff:\t000001ffff7fffff\nCapBnd:\t000001ffff7fffff\nCapAmb:\t0000000000000000\nNoNewPrivs:\t0\nSeccomp:\t0\nSeccomp_filters:\t0\nSpeculation_Store_Bypass:\tvulnerable\nSpeculationIndirectBranch:\talways enabled\nCpus_allowed:\t3\nCpus_allowed_list:\t0-1\nMems_allowed:\t00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000001\nMems_allowed_list:\t0\nvoluntary_ctxt_switches:\t42\nnonvoluntary_ctxt_switches:\t2\nx86_Thread_features:\t\nx86_Thread_features_locked:\t\n",
+            "sched_policy": 0,
+            "sched_priority": 0,
+            "maps": "mpstudy-data: 0 524288 linear 252:1 2048\nprobe: 0 2097152 multipath 1 queue_if_no_path 0 1 1 round-robin 0 1 1 8:0 1 \nprobe1: 0 2093056 linear 252:0 2048\n",
+            "status": "mpstudy-data: 0 524288 linear \nprobe: 0 2097152 multipath 2 0 0 0 1 1 A 0 1 0 8:0 A 0 \nprobe1: 0 2093056 linear \n",
+            "topology": "probe (0QEMU_QEMU_HARDDISK_UPSTREAM-SCSI-001) dm-0 QEMU,QEMU HARDDISK\nsize=1.0G features='1 queue_if_no_path' hwhandler='0' wp=rw\n`-+- policy='round-robin 0' prio=1 status=active\n  `- 0:0:0:0 sda 8:0 active ready running\n",
+            "ok": 185,
+            "errors": [],
+            "max_seconds": 0.50076009
+          }
+        },
+        {
+          "deleted_host_time": 11829.268834458,
+          "reattached_host_time": 11829.384130651,
+          "qmp_reattach_seconds": 0.11529619300017657,
+          "snapshot": {
+            "pid": 117,
+            "wwid": "0QEMU_QEMU_HARDDISK_UPSTREAM-SCSI-001",
+            "daemon_stat": "117 (multipathd) S 112 0 0 0 -1 4194560 5039 0 0 0 1 2 0 0 20 0 7 0 142 430305280 6880 18446744073709551615 95334026682368 95334026770337 140731557998016 0 0 0 2147217151 0 23043 0 0 0 17 0 0 0 0 0 0 95334026797936 95334026801248 95334947561472 140731558006644 140731558006672 140731558006672 140731558006755 0\n",
+            "daemon_status": "Name:\tmultipathd\nUmask:\t0077\nState:\tS (sleeping)\nTgid:\t117\nNgid:\t0\nPid:\t117\nPPid:\t112\nTracerPid:\t0\nUid:\t0\t0\t0\t0\nGid:\t0\t0\t0\t0\nFDSize:\t64\nGroups:\t \nNStgid:\t117\nNSpid:\t117\nNSpgid:\t0\nNSsid:\t0\nKthread:\t0\nVmPeak:\t  485756 kB\nVmSize:\t  420220 kB\nVmLck:\t  420196 kB\nVmPin:\t       0 kB\nVmHWM:\t   27748 kB\nVmRSS:\t   27748 kB\nRssAnon:\t   18980 kB\nRssFile:\t       8 kB\nRssShmem:\t    8760 kB\nVmData:\t   18676 kB\nVmStk:\t     132 kB\nVmExe:\t      88 kB\nVmLib:\t    6280 kB\nVmPTE:\t     124 kB\nVmSwap:\t       0 kB\nHugetlbPages:\t       0 kB\nCoreDumping:\t0\nTHP_enabled:\t1\nuntag_mask:\t0xffffffffffffffff\nThreads:\t7\nSigQ:\t1/3664\nSigPnd:\t0000000000000000\nShdPnd:\t0000000000000000\nSigBlk:\tfffffffe7ffbeeff\nSigIgn:\t0000000000000000\nSigCgt:\t0000000180005a03\nCapInh:\t0000000000000000\nCapPrm:\t000001ffff7fffff\nCapEff:\t000001ffff7fffff\nCapBnd:\t000001ffff7fffff\nCapAmb:\t0000000000000000\nNoNewPrivs:\t0\nSeccomp:\t0\nSeccomp_filters:\t0\nSpeculation_Store_Bypass:\tvulnerable\nSpeculationIndirectBranch:\talways enabled\nCpus_allowed:\t3\nCpus_allowed_list:\t0-1\nMems_allowed:\t00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000001\nMems_allowed_list:\t0\nvoluntary_ctxt_switches:\t49\nnonvoluntary_ctxt_switches:\t2\nx86_Thread_features:\t\nx86_Thread_features_locked:\t\n",
+            "sched_policy": 0,
+            "sched_priority": 0,
+            "maps": "mpstudy-data: 0 524288 linear 252:1 2048\nprobe: 0 2097152 multipath 1 queue_if_no_path 0 1 1 round-robin 0 1 1 8:0 1 \nprobe1: 0 2093056 linear 252:0 2048\n",
+            "status": "mpstudy-data: 0 524288 linear \nprobe: 0 2097152 multipath 2 0 0 0 1 1 A 0 1 0 8:0 A 0 \nprobe1: 0 2093056 linear \n",
+            "topology": "probe (0QEMU_QEMU_HARDDISK_UPSTREAM-SCSI-001) dm-0 QEMU,QEMU HARDDISK\nsize=1.0G features='1 queue_if_no_path' hwhandler='0' wp=rw\n`-+- policy='round-robin 0' prio=1 status=active\n  `- 0:0:0:0 sda 8:0 active ready running\n",
+            "ok": 230,
+            "errors": [],
+            "max_seconds": 0.5340374170000004
+          }
+        }
+      ],
+      "validation": {
+        "id": 6,
+        "validated": true,
+        "records": 231
+      },
+      "qemu_command": [
+        "qemu-system-x86_64",
+        "-machine",
+        "q35",
+        "-accel",
+        "kvm",
+        "-m",
+        "1024",
+        "-smp",
+        "2",
+        "-display",
+        "none",
+        "-nodefaults",
+        "-no-reboot",
+        "-nic",
+        "none",
+        "-kernel",
+        "/workspace/Project/External-Memo-Rescue-Handler/lab/work/vmlinuz",
+        "-initrd",
+        "/workspace/Project/External-Memo-Rescue-Handler/lab/work/upstream-study/20260925-005151/initramfs.cpio.gz",
+        "-append",
+        "console=ttyS0 rdinit=/init panic=-1 probe_deny_rt=1",
+        "-serial",
+        "file:/workspace/Project/External-Memo-Rescue-Handler/lab/work/upstream-study/20260925-005151/console.log",
+        "-serial",
+        "unix:/workspace/Project/External-Memo-Rescue-Handler/lab/work/upstream-study/20260925-005151/agent.sock,server=on,wait=off",
+        "-qmp",
+        "unix:/workspace/Project/External-Memo-Rescue-Handler/lab/work/upstream-study/20260925-005151/qmp.sock,server=on,wait=off",
+        "-device",
+        "qemu-xhci,id=xhci",
+        "-blockdev",
+        "{\"driver\": \"raw\", \"node-name\": \"disk\", \"file\": {\"driver\": \"file\", \"filename\": \"/workspace/Project/External-Memo-Rescue-Handler/lab/work/upstream-study/20260925-005151/disk.raw\"}}",
+        "-device",
+        "usb-uas,bus=xhci.0,id=stick,serial=UPSTREAM-USB-001,port=1",
+        "-device",
+        "scsi-hd,bus=stick.0,id=lun,drive=disk,serial=UPSTREAM-SCSI-001"
+      ],
+      "guest_payload_sha256": "c593c4c17b40610639770eb9036bbc5fdf858dc7f2ded309bdf4e6d0b4f4ff34",
+      "configuration": "defaults { allow_usb_devices yes; find_multipaths strict; polling_interval 1; max_polling_interval 4; path_checker tur; detect_prio no; prio const; path_selector \"round-robin 0\"; no_path_retry 8; flush_on_last_del no; recheck_wwid yes; user_friendly_names no; } blacklist { wwid \".*\"; } blacklist_exceptions { property \"^ID_SERIAL$\"; wwid \"0QEMU_QEMU_HARDDISK_UPSTREAM-SCSI-001\"; } multipaths { multipath { wwid \"0QEMU_QEMU_HARDDISK_UPSTREAM-SCSI-001\"; alias probe; } }",
+      "configuration_note": "Semicolons here separate lines for display; generated multipath.conf uses newlines. wwids file contains only the enrolled WWID. Exact template is in probe source.",
+      "command": "python3 research/2026-09-25/multipathd_probe.py --deny-rt"
+    },
+    {
+      "run_id": "20260925-005341",
+      "raw_report": "lab/work/upstream-study/20260925-005341/report.json",
+      "raw_report_sha256": "dc6fbcc18bd3bd334dfec295fb6c43062bee94f665df305a4ac4436c0be97f68",
+      "original_runner_sha256": "065335deb44edc4a92c477f75953426a791f0794d9f3e7a886323f4d370bcfcc",
+      "initramfs_sha256": "825d496c3bce22ec6b5a0e884e3196c1fcc20575081e2d5cc0d034fe4f08fa85",
+      "base_initramfs_sha256": "bc2efe6bbf60be49264936c750655e941b75195db75a4a80f9f722d0658ebe6a",
+      "scope": "RAM root, stock multipathd, whole USB disk -> kpartx -> LVM -> ext4 data workload; not Ubuntu root recovery",
+      "deny_rt": true,
+      "wrong_disk": true,
+      "recovery_passed": false,
+      "cpu_measurement": {
+        "sample_seconds": 10.000115128001198,
+        "clock_ticks_per_second": 100,
+        "daemon_cpu_ticks": 0,
+        "cpu_percent_of_one_core": 0.0,
+        "scope": "process aggregate ticks include daemon threads; 10s coarse sample; excludes udevd and all other processes; no subsecond peak claim"
+      },
+      "before": {
+        "pid": 118,
+        "wwid": "0QEMU_QEMU_HARDDISK_UPSTREAM-SCSI-001",
+        "daemon_stat": "118 (multipathd) S 112 0 0 0 -1 4194560 5031 0 0 0 0 1 0 0 20 0 7 0 142 430305280 6848 18446744073709551615 99904785260544 99904785348513 140721316128448 0 0 0 2147217151 0 23043 0 0 0 17 0 0 0 0 0 0 99904785376112 99904785379424 99905858695168 140721316130676 140721316130704 140721316130704 140721316130787 0\n",
+        "daemon_status": "Name:\tmultipathd\nUmask:\t0077\nState:\tS (sleeping)\nTgid:\t118\nNgid:\t0\nPid:\t118\nPPid:\t112\nTracerPid:\t0\nUid:\t0\t0\t0\t0\nGid:\t0\t0\t0\t0\nFDSize:\t64\nGroups:\t \nNStgid:\t118\nNSpid:\t118\nNSpgid:\t0\nNSsid:\t0\nKthread:\t0\nVmPeak:\t  485756 kB\nVmSize:\t  420220 kB\nVmLck:\t  420196 kB\nVmPin:\t       0 kB\nVmHWM:\t   27748 kB\nVmRSS:\t   27748 kB\nRssAnon:\t   18980 kB\nRssFile:\t       8 kB\nRssShmem:\t    8760 kB\nVmData:\t   18676 kB\nVmStk:\t     132 kB\nVmExe:\t      88 kB\nVmLib:\t    6280 kB\nVmPTE:\t     124 kB\nVmSwap:\t       0 kB\nHugetlbPages:\t       0 kB\nCoreDumping:\t0\nTHP_enabled:\t1\nuntag_mask:\t0xffffffffffffffff\nThreads:\t7\nSigQ:\t2/3664\nSigPnd:\t0000000000000000\nShdPnd:\t0000000000000000\nSigBlk:\tfffffffe7ffbeeff\nSigIgn:\t0000000000000000\nSigCgt:\t0000000180005a03\nCapInh:\t0000000000000000\nCapPrm:\t000001ffff7fffff\nCapEff:\t000001ffff7fffff\nCapBnd:\t000001ffff7fffff\nCapAmb:\t0000000000000000\nNoNewPrivs:\t0\nSeccomp:\t0\nSeccomp_filters:\t0\nSpeculation_Store_Bypass:\tvulnerable\nSpeculationIndirectBranch:\talways enabled\nCpus_allowed:\t3\nCpus_allowed_list:\t0-1\nMems_allowed:\t00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000001\nMems_allowed_list:\t0\nvoluntary_ctxt_switches:\t14\nnonvoluntary_ctxt_switches:\t4\nx86_Thread_features:\t\nx86_Thread_features_locked:\t\n",
+        "sched_policy": 0,
+        "sched_priority": 0,
+        "maps": "mpstudy-data: 0 524288 linear 252:1 2048\nprobe: 0 2097152 multipath 1 queue_if_no_path 0 1 1 round-robin 0 1 1 8:0 1 \nprobe1: 0 2093056 linear 252:0 2048\n",
+        "status": "mpstudy-data: 0 524288 linear \nprobe: 0 2097152 multipath 2 0 0 0 1 1 A 0 1 0 8:0 A 0 \nprobe1: 0 2093056 linear \n",
+        "topology": "create: probe (0QEMU_QEMU_HARDDISK_UPSTREAM-SCSI-001) dm-0 QEMU,QEMU HARDDISK\nsize=1.0G features='1 queue_if_no_path' hwhandler='0' wp=rw\n`-+- policy='round-robin 0' prio=1 status=active\n  `- 0:0:0:0 sda 8:0 active ready running\n",
+        "ok": 1
+      },
+      "cycles": [
+        {
+          "deleted_host_time": 11928.106120146,
+          "reattached_host_time": 11928.221120658,
+          "qmp_reattach_seconds": 0.11500051199982408,
+          "snapshot": {
+            "pid": 118,
+            "wwid": "0QEMU_QEMU_HARDDISK_UPSTREAM-SCSI-001",
+            "daemon_stat": "118 (multipathd) S 112 0 0 0 -1 4194560 5031 0 0 0 0 2 0 0 20 0 7 0 142 430305280 6848 18446744073709551615 99904785260544 99904785348513 140721316128448 0 0 0 2147217151 0 23043 0 0 0 17 0 0 0 0 0 0 99904785376112 99904785379424 99905858695168 140721316130676 140721316130704 140721316130704 140721316130787 0\n",
+            "daemon_status": "Name:\tmultipathd\nUmask:\t0077\nState:\tS (sleeping)\nTgid:\t118\nNgid:\t0\nPid:\t118\nPPid:\t112\nTracerPid:\t0\nUid:\t0\t0\t0\t0\nGid:\t0\t0\t0\t0\nFDSize:\t64\nGroups:\t \nNStgid:\t118\nNSpid:\t118\nNSpgid:\t0\nNSsid:\t0\nKthread:\t0\nVmPeak:\t  485756 kB\nVmSize:\t  420220 kB\nVmLck:\t  420196 kB\nVmPin:\t       0 kB\nVmHWM:\t   27748 kB\nVmRSS:\t   27748 kB\nRssAnon:\t   18980 kB\nRssFile:\t       8 kB\nRssShmem:\t    8760 kB\nVmData:\t   18676 kB\nVmStk:\t     132 kB\nVmExe:\t      88 kB\nVmLib:\t    6280 kB\nVmPTE:\t     124 kB\nVmSwap:\t       0 kB\nHugetlbPages:\t       0 kB\nCoreDumping:\t0\nTHP_enabled:\t1\nuntag_mask:\t0xffffffffffffffff\nThreads:\t7\nSigQ:\t1/3664\nSigPnd:\t0000000000000000\nShdPnd:\t0000000000000000\nSigBlk:\tfffffffe7ffbeeff\nSigIgn:\t0000000000000000\nSigCgt:\t0000000180005a03\nCapInh:\t0000000000000000\nCapPrm:\t000001ffff7fffff\nCapEff:\t000001ffff7fffff\nCapBnd:\t000001ffff7fffff\nCapAmb:\t0000000000000000\nNoNewPrivs:\t0\nSeccomp:\t0\nSeccomp_filters:\t0\nSpeculation_Store_Bypass:\tvulnerable\nSpeculationIndirectBranch:\talways enabled\nCpus_allowed:\t3\nCpus_allowed_list:\t0-1\nMems_allowed:\t00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000001\nMems_allowed_list:\t0\nvoluntary_ctxt_switches:\t34\nnonvoluntary_ctxt_switches:\t4\nx86_Thread_features:\t\nx86_Thread_features_locked:\t\n",
+            "sched_policy": 0,
+            "sched_priority": 0,
+            "maps": "mpstudy-data: 0 524288 linear 252:1 2048\nprobe: 0 2097152 multipath 1 queue_if_no_path 0 1 1 round-robin 0 1 1 8:0 1 \nprobe1: 0 2093056 linear 252:0 2048\n",
+            "status": "mpstudy-data: 0 524288 linear \nprobe: 0 2097152 multipath 2 0 0 0 1 1 A 0 1 0 8:0 A 0 \nprobe1: 0 2093056 linear \n",
+            "topology": "probe (0QEMU_QEMU_HARDDISK_UPSTREAM-SCSI-001) dm-0 QEMU,QEMU HARDDISK\nsize=1.0G features='1 queue_if_no_path' hwhandler='0' wp=rw\n`-+- policy='round-robin 0' prio=1 status=active\n  `- 0:0:0:0 sda 8:0 active ready running\n",
+            "ok": 142,
+            "errors": [],
+            "max_seconds": 0.38049839399999996
+          }
+        }
+      ],
+      "validation": {
+        "id": 4,
+        "validated": false,
+        "records": 143
+      },
+      "wrong_disk_contents": {
+        "allocated_bytes": 1318912,
+        "data_ranges": [
+          [
+            138817536,
+            139948032
+          ],
+          [
+            153620480,
+            153808896
+          ]
+        ],
+        "records": [
+          {
+            "offset": 153620480,
+            "number": 97,
+            "sha256": "f6eb0dd5c9fe638c4c294bc1525e43ca8baf9855eebad0ea37018d9620afd21d"
+          },
+          {
+            "offset": 153624576,
+            "number": 98,
+            "sha256": "d1fed8f79054a8b274ef73d724c3119590870ab31b521b471ab4d004cbd0d4db"
+          },
+          {
+            "offset": 153628672,
+            "number": 99,
+            "sha256": "e9748b8802bdf6cae9e3d21ea051c1ea07928d10333432ad97abd81a2f107392"
+          },
+          {
+            "offset": 153632768,
+            "number": 100,
+            "sha256": "abff1ea14fc902de3e992c6a270cb632aaf37d9b6dca82a681de34d7a9c495e0"
+          },
+          {
+            "offset": 153636864,
+            "number": 101,
+            "sha256": "f4cafc6ee454d92a9c2d419d31e767277c25c7ee2d60d65769eb71f90219ab79"
+          },
+          {
+            "offset": 153640960,
+            "number": 102,
+            "sha256": "7626f7d6ba785a6473673ec9b540093d0c985671f1433365d635b132920bc927"
+          },
+          {
+            "offset": 153645056,
+            "number": 103,
+            "sha256": "084402cb2f57eeb229e126a0c672d9dc9d6d5bb60cd5473a72d03979286b54a4"
+          },
+          {
+            "offset": 153649152,
+            "number": 104,
+            "sha256": "cffdfa7ace8110d1d477d21722799ef1a0a156050f2f9fd943ba3643d6c6b9c9"
+          },
+          {
+            "offset": 153653248,
+            "number": 105,
+            "sha256": "f8c7ea7a57ab63c6b8eac100bbec75f83f92d96c8a0439291d27976817a4577a"
+          },
+          {
+            "offset": 153657344,
+            "number": 106,
+            "sha256": "7ac3c1cd08e871af9a92d1d1d017077ecc078ef25fcf991e29f3d4b2c2d6fb0a"
+          },
+          {
+            "offset": 153661440,
+            "number": 107,
+            "sha256": "a421b2025888ef702624c25526b05a9fd6feed459f390e68f8319daa46dabb2c"
+          },
+          {
+            "offset": 153665536,
+            "number": 108,
+            "sha256": "8aeb3c644e9054bea27875c24877a06a36c9ac8941d12ea178e6db9341eca475"
+          },
+          {
+            "offset": 153669632,
+            "number": 109,
+            "sha256": "8a1860fafc9e7a953a4aac57d540fc5103c92ca3fdd9861dda72a79dc04b6fae"
+          },
+          {
+            "offset": 153673728,
+            "number": 110,
+            "sha256": "e400d27ffc9c55be1b52469230f68e73402f9c9dc4d03a26d56ea3d944548a38"
+          },
+          {
+            "offset": 153677824,
+            "number": 111,
+            "sha256": "ce04518bdb31fc32d193ad641711e719bae09bb481399773a7dca1f5b916efa8"
+          },
+          {
+            "offset": 153681920,
+            "number": 112,
+            "sha256": "31c2bf44acbba3a4091cc824d94c40dc035f77e742edc6f7e979f5944be4e640"
+          },
+          {
+            "offset": 153686016,
+            "number": 113,
+            "sha256": "24305e664060602fce97c57dd6715d849e83594f261e980515329f8220cefc5b"
+          },
+          {
+            "offset": 153690112,
+            "number": 114,
+            "sha256": "cebeb23ee7fcdd9f2b34de5bcc3a7b57058c9bdffbceeb2927459c85739d376c"
+          },
+          {
+            "offset": 153694208,
+            "number": 115,
+            "sha256": "95d05aadf2778ceedecb80b211fa06576e6d731578eaa5aa04fdb1e1036285e1"
+          },
+          {
+            "offset": 153698304,
+            "number": 116,
+            "sha256": "6e4d15b70a1be2b3a19bef800d35144b005227eaee8bd68858362bb95e41b1a0"
+          },
+          {
+            "offset": 153702400,
+            "number": 117,
+            "sha256": "32ca665353be23c1450d869ba324c529fe760ccdd39e2541c77cc8ea46ef5898"
+          },
+          {
+            "offset": 153706496,
+            "number": 118,
+            "sha256": "b2ea05de95d2eaeb56771a3b5b6b8814d5a32ea9f9c24c290d1bfe9ba3ac7225"
+          },
+          {
+            "offset": 153710592,
+            "number": 119,
+            "sha256": "1ae8c9005d78639398fd129d6ce577340c13c1885966dc3aa1f98fd0aec67a2f"
+          },
+          {
+            "offset": 153714688,
+            "number": 120,
+            "sha256": "e39818499458bed2786df2720ba84f9ffd6f8b1599603e20bc7f0218d8064f5c"
+          },
+          {
+            "offset": 153718784,
+            "number": 121,
+            "sha256": "67c7dd19d51ff4759c2d38a09a88a1060da817aa73ad1171a53a85bf85ad5f04"
+          },
+          {
+            "offset": 153722880,
+            "number": 122,
+            "sha256": "2345b7c03f71e1ebfa22f8e88571119ed3a5ba10db8fff8b5ab4dc84736ad9d5"
+          },
+          {
+            "offset": 153726976,
+            "number": 123,
+            "sha256": "d1a19013c13a9178b88964f2edf1307829863e64ff86509a3d61e9816612ca47"
+          },
+          {
+            "offset": 153731072,
+            "number": 124,
+            "sha256": "64138d075829231380589fc119c1a140360fcb4a4bb6288e77ba32dc07cffc9a"
+          },
+          {
+            "offset": 153735168,
+            "number": 125,
+            "sha256": "3e6b21adca9a85bee4be4ec183b36836e68423689401365dec38f6481100a051"
+          },
+          {
+            "offset": 153739264,
+            "number": 126,
+            "sha256": "d0547455f6c5e32bca812486514c79d986aac89d5289f49a3a613642adbd1804"
+          },
+          {
+            "offset": 153743360,
+            "number": 127,
+            "sha256": "d2a211e406097ba314a7dfaa23c0c4b1a84574ddec5ae9f30ae46488d80f40db"
+          },
+          {
+            "offset": 153747456,
+            "number": 128,
+            "sha256": "8f6f108624d77f66a496247c30b222f3e59fa951ab5e9aec214d4e95de597bcc"
+          },
+          {
+            "offset": 153751552,
+            "number": 129,
+            "sha256": "811df0e8e6faa7d16a105c0ae30b44d72a47c28205d6d2cd90fbd879e31dbdd3"
+          },
+          {
+            "offset": 153755648,
+            "number": 130,
+            "sha256": "9228ef758ed7df7a8c4df4484b64988fcc752add80b6b8e5fd8a00659c069d5f"
+          },
+          {
+            "offset": 153759744,
+            "number": 131,
+            "sha256": "ac52c5c6bbad36a66c9a53d5d854eec15d2a6966d633e6e7019721d042dd2cf0"
+          },
+          {
+            "offset": 153763840,
+            "number": 132,
+            "sha256": "f7ad31a72177342fec8c4809791817b5e2382659ece6355a4f48731ac377ca94"
+          },
+          {
+            "offset": 153767936,
+            "number": 133,
+            "sha256": "a3c2e99a83dcf5163b2bad740ca3ed1d6dbfd55a450bfc9a15ae33e5ca0d7c75"
+          },
+          {
+            "offset": 153772032,
+            "number": 134,
+            "sha256": "e82a84b8db502d2aceea335c812af2875c50e70852b5d2a182276337266cb7a5"
+          },
+          {
+            "offset": 153776128,
+            "number": 135,
+            "sha256": "f730e2c28a506b43f9fae11c1b016b6c1dac4546b774d912142a4e8267294f92"
+          },
+          {
+            "offset": 153780224,
+            "number": 136,
+            "sha256": "652d7ac1266eeace12dd345c91bc42b1134d15ad14627adf9e4f24f9c0444aab"
+          },
+          {
+            "offset": 153784320,
+            "number": 137,
+            "sha256": "819a714a58cd2cceb65aa05a9a919db91a5d3b0275146068cfa51484d031d358"
+          },
+          {
+            "offset": 153788416,
+            "number": 138,
+            "sha256": "5c790cc9250035f4a99037a3a7144fa962480d743bafd040d1262a76c1046590"
+          },
+          {
+            "offset": 153792512,
+            "number": 139,
+            "sha256": "ba025c44d05e36e6f2bcef162eeee997b818ce20a6010e195060e8c0ed991ece"
+          },
+          {
+            "offset": 153796608,
+            "number": 140,
+            "sha256": "4b6c3ba89dd20c770425eb9813315ebe3a37d302710a83dbd96f3c0141f3997b"
+          },
+          {
+            "offset": 153800704,
+            "number": 141,
+            "sha256": "012b4c00799d55aa545e1489f9c152ecded49001dfe03caf431301b41cbdae83"
+          },
+          {
+            "offset": 153804800,
+            "number": 142,
+            "sha256": "512bb479d8211b5d9231fd7a60584a6202eeee459ed7eb7a706606a0ae6d2880"
+          }
+        ]
+      },
+      "injection_qmp": [
+        {
+          "host_time": 11928.096380146,
+          "message": {
+            "timestamp": {
+              "seconds": 1790268834,
+              "microseconds": 392399
+            },
+            "event": "DEVICE_DELETED",
+            "data": {
+              "device": "lun",
+              "path": "/machine/peripheral/lun"
+            }
+          }
+        },
+        {
+          "host_time": 11928.096920573,
+          "message": {
+            "timestamp": {
+              "seconds": 1790268834,
+              "microseconds": 392476
+            },
+            "event": "DEVICE_DELETED",
+            "data": {
+              "device": "stick",
+              "path": "/machine/peripheral/stick"
+            }
+          }
+        },
+        {
+          "host_time": 11928.158406235,
+          "message": {
+            "return": {},
+            "id": 4
+          }
+        },
+        {
+          "host_time": 11928.219253628,
+          "message": {
+            "return": {},
+            "id": 5
+          }
+        },
+        {
+          "host_time": 11928.220963075,
+          "message": {
+            "return": {},
+            "id": 6
+          }
+        },
+        {
+          "host_time": 11933.324029927,
+          "message": {
+            "return": [
+              {
+                "stats": {
+                  "unmap_operations": 0,
+                  "unmap_merged": 0,
+                  "failed_zone_append_operations": 0,
+                  "flush_total_time_ns": 0,
+                  "wr_highest_offset": 1073741824,
+                  "wr_total_time_ns": 0,
+                  "failed_wr_operations": 0,
+                  "failed_rd_operations": 0,
+                  "wr_merged": 0,
+                  "wr_bytes": 0,
+                  "timed_stats": [],
+                  "failed_unmap_operations": 0,
+                  "zone_append_merged": 0,
+                  "failed_flush_operations": 0,
+                  "account_invalid": false,
+                  "rd_total_time_ns": 0,
+                  "invalid_unmap_operations": 0,
+                  "flush_operations": 0,
+                  "wr_operations": 0,
+                  "unmap_bytes": 0,
+                  "rd_merged": 0,
+                  "rd_bytes": 0,
+                  "unmap_total_time_ns": 0,
+                  "invalid_flush_operations": 0,
+                  "account_failed": false,
+                  "zone_append_total_time_ns": 0,
+                  "zone_append_operations": 0,
+                  "rd_operations": 0,
+                  "zone_append_bytes": 0,
+                  "invalid_zone_append_operations": 0,
+                  "invalid_wr_operations": 0,
+                  "invalid_rd_operations": 0
+                },
+                "node-name": "#block033",
+                "driver-specific": {
+                  "discard-bytes-ok": 0,
+                  "discard-nb-ok": 0,
+                  "driver": "file",
+                  "discard-nb-failed": 0
+                }
+              },
+              {
+                "parent": {
+                  "stats": {
+                    "unmap_operations": 0,
+                    "unmap_merged": 0,
+                    "failed_zone_append_operations": 0,
+                    "flush_total_time_ns": 0,
+                    "wr_highest_offset": 1073741824,
+                    "wr_total_time_ns": 0,
+                    "failed_wr_operations": 0,
+                    "failed_rd_operations": 0,
+                    "wr_merged": 0,
+                    "wr_bytes": 0,
+                    "timed_stats": [],
+                    "failed_unmap_operations": 0,
+                    "zone_append_merged": 0,
+                    "failed_flush_operations": 0,
+                    "account_invalid": false,
+                    "rd_total_time_ns": 0,
+                    "invalid_unmap_operations": 0,
+                    "flush_operations": 0,
+                    "wr_operations": 0,
+                    "unmap_bytes": 0,
+                    "rd_merged": 0,
+                    "rd_bytes": 0,
+                    "unmap_total_time_ns": 0,
+                    "invalid_flush_operations": 0,
+                    "account_failed": false,
+                    "zone_append_total_time_ns": 0,
+                    "zone_append_operations": 0,
+                    "rd_operations": 0,
+                    "zone_append_bytes": 0,
+                    "invalid_zone_append_operations": 0,
+                    "invalid_wr_operations": 0,
+                    "invalid_rd_operations": 0
+                  },
+                  "node-name": "#block033",
+                  "driver-specific": {
+                    "discard-bytes-ok": 0,
+                    "discard-nb-ok": 0,
+                    "driver": "file",
+                    "discard-nb-failed": 0
+                  }
+                },
+                "stats": {
+                  "unmap_operations": 0,
+                  "unmap_merged": 0,
+                  "failed_zone_append_operations": 0,
+                  "flush_total_time_ns": 0,
+                  "wr_highest_offset": 1073741824,
+                  "wr_total_time_ns": 0,
+                  "failed_wr_operations": 0,
+                  "failed_rd_operations": 0,
+                  "wr_merged": 0,
+                  "wr_bytes": 0,
+                  "timed_stats": [],
+                  "failed_unmap_operations": 0,
+                  "zone_append_merged": 0,
+                  "failed_flush_operations": 0,
+                  "account_invalid": false,
+                  "rd_total_time_ns": 0,
+                  "invalid_unmap_operations": 0,
+                  "flush_operations": 0,
+                  "wr_operations": 0,
+                  "unmap_bytes": 0,
+                  "rd_merged": 0,
+                  "rd_bytes": 0,
+                  "unmap_total_time_ns": 0,
+                  "invalid_flush_operations": 0,
+                  "account_failed": false,
+                  "zone_append_total_time_ns": 0,
+                  "zone_append_operations": 0,
+                  "rd_operations": 0,
+                  "zone_append_bytes": 0,
+                  "invalid_zone_append_operations": 0,
+                  "invalid_wr_operations": 0,
+                  "invalid_rd_operations": 0
+                },
+                "node-name": "disk"
+              },
+              {
+                "stats": {
+                  "unmap_operations": 0,
+                  "unmap_merged": 0,
+                  "failed_zone_append_operations": 0,
+                  "flush_total_time_ns": 0,
+                  "wr_highest_offset": 153808896,
+                  "wr_total_time_ns": 0,
+                  "failed_wr_operations": 0,
+                  "failed_rd_operations": 0,
+                  "wr_merged": 0,
+                  "wr_bytes": 0,
+                  "timed_stats": [],
+                  "failed_unmap_operations": 0,
+                  "zone_append_merged": 0,
+                  "failed_flush_operations": 0,
+                  "account_invalid": false,
+                  "rd_total_time_ns": 0,
+                  "invalid_unmap_operations": 0,
+                  "flush_operations": 0,
+                  "wr_operations": 0,
+                  "unmap_bytes": 0,
+                  "rd_merged": 0,
+                  "rd_bytes": 0,
+                  "unmap_total_time_ns": 0,
+                  "invalid_flush_operations": 0,
+                  "account_failed": false,
+                  "zone_append_total_time_ns": 0,
+                  "zone_append_operations": 0,
+                  "rd_operations": 0,
+                  "zone_append_bytes": 0,
+                  "invalid_zone_append_operations": 0,
+                  "invalid_wr_operations": 0,
+                  "invalid_rd_operations": 0
+                },
+                "node-name": "#block184",
+                "driver-specific": {
+                  "discard-bytes-ok": 0,
+                  "discard-nb-ok": 0,
+                  "driver": "file",
+                  "discard-nb-failed": 0
+                }
+              },
+              {
+                "parent": {
+                  "stats": {
+                    "unmap_operations": 0,
+                    "unmap_merged": 0,
+                    "failed_zone_append_operations": 0,
+                    "flush_total_time_ns": 0,
+                    "wr_highest_offset": 153808896,
+                    "wr_total_time_ns": 0,
+                    "failed_wr_operations": 0,
+                    "failed_rd_operations": 0,
+                    "wr_merged": 0,
+                    "wr_bytes": 0,
+                    "timed_stats": [],
+                    "failed_unmap_operations": 0,
+                    "zone_append_merged": 0,
+                    "failed_flush_operations": 0,
+                    "account_invalid": false,
+                    "rd_total_time_ns": 0,
+                    "invalid_unmap_operations": 0,
+                    "flush_operations": 0,
+                    "wr_operations": 0,
+                    "unmap_bytes": 0,
+                    "rd_merged": 0,
+                    "rd_bytes": 0,
+                    "unmap_total_time_ns": 0,
+                    "invalid_flush_operations": 0,
+                    "account_failed": false,
+                    "zone_append_total_time_ns": 0,
+                    "zone_append_operations": 0,
+                    "rd_operations": 0,
+                    "zone_append_bytes": 0,
+                    "invalid_zone_append_operations": 0,
+                    "invalid_wr_operations": 0,
+                    "invalid_rd_operations": 0
+                  },
+                  "node-name": "#block184",
+                  "driver-specific": {
+                    "discard-bytes-ok": 0,
+                    "discard-nb-ok": 0,
+                    "driver": "file",
+                    "discard-nb-failed": 0
+                  }
+                },
+                "stats": {
+                  "unmap_operations": 0,
+                  "unmap_merged": 0,
+                  "failed_zone_append_operations": 0,
+                  "flush_total_time_ns": 0,
+                  "wr_highest_offset": 153808896,
+                  "wr_total_time_ns": 0,
+                  "failed_wr_operations": 0,
+                  "failed_rd_operations": 0,
+                  "wr_merged": 0,
+                  "wr_bytes": 0,
+                  "timed_stats": [],
+                  "failed_unmap_operations": 0,
+                  "zone_append_merged": 0,
+                  "failed_flush_operations": 0,
+                  "account_invalid": false,
+                  "rd_total_time_ns": 0,
+                  "invalid_unmap_operations": 0,
+                  "flush_operations": 0,
+                  "wr_operations": 0,
+                  "unmap_bytes": 0,
+                  "rd_merged": 0,
+                  "rd_bytes": 0,
+                  "unmap_total_time_ns": 0,
+                  "invalid_flush_operations": 0,
+                  "account_failed": false,
+                  "zone_append_total_time_ns": 0,
+                  "zone_append_operations": 0,
+                  "rd_operations": 0,
+                  "zone_append_bytes": 0,
+                  "invalid_zone_append_operations": 0,
+                  "invalid_wr_operations": 0,
+                  "invalid_rd_operations": 0
+                },
+                "node-name": "wrong"
+              }
+            ],
+            "id": 7
+          }
+        }
+      ],
+      "note": "The initially blank same-capacity candidate was created by exclusive open and truncate; this run did not record an initial full-image hash or allocated-byte field. QMP query-nodes request counters were zero but wr_highest_offset increased. Complete 4KiB workload records in independent wrong.raw prove writes to a different disk under duplicate presented identity.",
+      "qemu_command": [
+        "qemu-system-x86_64",
+        "-machine",
+        "q35",
+        "-accel",
+        "kvm",
+        "-m",
+        "1024",
+        "-smp",
+        "2",
+        "-display",
+        "none",
+        "-nodefaults",
+        "-no-reboot",
+        "-nic",
+        "none",
+        "-kernel",
+        "/workspace/Project/External-Memo-Rescue-Handler/lab/work/vmlinuz",
+        "-initrd",
+        "/workspace/Project/External-Memo-Rescue-Handler/lab/work/upstream-study/20260925-005341/initramfs.cpio.gz",
+        "-append",
+        "console=ttyS0 rdinit=/init panic=-1 probe_deny_rt=1",
+        "-serial",
+        "file:/workspace/Project/External-Memo-Rescue-Handler/lab/work/upstream-study/20260925-005341/console.log",
+        "-serial",
+        "unix:/workspace/Project/External-Memo-Rescue-Handler/lab/work/upstream-study/20260925-005341/agent.sock,server=on,wait=off",
+        "-qmp",
+        "unix:/workspace/Project/External-Memo-Rescue-Handler/lab/work/upstream-study/20260925-005341/qmp.sock,server=on,wait=off",
+        "-device",
+        "qemu-xhci,id=xhci",
+        "-blockdev",
+        "{\"driver\": \"raw\", \"node-name\": \"disk\", \"file\": {\"driver\": \"file\", \"filename\": \"/workspace/Project/External-Memo-Rescue-Handler/lab/work/upstream-study/20260925-005341/disk.raw\"}}",
+        "-device",
+        "usb-uas,bus=xhci.0,id=stick,serial=UPSTREAM-USB-001,port=1",
+        "-device",
+        "scsi-hd,bus=stick.0,id=lun,drive=disk,serial=UPSTREAM-SCSI-001",
+        "-blockdev",
+        "{\"driver\": \"raw\", \"node-name\": \"wrong\", \"file\": {\"driver\": \"file\", \"filename\": \"/workspace/Project/External-Memo-Rescue-Handler/lab/work/upstream-study/20260925-005341/wrong.raw\"}}"
+      ],
+      "guest_payload_sha256": "c593c4c17b40610639770eb9036bbc5fdf858dc7f2ded309bdf4e6d0b4f4ff34",
+      "configuration": "defaults { allow_usb_devices yes; find_multipaths strict; polling_interval 1; max_polling_interval 4; path_checker tur; detect_prio no; prio const; path_selector \"round-robin 0\"; no_path_retry 8; flush_on_last_del no; recheck_wwid yes; user_friendly_names no; } blacklist { wwid \".*\"; } blacklist_exceptions { property \"^ID_SERIAL$\"; wwid \"0QEMU_QEMU_HARDDISK_UPSTREAM-SCSI-001\"; } multipaths { multipath { wwid \"0QEMU_QEMU_HARDDISK_UPSTREAM-SCSI-001\"; alias probe; } }",
+      "configuration_note": "Semicolons here separate lines for display; generated multipath.conf uses newlines. wwids file contains only the enrolled WWID. Exact template is in probe source.",
+      "command": "python3 research/2026-09-25/multipathd_probe.py --deny-rt --wrong",
+      "independent_readonly_audit": {
+        "original_record_numbers": [
+          0,
+          96
+        ],
+        "original_record_count": 97,
+        "wrong_record_numbers": [
+          97,
+          142
+        ],
+        "wrong_record_count": 46,
+        "original_record_locations_zero_on_wrong": true,
+        "wrong_record_locations_zero_on_original": true,
+        "wrong_first_mib_all_zero": true,
+        "wrong_allocated_bytes": 1318912,
+        "method": "Read allocated sparse file extents with inspect_sparse_records, then os.pread matching 4096-byte offsets on opposite backing file; no guest or host block devices used."
+      }
+    }
+  ],
+  "debug_setup_failures": [
+    {
+      "run_id": "20260925-004614",
+      "cause": "BusyBox modprobe cannot load compressed module; corrected to /sbin/modprobe."
+    },
+    {
+      "run_id": "20260925-004657",
+      "cause": "Runtime pthread_cancel dependency libgcc_s.so.1 missing from ldd-only closure; added explicitly."
+    },
+    {
+      "run_id": "20260925-004913",
+      "cause": "Default udev property allowlist does not accept this QEMU identity; added explicit ID_SERIAL property allowlist restricted by WWID."
+    },
+    {
+      "run_id": "20260925-005023",
+      "cause": "Plain scsi_id formatting differs from exported ID_SERIAL; enrollment now uses same exported property as daemon."
+    }
+  ],
+  "reproduce_commands": [
+    "python3 research/2026-09-25/multipathd_probe.py",
+    "python3 research/2026-09-25/multipathd_probe.py --deny-rt",
+    "python3 research/2026-09-25/multipathd_probe.py --deny-rt --wrong"
+  ],
+  "current_runner_sha256": "67d72f30d4d86cb2985d7c071e17b15e8b3e2d936991ce724e15454e74f4e645",
+  "notes": [
+    "Each run uses fresh regular files, no host disks, RAM root, no Guard, and a data LV; no full Ubuntu root deployment proof.",
+    "VmLck is the reported virtual locked-mapping quantity, not a physical RAM usage sum; no cause attributed.",
+    "The published script evolved between runs to add flags/evidence extraction; each original script hash and actual guest payload hash are recorded.",
+    "Verification uses posix_fadvise(POSIX_FADV_DONTNEED) plus ordinary read, not O_DIRECT and not a power-loss durability test.",
+    "The normal-scheduler run removes CAP_SYS_NICE but does not impose a CPU quota.",
+    "Scheduler values were observed for main daemon PID; source has only one scheduler change site; all-thread scheduler sampling is still a follow-up."
+  ]
+}
