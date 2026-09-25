@@ -4,7 +4,7 @@
 
 ## 已实现的环境
 
-- 本机 Ubuntu 6.8 内核 + Ubuntu 的 BusyBox、Python、LVM、ext4 工具，组成最小 Linux 虚拟机。
+- 当前 Ubuntu 7.0 内核 + Ubuntu 的 BusyBox、Python、LVM、ext4 工具，组成最小 Linux 虚拟机。
 - 每次运行新建 2 GiB 稀疏磁盘，虚拟机内建立分区、PV、`labrescue` VG、`ubuntu`/`shared` LV 和 ext4。
 - PID 1 通过 `switch_root` 真正运行在 USB/LVM 根卷上，不只是把测试盘挂到一个健康系统旁边。
 - 独立工具副本位于 `tmpfs,noswap`，一个串口运行 JSON 控制程序和心跳，另一个串口提供独立 RAM shell。
@@ -34,6 +34,8 @@ python3 lab/build.py --kernel "lab/work/kernel-package/extracted/boot/vmlinuz-$(
 ```
 
 若精确内核包已从源中移除，可以自行提供可读的匹配内核文件，通过 `--kernel` 指定；`--release` 指定其模块版本。不要把不同版本的内核和模块混用。
+
+恢复事务重构、准入边界、死亡接管与故障矩阵见 [TRANSACTIONS.md](TRANSACTIONS.md)；全内存与 CPU 统计口径见 [RESOURCE-MEASUREMENT.md](RESOURCE-MEASUREMENT.md)。
 
 当前自动 Guard 以本机 `7.0.0-34-generic` 为验收基线，必须具备 `DM_MPATH_PROBE_PATHS`（multipath target ≥ 1.15.0），没有旧内核兼容降级。构建器仍可用于历史研究镜像，但不表示自动 Guard 支持这些内核。
 

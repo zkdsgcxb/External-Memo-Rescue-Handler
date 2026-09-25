@@ -10,6 +10,8 @@
 
 实验 Guard 已接入新内核的 `DM_MPATH_PROBE_PATHS`，替换换表后直接宣布就绪的分支；当前以本机 7.0 为基线，要求此接口，不提供旧内核兼容降级。健康期不主动读盘。机制和 QEMU 验收见 [路径探测接入](lab/KERNEL-PROBE.md)。
 
+已按技术路线收敛恢复事务：独立准入凭证、唯一 owner、单次内核换表、RAM 有界事务记录与死亡接管；超时停止后续自动准入，保留在途 I/O 的边界。组件职责与复现命令见 [恢复事务](lab/TRANSACTIONS.md)，本轮实测与剩余门槛见 [重构记录](research/2026-09-25/REFACTOR-RESULTS.md)。
+
 完整 Ubuntu Server 用户空间和真实 Git 克隆场景见 [`lab/UBUNTU.md`](lab/UBUNTU.md)，使用 systemd 管理服务并从虚拟 USB/LVM 根卷运行。
 
 2026-09-25 的系统性调研、故障分类、组件选型和新增边界实验见 [技术路线报告](research/2026-09-25/TECHNICAL-ROUTE.md)。报告区分已测能力与待验证情形，不代表实机部署完成。

@@ -9,6 +9,9 @@ mkdir -p /run/lock/lvm /run/lvm
 for module in xhci_pci usb_storage uas sd_mod dm_mod dm_multipath dm_round_robin ext4 virtio_pci virtio_blk; do
     /sbin/modprobe "$module"
 done
+if grep -qw ram_rescue_cold_audit=1 /proc/cmdline; then
+    exec python3 /opt/lab/cold_audit.py
+fi
 python3 /opt/lab/agent.py --setup || { sleep 2; exit 1; }
 # Independent tools and control channels stay on tmpfs after switch_root.
 mkdir -p /run/rescue
@@ -26,10 +29,12 @@ chroot /run/rescue python3 /opt/lab/agent.py &
 if [ -f /run/rescue/etc/rescue/path-guard.json ]; then
     mkdir -p /sys/fs/cgroup
     mount -t cgroup2 none /sys/fs/cgroup
-    echo +cpu > /sys/fs/cgroup/cgroup.subtree_control
+    echo '+cpu +memory' > /sys/fs/cgroup/cgroup.subtree_control
     mkdir /sys/fs/cgroup/lab-guard
     echo "4000 20000" > /sys/fs/cgroup/lab-guard/cpu.max
-    chroot /run/rescue /bin/sh -c 'echo $$ > /proc/1/root/sys/fs/cgroup/lab-guard/cgroup.procs && exec python3 /opt/lab/path_guard.py' &
+    echo 134217728 > /sys/fs/cgroup/lab-guard/memory.max
+    echo 0 > /sys/fs/cgroup/lab-guard/memory.swap.max
+    chroot /run/rescue /bin/sh -c 'echo $$ > /proc/1/root/sys/fs/cgroup/lab-guard/cgroup.procs; python3 /opt/lab/path_guard.py; exec python3 /opt/lab/path_guard.py --takeover' &
 fi
 chroot /run/rescue /bin/sh -c 'exec /bin/setsid /bin/sh -i </dev/ttyS2 >/dev/ttyS2 2>&1' &
 fi

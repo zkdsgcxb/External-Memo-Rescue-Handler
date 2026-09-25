@@ -13,15 +13,25 @@ import time
 DM_MPATH_PROBE_PATHS = 0xfd12
 
 
+class DMInfo(C.Structure):
+    # libdevmapper ABI, including the trailing internal_suspend member.
+    _fields_=[(name,kind) for name,kind in (
+        ('exists',C.c_int),('suspended',C.c_int),('live_table',C.c_int),
+        ('inactive_table',C.c_int),('open_count',C.c_int32),('event_nr',C.c_uint32),
+        ('major',C.c_uint32),('minor',C.c_uint32),('read_only',C.c_int),
+        ('target_count',C.c_int32),('deferred_remove',C.c_int),('internal_suspend',C.c_int))]
+
+
 class PathProbe:
     """One on-demand ioctl; a blocked driver must never spawn more workers.
 
     Success means the ioctl completed, not that a read or full health check
     succeeded. The kernel can skip paths or ignore non-path read errors.
     """
-    def __init__(self):
+    def __init__(self,owner_fd=None):
         self._thread=None
         self._result=None
+        self._owner_fd=owner_fd
 
     @property
     def busy(self):
@@ -32,6 +42,7 @@ class PathProbe:
             raise RuntimeError('Previous path probe has not been consumed')
         # No worker or threading import during ordinary healthy monitoring.
         import threading
+        fence=None
         def run():
             started=time.monotonic()
             error=0
@@ -42,15 +53,26 @@ class PathProbe:
             except OSError as exc:
                 error=exc.errno or errno.EIO
             finally:
-                if fd is not None:
-                    os.close(fd)
+                try:
+                    if fd is not None:
+                        os.close(fd)
+                finally:
+                    if fence is not None:
+                        os.close(fence)
             status={0:'completed',errno.ENOTCONN:'no_paths'}.get(error,'error')
             self._result={'token':token,'errno':error,'elapsed':time.monotonic()-started,'status':status,'source':'ioctl'}
-        self._thread=threading.Thread(target=run,name='dm-path-probe',daemon=True)
+        # Import and construction can fail; acquire no fd until they succeed.
+        thread=threading.Thread(target=run,name='dm-path-probe',daemon=True)
+        # Closing the manager's fd must not authorize takeover while this
+        # worker still has a live-table reference inside the kernel ioctl.
+        fence=None if self._owner_fd is None else os.dup(self._owner_fd)
+        self._thread=thread
         try:
             self._thread.start()
         except RuntimeError:
             self._thread=None
+            if fence is not None:
+                os.close(fence)
             raise
 
     def poll(self):
@@ -73,6 +95,8 @@ class DeviceMapper:
             'dm_task_set_name':(C.c_int,[C.c_void_p,C.c_char_p]),
             'dm_task_run':(C.c_int,[C.c_void_p]),
             'dm_task_get_uuid':(C.c_char_p,[C.c_void_p]),
+            'dm_task_get_info':(C.c_int,[C.c_void_p,C.POINTER(DMInfo)]),
+            'dm_task_query_inactive_table':(C.c_int,[C.c_void_p]),
             'dm_task_get_versions':(C.c_void_p,[C.c_void_p]),
             'dm_get_next_target':(C.c_void_p,[C.c_void_p,C.c_void_p,C.POINTER(C.c_uint64),C.POINTER(C.c_uint64),C.POINTER(C.c_char_p),C.POINTER(C.c_char_p)]),
         }
@@ -103,23 +127,44 @@ class DeviceMapper:
             self.lib.dm_task_destroy(task)
 
     def query(self,name):
-        # DM_DEVICE_STATUS from libdevmapper.h. Tasks own returned string storage.
-        task=self.lib.dm_task_create(10)
+        result=self._read(name,10)
+        self.last_info=result['info']
+        return result['uuid'],[(target[2],target[3]) for target in result['targets']]
+
+    def snapshot(self,name):
+        active=self._read(name,11)  # DM_DEVICE_TABLE
+        inactive=self._read(name,11,inactive=True)
+        if active['uuid']!=inactive['uuid']:
+            raise RuntimeError('DM identity changed while reading tables')
+        return {'uuid':active['uuid'],'info':active['info'],
+                'active':active['targets'],'inactive':inactive['targets']}
+
+    def _read(self,name,operation,inactive=False):
+        # Tasks own all returned strings; copy them before destroying the task.
+        task=self.lib.dm_task_create(operation)
         if not task:
             raise RuntimeError('Cannot allocate DM status task')
         try:
-            if not self.lib.dm_task_set_name(task,name.encode()) or not self.lib.dm_task_run(task):
+            if not self.lib.dm_task_set_name(task,name.encode()):
+                raise RuntimeError('Cannot name DM task')
+            if inactive and not self.lib.dm_task_query_inactive_table(task):
+                raise RuntimeError('Cannot select inactive DM table')
+            if not self.lib.dm_task_run(task):
                 raise RuntimeError('Cannot query DM map '+name)
+            info=DMInfo()
+            if not self.lib.dm_task_get_info(task,C.byref(info)) or not info.exists:
+                raise RuntimeError('DM map does not exist: '+name)
             uuid=self.lib.dm_task_get_uuid(task)
             targets=[];cursor=None
             while True:
                 start=C.c_uint64();size=C.c_uint64();kind=C.c_char_p();params=C.c_char_p()
                 cursor=self.lib.dm_get_next_target(task,cursor,C.byref(start),C.byref(size),C.byref(kind),C.byref(params))
                 if kind.value:
-                    targets.append((kind.value.decode(),(params.value or b'').decode()))
+                    targets.append([start.value,size.value,kind.value.decode(),(params.value or b'').decode()])
                 if not cursor:
                     break
-            return (uuid or b'').decode(),targets
+            return {'uuid':(uuid or b'').decode(),'targets':targets,
+                    'info':{key:getattr(info,key) for key,_ in DMInfo._fields_}}
         finally:
             self.lib.dm_task_destroy(task)
 

@@ -213,12 +213,12 @@ def main():
                     if args.kill_manager:
                         return snap if any(not json.loads(line)['ok'] for line in snap['workload'].splitlines()) else None
                     state=snap['path_guard']
-                    if state['state']=='expired' or state['state']=='ready' and state['recoveries']>=cycle+1:
+                    if state['state'] in {'expired','failed','interrupted','blocked'} or state['state']=='ready' and state['recoveries']>=cycle+1:
                         return snap
                     return None
                 entry['outcome']=wait_for(finished,args.queue_seconds+15,'automatic path outcome')
                 entry['outcome_host_time']=time.monotonic()
-                if entry['outcome']['path_guard']['state']=='expired':
+                if entry['outcome']['path_guard']['state'] in {'expired','failed','interrupted','blocked'}:
                     break
                 time.sleep(1)
             if git_clone:
@@ -282,7 +282,14 @@ def main():
                 checks['same_git_process']=all(before_git[k]==after_git[k] for k in ['pid','start_ticks'])
                 checks['git_active_during_fault']=all(e['git_while_absent'].get('same_process_alive',False) for e in report['cycles'])
                 checks['git_integrity']=all(report['git_validation'][k] for k in ['head_matches','fsck_passed','worktree_clean'])
-            report.update(completed=True,checks=checks,passed=all(checks.values()))
+            passed=all(checks.values())
+            # A negative test passing means its failure contract was observed,
+            # never that the original application recovered.
+            expectation='continuity' if args.reconnect=='same' else 'failure_contract'
+            report.update(completed=True,checks=checks,passed=passed,expectation=expectation,
+                application_continuity_passed=passed and expectation=='continuity',
+                outcome=('continuity_verified' if expectation=='continuity' else 'expected_failure_verified')
+                        if passed else 'acceptance_failed')
         except BaseException as exc:
             report.update(completed=False,error=repr(exc))
             raise

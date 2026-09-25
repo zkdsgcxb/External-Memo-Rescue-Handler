@@ -1,0 +1,112 @@
+{
+  "date": "2026-09-25",
+  "experiment": "stock multipathd late return after no-path timeout",
+  "scope": "stock 0.15, Linux 7.0, RAM root, whole USB multipath/LVM data disk; no Guard",
+  "oracle_passed": true,
+  "oracle_meaning": "Observed queue timeout and application errors, then same map successfully served O_DIRECT read after late return. This passes the counterexample oracle, not application-continuity or strict terminal-state requirements.",
+  "kernel": "7.0.0-34-generic",
+  "multipath_tools": "0.15.0",
+  "source_commit": "5a60a67d9f48ddff0d63b6e5d04c3a22764a0670",
+  "raw_report": "lab/work/admission-study/20260925-151213/report.json",
+  "sha256": {
+    "lab/work/admission-study/20260925-151213/report.json": "ba838a835357ffbdec14d23225d89c0d9837c22329f804e504b606fbab118505",
+    "lab/work/admission-study/20260925-151213/console.log": "95dd75013cc9199c24a2dc922c344c1e9c6228928d23e93d9cb87a139d77d207",
+    "lab/work/admission-study/20260925-151213/agent.jsonl": "9b565640f7c4c85e5cbdc9eafff4fe03edbc61dafe1480787bff3834cb0f721d",
+    "lab/work/admission-study/20260925-151213/qmp.jsonl": "0fecf06ac0a2231f4f1356085f15b87bd1c36ff0b9077bdef321a9babb369a84"
+  },
+  "inputs": {
+    "script_sha256": "b5ec9b4b0f5ff826f1279d1bf364dfba6077ad714f4d219bbbbc5742cf537fbc",
+    "version_probe_sha256": "3e6a7a187a33f166090781edabf7f590911d6be93ef4f3f9279fbeef90acad87",
+    "baseline_script_sha256": "67d72f30d4d86cb2985d7c071e17b15e8b3e2d936991ce724e15454e74f4e645",
+    "kernel_sha256": "73d9c6e40b210deb638070d6af591a68bb6d7ff0280d0ec34c9ccf705a4f47ac",
+    "base_initramfs_sha256": "6f4c6d30d627ae5ff204572e3cdfc472b273ce1238c7c1abffb9e7f8f2e2dcf1",
+    "initramfs_sha256": "2af81e5d148e49ffd4c4d2b61b7e2cd48c60f18a64714577df6c35080346cc73",
+    "guest_sha256": "f9d05d1ac1bea4c9efaba604d5249b6e37eae725e1cbf8c6d6bfbd30a46461fd",
+    "daemon_sha256": "5f275e7639e9370c6b60b5f6e8fff26fabd2faa45ed633d7541d1c1cef6904c4"
+  },
+  "configuration": {
+    "no_path_retry": 8,
+    "polling_interval": 1,
+    "max_polling_interval": 4,
+    "flush_on_last_del": "never",
+    "recheck_wwid": "yes",
+    "find_multipaths": "strict",
+    "allow_usb_devices": "yes",
+    "checker": "tur"
+  },
+  "scheduling": {
+    "policy": 0,
+    "priority": 0,
+    "rtprio_limit": [
+      0,
+      0
+    ]
+  },
+  "host_observed_disconnected_seconds": 15.401190881995717,
+  "stages": {
+    "before": {
+      "successful_appends": 1,
+      "error_counts": {},
+      "table": "mpstudy-data: 0 524288 linear 252:1 2048\nprobe: 0 2097152 multipath 1 queue_if_no_path 0 1 1 round-robin 0 1 1 8:0 1 \nprobe1: 0 2093056 linear 252:0 2048\n",
+      "status": "mpstudy-data: 0 524288 linear \nprobe: 0 2097152 multipath 2 0 0 0 1 1 A 0 1 0 8:0 A 0 \nprobe1: 0 2093056 linear \n",
+      "topology": "create: probe (0QEMU_QEMU_HARDDISK_UPSTREAM-SCSI-001) dm-0 QEMU,QEMU HARDDISK\nsize=1.0G features='1 queue_if_no_path' hwhandler='0' wp=rw\n`-+- policy='round-robin 0' prio=1 status=active\n  `- 0:0:0:0 sda 8:0 active ready running\n"
+    },
+    "absent": {
+      "successful_appends": 4,
+      "error_counts": {
+        "[Errno 5] Input/output error": 1,
+        "[Errno 30] Read-only file system": 69
+      },
+      "table": "mpstudy-data: 0 524288 linear 252:1 2048\nprobe: 0 2097152 multipath 0 0 0 0 \nprobe1: 0 2093056 linear 252:0 2048\n",
+      "status": "mpstudy-data: 0 524288 linear \nprobe: 0 2097152 multipath 2 0 0 0 0 0 \nprobe1: 0 2093056 linear \n",
+      "topology": "probe (0QEMU_QEMU_HARDDISK_UPSTREAM-SCSI-001) dm-0 ##,##\nsize=1.0G features='0' hwhandler='0' wp=rw\n"
+    },
+    "returned": {
+      "successful_appends": 4,
+      "error_counts": {
+        "[Errno 5] Input/output error": 1,
+        "[Errno 30] Read-only file system": 123
+      },
+      "table": "mpstudy-data: 0 524288 linear 252:1 2048\nprobe: 0 2097152 multipath 1 queue_if_no_path 0 1 1 round-robin 0 1 1 8:0 1 \nprobe1: 0 2093056 linear 252:0 2048\n",
+      "status": "mpstudy-data: 0 524288 linear \nprobe: 0 2097152 multipath 2 0 0 0 1 1 A 0 1 0 8:0 A 0 \nprobe1: 0 2093056 linear \n",
+      "topology": "probe (0QEMU_QEMU_HARDDISK_UPSTREAM-SCSI-001) dm-0 QEMU,QEMU HARDDISK\nsize=1.0G features='1 queue_if_no_path' hwhandler='0' wp=rw\n`-+- policy='round-robin 0' prio=1 status=active\n  `- 0:0:0:0 sda 8:0 active ready running\n"
+    }
+  },
+  "first_4k_direct_read": {
+    "before": {
+      "bytes": 4096,
+      "sha256": "80db0bc5bacee0bba83c9532f7198419acc0ad1d1dfc117351dee4c45f4468f1"
+    },
+    "after_late_return": {
+      "bytes": 4096,
+      "sha256": "80db0bc5bacee0bba83c9532f7198419acc0ad1d1dfc117351dee4c45f4468f1"
+    }
+  },
+  "daemon_log_excerpt": [
+    "2.355556 | probe: reload [0 2097152 multipath 1 queue_if_no_path 0 0 0]",
+    "2.364231 | probe: Entering recovery mode: max_retries=8",
+    "10.440454 | probe: Disable queueing",
+    "18.093803 | probe: reload [0 2097152 multipath 1 queue_if_no_path 0 1 1 round-robin 0 1 1 8:0 1]",
+    "18.103698 | probe: queue_if_no_path enabled",
+    "18.103738 | sda [8:0]: path added to devmap probe"
+  ],
+  "kernel_log_excerpt": [
+    "[   10.504301] JBD2: I/O error when updating journal superblock for dm-2-8.",
+    "[   10.604078] EXT4-fs error (device dm-2): ext4_journal_check_start:86: comm python3: Detected aborted journal",
+    "[   10.604253] EXT4-fs (dm-2): Remounting filesystem read-only"
+  ],
+  "claims": [
+    "Stock daemon resumes block access after its no-path timeout.",
+    "This run does not satisfy strict terminal-state or application-continuity requirements.",
+    "Only the first logical 4 KiB was directly reread; this is not whole-disk identity or filesystem recovery verification."
+  ],
+  "not_tested": [
+    "Daemon death or restart in this run",
+    "Strict admission extension",
+    "Full Ubuntu root integration",
+    "Wrong disk on Linux 7.0",
+    "Physical USB power failure",
+    "Comparable resource benchmark"
+  ],
+  "guest_daemon_recovery_to_disable_seconds": 8.076223
+}

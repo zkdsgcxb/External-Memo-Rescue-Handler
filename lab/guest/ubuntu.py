@@ -35,7 +35,7 @@ def prepare():
         path.symlink_to('/dev/null')
     services = {
         'lab-agent': '/usr/sbin/chroot /run/rescue /usr/bin/python3 /opt/lab/agent.py',
-        'lab-guard': '/usr/sbin/chroot /run/rescue /usr/bin/python3 /opt/lab/path_guard.py',
+        'lab-guard': '/usr/bin/python3 /opt/lab/path_guard.py',
         'lab-shell': '/usr/sbin/chroot /run/rescue /bin/sh -i',
     }
     wants = units/'multi-user.target.wants'
@@ -43,7 +43,7 @@ def prepare():
     for name, command in services.items():
         (units/(name+'.service')).write_text('[Unit]\nDescription=USB lab RAM '+name+'\n'
             'After=systemd-remount-fs.service\n[Service]\nType=simple\nExecStart='+command+
-            '\nRestart=no\n' + ('CPUAccounting=yes\nCPUQuota=20%\nCPUQuotaPeriodSec=20ms\n' if name=='lab-guard' else '') + ('StandardInput=tty\nStandardOutput=tty\nStandardError=tty\nTTYPath=/dev/ttyS2\n' if name=='lab-shell' else '') +
+            '\nRestart=no\n' + ('RootDirectory=/run/rescue\nExecStopPost=/usr/bin/python3 /opt/lab/path_guard.py --takeover\nCPUAccounting=yes\nCPUQuota=20%\nCPUQuotaPeriodSec=20ms\nMemoryAccounting=yes\nMemoryMax=128M\nMemorySwapMax=0\n' if name=='lab-guard' else '') + ('StandardInput=tty\nStandardOutput=tty\nStandardError=tty\nTTYPath=/dev/ttyS2\n' if name=='lab-shell' else '') +
             '[Install]\nWantedBy=multi-user.target\n')
         (wants/(name+'.service')).symlink_to('../'+name+'.service')
     (units/'lab-workload.service').write_text('[Unit]\nDescription=USB root append/fsync workload\n'

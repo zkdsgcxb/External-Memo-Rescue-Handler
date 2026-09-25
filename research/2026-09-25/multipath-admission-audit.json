@@ -1,0 +1,130 @@
+{
+  "date": "2026-09-25",
+  "kind": "fixed-source audit; not runtime admission proof",
+  "source_commit": "5a60a67d9f48ddff0d63b6e5d04c3a22764a0670",
+  "archive_sha256": "c0424c48fc04c82e12b5c21e359e22a58441a8fe27ad73e3255a78a5403508ae",
+  "all_audited_files_match_fixed_archive": true,
+  "files": {
+    "libmultipath/devmapper.c": {
+      "sha256": "7db179790826234a95dbc8d63e9a037292a3b7d8a238b7004982fb19caa7324c",
+      "line_count": 1754,
+      "function_lines": {
+        "dm_addmap": 455,
+        "dm_addmap_create": 540,
+        "dm_addmap_reload": 578,
+        "dm_reinstate_path": 1155,
+        "dm_simplecmd": 402,
+        "dm_reassign_table": 1585
+      }
+    },
+    "libmultipath/configure.c": {
+      "sha256": "edc38b843c3a6a681183c5fcc9f7cc93f6b13b5db7ba98ef4b11fb1504da39fb",
+      "line_count": 1398,
+      "function_lines": {
+        "domap": 845,
+        "coalesce_paths": 1037
+      }
+    },
+    "libmultipath/dmparser.c": {
+      "sha256": "91ccc391da3f85b234ff695c505530fd274f7f6a43d94b618f7ab89638db49c8",
+      "line_count": 514,
+      "function_lines": {
+        "assemble_map": 47
+      }
+    },
+    "libmultipath/structs_vec.c": {
+      "sha256": "e7da094765f00c206d091d4c70172488474c4f449323e424998dc4012b4adfff",
+      "line_count": 964,
+      "function_lines": {
+        "sync_map_state": 768,
+        "verify_paths": 865,
+        "enter_recovery_mode": 678,
+        "leave_recovery_mode": 702,
+        "set_no_path_retry": 722,
+        "update_queue_mode_add_path": 938
+      }
+    },
+    "multipathd/main.c": {
+      "sha256": "3ddf619a7a57253ca5e9e786047a6fb786b409930b0ad36998b638fc7c5e916a",
+      "line_count": 4593,
+      "function_lines": {
+        "uev_add_path": 1131,
+        "ev_add_path": 1301,
+        "update_map": 713,
+        "reinstate_path": 2058,
+        "update_path_state": 2598,
+        "retry_count_tick": 2185,
+        "check_path_wwid_change": 1090
+      }
+    },
+    "multipathd/cli_handlers.c": {
+      "sha256": "c0b80c84a35c363a11d4b8523ce79896b6bc4e2e77d5ec48fed62c65e20edb57",
+      "line_count": 1568,
+      "function_lines": {
+        "cli_add_path": 564,
+        "cli_reinstate": 1100,
+        "cli_resume": 1068
+      }
+    },
+    "multipath/main.c": {
+      "sha256": "0ce6aad2c3db41dacd9a96aea0369a40b2629466435ed9698c7be6a08d0ecf04",
+      "line_count": 1109,
+      "function_lines": {
+        "get_dm_mpvec": 168
+      }
+    }
+  },
+  "release_site_inventory": [
+    {
+      "file": "libmultipath/configure.c",
+      "line": 930,
+      "text": "r = dm_addmap_create(mpp, params);"
+    },
+    {
+      "file": "libmultipath/configure.c",
+      "line": 939,
+      "text": "r = dm_addmap_reload(mpp, params, 0);"
+    },
+    {
+      "file": "libmultipath/configure.c",
+      "line": 946,
+      "text": "r = dm_addmap_reload(mpp, params, 1);"
+    },
+    {
+      "file": "libmultipath/devmapper.c",
+      "line": 540,
+      "text": "int dm_addmap_create (struct multipath *mpp, char *params)"
+    },
+    {
+      "file": "libmultipath/devmapper.c",
+      "line": 578,
+      "text": "int dm_addmap_reload(struct multipath *mpp, char *params, int flush)"
+    },
+    {
+      "file": "libmultipath/devmapper.c",
+      "line": 1155,
+      "text": "dm_reinstate_path(const char * mapname, char * path)"
+    },
+    {
+      "file": "libmultipath/structs_vec.c",
+      "line": 789,
+      "text": "dm_reinstate_path(mpp->alias, pp->dev_t);"
+    },
+    {
+      "file": "multipathd/cli_handlers.c",
+      "line": 1132,
+      "text": "return dm_reinstate_path(pp->mpp->alias, pp->dev_t);"
+    },
+    {
+      "file": "multipathd/main.c",
+      "line": 2063,
+      "text": "if (dm_reinstate_path(pp->mpp->alias, pp->dev_t))"
+    }
+  ],
+  "diskseq_code_references": [],
+  "limits": [
+    "Direct arbitrary root dmsetup is outside library interception; service ownership must exclude concurrent writers.",
+    "Absence of an identifier in C/H sources does not prove absence of every equivalent mechanism.",
+    "Checker-only race is a source-order finding, not a measured wrong-disk write in this new run."
+  ]
+}

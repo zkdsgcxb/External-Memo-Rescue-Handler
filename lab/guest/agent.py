@@ -96,9 +96,11 @@ def setup():
               'vg_name': 'labrescue', 'vg_uuid': pv['vg_uuid'].strip().replace('-',''), 'lvs': lvs}
     Path('/etc/rescue/identity.json').write_text(json.dumps(config))
     if protected:
-        from path_guard import layout
+        from admission import layout
         Path('/etc/rescue/path-guard.json').write_text(json.dumps({'queue_seconds':seconds,
             'partition_sectors':int(Path('/sys/class/block/sda1/size').read_text()),
+            'logical_block_size':int((disk/'queue/logical_block_size').read_text()),
+            'initial_diskseq':int((disk/'diskseq').read_text()),
             'initial_node':'/dev/sda1','initial_sys_path':str(Path('/sys/class/block/sda1').resolve()),
             'layout':layout('/dev/sda1')}))
     print('LAB_SETUP_COMPLETE', flush=True)
@@ -133,7 +135,7 @@ def serve():
                 log.write(json.dumps(entry)+'\n')
     protected=Path('/etc/rescue/path-guard.json').exists()
     if protected:
-        from path_guard import readonly
+        from admission import readonly
     recovery = Recovery(json.loads(Path('/etc/rescue/identity.json').read_text()), runner=readonly if protected else traced_command)
     worker = None
     def snapshot():
@@ -147,6 +149,10 @@ def serve():
                 'identity': recovery.c,
                 'path_guard': json.loads(Path('/run/path-state.json').read_text()) if Path('/run/path-state.json').exists() else None,
                 'path_events':Path('/run/path-events.jsonl').read_text() if Path('/run/path-events.jsonl').exists() else '',
+                **{key:json.loads(Path('/run/'+filename).read_text()) if Path('/run/'+filename).exists() else None
+                   for key,filename in [('path_transaction','path-transaction.json'),
+                                        ('path_supervisor','path-supervisor.json'),
+                                        ('fault_hook','lab-fault-reached.json')]},
                 'kernel_queue_timeout_seconds': Path('/sys/module/dm_multipath/parameters/queue_if_no_path_timeout_secs').read_text().strip() if protected else None,
                 'helper_commands': Path('/run/helper-commands.jsonl').read_text() if Path('/run/helper-commands.jsonl').exists() else '',
                 'disks': [p.name for p in recovery.candidates()],
