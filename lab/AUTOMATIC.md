@@ -26,7 +26,7 @@ Ubuntu 中 `lab-guard.service` 配置 `CPUQuota=20%`、`CPUQuotaPeriodSec=20ms`�
 
 2026-09-25 已用 **`probing → 路径复核 → ready` 替换原来的 resume 后直接 ready**。启动时通过 libdevmapper 查询实际 multipath target 版本；1.15.0 起使用 `DM_MPATH_PROBE_PATHS`，由内核读取当前活动组的活动路径并标记路径类错误。仅在已准入的新表 resume 后按需启动一个后台线程，健康期不启动探测线程或读取。完成后复核映射 UUID/类型、当前 dev_t 的 Active 状态、sysfs 实例和原恢复期限，再记录 ready；返回 0 只记作 `completed`，不解释为读成功或文件系统健康。
 
-未完成探测持有内核 live-table 引用，期间禁止再次 load/suspend；超过原期限则保持 expired，迟到结果不能复活恢复流程。后台线程不能取消卡在内核的读取。旧 target 不发新 ioctl，明确记录 `state-only-unsupported`；真正的 ENOTTY 会缓存，不重复调用。旧 6.8 实测可能将未知 ioctl 转发并返回 EINVAL，所以新内核的 EINVAL 必须按错误处理，不能统一降级。实现、单独 ABI 实验和集成结果见 [新内核路径探测接入](KERNEL-PROBE.md)。
+未完成探测持有内核 live-table 引用，期间禁止再次 load/suspend；超过原期限则保持 expired，迟到结果不能复活恢复流程。后台线程不能取消卡在内核的读取。当前只维护本机 7.0 基线，启动时要求 multipath target 至少 1.15.0；能力不足直接报错。ENOTTY、EINVAL、EIO 等错误均不能当作成功，不再提供旧内核适配、缓存或跳过探测的降级分支。实现、单独 ABI 实验和集成结果见 [新内核路径探测接入](KERNEL-PROBE.md)。
 
 默认后台等待窗口为 8 秒，包含切换后的探测确认阶段；内核无路径排队超时为该值加 2 秒，作为后台死亡时的补充退路。计时起点和调度不同，不是严格实时上限。超时后切成 `fail_if_no_path`，结束无路径排队，并保持终止状态，不再自动装入新表。它不取消下层在途 I/O，也不禁止仍为 Active 的路径继续工作；此时不能保证原系统完整存活。
 

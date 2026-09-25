@@ -9,8 +9,7 @@ import time
 
 
 # Linux UAPI _IO(0xfd, 18), introduced in 6.16. Noble's userspace header
-# predates it. This lab builds x86_64 guests. Check the target version first:
-# old targets may forward unknown ioctls and return EINVAL instead of ENOTTY.
+# predates it. This lab targets the current x86_64 kernel with this interface.
 DM_MPATH_PROBE_PATHS = 0xfd12
 
 
@@ -20,11 +19,9 @@ class PathProbe:
     Success means the ioctl completed, not that a read or full health check
     succeeded. The kernel can skip paths or ignore non-path read errors.
     """
-    def __init__(self,supported=None):
+    def __init__(self):
         self._thread=None
         self._result=None
-        self.supported=supported
-        self._unsupported_errno=None
 
     @property
     def busy(self):
@@ -33,10 +30,6 @@ class PathProbe:
     def start(self,device,token):
         if self.busy:
             raise RuntimeError('Previous path probe has not been consumed')
-        if self.supported is False:
-            self._result={'token':token,'errno':self._unsupported_errno,'elapsed':0.0,'status':'unsupported',
-                          'source':'feature-check' if self._unsupported_errno is None else 'cached-unsupported'}
-            return
         # No worker or threading import during ordinary healthy monitoring.
         import threading
         def run():
@@ -51,7 +44,7 @@ class PathProbe:
             finally:
                 if fd is not None:
                     os.close(fd)
-            status={0:'completed',errno.ENOTCONN:'no_paths',errno.ENOTTY:'unsupported'}.get(error,'error')
+            status={0:'completed',errno.ENOTCONN:'no_paths'}.get(error,'error')
             self._result={'token':token,'errno':error,'elapsed':time.monotonic()-started,'status':status,'source':'ioctl'}
         self._thread=threading.Thread(target=run,name='dm-path-probe',daemon=True)
         try:
@@ -68,12 +61,6 @@ class PathProbe:
             self._thread=None
         result=self._result
         self._result=None
-        if result is not None:
-            if result['errno']==errno.ENOTTY:
-                self.supported=False
-                self._unsupported_errno=errno.ENOTTY
-            elif result['errno'] in (0,errno.ENOTCONN):
-                self.supported=True
         return result
 
 

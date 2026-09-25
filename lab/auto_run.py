@@ -266,8 +266,8 @@ def main():
                     checks['no_failed_units']=not ub['failed_units'].strip() and not ua.get('failed_units','missing').strip()
                 checks['acknowledged_data_present']=report.get('data_audit',{}).get('result',{}).get('prefix_matches',False)
                 checks['post_swap_confirmation']=all(
-                    e['outcome']['path_guard'].get('confirmation') in
-                        ('kernel-probe-and-state','state-only-unsupported') and
+                    e['outcome']['path_guard'].get('confirmation')=='kernel-probe-and-state' and
+                    e['outcome']['path_guard'].get('kernel_probe',{}).get('status')=='completed' and
                     e['outcome']['path_guard'].get('kernel_probe',{}).get('token')==e['index']
                     for e in report['cycles'])
             else:

@@ -21,7 +21,7 @@ from run import Channel, WORK, qemu_command, shell_probe
 
 
 GUEST_COMMON = '''\
-import errno, fcntl, json, os, subprocess, time
+import fcntl, json, os, subprocess, time
 from pathlib import Path
 assert 'ram_rescue_lab=1' in Path('/proc/cmdline').read_text().split()
 assert Path('/sys/class/dmi/id/product_name').read_text().strip() == 'RAMRescueLab'
@@ -39,8 +39,8 @@ def status():
 def backend_reads():
     st = os.stat('/dev/mapper/probe-backend')
     return int(Path('/sys/dev/block/%d:%d/stat' % (os.major(st.st_rdev), os.minor(st.st_rdev))).read_text().split()[0])
-def probe(start_marker=None, node='/dev/mapper/probe-target'):
-    fd = os.open(node, os.O_RDONLY | os.O_CLOEXEC)
+def probe(start_marker=None):
+    fd = os.open('/dev/mapper/probe-target', os.O_RDONLY | os.O_CLOEXEC)
     started = time.monotonic()
     if start_marker:
         Path(start_marker).write_text(json.dumps({'pid': os.getpid(), 'started': started}))
@@ -107,7 +107,6 @@ def ram_action(folder, name, body, timeout=20):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--build-dir', type=Path, default=WORK)
-    parser.add_argument('--expect', choices=['available', 'unsupported'], required=True)
     parser.add_argument('--tcg', action='store_true')
     args = parser.parse_args()
     if os.geteuid() == 0:
@@ -127,7 +126,7 @@ def main():
     command = qemu_command(folder, tcg=args.tcg, kernel=args.build_dir / 'vmlinuz',
                            initramfs=args.build_dir / 'initramfs.cpio.gz')
     report = {
-        'expected_capability': args.expect,
+        'expected_capability': 'available',
         'build': build,
         'command': command,
         'qemu_version': subprocess.check_output(['qemu-system-x86_64', '--version'], text=True).splitlines()[0],
@@ -198,95 +197,73 @@ def main():
                 outcome = probe()
                 answer = {'probe': outcome, 'reads_before': before, 'reads_after': backend_reads(), 'status': status()}
             ''')
-            if args.expect == 'unsupported':
-                report['legacy_forwarding'] = ram_action(folder, '03-legacy-forwarding', '''
-                    dm('create', 'probe-direct', '--table', '0 32768 multipath 2 queue_mode bio 0 1 1 round-robin 0 1 1 /dev/sdb 1')
-                    dm('mknodes', 'probe-direct')
-                    fd = os.open('/dev/mapper/probe-direct', os.O_RDONLY)
-                    try:
-                        assert len(os.pread(fd, 4096, 0)) == 4096
-                    finally:
-                        os.close(fd)
-                    answer = {'direct_multipath': probe(node='/dev/mapper/probe-direct'),
-                              'plain_block': probe(node='/dev/sdb')}
-                ''')
-                healthy = report['healthy']
-                report['checks'] = {
-                    # Older targets can forward the unknown ioctl to a lower
-                    # target/driver, so absence is not uniformly ENOTTY.
-                    'legacy_probe_rejected': healthy['probe']['errno'] in [22, 25],
-                    'unsupported_does_not_read': healthy['reads_before'] == healthy['reads_after'],
-                    'path_still_active': ' A ' in healthy['status'] and ' F ' not in healthy['status'],
-                    'ram_shell_alive': shell_probe(folder / 'rescue.sock'),
-                }
-            else:
-                report['blocked_start'] = ram_action(folder, '03-block-start', '''
-                    dm('suspend', '--noflush', '--nolockfs', 'probe-backend')
-                    pid = os.fork()
-                    if pid == 0:
-                        os.setsid()
-                        devnull = os.open('/dev/null', os.O_RDWR)
-                        for descriptor in (0, 1, 2):
-                            os.dup2(devnull, descriptor)
-                        outcome = probe(str(ROOT/'started.json'))
-                        (ROOT/'complete.tmp').write_text(json.dumps(outcome))
-                        os.replace(ROOT/'complete.tmp', ROOT/'complete.json')
-                        os._exit(0)
-                    (ROOT/'pid').write_text(str(pid))
-                    answer = {'pid': pid, 'lower_mapping_suspended': dm('info', '-c', '--noheadings', '-o', 'suspended', 'probe-backend')}
-                ''')
-                time.sleep(2)
-                report['blocked_observed'] = ram_action(folder, '04-block-observe', '''
-                    pid = int((ROOT/'pid').read_text())
-                    started = json.loads((ROOT/'started.json').read_text())
-                    answer = {'started': started, 'result_exists': (ROOT/'complete.json').exists(),
-                              'process_state': Path(f'/proc/{pid}/stat').read_text().split()[2],
-                              'elapsed_seconds': time.monotonic() - started['started'], 'status': status()}
-                ''')
-                report['ram_shell_while_blocked'] = shell_probe(folder / 'rescue.sock')
-                report['released'] = ram_action(folder, '05-block-release', '''
-                    dm('resume', 'probe-backend')
-                    deadline = time.monotonic() + 10
-                    while not (ROOT/'complete.json').exists():
-                        if time.monotonic() > deadline:
-                            raise RuntimeError('Original probe failed to complete after release')
-                        time.sleep(.05)
-                    answer = {'probe': json.loads((ROOT/'complete.json').read_text()), 'status': status()}
-                ''')
-                report['read_error'] = ram_action(folder, '06-read-error', '''
-                    dm('suspend', '--noflush', '--nolockfs', 'probe-backend')
-                    dm('reload', 'probe-backend', '--table', '0 32768 error')
-                    dm('resume', 'probe-backend')
-                    before = status()
-                    outcome = probe()
-                    answer = {'status_before': before, 'probe': outcome, 'status_after': status(),
-                              'backend_table': dm('table', 'probe-backend')}
-                ''')
-                report['failed_path_not_reinstated'] = ram_action(folder, '07-no-reinstate', '''
-                    dm('suspend', '--noflush', '--nolockfs', 'probe-backend')
-                    dm('reload', 'probe-backend', '--table', '0 32768 linear /dev/sdb 0')
-                    dm('resume', 'probe-backend')
-                    before = backend_reads()
-                    answer = {'probe': probe(), 'reads_before': before,
-                              'reads_after': backend_reads(), 'status': status()}
-                ''')
-                healthy, blocked, released, error, failed = (report[key] for key in
-                    ['healthy', 'blocked_observed', 'released', 'read_error', 'failed_path_not_reinstated'])
-                report['checks'] = {
-                    'cold_zero_can_skip_reads': report['setup']['cold_probe']['return'] == 0 and report['setup']['cold_reads_before'] == report['setup']['cold_reads_after'],
-                    'healthy_returns_zero': healthy['probe']['return'] == 0,
-                    'healthy_probe_performs_read': healthy['reads_after'] > healthy['reads_before'],
-                    'blocked_exceeds_two_seconds': blocked['elapsed_seconds'] >= 2,
-                    'blocked_probe_incomplete': not blocked['result_exists'],
-                    'blocked_child_alive': blocked['process_state'] in ['D', 'S', 'R'],
-                    'ram_shell_alive_during_block': report['ram_shell_while_blocked'],
-                    'original_probe_completes_after_release': released['probe']['return'] == 0 and released['probe']['elapsed_seconds'] >= 2,
-                    'error_path_was_active': ' A ' in error['status_before'] and ' F ' not in error['status_before'],
-                    'read_error_marks_path_failed': ' F ' in error['status_after'],
-                    'all_failed_is_enotconn': error['probe']['errno'] == 107,
-                    'probe_does_not_reinstate_failed_path': failed['probe']['errno'] == 107 and ' F ' in failed['status'],
-                    'failed_path_not_probed': failed['reads_before'] == failed['reads_after'],
-                }
+            report['blocked_start'] = ram_action(folder, '03-block-start', '''
+                dm('suspend', '--noflush', '--nolockfs', 'probe-backend')
+                pid = os.fork()
+                if pid == 0:
+                    os.setsid()
+                    devnull = os.open('/dev/null', os.O_RDWR)
+                    for descriptor in (0, 1, 2):
+                        os.dup2(devnull, descriptor)
+                    outcome = probe(str(ROOT/'started.json'))
+                    (ROOT/'complete.tmp').write_text(json.dumps(outcome))
+                    os.replace(ROOT/'complete.tmp', ROOT/'complete.json')
+                    os._exit(0)
+                (ROOT/'pid').write_text(str(pid))
+                answer = {'pid': pid, 'lower_mapping_suspended': dm('info', '-c', '--noheadings', '-o', 'suspended', 'probe-backend')}
+            ''')
+            time.sleep(2)
+            report['blocked_observed'] = ram_action(folder, '04-block-observe', '''
+                pid = int((ROOT/'pid').read_text())
+                started = json.loads((ROOT/'started.json').read_text())
+                answer = {'started': started, 'result_exists': (ROOT/'complete.json').exists(),
+                          'process_state': Path(f'/proc/{pid}/stat').read_text().split()[2],
+                          'elapsed_seconds': time.monotonic() - started['started'], 'status': status()}
+            ''')
+            report['ram_shell_while_blocked'] = shell_probe(folder / 'rescue.sock')
+            report['released'] = ram_action(folder, '05-block-release', '''
+                dm('resume', 'probe-backend')
+                deadline = time.monotonic() + 10
+                while not (ROOT/'complete.json').exists():
+                    if time.monotonic() > deadline:
+                        raise RuntimeError('Original probe failed to complete after release')
+                    time.sleep(.05)
+                answer = {'probe': json.loads((ROOT/'complete.json').read_text()), 'status': status()}
+            ''')
+            report['read_error'] = ram_action(folder, '06-read-error', '''
+                dm('suspend', '--noflush', '--nolockfs', 'probe-backend')
+                dm('reload', 'probe-backend', '--table', '0 32768 error')
+                dm('resume', 'probe-backend')
+                before = status()
+                outcome = probe()
+                answer = {'status_before': before, 'probe': outcome, 'status_after': status(),
+                          'backend_table': dm('table', 'probe-backend')}
+            ''')
+            report['failed_path_not_reinstated'] = ram_action(folder, '07-no-reinstate', '''
+                dm('suspend', '--noflush', '--nolockfs', 'probe-backend')
+                dm('reload', 'probe-backend', '--table', '0 32768 linear /dev/sdb 0')
+                dm('resume', 'probe-backend')
+                before = backend_reads()
+                answer = {'probe': probe(), 'reads_before': before,
+                          'reads_after': backend_reads(), 'status': status()}
+            ''')
+            healthy, blocked, released, error, failed = (report[key] for key in
+                ['healthy', 'blocked_observed', 'released', 'read_error', 'failed_path_not_reinstated'])
+            report['checks'] = {
+                'cold_zero_can_skip_reads': report['setup']['cold_probe']['return'] == 0 and report['setup']['cold_reads_before'] == report['setup']['cold_reads_after'],
+                'healthy_returns_zero': healthy['probe']['return'] == 0,
+                'healthy_probe_performs_read': healthy['reads_after'] > healthy['reads_before'],
+                'blocked_exceeds_two_seconds': blocked['elapsed_seconds'] >= 2,
+                'blocked_probe_incomplete': not blocked['result_exists'],
+                'blocked_child_alive': blocked['process_state'] in ['D', 'S', 'R'],
+                'ram_shell_alive_during_block': report['ram_shell_while_blocked'],
+                'original_probe_completes_after_release': released['probe']['return'] == 0 and released['probe']['elapsed_seconds'] >= 2,
+                'error_path_was_active': ' A ' in error['status_before'] and ' F ' not in error['status_before'],
+                'read_error_marks_path_failed': ' F ' in error['status_after'],
+                'all_failed_is_enotconn': error['probe']['errno'] == 107,
+                'probe_does_not_reinstate_failed_path': failed['probe']['errno'] == 107 and ' F ' in failed['status'],
+                'failed_path_not_probed': failed['reads_before'] == failed['reads_after'],
+            }
             report['passed'] = all(report['checks'].values())
         except BaseException as exc:
             report['error'] = repr(exc)

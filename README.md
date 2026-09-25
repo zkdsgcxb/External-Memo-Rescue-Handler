@@ -8,7 +8,7 @@
 
 各部件的职责、我们新增的工作、复用的开源实现与可替换边界见 [`ARCHITECTURE.md`](ARCHITECTURE.md)。
 
-实验 Guard 已接入新内核的 `DM_MPATH_PROBE_PATHS`，替换换表后直接宣布就绪的分支；健康期不主动读盘，旧内核明确降级。机制和 QEMU 验收见 [路径探测接入](lab/KERNEL-PROBE.md)。
+实验 Guard 已接入新内核的 `DM_MPATH_PROBE_PATHS`，替换换表后直接宣布就绪的分支；当前以本机 7.0 为基线，要求此接口，不提供旧内核兼容降级。健康期不主动读盘。机制和 QEMU 验收见 [路径探测接入](lab/KERNEL-PROBE.md)。
 
 完整 Ubuntu Server 用户空间和真实 Git 克隆场景见 [`lab/UBUNTU.md`](lab/UBUNTU.md)，使用 systemd 管理服务并从虚拟 USB/LVM 根卷运行。
 

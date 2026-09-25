@@ -62,7 +62,9 @@ class Guard:
         self.suspended=False
         self.mapper=DeviceMapper()
         self.target_version=self.mapper.target_version('multipath')
-        self.probe=PathProbe(supported=self.target_version>=(1,15,0))
+        if self.target_version<(1,15,0):
+            raise RuntimeError('DM_MPATH_PROBE_PATHS is required (multipath target >= 1.15.0)')
+        self.probe=PathProbe()
         self.confirming=False
         self.generation=0
         self.current_dev=None
@@ -114,7 +116,7 @@ class Guard:
         status=self.check_map()
         # Zero is not proof of a successful read. Reconcile the mapping and
         # enrolled instance again; never substitute this for media admission.
-        if (result['status'] not in ('completed','unsupported') or
+        if (result['status']!='completed' or
                 not self.current_present() or not self.current_active(status) or
                 re.search(r'\b\d+:\d+ F \d+\b',status)):
             self.event('rejected',reason='Post-swap path confirmation failed',kernel_probe=result)
@@ -126,7 +128,7 @@ class Guard:
         self.recoveries+=1
         self.last_rejection=None
         self.event('ready',node=self.current,kernel_probe=result,
-                   confirmation='kernel-probe-and-state' if result['status']=='completed' else 'state-only-unsupported')
+                   confirmation='kernel-probe-and-state')
 
     def step(self):
         if self.state=='expired':

@@ -70,25 +70,8 @@ class PathProbeTests(unittest.TestCase):
             close.assert_called_once_with(41)
             self.assertEqual(call.call_args.args[:2], (41, 0xfd12))
 
-    def test_enotty_is_cached_without_reopening_or_reissuing_ioctl(self):
-        probe = PathProbe()
-        with patch('dm_monitor.os.open', return_value=42) as opened, \
-             patch('dm_monitor.os.close') as close, \
-             patch('dm_monitor.fcntl.ioctl', side_effect=OSError(errno.ENOTTY, 'unsupported')) as ioctl:
-            probe.start('/dev/mapper/example', 1)
-            first = self.result(probe)
-            self.assertEqual((first['errno'], first['status']), (errno.ENOTTY, 'unsupported'))
-            probe.start('/dev/mapper/example', 2)
-            second = self.result(probe)
-            self.assertEqual((second['token'], second['status']), (2, 'unsupported'))
-            self.assertEqual(second['errno'], errno.ENOTTY)
-            self.assertEqual(second['source'], 'cached-unsupported')
-            opened.assert_called_once()
-            ioctl.assert_called_once()
-            close.assert_called_once_with(42)
-
-    def test_unknown_error_is_not_a_success_and_closes_device(self):
-        for error in (errno.EIO, errno.EINVAL):
+    def test_ioctl_error_is_not_a_success_and_closes_device(self):
+        for error in (errno.ENOTTY, errno.EINVAL, errno.EIO):
             with self.subTest(error=error):
                 probe = PathProbe()
                 with patch('dm_monitor.os.open', return_value=43), \
@@ -97,21 +80,8 @@ class PathProbeTests(unittest.TestCase):
                     probe.start('/dev/mapper/example', 3)
                     result = self.result(probe)
                 self.assertEqual((result['errno'], result['status']), (error, 'error'))
+                self.assertEqual(result['source'], 'ioctl')
                 close.assert_called_once_with(43)
-
-    def test_old_target_version_disables_probe_without_touching_device(self):
-        probe = PathProbe(supported=False)
-        with patch('dm_monitor.os.open') as opened, \
-             patch('dm_monitor.os.close') as close, \
-             patch('dm_monitor.fcntl.ioctl') as ioctl:
-            probe.start('/dev/mapper/example', 1)
-            result = self.result(probe)
-        self.assertEqual(result['status'], 'unsupported')
-        self.assertEqual(result['source'], 'feature-check')
-        self.assertIsNone(result['errno'])
-        opened.assert_not_called()
-        close.assert_not_called()
-        ioctl.assert_not_called()
 
     def test_no_paths_has_distinct_result(self):
         probe = PathProbe()

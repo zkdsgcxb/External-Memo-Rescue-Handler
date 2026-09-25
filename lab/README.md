@@ -35,6 +35,8 @@ python3 lab/build.py --kernel "lab/work/kernel-package/extracted/boot/vmlinuz-$(
 
 若精确内核包已从源中移除，可以自行提供可读的匹配内核文件，通过 `--kernel` 指定；`--release` 指定其模块版本。不要把不同版本的内核和模块混用。
 
+当前自动 Guard 以本机 `7.0.0-34-generic` 为验收基线，必须具备 `DM_MPATH_PROBE_PATHS`（multipath target ≥ 1.15.0），没有旧内核兼容降级。构建器仍可用于历史研究镜像，但不表示自动 Guard 支持这些内核。
+
 测试另一内核时，可将对应 image/modules 包私有解包，以 `--module-root <解包根>` 读取其 `/lib/modules/<release>`，用 `--work-dir lab/work/<独立目录>` 保存新构建，无需安装宿主内核。解包根若只有 `usr/lib`，需要补私有 `lib → usr/lib` 链接，再执行 `depmod -b <解包根> <release>`。`auto_run.py` 和 `research_probe.py` 接受 `--build-dir <独立目录>`；Ubuntu/Git 种子仍沿用原路径。完整命令、来源与已运行的 7.0 对照见 [版本研究](../research/2026-09-25/VERSION-STUDY.md)。
 
 构建脚本只复用生产构建器的文件/动态库复制函数，不执行其中绑定真实磁盘的登记函数。它不包含宿主密码、主机设备登记清单或实际救援镜像。

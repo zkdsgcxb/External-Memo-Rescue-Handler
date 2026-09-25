@@ -1,0 +1,180 @@
+{
+  "scope": "Current Ubuntu 7.0 baseline only. Legacy fallback/cache/test mode removed; missing target capability rejects startup. No host deployment.",
+  "lab_unit_tests": {
+    "count": 25,
+    "passed": true
+  },
+  "kernel_release": "7.0.0-34-generic",
+  "source_sha256": {
+    "lab/build.py": "b77347cf135399f6febeaac272f85528ba95f217e4375786fae85325f2f85ae5",
+    "ram-rescue-demo/src/rescue.py": "c40649b895ba56ebecbac8a0192c30efbb4ec85bfb29adf36a4f07289f2b0a31",
+    "ram-rescue-demo/src/lvm.conf": "10708bf37ce4b01ec3e7e3e0d3d6394301f0bf3d4046fbd1da8521dad80d0cd3",
+    "lab/guest/agent.py": "3c0f06180aa71ecb508658f6af3fbc1eaca3bf1b217a405301f701153db9c805",
+    "lab/guest/dm_monitor.py": "0a6fcad28e2ca6ccdfe7e7193ba2da89bac9ed08a0bc7f85cb91a1f1692fddb3",
+    "lab/guest/git_workload.py": "c61d4c440a44cdb263f247e868292cea4270a78d59dd537706090909cd7c0538",
+    "lab/guest/init.sh": "7fc37f2d3a97d0489ef534a37ef1a612bee40f1c9c6b62d4d5cba7e6170bf75f",
+    "lab/guest/path_guard.py": "97c58531bc197199d25f3d85eb52bf9250aabbeff8093454f77795cbfe4a2a24",
+    "lab/guest/root-init.sh": "078ec84bb1f502fc2b80b99b4eef2ee4a40432ccb9a476bf7757952547ca57d9",
+    "lab/guest/ubuntu.py": "224aada1ec5efbd05a1bd6a622a617a911f61760141dce73078553d66923aeb6",
+    "lab/guest/ubuntu_workload.py": "2cb4f4a137fa6b6e8b99d87c29efe89c2dbcc7d7cc7ee814b736a193f667a890",
+    "lab/guest/wire.py": "66180734f19432381ff6fbd3b8853c536d083ee3c681e52864902a91efafe87e",
+    "lab/guest/workload.py": "15d8e159ab16b2e7786aeee10d4be861a6b1cf448bf3ddf16b6a8c64ab72ad2c",
+    "lab/kernel_probe_test.py": "f2f0ed30de7cbb86eb52c487218061150591d28a9b6f14e7fc333d9d966aabca",
+    "lab/auto_run.py": "dbea57961c9865a39de0997aa20e9291d8837d956058a2014ebe19f5c1a0398c",
+    "lab/tests/test_path_probe.py": "0abaf88aca98915bbc6222459e38d12df360e443491231f2f78c3aa0d70e157d",
+    "lab/tests/test_path_guard.py": "50cedda37bf8d103a9acf9959a2edd3305adcc053447ef591598c8b4ea2d9414"
+  },
+  "runs": [
+    {
+      "name": "kernel_api",
+      "raw_report": "lab/work/20260925-145254-kernel-probe-32541/report.json",
+      "raw_report_sha256": "4526918d90ceb481d745b4278909fd692cefaefaced1353f61a2193e08efebf8",
+      "runner_sha256": "f2f0ed30de7cbb86eb52c487218061150591d28a9b6f14e7fc333d9d966aabca",
+      "kernel_sha256": "73d9c6e40b210deb638070d6af591a68bb6d7ff0280d0ec34c9ccf705a4f47ac",
+      "initramfs_sha256": "28aaa04ecedbdc43f5f18c639263f16f4189045c622ffbedb3dbb2be79aa0710",
+      "passed": true,
+      "checks": {
+        "cold_zero_can_skip_reads": true,
+        "healthy_returns_zero": true,
+        "healthy_probe_performs_read": true,
+        "blocked_exceeds_two_seconds": true,
+        "blocked_probe_incomplete": true,
+        "blocked_child_alive": true,
+        "ram_shell_alive_during_block": true,
+        "original_probe_completes_after_release": true,
+        "error_path_was_active": true,
+        "read_error_marks_path_failed": true,
+        "all_failed_is_enotconn": true,
+        "probe_does_not_reinstate_failed_path": true,
+        "failed_path_not_probed": true
+      }
+    },
+    {
+      "name": "ubuntu_git",
+      "raw_report": "lab/work/20260925-145255-auto-32539/report.json",
+      "raw_report_sha256": "6387e3ff261f9ee1d35e0db75acc57d251b7704318b53b74053d9678183feb5e",
+      "runner_sha256": "dbea57961c9865a39de0997aa20e9291d8837d956058a2014ebe19f5c1a0398c",
+      "kernel_sha256": "73d9c6e40b210deb638070d6af591a68bb6d7ff0280d0ec34c9ccf705a4f47ac",
+      "initramfs_sha256": "28aaa04ecedbdc43f5f18c639263f16f4189045c622ffbedb3dbb2be79aa0710",
+      "passed": true,
+      "checks": {
+        "ram_heartbeat": true,
+        "ram_shell": true,
+        "stable_upper_mappings": true,
+        "same_process_alive": true,
+        "automatic_recovery": true,
+        "zero_application_errors": true,
+        "writes_continued": true,
+        "block_read": true,
+        "root_read": true,
+        "filesystem_writable": true,
+        "no_journal_abort": true,
+        "ubuntu_systemd": true,
+        "same_boot": true,
+        "services_survived": true,
+        "no_failed_units": true,
+        "acknowledged_data_present": true,
+        "post_swap_confirmation": true,
+        "git_clone_succeeded": true,
+        "same_git_process": true,
+        "git_active_during_fault": true,
+        "git_integrity": true
+      },
+      "successful_writes": 233,
+      "failed_writes": 0,
+      "max_write_latency": 1.0429324800000046,
+      "max_heartbeat_gap": 0.7728454730022349,
+      "cycle_path_states": [
+        {
+          "time": 54.030120968,
+          "state": "ready",
+          "recoveries": 1,
+          "multipath_target_version": [
+            1,
+            15,
+            0
+          ],
+          "node": "/dev/sdb1",
+          "kernel_probe": {
+            "token": 1,
+            "errno": 0,
+            "elapsed": 0.0004311020000002941,
+            "status": "completed",
+            "source": "ioctl"
+          },
+          "confirmation": "kernel-probe-and-state"
+        },
+        {
+          "time": 57.146011099,
+          "state": "ready",
+          "recoveries": 2,
+          "multipath_target_version": [
+            1,
+            15,
+            0
+          ],
+          "node": "/dev/sda1",
+          "kernel_probe": {
+            "token": 2,
+            "errno": 0,
+            "elapsed": 0.00042509600000073533,
+            "status": "completed",
+            "source": "ioctl"
+          },
+          "confirmation": "kernel-probe-and-state"
+        },
+        {
+          "time": 60.1677191,
+          "state": "ready",
+          "recoveries": 3,
+          "multipath_target_version": [
+            1,
+            15,
+            0
+          ],
+          "node": "/dev/sdb1",
+          "kernel_probe": {
+            "token": 3,
+            "errno": 0,
+            "elapsed": 0.00030415099999459017,
+            "status": "completed",
+            "source": "ioctl"
+          },
+          "confirmation": "kernel-probe-and-state"
+        }
+      ],
+      "block_after": {
+        "bytes": 4096,
+        "ext4_magic": "53ef"
+      },
+      "data_audit": {
+        "acknowledged_records": 237,
+        "confirmed_bytes": 971592,
+        "prefix_matches": true
+      },
+      "git_validation": {
+        "head": "e8f897f4afef0031fe618a8e94127a0934896aba",
+        "expected_head": "e8f897f4afef0031fe618a8e94127a0934896aba",
+        "head_matches": true,
+        "fsck_passed": true,
+        "fsck_output": "",
+        "worktree_clean": true,
+        "tracked_files": 83475,
+        "source": {
+          "url": "https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git",
+          "ref": "v6.8",
+          "commit": "e8f897f4afef0031fe618a8e94127a0934896aba",
+          "history": "depth 1",
+          "tracked_files": 83475,
+          "object_disk_bytes": 260778158
+        }
+      }
+    }
+  ],
+  "limitations": [
+    "No new old-kernel VM run or compatibility implementation. Historical experiment files remain historical evidence.",
+    "An ioctl return of zero is not a full health certificate.",
+    "This change did not rerun CPU benchmarks; initial integration resource results refer to commit 88b8e55.",
+    "No physical root-disk unplug or automatic-root deployment."
+  ]
+}

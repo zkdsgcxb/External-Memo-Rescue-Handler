@@ -10,7 +10,6 @@ BASE = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(BASE.parent / 'ram-rescue-demo/src'))
 sys.path.insert(0, str(BASE / 'guest'))
 import path_guard
-from dm_monitor import PathProbe
 
 
 class FakeProbe:
@@ -30,8 +29,7 @@ class FakeProbe:
             'token': self.calls[-1][1] if token is None else token,
             'errno': error,
             'elapsed': .01,
-            'status': {0: 'completed', errno.ENOTTY: 'unsupported',
-                       errno.ENOTCONN: 'no_paths'}.get(error, 'error'),
+            'status': {0: 'completed', errno.ENOTCONN: 'no_paths'}.get(error, 'error'),
         }
 
     def poll(self):
@@ -176,12 +174,22 @@ class GuardProbeTests(unittest.TestCase):
         self.guard.step()
         self.assert_not_recovered()
 
-    def test_unknown_ioctl_error_never_becomes_ready(self):
+    def assert_probe_error_not_ready(self, error):
         self.start_recovery()
-        self.probe.complete(errno.EIO)
+        self.probe.complete(error)
         self.guard.step()
         self.assert_not_recovered()
-        self.assertEqual(self.events[-1]['kernel_probe']['errno'], errno.EIO)
+        self.assertEqual(self.events[-1]['kernel_probe']['errno'], error)
+        self.assertEqual(self.events[-1]['kernel_probe']['status'], 'error')
+
+    def test_io_error_never_becomes_ready(self):
+        self.assert_probe_error_not_ready(errno.EIO)
+
+    def test_invalid_ioctl_never_becomes_ready(self):
+        self.assert_probe_error_not_ready(errno.EINVAL)
+
+    def test_unavailable_ioctl_never_becomes_ready(self):
+        self.assert_probe_error_not_ready(errno.ENOTTY)
 
     def test_no_paths_never_becomes_ready(self):
         self.start_recovery()
@@ -216,38 +224,14 @@ class GuardProbeTests(unittest.TestCase):
         self.assertEqual(self.guard.state, 'expired')
         self.assertEqual(self.guard.recoveries, 0)
 
-    def test_unsupported_fallback_is_explicit_and_still_checks_current_state(self):
-        self.start_recovery()
-        self.probe.complete(errno.ENOTTY)
-        self.guard.step()
-        self.assertEqual(self.guard.state, 'ready')
-        self.assertEqual(self.events[-1]['confirmation'], 'state-only-unsupported')
-        self.assertEqual(self.events[-1]['kernel_probe']['errno'], errno.ENOTTY)
-
-    def test_old_dm_target_falls_back_without_creating_probe_thread(self):
-        self.mapper.target_version.return_value = (1, 14, 0)
-        event = self.guard.event
-        with patch('path_guard.PathProbe', wraps=PathProbe):
-            self.guard = path_guard.Guard(self.guard.config, self.recovery)
-        self.guard.event = event
-        (self.sys / 'class/block/sda3').unlink()
-        with patch('dm_monitor.fcntl.ioctl') as ioctl, patch('threading.Thread') as worker:
-            self.guard.step()
-            self.assertEqual(self.guard.state, 'probing')
-            self.guard.step()
-        self.assertEqual(self.guard.state, 'ready')
-        self.assertEqual(self.events[-1]['confirmation'], 'state-only-unsupported')
-        self.assertEqual(self.events[-1]['kernel_probe']['source'], 'feature-check')
-        self.assertIsNone(self.events[-1]['kernel_probe']['errno'])
-        ioctl.assert_not_called()
-        worker.assert_not_called()
-
-    def test_unsupported_fallback_cannot_override_failed_path(self):
-        self.start_recovery()
-        self.set_status('0 0 0 1 1 A 0 1 0 0:0 F 1')
-        self.probe.complete(errno.ENOTTY)
-        self.guard.step()
-        self.assert_not_recovered()
+    def test_missing_target_capability_rejects_startup_before_creating_probe(self):
+        for version in ((1, 14, 0), (1, 14, 9)):
+            with self.subTest(version=version):
+                self.mapper.target_version.return_value = version
+                with patch('path_guard.PathProbe') as probe:
+                    with self.assertRaisesRegex(RuntimeError, 'multipath'):
+                        path_guard.Guard(self.guard.config, self.recovery)
+                probe.assert_not_called()
 
     def test_expiry_is_terminal_even_if_the_kernel_probe_finishes_later(self):
         self.start_recovery()
