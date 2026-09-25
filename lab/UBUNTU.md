@@ -136,7 +136,7 @@ python3 lab/auto_run.py --guest ubuntu --workload git-clone --same-port --gap 0 
 
 ## 事件监视替换与 CPU 配额验收（2026-09-24）
 
-现已替换原 100 ms 命令轮询：内核 netlink 事件唤醒、1 秒兜底、进程内 libdevmapper 状态查询、重复事件合并及 100/200/400/800 ms 串行退避。先检查 sysfs 和节点就绪再读候选盘元数据，完整身份核验及切换前复核保留。故障判定条件没有改为 I/O 积压推断，也没有添加主动健康读盘探针。实现细节见 [自动恢复机制](AUTOMATIC.md)。
+现已替换原 100 ms 命令轮询：内核 netlink 事件唤醒、1 秒兜底、进程内 libdevmapper 状态查询、重复事件合并及 100/200/400/800 ms 串行退避。先检查 sysfs 和节点就绪再读候选盘元数据，完整身份核验及切换前复核保留。故障判定条件没有改为 I/O 积压推断，也没有添加健康期读盘探针；后续在恢复换表后接入新内核的单次路径探测，见 [接入记录](KERNEL-PROBE.md)。实现细节见 [自动恢复机制](AUTOMATIC.md)。
 
 ```bash
 python3 lab/build.py --kernel lab/work/kernel-package/boot/vmlinuz-6.8.0-139-generic

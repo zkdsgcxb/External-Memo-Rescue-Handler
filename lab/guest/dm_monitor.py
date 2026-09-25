@@ -1,9 +1,80 @@
 """In-process libdevmapper status queries and bounded kernel uevent waiting."""
 import ctypes as C
 import errno
+import fcntl
+import os
 import select
 import socket
 import time
+
+
+# Linux UAPI _IO(0xfd, 18), introduced in 6.16. Noble's userspace header
+# predates it. This lab builds x86_64 guests. Check the target version first:
+# old targets may forward unknown ioctls and return EINVAL instead of ENOTTY.
+DM_MPATH_PROBE_PATHS = 0xfd12
+
+
+class PathProbe:
+    """One on-demand ioctl; a blocked driver must never spawn more workers.
+
+    Success means the ioctl completed, not that a read or full health check
+    succeeded. The kernel can skip paths or ignore non-path read errors.
+    """
+    def __init__(self,supported=None):
+        self._thread=None
+        self._result=None
+        self.supported=supported
+        self._unsupported_errno=None
+
+    @property
+    def busy(self):
+        return self._thread is not None or self._result is not None
+
+    def start(self,device,token):
+        if self.busy:
+            raise RuntimeError('Previous path probe has not been consumed')
+        if self.supported is False:
+            self._result={'token':token,'errno':self._unsupported_errno,'elapsed':0.0,'status':'unsupported',
+                          'source':'feature-check' if self._unsupported_errno is None else 'cached-unsupported'}
+            return
+        # No worker or threading import during ordinary healthy monitoring.
+        import threading
+        def run():
+            started=time.monotonic()
+            error=0
+            fd=None
+            try:
+                fd=os.open(device,os.O_RDONLY|os.O_NONBLOCK|os.O_CLOEXEC)
+                fcntl.ioctl(fd,DM_MPATH_PROBE_PATHS)
+            except OSError as exc:
+                error=exc.errno or errno.EIO
+            finally:
+                if fd is not None:
+                    os.close(fd)
+            status={0:'completed',errno.ENOTCONN:'no_paths',errno.ENOTTY:'unsupported'}.get(error,'error')
+            self._result={'token':token,'errno':error,'elapsed':time.monotonic()-started,'status':status,'source':'ioctl'}
+        self._thread=threading.Thread(target=run,name='dm-path-probe',daemon=True)
+        try:
+            self._thread.start()
+        except RuntimeError:
+            self._thread=None
+            raise
+
+    def poll(self):
+        if self._thread is not None:
+            if self._thread.is_alive():
+                return None
+            self._thread.join()
+            self._thread=None
+        result=self._result
+        self._result=None
+        if result is not None:
+            if result['errno']==errno.ENOTTY:
+                self.supported=False
+                self._unsupported_errno=errno.ENOTTY
+            elif result['errno'] in (0,errno.ENOTCONN):
+                self.supported=True
+        return result
 
 
 class DeviceMapper:
@@ -15,10 +86,34 @@ class DeviceMapper:
             'dm_task_set_name':(C.c_int,[C.c_void_p,C.c_char_p]),
             'dm_task_run':(C.c_int,[C.c_void_p]),
             'dm_task_get_uuid':(C.c_char_p,[C.c_void_p]),
+            'dm_task_get_versions':(C.c_void_p,[C.c_void_p]),
             'dm_get_next_target':(C.c_void_p,[C.c_void_p,C.c_void_p,C.POINTER(C.c_uint64),C.POINTER(C.c_uint64),C.POINTER(C.c_char_p),C.POINTER(C.c_char_p)]),
         }
         for name,(result,args) in signatures.items():
             fn=getattr(self.lib,name);fn.restype=result;fn.argtypes=args
+
+    def target_version(self,name):
+        # DM_DEVICE_LIST_VERSIONS and struct dm_versions from libdevmapper.h.
+        # Only query once at startup; all returned memory belongs to this task.
+        class Version(C.Structure):
+            _fields_=[('next',C.c_uint32),('version',C.c_uint32*3)]
+        task=self.lib.dm_task_create(16)
+        if not task:
+            raise RuntimeError('Cannot allocate DM version task')
+        try:
+            if not self.lib.dm_task_run(task):
+                raise RuntimeError('Cannot query kernel DM target versions')
+            address=self.lib.dm_task_get_versions(task)
+            while address:
+                entry=Version.from_address(address)
+                if C.string_at(address+C.sizeof(Version)).decode()==name:
+                    return tuple(entry.version)
+                if not entry.next:
+                    break
+                address+=entry.next
+            raise RuntimeError('Kernel DM target not loaded: '+name)
+        finally:
+            self.lib.dm_task_destroy(task)
 
     def query(self,name):
         # DM_DEVICE_STATUS from libdevmapper.h. Tasks own returned string storage.

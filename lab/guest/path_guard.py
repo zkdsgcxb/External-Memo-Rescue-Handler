@@ -8,7 +8,7 @@ import subprocess
 import time
 
 from rescue import Recovery, command, rows
-from dm_monitor import DeviceMapper, Events, Schedule
+from dm_monitor import DeviceMapper, Events, PathProbe, Schedule
 
 NAME = 'lab-path'
 UUID = 'mpath-RAMRESCUE-LAB'
@@ -61,9 +61,15 @@ class Guard:
         self.last_rejection=None
         self.suspended=False
         self.mapper=DeviceMapper()
+        self.target_version=self.mapper.target_version('multipath')
+        self.probe=PathProbe(supported=self.target_version>=(1,15,0))
+        self.confirming=False
+        self.generation=0
+        self.current_dev=None
 
     def event(self, state, **details):
-        entry={'time':time.monotonic(),'state':state,'recoveries':self.recoveries,**details}
+        entry={'time':time.monotonic(),'state':state,'recoveries':self.recoveries,
+               'multipath_target_version':self.target_version,**details}
         self.state=state
         with open('/run/path-events.jsonl','a') as log:
             log.write(json.dumps(entry)+'\n')
@@ -77,11 +83,50 @@ class Guard:
             dm('resume',NAME)
             self.suspended=False
         dm('message',NAME,'0','fail_if_no_path')
-        self.event('expired',reason='queue deadline exceeded; I/O now fails rather than waiting forever')
+        self.event('expired',probe_pending=self.probe.busy,
+                   reason='queue deadline exceeded; no-path queue disabled; in-flight I/O may still be blocked')
 
     def check_map(self):
-        if self.mapper.query(NAME)[0]!=UUID:
-            raise RuntimeError('Unexpected stable map identity')
+        map_uuid,targets=self.mapper.query(NAME)
+        if map_uuid!=UUID or len(targets)!=1 or targets[0][0]!='multipath':
+            raise RuntimeError('Unexpected stable map identity or target')
+        return targets[0][1]
+
+    def current_present(self):
+        path=Path('/sys/class/block')/Path(self.current).name
+        return path.exists() and str(path.resolve())==self.current_sys
+
+    def current_active(self,status):
+        try:
+            dev=os.stat(self.current).st_rdev
+        except OSError:
+            return False
+        expected=f'{os.major(dev)}:{os.minor(dev)}'
+        return dev==self.current_dev and bool(re.search(r'\b'+re.escape(expected)+r' A \d+\b',status))
+
+    def confirm_path(self):
+        result=self.probe.poll()
+        if result is None:
+            return
+        self.confirming=False
+        if result['token']!=self.generation:
+            raise RuntimeError('Path probe belongs to a different table generation')
+        status=self.check_map()
+        # Zero is not proof of a successful read. Reconcile the mapping and
+        # enrolled instance again; never substitute this for media admission.
+        if (result['status'] not in ('completed','unsupported') or
+                not self.current_present() or not self.current_active(status) or
+                re.search(r'\b\d+:\d+ F \d+\b',status)):
+            self.event('rejected',reason='Post-swap path confirmation failed',kernel_probe=result)
+            return
+        if time.monotonic()>=self.deadline:
+            self.expire()
+            return
+        self.deadline=None
+        self.recoveries+=1
+        self.last_rejection=None
+        self.event('ready',node=self.current,kernel_probe=result,
+                   confirmation='kernel-probe-and-state' if result['status']=='completed' else 'state-only-unsupported')
 
     def step(self):
         if self.state=='expired':
@@ -90,14 +135,15 @@ class Guard:
         if self.deadline is not None and now>=self.deadline:
             self.expire()
             return
-        path=Path('/sys/class/block')/Path(self.current).name
+        # An ioctl holds a live-table reference until it finishes. Never load
+        # or suspend another table while it is outstanding, even after unplug.
+        if self.confirming:
+            self.confirm_path()
+            return
         # No pre-unplug notification from host: first notice the old sysfs object disappearing.
         if self.deadline is None:
-            map_uuid,targets=self.mapper.query(NAME)
-            if map_uuid!=UUID or len(targets)!=1 or targets[0][0]!='multipath':
-                raise RuntimeError('Unexpected stable map identity or target')
-            failed_path=re.search(r'\b\d+:\d+ F \d+\b',targets[0][1])
-            if path.exists() and str(path.resolve())==self.current_sys and not failed_path:
+            failed_path=re.search(r'\b\d+:\d+ F \d+\b',self.check_map())
+            if self.current_present() and not failed_path:
                 return
             self.deadline=now+self.config['queue_seconds']
             self.event('waiting',old_node=self.current,deadline=self.deadline)
@@ -139,10 +185,14 @@ class Guard:
                     raise
                 self.current=node
                 self.current_sys=resolved
-                self.deadline=None
-                self.recoveries+=1
-                self.last_rejection=None
-                self.event('ready',node=node)
+                self.current_dev=dev
+                if time.monotonic()>=self.deadline:
+                    self.expire()
+                    return
+                self.generation+=1
+                self.probe.start(DEVICE,self.generation)
+                self.confirming=True
+                self.event('probing',node=node,generation=self.generation)
             finally:
                 os.close(fd)
         except Exception as exc:

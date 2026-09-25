@@ -47,6 +47,7 @@ flowchart TD
 | USB / SCSI 驱动 | 枚举设备、提交请求、报告路径故障 | Linux xHCI、UAS、usb-storage、SCSI 块设备驱动 | 选择 guest 模块、制造协议对照；未修改驱动 |
 | Device Mapper 核心 | 提供稳定虚拟块设备、映射表及切换机制 | Linux DM；LVM2 的 dmsetup / libdevmapper | 编排建表、核验、加载和切换；没有自写块设备框架 |
 | I/O 排队层 | 路径失效时暂存适用的请求，恢复后重试或超时报错 | Linux dm-multipath，BIO 模式、queue_if_no_path、内核无路径超时 | 选定单路径布局、配置等待策略、验证 USB 分区后端；`lab/guest/path_guard.py` 与 `agent.py` |
+| 恢复后的路径探测 | 读取当前活动组的活动路径并标记路径类错误 | Linux 6.16 起的 `DM_MPATH_PROBE_PATHS` | 版本能力查询、单个按需 worker、期限/实例复核；替换 resume 后直接 ready 的旧分支；`lab/guest/dm_monitor.py`、`path_guard.py`，见 [接入记录](lab/KERNEL-PROBE.md) |
 | 路径管理程序 | 发现失效、寻找重连盘、决定是否接回、超时终止 | 调用 sysfs、libdevmapper、blkid、LVM 和 dmsetup | 我们编写的 `Guard` 状态机、二次核验、布局比较、事件记录、路径切换；`lab/guest/path_guard.py` |
 | 设备身份核验 | 避免只因新盘符或序列号相同就接入 | Linux sysfs、util-linux blkid、LVM 元数据解析工具 | 登记字段、唯一候选要求、USB/容量/分区/PV/VG 比较和拒绝策略；`ram-rescue-demo/src/rescue.py` |
 | LVM 卷管理 | PV/VG/LV 管理、LV 到物理范围的映射 | LVM2 用户态工具、Linux DM linear | 手动恢复的限制、确认流程、再次核验及结果检查；`Recovery.refresh()`；修正真实 lvs JSON 的 seg 键解析 |

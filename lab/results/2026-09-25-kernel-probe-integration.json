@@ -1,0 +1,591 @@
+{
+  "scope": "Final Guard integration in disposable QEMU guests; no host root topology change. Healthy CPU measured separately with no concurrent QEMU runs.",
+  "unit_tests": {
+    "lab": 27,
+    "rescue": 14,
+    "new_probe_and_guard_tests": 22,
+    "passed": true
+  },
+  "runs": [
+    {
+      "name": "ubuntu_git_kernel7",
+      "raw_report": "lab/work/20260925-143447-auto-30345/report.json",
+      "raw_report_sha256": "e459186acad21740752d0d9757dd87e592e6df7d91bb8e2269c0b2035d3ef12a",
+      "build": {
+        "kernel_release": "7.0.0-34-generic",
+        "module_root": "/workspace/Project/External-Memo-Rescue-Handler/lab/work/version-study/kernel7/extracted",
+        "source_commit": "ce7eb8b250d0ae52caeca78bc63ac1bc187672a5",
+        "source_sha256": {
+          "lab/build.py": "b77347cf135399f6febeaac272f85528ba95f217e4375786fae85325f2f85ae5",
+          "ram-rescue-demo/src/rescue.py": "c40649b895ba56ebecbac8a0192c30efbb4ec85bfb29adf36a4f07289f2b0a31",
+          "ram-rescue-demo/src/lvm.conf": "10708bf37ce4b01ec3e7e3e0d3d6394301f0bf3d4046fbd1da8521dad80d0cd3",
+          "lab/guest/agent.py": "3c0f06180aa71ecb508658f6af3fbc1eaca3bf1b217a405301f701153db9c805",
+          "lab/guest/dm_monitor.py": "bdc3bf1b9bf6ee0cd9d6d4050218549ce8777ab3b49830ab2141f59634a99a31",
+          "lab/guest/git_workload.py": "c61d4c440a44cdb263f247e868292cea4270a78d59dd537706090909cd7c0538",
+          "lab/guest/init.sh": "7fc37f2d3a97d0489ef534a37ef1a612bee40f1c9c6b62d4d5cba7e6170bf75f",
+          "lab/guest/path_guard.py": "af1159256da96639043c2315eb08a6479dbcba7f92aebf3371d8c165ba5d8f9b",
+          "lab/guest/root-init.sh": "078ec84bb1f502fc2b80b99b4eef2ee4a40432ccb9a476bf7757952547ca57d9",
+          "lab/guest/ubuntu.py": "224aada1ec5efbd05a1bd6a622a617a911f61760141dce73078553d66923aeb6",
+          "lab/guest/ubuntu_workload.py": "2cb4f4a137fa6b6e8b99d87c29efe89c2dbcc7d7cc7ee814b736a193f667a890",
+          "lab/guest/wire.py": "66180734f19432381ff6fbd3b8853c536d083ee3c681e52864902a91efafe87e",
+          "lab/guest/workload.py": "15d8e159ab16b2e7786aeee10d4be861a6b1cf448bf3ddf16b6a8c64ab72ad2c"
+        },
+        "kernel_sha256": "73d9c6e40b210deb638070d6af591a68bb6d7ff0280d0ec34c9ccf705a4f47ac",
+        "initramfs_sha256": "f59965f740cf1bc3b79fc968334c76f73ead3622d108a38096a571e5903a4561",
+        "note": "guest payload copied from working tree; no host identities or passwords"
+      },
+      "runner_sha256": "5c8aaa6e9aa7ce595cdb03c3c7f9ea38e36fa3cd6e45b51edd07e1dc1aa8fb43",
+      "qemu_runner_sha256": "f92923b99c0d5436ef7778ea7b70909125ebd5c109f24c534f6325257b31d788",
+      "passed": true,
+      "checks": {
+        "ram_heartbeat": true,
+        "ram_shell": true,
+        "stable_upper_mappings": true,
+        "same_process_alive": true,
+        "automatic_recovery": true,
+        "zero_application_errors": true,
+        "writes_continued": true,
+        "block_read": true,
+        "root_read": true,
+        "filesystem_writable": true,
+        "no_journal_abort": true,
+        "ubuntu_systemd": true,
+        "same_boot": true,
+        "services_survived": true,
+        "no_failed_units": true,
+        "acknowledged_data_present": true,
+        "post_swap_confirmation": true,
+        "git_clone_succeeded": true,
+        "same_git_process": true,
+        "git_active_during_fault": true,
+        "git_integrity": true
+      },
+      "guest": "ubuntu",
+      "workload": "git-clone",
+      "gap": 0.0,
+      "same_port": true,
+      "cycle_path_states": [
+        {
+          "time": 55.642698739,
+          "state": "ready",
+          "recoveries": 1,
+          "multipath_target_version": [
+            1,
+            15,
+            0
+          ],
+          "node": "/dev/sdb1",
+          "kernel_probe": {
+            "token": 1,
+            "errno": 0,
+            "elapsed": 0.0002932520000058503,
+            "status": "completed",
+            "source": "ioctl"
+          },
+          "confirmation": "kernel-probe-and-state"
+        },
+        {
+          "time": 59.769065874,
+          "state": "ready",
+          "recoveries": 2,
+          "multipath_target_version": [
+            1,
+            15,
+            0
+          ],
+          "node": "/dev/sda1",
+          "kernel_probe": {
+            "token": 2,
+            "errno": 0,
+            "elapsed": 0.003811120000001722,
+            "status": "completed",
+            "source": "ioctl"
+          },
+          "confirmation": "kernel-probe-and-state"
+        },
+        {
+          "time": 62.985503999,
+          "state": "ready",
+          "recoveries": 3,
+          "multipath_target_version": [
+            1,
+            15,
+            0
+          ],
+          "node": "/dev/sdb1",
+          "kernel_probe": {
+            "token": 3,
+            "errno": 0,
+            "elapsed": 0.00024874000000352225,
+            "status": "completed",
+            "source": "ioctl"
+          },
+          "confirmation": "kernel-probe-and-state"
+        }
+      ],
+      "final_path_state": {
+        "time": 62.985503999,
+        "state": "ready",
+        "recoveries": 3,
+        "multipath_target_version": [
+          1,
+          15,
+          0
+        ],
+        "node": "/dev/sdb1",
+        "kernel_probe": {
+          "token": 3,
+          "errno": 0,
+          "elapsed": 0.00024874000000352225,
+          "status": "completed",
+          "source": "ioctl"
+        },
+        "confirmation": "kernel-probe-and-state"
+      },
+      "probing_events": 3,
+      "successful_writes": 213,
+      "failed_writes": 0,
+      "max_write_latency": 2.0863704460000037,
+      "max_heartbeat_gap": 0.6651038409981993,
+      "git_validation": {
+        "head": "e8f897f4afef0031fe618a8e94127a0934896aba",
+        "expected_head": "e8f897f4afef0031fe618a8e94127a0934896aba",
+        "head_matches": true,
+        "fsck_passed": true,
+        "fsck_output": "",
+        "worktree_clean": true,
+        "tracked_files": 83475,
+        "source": {
+          "url": "https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git",
+          "ref": "v6.8",
+          "commit": "e8f897f4afef0031fe618a8e94127a0934896aba",
+          "history": "depth 1",
+          "tracked_files": 83475,
+          "object_disk_bytes": 260778158
+        }
+      },
+      "block_after": {
+        "bytes": 4096,
+        "ext4_magic": "53ef"
+      },
+      "filesystem_after": {
+        "statvfs_readonly": false,
+        "write_fsync_ok": true
+      },
+      "data_audit": {
+        "acknowledged_records": 219,
+        "confirmed_bytes": 897792,
+        "prefix_matches": true
+      }
+    },
+    {
+      "name": "legacy_kernel68",
+      "raw_report": "lab/work/20260925-143446-auto-30346/report.json",
+      "raw_report_sha256": "5df4fa29c72ae78bd8193c6b12ecf6586f95295b97e8eeb703dc0ff8d8e554a1",
+      "build": {
+        "kernel_release": "6.8.0-139-generic",
+        "module_root": "/workspace/Project/External-Memo-Rescue-Handler/lab/work/rootfs",
+        "source_commit": "ce7eb8b250d0ae52caeca78bc63ac1bc187672a5",
+        "source_sha256": {
+          "lab/build.py": "b77347cf135399f6febeaac272f85528ba95f217e4375786fae85325f2f85ae5",
+          "ram-rescue-demo/src/rescue.py": "c40649b895ba56ebecbac8a0192c30efbb4ec85bfb29adf36a4f07289f2b0a31",
+          "ram-rescue-demo/src/lvm.conf": "10708bf37ce4b01ec3e7e3e0d3d6394301f0bf3d4046fbd1da8521dad80d0cd3",
+          "lab/guest/agent.py": "3c0f06180aa71ecb508658f6af3fbc1eaca3bf1b217a405301f701153db9c805",
+          "lab/guest/dm_monitor.py": "bdc3bf1b9bf6ee0cd9d6d4050218549ce8777ab3b49830ab2141f59634a99a31",
+          "lab/guest/git_workload.py": "c61d4c440a44cdb263f247e868292cea4270a78d59dd537706090909cd7c0538",
+          "lab/guest/init.sh": "7fc37f2d3a97d0489ef534a37ef1a612bee40f1c9c6b62d4d5cba7e6170bf75f",
+          "lab/guest/path_guard.py": "af1159256da96639043c2315eb08a6479dbcba7f92aebf3371d8c165ba5d8f9b",
+          "lab/guest/root-init.sh": "078ec84bb1f502fc2b80b99b4eef2ee4a40432ccb9a476bf7757952547ca57d9",
+          "lab/guest/ubuntu.py": "224aada1ec5efbd05a1bd6a622a617a911f61760141dce73078553d66923aeb6",
+          "lab/guest/ubuntu_workload.py": "2cb4f4a137fa6b6e8b99d87c29efe89c2dbcc7d7cc7ee814b736a193f667a890",
+          "lab/guest/wire.py": "66180734f19432381ff6fbd3b8853c536d083ee3c681e52864902a91efafe87e",
+          "lab/guest/workload.py": "15d8e159ab16b2e7786aeee10d4be861a6b1cf448bf3ddf16b6a8c64ab72ad2c"
+        },
+        "kernel_sha256": "0066409132868538bc0c9076f60131025775d5bbd8617df074d059f91b584918",
+        "initramfs_sha256": "1873b8bc0ad607036282ad5b0144d39136ea508060d1ae405b73f43b7966ede5",
+        "note": "guest payload copied from working tree; no host identities or passwords"
+      },
+      "runner_sha256": "5c8aaa6e9aa7ce595cdb03c3c7f9ea38e36fa3cd6e45b51edd07e1dc1aa8fb43",
+      "qemu_runner_sha256": "f92923b99c0d5436ef7778ea7b70909125ebd5c109f24c534f6325257b31d788",
+      "passed": true,
+      "checks": {
+        "ram_heartbeat": true,
+        "ram_shell": true,
+        "stable_upper_mappings": true,
+        "same_process_alive": true,
+        "automatic_recovery": true,
+        "zero_application_errors": true,
+        "writes_continued": true,
+        "block_read": true,
+        "root_read": true,
+        "filesystem_writable": true,
+        "no_journal_abort": true,
+        "acknowledged_data_present": true,
+        "post_swap_confirmation": true
+      },
+      "guest": "minimal",
+      "workload": "fsync",
+      "gap": 0.0,
+      "same_port": true,
+      "cycle_path_states": [
+        {
+          "time": 6.186295825,
+          "state": "ready",
+          "recoveries": 1,
+          "multipath_target_version": [
+            1,
+            14,
+            0
+          ],
+          "node": "/dev/sdb1",
+          "kernel_probe": {
+            "token": 1,
+            "errno": null,
+            "elapsed": 0.0,
+            "status": "unsupported",
+            "source": "feature-check"
+          },
+          "confirmation": "state-only-unsupported"
+        },
+        {
+          "time": 9.440373898,
+          "state": "ready",
+          "recoveries": 2,
+          "multipath_target_version": [
+            1,
+            14,
+            0
+          ],
+          "node": "/dev/sda1",
+          "kernel_probe": {
+            "token": 2,
+            "errno": null,
+            "elapsed": 0.0,
+            "status": "unsupported",
+            "source": "feature-check"
+          },
+          "confirmation": "state-only-unsupported"
+        },
+        {
+          "time": 12.46868298,
+          "state": "ready",
+          "recoveries": 3,
+          "multipath_target_version": [
+            1,
+            14,
+            0
+          ],
+          "node": "/dev/sdb1",
+          "kernel_probe": {
+            "token": 3,
+            "errno": null,
+            "elapsed": 0.0,
+            "status": "unsupported",
+            "source": "feature-check"
+          },
+          "confirmation": "state-only-unsupported"
+        }
+      ],
+      "final_path_state": {
+        "time": 12.46868298,
+        "state": "ready",
+        "recoveries": 3,
+        "multipath_target_version": [
+          1,
+          14,
+          0
+        ],
+        "node": "/dev/sdb1",
+        "kernel_probe": {
+          "token": 3,
+          "errno": null,
+          "elapsed": 0.0,
+          "status": "unsupported",
+          "source": "feature-check"
+        },
+        "confirmation": "state-only-unsupported"
+      },
+      "probing_events": 3,
+      "successful_writes": 81,
+      "failed_writes": 0,
+      "max_write_latency": 1.2489286660000003,
+      "max_heartbeat_gap": 0.579086609002843,
+      "block_after": {
+        "bytes": 4096,
+        "ext4_magic": "53ef"
+      },
+      "filesystem_after": {
+        "statvfs_readonly": false,
+        "write_fsync_ok": true
+      },
+      "data_audit": {
+        "acknowledged_records": 82,
+        "confirmed_bytes": 336109,
+        "prefix_matches": true
+      }
+    },
+    {
+      "name": "wrong_pv_kernel7",
+      "raw_report": "lab/work/20260925-143446-auto-30347/report.json",
+      "raw_report_sha256": "e545fd01e068b482c5b11cc8257df2e85e430020cd2d2998c9d3588af0afa14b",
+      "build": {
+        "kernel_release": "7.0.0-34-generic",
+        "module_root": "/workspace/Project/External-Memo-Rescue-Handler/lab/work/version-study/kernel7/extracted",
+        "source_commit": "ce7eb8b250d0ae52caeca78bc63ac1bc187672a5",
+        "source_sha256": {
+          "lab/build.py": "b77347cf135399f6febeaac272f85528ba95f217e4375786fae85325f2f85ae5",
+          "ram-rescue-demo/src/rescue.py": "c40649b895ba56ebecbac8a0192c30efbb4ec85bfb29adf36a4f07289f2b0a31",
+          "ram-rescue-demo/src/lvm.conf": "10708bf37ce4b01ec3e7e3e0d3d6394301f0bf3d4046fbd1da8521dad80d0cd3",
+          "lab/guest/agent.py": "3c0f06180aa71ecb508658f6af3fbc1eaca3bf1b217a405301f701153db9c805",
+          "lab/guest/dm_monitor.py": "bdc3bf1b9bf6ee0cd9d6d4050218549ce8777ab3b49830ab2141f59634a99a31",
+          "lab/guest/git_workload.py": "c61d4c440a44cdb263f247e868292cea4270a78d59dd537706090909cd7c0538",
+          "lab/guest/init.sh": "7fc37f2d3a97d0489ef534a37ef1a612bee40f1c9c6b62d4d5cba7e6170bf75f",
+          "lab/guest/path_guard.py": "af1159256da96639043c2315eb08a6479dbcba7f92aebf3371d8c165ba5d8f9b",
+          "lab/guest/root-init.sh": "078ec84bb1f502fc2b80b99b4eef2ee4a40432ccb9a476bf7757952547ca57d9",
+          "lab/guest/ubuntu.py": "224aada1ec5efbd05a1bd6a622a617a911f61760141dce73078553d66923aeb6",
+          "lab/guest/ubuntu_workload.py": "2cb4f4a137fa6b6e8b99d87c29efe89c2dbcc7d7cc7ee814b736a193f667a890",
+          "lab/guest/wire.py": "66180734f19432381ff6fbd3b8853c536d083ee3c681e52864902a91efafe87e",
+          "lab/guest/workload.py": "15d8e159ab16b2e7786aeee10d4be861a6b1cf448bf3ddf16b6a8c64ab72ad2c"
+        },
+        "kernel_sha256": "73d9c6e40b210deb638070d6af591a68bb6d7ff0280d0ec34c9ccf705a4f47ac",
+        "initramfs_sha256": "f59965f740cf1bc3b79fc968334c76f73ead3622d108a38096a571e5903a4561",
+        "note": "guest payload copied from working tree; no host identities or passwords"
+      },
+      "runner_sha256": "5c8aaa6e9aa7ce595cdb03c3c7f9ea38e36fa3cd6e45b51edd07e1dc1aa8fb43",
+      "qemu_runner_sha256": "f92923b99c0d5436ef7778ea7b70909125ebd5c109f24c534f6325257b31d788",
+      "passed": true,
+      "checks": {
+        "ram_heartbeat": true,
+        "ram_shell": true,
+        "stable_upper_mappings": true,
+        "same_process_alive": true,
+        "deadline_released_queue": true,
+        "no_recovery_after_failure": true,
+        "bounded_wait": true,
+        "wrong_pv_rejected": true
+      },
+      "guest": "minimal",
+      "workload": "fsync",
+      "gap": 0.2,
+      "same_port": false,
+      "cycle_path_states": [
+        {
+          "time": 10.108747646,
+          "state": "expired",
+          "recoveries": 0,
+          "multipath_target_version": [
+            1,
+            15,
+            0
+          ],
+          "probe_pending": false,
+          "reason": "queue deadline exceeded; no-path queue disabled; in-flight I/O may still be blocked"
+        }
+      ],
+      "final_path_state": {
+        "time": 10.108747646,
+        "state": "expired",
+        "recoveries": 0,
+        "multipath_target_version": [
+          1,
+          15,
+          0
+        ],
+        "probe_pending": false,
+        "reason": "queue deadline exceeded; no-path queue disabled; in-flight I/O may still be blocked"
+      },
+      "probing_events": 0,
+      "successful_writes": 11,
+      "failed_writes": 24,
+      "max_write_latency": 3.9970571050000006,
+      "max_heartbeat_gap": 0.5401903199963272
+    }
+  ],
+  "healthy_resources": {
+    "passed": true,
+    "checks": {
+      "ready": true,
+      "no_recoveries": true,
+      "same_process": true,
+      "no_probe_events": true,
+      "single_thread_observed": true,
+      "no_child_processes_observed": true,
+      "no_child_cpu": true
+    },
+    "scope": "100 percent = one vCPU; cgroup includes all guard children; sampler is outside cgroup; nominal 100 ms CPU/task windows; short unsampled tasks are not excluded; probing events and child CPU ticks are cumulative; no fault injected",
+    "build": {
+      "kernel_release": "7.0.0-34-generic",
+      "module_root": "/workspace/Project/External-Memo-Rescue-Handler/lab/work/version-study/kernel7/extracted",
+      "source_commit": "ce7eb8b250d0ae52caeca78bc63ac1bc187672a5",
+      "source_sha256": {
+        "lab/build.py": "b77347cf135399f6febeaac272f85528ba95f217e4375786fae85325f2f85ae5",
+        "ram-rescue-demo/src/rescue.py": "c40649b895ba56ebecbac8a0192c30efbb4ec85bfb29adf36a4f07289f2b0a31",
+        "ram-rescue-demo/src/lvm.conf": "10708bf37ce4b01ec3e7e3e0d3d6394301f0bf3d4046fbd1da8521dad80d0cd3",
+        "lab/guest/agent.py": "3c0f06180aa71ecb508658f6af3fbc1eaca3bf1b217a405301f701153db9c805",
+        "lab/guest/dm_monitor.py": "bdc3bf1b9bf6ee0cd9d6d4050218549ce8777ab3b49830ab2141f59634a99a31",
+        "lab/guest/git_workload.py": "c61d4c440a44cdb263f247e868292cea4270a78d59dd537706090909cd7c0538",
+        "lab/guest/init.sh": "7fc37f2d3a97d0489ef534a37ef1a612bee40f1c9c6b62d4d5cba7e6170bf75f",
+        "lab/guest/path_guard.py": "af1159256da96639043c2315eb08a6479dbcba7f92aebf3371d8c165ba5d8f9b",
+        "lab/guest/root-init.sh": "078ec84bb1f502fc2b80b99b4eef2ee4a40432ccb9a476bf7757952547ca57d9",
+        "lab/guest/ubuntu.py": "224aada1ec5efbd05a1bd6a622a617a911f61760141dce73078553d66923aeb6",
+        "lab/guest/ubuntu_workload.py": "2cb4f4a137fa6b6e8b99d87c29efe89c2dbcc7d7cc7ee814b736a193f667a890",
+        "lab/guest/wire.py": "66180734f19432381ff6fbd3b8853c536d083ee3c681e52864902a91efafe87e",
+        "lab/guest/workload.py": "15d8e159ab16b2e7786aeee10d4be861a6b1cf448bf3ddf16b6a8c64ab72ad2c"
+      },
+      "kernel_sha256": "73d9c6e40b210deb638070d6af591a68bb6d7ff0280d0ec34c9ccf705a4f47ac",
+      "initramfs_sha256": "f59965f740cf1bc3b79fc968334c76f73ead3622d108a38096a571e5903a4561",
+      "note": "guest payload copied from working tree; no host identities or passwords"
+    },
+    "runner_sha256": "062debf049dec95963617c2246ec487ea6b9919b1c90b28332ff5835b43c18f7",
+    "sampler_sha256": "05fd25c33740d9be374386873afbb9529f8f5ecd86abb5ac9ec3059c484dcb6b",
+    "cpu_max": "4000 20000",
+    "guard_state": {
+      "time": 18.099669106,
+      "state": "ready",
+      "recoveries": 0,
+      "multipath_target_version": [
+        1,
+        15,
+        0
+      ],
+      "node": "/dev/sda1"
+    },
+    "raw_report": "lab/work/20260925-143634-guard-budget/report.json",
+    "raw_report_sha256": "ca2aa180061a2514b3cda8ab085cc4020b15bddef7ae4936947517005716448d",
+    "phases": [
+      {
+        "name": "idle",
+        "seconds": 30.352822164000003,
+        "mean_cpu_percent": 0.1222719910506968,
+        "peak_cpu_percent": 1.5551313195128211,
+        "p95_cpu_percent": 1.3250311384793285,
+        "peak_thread_count": 1,
+        "probing_events_before": 0,
+        "probing_events_after": 0,
+        "cpu_stat_before": {
+          "usage_usec": 63770,
+          "user_usec": 49198,
+          "system_usec": 14571,
+          "nice_usec": 0,
+          "core_sched.force_idle_usec": 0,
+          "nr_periods": 40,
+          "nr_throttled": 6,
+          "throttled_usec": 30809,
+          "nr_bursts": 0,
+          "burst_usec": 0
+        },
+        "cpu_stat_after": {
+          "usage_usec": 100883,
+          "user_usec": 76820,
+          "system_usec": 24063,
+          "nice_usec": 0,
+          "core_sched.force_idle_usec": 0,
+          "nr_periods": 86,
+          "nr_throttled": 6,
+          "throttled_usec": 30809,
+          "nr_bursts": 0,
+          "burst_usec": 0
+        },
+        "proc_before": {
+          "self_ticks": 5,
+          "child_ticks": 0,
+          "start_ticks": "1790",
+          "rss_bytes": 15433728,
+          "thread_count": 1,
+          "child_pids": []
+        },
+        "proc_after": {
+          "self_ticks": 9,
+          "child_ticks": 0,
+          "start_ticks": "1790",
+          "rss_bytes": 15433728,
+          "thread_count": 1,
+          "child_pids": []
+        }
+      },
+      {
+        "name": "events_100_per_second",
+        "seconds": 10.236718057000004,
+        "mean_cpu_percent": 0.8692141319566281,
+        "peak_cpu_percent": 2.3360608596235073,
+        "p95_cpu_percent": 1.5838742263815957,
+        "peak_thread_count": 1,
+        "probing_events_before": 0,
+        "probing_events_after": 0,
+        "cpu_stat_before": {
+          "usage_usec": 100883,
+          "user_usec": 76820,
+          "system_usec": 24063,
+          "nice_usec": 0,
+          "core_sched.force_idle_usec": 0,
+          "nr_periods": 86,
+          "nr_throttled": 6,
+          "throttled_usec": 30809,
+          "nr_bursts": 0,
+          "burst_usec": 0
+        },
+        "cpu_stat_after": {
+          "usage_usec": 189862,
+          "user_usec": 137893,
+          "system_usec": 51968,
+          "nice_usec": 0,
+          "core_sched.force_idle_usec": 0,
+          "nr_periods": 214,
+          "nr_throttled": 6,
+          "throttled_usec": 30809,
+          "nr_bursts": 0,
+          "burst_usec": 0
+        },
+        "proc_before": {
+          "self_ticks": 9,
+          "child_ticks": 0,
+          "start_ticks": "1790",
+          "rss_bytes": 15433728,
+          "thread_count": 1,
+          "child_pids": []
+        },
+        "proc_after": {
+          "self_ticks": 18,
+          "child_ticks": 0,
+          "start_ticks": "1790",
+          "rss_bytes": 15433728,
+          "thread_count": 1,
+          "child_pids": []
+        }
+      }
+    ]
+  },
+  "superseded_integration_runs": [
+    {
+      "raw_report": "lab/work/20260925-142520-auto-26649/report.json",
+      "sha256": "0affcf7dff65544594c8032004851709eaa149f5ba10c00bb12d5f95d407bea5",
+      "passed": true,
+      "reason": "Pre-final integration run; capability gating or post-resume deadline refinement followed. Original report/build hashes preserved, not claimed to be final code."
+    },
+    {
+      "raw_report": "lab/work/20260925-142956-auto-28872/report.json",
+      "sha256": "f74d32f433eb23c691b6b9d1fb95cf17846723832044cfc9bad7858efba92df2",
+      "passed": true,
+      "reason": "Pre-final integration run; capability gating or post-resume deadline refinement followed. Original report/build hashes preserved, not claimed to be final code."
+    },
+    {
+      "raw_report": "lab/work/20260925-142955-auto-28873/report.json",
+      "sha256": "0135127d773c9aa295750371932210be4e4450013a2515b7a032637bbc4239bd",
+      "passed": true,
+      "reason": "Pre-final integration run; capability gating or post-resume deadline refinement followed. Original report/build hashes preserved, not claimed to be final code."
+    },
+    {
+      "raw_report": "lab/work/20260925-142955-auto-28874/report.json",
+      "sha256": "3944c08d765ecd9a4ea1df958d4c0a163a6424e51dfc68d348af98f5f4b0bed7",
+      "passed": true,
+      "reason": "Pre-final integration run; capability gating or post-resume deadline refinement followed. Original report/build hashes preserved, not claimed to be final code."
+    }
+  ],
+  "limitations": [
+    "A completed ioctl can skip reads; path readiness is not proof of filesystem or application health.",
+    "CPU percentages refer to one guest vCPU; 100 ms sample peaks are observations, not hard bounds. RSS includes shared pages.",
+    "The kernel ABI blocking experiment and mocked Guard deadline tests are distinct evidence; this task did not inject every blocked-probe/table-reload timing into a full Ubuntu root.",
+    "No real host USB root unplug, power-loss durability test, or automatic-root deployment was performed.",
+    "Fault integration runs were parallel and are not used to rank kernel versions or claim latency guarantees."
+  ]
+}

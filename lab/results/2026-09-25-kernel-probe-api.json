@@ -1,0 +1,411 @@
+{
+  "schema_version": 1,
+  "date": "2026-09-25",
+  "scope": "Direct DM_MPATH_PROBE_PATHS kernel ABI experiments on isolated mappings in disposable QEMU guests. These are independent of the new Guard integration and are not host deployment or full storage-health tests.",
+  "interface": {
+    "name": "DM_MPATH_PROBE_PATHS",
+    "ioctl_hex": "0xfd12",
+    "architecture": "x86_64",
+    "target_mode": "bio",
+    "mapping": "probe-target multipath -> probe-backend linear/error -> disposable USB decoy.raw"
+  },
+  "commands": [
+    "python3 lab/kernel_probe_test.py --build-dir lab/work/version-study/kernel7/guest --expect available",
+    "python3 lab/kernel_probe_test.py --build-dir lab/work --expect unsupported"
+  ],
+  "current_runner_sha256": "e2847c42eab98da98fad935c9137619339f223e3c6c4970c6a7790c3f2bbe04f",
+  "self_review": {
+    "final_runs_match_current_runner": true,
+    "final_runs_match_current_qemu_runner": true,
+    "all_recorded_guest_action_hashes_verified": true,
+    "normal_user_host_execution": true,
+    "qemu_block_backends_are_per_run_regular_files": true,
+    "guest_safety_guards": [
+      "ram_rescue_lab=1 kernel argument",
+      "RAMRescueLab DMI product",
+      "KERNEL-PROBE-ONLY USB serial and 32768-sector fixture size"
+    ],
+    "assessment": "No correctness issue requiring a runner change was found in final self-review. Failure history below records the fixed fixture mode/readiness issues and the corrected legacy errno expectation."
+  },
+  "interpretation": [
+    "A zero return can occur without any probe read when current_pg has not yet been selected. Guard must not treat zero as proof of a completed read or comprehensive recovery.",
+    "After a normal I/O selects current_pg, the healthy ioctl caused an additional lower-device read. An injected lower read error made the active path failed and returned ENOTCONN when no valid paths remained.",
+    "The ioctl remained blocked while the lower mapping was suspended; a separate RAM shell continued to work. Releasing that mapping allowed the original invocation to finish. This does not demonstrate a hard deadline or cancellation mechanism.",
+    "Repairing the lower backend did not make this ioctl reinstate a failed path.",
+    "The tested 6.8 kernel returned EINVAL, including on a plain virtual USB block device. Do not infer lack of feature support from EINVAL alone; target capability/version checks and preservation of unexpected errors are required."
+  ],
+  "runs": [
+    {
+      "run_id": "20260925-142726-kernel-probe-27222",
+      "local_evidence_directory": "lab/work/20260925-142726-kernel-probe-27222",
+      "expected_capability": "available",
+      "kernel_release": "7.0.0-34-generic",
+      "kernel_sha256": "73d9c6e40b210deb638070d6af591a68bb6d7ff0280d0ec34c9ccf705a4f47ac",
+      "initramfs_sha256": "6f4c6d30d627ae5ff204572e3cdfc472b273ce1238c7c1abffb9e7f8f2e2dcf1",
+      "build_source_commit": "511ef0d176fe7da50fdec2448211738dd2cb6af6",
+      "build_source_sha256": {
+        "lab/build.py": "b77347cf135399f6febeaac272f85528ba95f217e4375786fae85325f2f85ae5",
+        "ram-rescue-demo/src/rescue.py": "c40649b895ba56ebecbac8a0192c30efbb4ec85bfb29adf36a4f07289f2b0a31",
+        "ram-rescue-demo/src/lvm.conf": "10708bf37ce4b01ec3e7e3e0d3d6394301f0bf3d4046fbd1da8521dad80d0cd3",
+        "lab/guest/agent.py": "3c0f06180aa71ecb508658f6af3fbc1eaca3bf1b217a405301f701153db9c805",
+        "lab/guest/dm_monitor.py": "da64d2011514ecad4e708ad6d1eb1f5dc0104de8eba097ec96fb5ca762298378",
+        "lab/guest/git_workload.py": "c61d4c440a44cdb263f247e868292cea4270a78d59dd537706090909cd7c0538",
+        "lab/guest/init.sh": "7fc37f2d3a97d0489ef534a37ef1a612bee40f1c9c6b62d4d5cba7e6170bf75f",
+        "lab/guest/path_guard.py": "8251b0995d72e17100131d8a88d6f2009213b7c9a7c0580a2e7c4fe3e11e68fb",
+        "lab/guest/root-init.sh": "078ec84bb1f502fc2b80b99b4eef2ee4a40432ccb9a476bf7757952547ca57d9",
+        "lab/guest/ubuntu.py": "224aada1ec5efbd05a1bd6a622a617a911f61760141dce73078553d66923aeb6",
+        "lab/guest/ubuntu_workload.py": "2cb4f4a137fa6b6e8b99d87c29efe89c2dbcc7d7cc7ee814b736a193f667a890",
+        "lab/guest/wire.py": "66180734f19432381ff6fbd3b8853c536d083ee3c681e52864902a91efafe87e",
+        "lab/guest/workload.py": "15d8e159ab16b2e7786aeee10d4be861a6b1cf448bf3ddf16b6a8c64ab72ad2c"
+      },
+      "qemu_version": "QEMU emulator version 8.2.2 (Debian 1:8.2.2+ds-0ubuntu1.18)",
+      "runner_sha256": "e2847c42eab98da98fad935c9137619339f223e3c6c4970c6a7790c3f2bbe04f",
+      "qemu_runner_sha256": "f92923b99c0d5436ef7778ea7b70909125ebd5c109f24c534f6325257b31d788",
+      "report_sha256": "16018b120b72abd315e83b3489eb67f140e337419b68300b9ac199da97bb920b",
+      "guest_action_sha256": {
+        "01-setup.py": "d29d2745dccbd86090b14c39613014c94f74f228a92f9ec11ee7788cff776ac8",
+        "02-healthy.py": "24d7054fca42db56c37ac5f659c30b96b2167818391f986c9c438de6ddb41c61",
+        "03-block-start.py": "890ed9a71952b4524bf475d820746cbf9f1d1fc5044d8fcdadd6eb978c4bd60b",
+        "04-block-observe.py": "98958b773c82b9aa4dab6eeb97d8fe85d1f5f88d5ecc202c3ee8add3cb959437",
+        "05-block-release.py": "340f6e90b883f8f9879be874558529f71ba6aefaa53e39c79e5d875c20eb63fc",
+        "06-read-error.py": "5044569d60a331e248c69a1a62056069572458c72b55347ecf00d4b104a86dbc",
+        "07-no-reinstate.py": "3b08c71eed6ef09b29a5b6966f3833d7af661325f33b38fb041481b2e7754936"
+      },
+      "raw_artifact_sha256": {
+        "01-setup.py": "d29d2745dccbd86090b14c39613014c94f74f228a92f9ec11ee7788cff776ac8",
+        "01-setup.serial.log": "a987ec52d812fc88626b2b863e251a295601005aad05a972260b96822996e7b2",
+        "02-healthy.py": "24d7054fca42db56c37ac5f659c30b96b2167818391f986c9c438de6ddb41c61",
+        "02-healthy.serial.log": "eae4622959b39537033cd13f3bbc0689369b882fc69d80f11ab9f56ae76381d6",
+        "03-block-start.py": "890ed9a71952b4524bf475d820746cbf9f1d1fc5044d8fcdadd6eb978c4bd60b",
+        "03-block-start.serial.log": "519160f19cdded5a9951195827c2032ee947df98dc96dfe81bf9f53dae9fe5f1",
+        "04-block-observe.py": "98958b773c82b9aa4dab6eeb97d8fe85d1f5f88d5ecc202c3ee8add3cb959437",
+        "04-block-observe.serial.log": "00a0549351fdf564e4c55fe7c420b6110df22a348d080e98ed7fa5d167ce13ca",
+        "05-block-release.py": "340f6e90b883f8f9879be874558529f71ba6aefaa53e39c79e5d875c20eb63fc",
+        "05-block-release.serial.log": "b8d126f6325088a951487315845ebf7e014bc421c06d2fdbf67e9e8dcb99342e",
+        "06-read-error.py": "5044569d60a331e248c69a1a62056069572458c72b55347ecf00d4b104a86dbc",
+        "06-read-error.serial.log": "e98a80221e8285e819d1613e4172701158f0ecdda55b439a7783f512e47ce3d5",
+        "07-no-reinstate.py": "3b08c71eed6ef09b29a5b6966f3833d7af661325f33b38fb041481b2e7754936",
+        "07-no-reinstate.serial.log": "b7687f604b45796749924044c6587e7fb4797e917804f5e8063ec19e59080191",
+        "console.log": "9e4b5fec49c0c3fe1dc729004a8d4160504af8f37c2861f1f53c629be6948215",
+        "qemu.log": "f3eb33dba3ee381d5c2981c814fd8e19b93df28d1ad4149308184170d6176908",
+        "qmp.jsonl": "2af9cbba244010677f6761b57e06b7e6ec819726d2c44a09367d02f7d656ce5d",
+        "report.json": "16018b120b72abd315e83b3489eb67f140e337419b68300b9ac199da97bb920b"
+      },
+      "observations": {
+        "setup": {
+          "kernel": "7.0.0-34-generic",
+          "size_sectors": 32768,
+          "status": "0 32768 multipath 2 0 0 0 1 1 A 0 1 0 252:2 A 0",
+          "backend_table": "0 32768 linear 8:16 0",
+          "probe_table": "0 32768 multipath 2 queue_mode bio 0 1 1 round-robin 0 1 1 252:2 1",
+          "cold_probe": {
+            "return": 0,
+            "errno": null,
+            "elapsed_seconds": 1.9310999999966327e-05
+          },
+          "cold_reads_before": 0,
+          "cold_reads_after": 0
+        },
+        "healthy": {
+          "probe": {
+            "return": 0,
+            "errno": null,
+            "elapsed_seconds": 0.0004523380000001076
+          },
+          "reads_before": 1,
+          "reads_after": 2,
+          "status": "0 32768 multipath 2 0 0 0 1 1 A 0 1 0 252:2 A 0"
+        },
+        "blocked_start": {
+          "pid": 176,
+          "lower_mapping_suspended": "Suspended"
+        },
+        "blocked_observed": {
+          "started": {
+            "pid": 176,
+            "started": 4.232581355
+          },
+          "result_exists": false,
+          "process_state": "D",
+          "elapsed_seconds": 2.2847428580000004,
+          "status": "0 32768 multipath 2 0 0 0 1 1 A 0 1 0 252:2 A 0"
+        },
+        "ram_shell_while_blocked": true,
+        "released": {
+          "probe": {
+            "return": 0,
+            "errno": null,
+            "elapsed_seconds": 2.5635152230000005
+          },
+          "status": "0 32768 multipath 2 0 0 0 1 1 A 0 1 0 252:2 A 0"
+        },
+        "read_error": {
+          "status_before": "0 32768 multipath 2 0 0 0 1 1 A 0 1 0 252:2 A 0",
+          "probe": {
+            "return": null,
+            "errno": 107,
+            "error": "[Errno 107] Transport endpoint is not connected",
+            "elapsed_seconds": 5.8806000000188874e-05
+          },
+          "status_after": "0 32768 multipath 2 0 0 0 1 1 A 0 1 0 252:2 F 1",
+          "backend_table": "0 32768 error"
+        },
+        "failed_path_not_reinstated": {
+          "probe": {
+            "return": null,
+            "errno": 107,
+            "error": "[Errno 107] Transport endpoint is not connected",
+            "elapsed_seconds": 2.0272000000431944e-05
+          },
+          "reads_before": 3,
+          "reads_after": 3,
+          "status": "0 32768 multipath 2 0 0 0 1 1 A 0 1 0 252:2 F 1"
+        }
+      },
+      "checks": {
+        "cold_zero_can_skip_reads": true,
+        "healthy_returns_zero": true,
+        "healthy_probe_performs_read": true,
+        "blocked_exceeds_two_seconds": true,
+        "blocked_probe_incomplete": true,
+        "blocked_child_alive": true,
+        "ram_shell_alive_during_block": true,
+        "original_probe_completes_after_release": true,
+        "error_path_was_active": true,
+        "read_error_marks_path_failed": true,
+        "all_failed_is_enotconn": true,
+        "probe_does_not_reinstate_failed_path": true,
+        "failed_path_not_probed": true
+      },
+      "check_count": 13,
+      "passed": true
+    },
+    {
+      "run_id": "20260925-142750-kernel-probe-27401",
+      "local_evidence_directory": "lab/work/20260925-142750-kernel-probe-27401",
+      "expected_capability": "unsupported",
+      "kernel_release": "6.8.0-139-generic",
+      "kernel_sha256": "0066409132868538bc0c9076f60131025775d5bbd8617df074d059f91b584918",
+      "initramfs_sha256": "bc2efe6bbf60be49264936c750655e941b75195db75a4a80f9f722d0658ebe6a",
+      "build_source_commit": "ae8446eb9bc0b5575672c9472275faaef668a0f6",
+      "build_source_sha256": {
+        "lab/build.py": "1df2c8e5508aa59d974287677a42396634dd18c06af4b9b073aefb9ddfacc58d",
+        "ram-rescue-demo/src/rescue.py": "c40649b895ba56ebecbac8a0192c30efbb4ec85bfb29adf36a4f07289f2b0a31",
+        "ram-rescue-demo/src/lvm.conf": "10708bf37ce4b01ec3e7e3e0d3d6394301f0bf3d4046fbd1da8521dad80d0cd3",
+        "lab/guest/agent.py": "3c0f06180aa71ecb508658f6af3fbc1eaca3bf1b217a405301f701153db9c805",
+        "lab/guest/dm_monitor.py": "da64d2011514ecad4e708ad6d1eb1f5dc0104de8eba097ec96fb5ca762298378",
+        "lab/guest/git_workload.py": "c61d4c440a44cdb263f247e868292cea4270a78d59dd537706090909cd7c0538",
+        "lab/guest/init.sh": "7fc37f2d3a97d0489ef534a37ef1a612bee40f1c9c6b62d4d5cba7e6170bf75f",
+        "lab/guest/path_guard.py": "8251b0995d72e17100131d8a88d6f2009213b7c9a7c0580a2e7c4fe3e11e68fb",
+        "lab/guest/root-init.sh": "078ec84bb1f502fc2b80b99b4eef2ee4a40432ccb9a476bf7757952547ca57d9",
+        "lab/guest/ubuntu.py": "224aada1ec5efbd05a1bd6a622a617a911f61760141dce73078553d66923aeb6",
+        "lab/guest/ubuntu_workload.py": "2cb4f4a137fa6b6e8b99d87c29efe89c2dbcc7d7cc7ee814b736a193f667a890",
+        "lab/guest/wire.py": "66180734f19432381ff6fbd3b8853c536d083ee3c681e52864902a91efafe87e",
+        "lab/guest/workload.py": "15d8e159ab16b2e7786aeee10d4be861a6b1cf448bf3ddf16b6a8c64ab72ad2c"
+      },
+      "qemu_version": "QEMU emulator version 8.2.2 (Debian 1:8.2.2+ds-0ubuntu1.18)",
+      "runner_sha256": "e2847c42eab98da98fad935c9137619339f223e3c6c4970c6a7790c3f2bbe04f",
+      "qemu_runner_sha256": "f92923b99c0d5436ef7778ea7b70909125ebd5c109f24c534f6325257b31d788",
+      "report_sha256": "abe9f663b1a4592400b831d5184926d0da6bc2a5f5c936af3469f5eda35d8bc4",
+      "guest_action_sha256": {
+        "01-setup.py": "d29d2745dccbd86090b14c39613014c94f74f228a92f9ec11ee7788cff776ac8",
+        "02-healthy.py": "24d7054fca42db56c37ac5f659c30b96b2167818391f986c9c438de6ddb41c61",
+        "03-legacy-forwarding.py": "89ff4f62ff55f6fd1bdd1d0aec8937e412162893c23a6798737dd82e9d137a53"
+      },
+      "raw_artifact_sha256": {
+        "01-setup.py": "d29d2745dccbd86090b14c39613014c94f74f228a92f9ec11ee7788cff776ac8",
+        "01-setup.serial.log": "9b0cd5c7d5484a9b794282674b9bb09720ec8384c22979b8e622a9591656e1aa",
+        "02-healthy.py": "24d7054fca42db56c37ac5f659c30b96b2167818391f986c9c438de6ddb41c61",
+        "02-healthy.serial.log": "02001adda811fb45149ad74a9bd5eb1359958d6ad63fc3a77dea90e9b01d1080",
+        "03-legacy-forwarding.py": "89ff4f62ff55f6fd1bdd1d0aec8937e412162893c23a6798737dd82e9d137a53",
+        "03-legacy-forwarding.serial.log": "c85a6e7e47767da326f5d426a2f864f6455396745268f33ab73897fa001e22f1",
+        "console.log": "8b5b09dce9f9d3b8f8c7c104e298cb5c30c53588a564da37edcb52f956b43185",
+        "qemu.log": "7180f1dda1fa7d4caa3bdd39ca0afabdc32049d65da973bb501dd8411793a8c7",
+        "qmp.jsonl": "40c4dd7eaaa5a6cf063de93caf07aff8a7c9de249daf892f1bfbdda886b4cff4",
+        "report.json": "abe9f663b1a4592400b831d5184926d0da6bc2a5f5c936af3469f5eda35d8bc4"
+      },
+      "observations": {
+        "setup": {
+          "kernel": "6.8.0-139-generic",
+          "size_sectors": 32768,
+          "status": "0 32768 multipath 2 0 0 0 1 1 A 0 1 0 252:2 A 0",
+          "backend_table": "0 32768 linear 8:16 0",
+          "probe_table": "0 32768 multipath 3 retain_attached_hw_handler queue_mode bio 0 1 1 round-robin 0 1 1 252:2 1",
+          "cold_probe": {
+            "return": null,
+            "errno": 22,
+            "error": "[Errno 22] Invalid argument",
+            "elapsed_seconds": 3.0264999999918274e-05
+          },
+          "cold_reads_before": 0,
+          "cold_reads_after": 0
+        },
+        "healthy": {
+          "probe": {
+            "return": null,
+            "errno": 22,
+            "error": "[Errno 22] Invalid argument",
+            "elapsed_seconds": 1.7412000000049943e-05
+          },
+          "reads_before": 1,
+          "reads_after": 1,
+          "status": "0 32768 multipath 2 0 0 0 1 1 A 0 1 0 252:2 A 0"
+        },
+        "legacy_forwarding": {
+          "direct_multipath": {
+            "return": null,
+            "errno": 22,
+            "error": "[Errno 22] Invalid argument",
+            "elapsed_seconds": 1.9868000000755615e-05
+          },
+          "plain_block": {
+            "return": null,
+            "errno": 22,
+            "error": "[Errno 22] Invalid argument",
+            "elapsed_seconds": 5.525999999811404e-06
+          }
+        }
+      },
+      "checks": {
+        "legacy_probe_rejected": true,
+        "unsupported_does_not_read": true,
+        "path_still_active": true,
+        "ram_shell_alive": true
+      },
+      "check_count": 4,
+      "passed": true
+    }
+  ],
+  "debug_run_index": [
+    {
+      "run_id": "20260925-142359-kernel-probe-25794",
+      "classification": "failed",
+      "passed": false,
+      "explanation": "Initial multipath fixture omitted queue_mode bio, so the kernel rejected stacking a request-based multipath target on the DM linear backend. Fixed the fixture; no ioctl behavior was exercised.",
+      "report_sha256": "a375198a56817b2d52022bb7752582d52db5e3fb7fa38cb7ce1fd4537e97510c",
+      "runner_sha256": "bb7ad2b18789589726065912494e8a766d1b04440f9709b182fc335c46b0cfa3",
+      "checks": null,
+      "local_evidence_directory": "lab/work/20260925-142359-kernel-probe-25794",
+      "raw_artifact_sha256": {
+        "01-setup.py": "97324b09f382d7d3a77b879113792db80f2ed74c8c8716ba8aadd87bceb0d3f1",
+        "01-setup.serial.log": "a4eed4b3a1c298faf034513f36cd6fe0ff4e72167beced888672168348e41783",
+        "console.log": "307c2172e5988e15ad55f6fa30cedd779ba9ee4100f913afcdaa6cc70edd6298",
+        "qemu.log": "a5fd17a186a0ed918f02da030f8ee6b99f2939a6db81c21f2737a5279ff1cd4d",
+        "qmp.jsonl": "394891ad98a5ade2c37664b81ea6b3ce5cf97deceeeaec3e83f5315376ae5be8",
+        "report.json": "a375198a56817b2d52022bb7752582d52db5e3fb7fa38cb7ce1fd4537e97510c"
+      }
+    },
+    {
+      "run_id": "20260925-142441-kernel-probe-26426",
+      "classification": "superseded_pass",
+      "passed": true,
+      "explanation": "Initial 7.0 test passed all 12 then-present checks. Superseded by the final run that also observes zero-return/no-read before current_pg selection.",
+      "report_sha256": "525f1f772c0dc0079ac45f37fa0dcc2dd30a58506504d174200471758542540b",
+      "runner_sha256": "7052218406022f0c151965aa6fc61bd86465e14ac1591fcbaf59938ba9ef69fb",
+      "checks": {
+        "healthy_returns_zero": true,
+        "healthy_probe_performs_read": true,
+        "blocked_exceeds_two_seconds": true,
+        "blocked_probe_incomplete": true,
+        "blocked_child_alive": true,
+        "ram_shell_alive_during_block": true,
+        "original_probe_completes_after_release": true,
+        "error_path_was_active": true,
+        "read_error_marks_path_failed": true,
+        "all_failed_is_enotconn": true,
+        "probe_does_not_reinstate_failed_path": true,
+        "failed_path_not_probed": true
+      },
+      "local_evidence_directory": "lab/work/20260925-142441-kernel-probe-26426",
+      "raw_artifact_sha256": {
+        "01-setup.py": "5a64824ad66e39ac88dc32b3e11e9e94b8af2805b7908f81954978cbae801789",
+        "01-setup.serial.log": "ee7d44fb296c79b64e172442c842a35fb7e7dae2a22aff3a68ee6f6b10c07a8a",
+        "02-healthy.py": "d3b2503b7f5e13ea319f73572a74d715cb17690dfb22cd0958c9bf299027d98c",
+        "02-healthy.serial.log": "447f8042d98d5ea2ebe3eaeae1b34508ee217a88f67e19360aa00b39f4e9a984",
+        "03-block-start.py": "80c99dec5150262d14eb5e296e5ece7dc739e8e33952aef65d80d1c4371c1086",
+        "03-block-start.serial.log": "519160f19cdded5a9951195827c2032ee947df98dc96dfe81bf9f53dae9fe5f1",
+        "04-block-observe.py": "4f0c2e180b49c6d9e21eb00fcb4a7e538e660f1abdc7d3740870bc6c2efc2f21",
+        "04-block-observe.serial.log": "4644d1b6e366ba98c603af68b22403320290da3ba751bd994922a2494f9f350b",
+        "05-block-release.py": "dc8f0354e0b06868e6d38eac550138cddb5126750e914ffc34482bad8b8bbb42",
+        "05-block-release.serial.log": "34bbefc69231347ed608f61ea549e1788669d3368083acc6b5a5357cc92eef13",
+        "06-read-error.py": "f95ddc1e183faf0d828d6d7e2fb2abd1afc46e020e87480e22cc8c3425204622",
+        "06-read-error.serial.log": "a9e66c1bbdac6a98a3ed4bd7282cc5dadc71999c003892bc7ade89da07ebbded",
+        "07-no-reinstate.py": "f9652b624b5fa35c967cb592d463dba3e279fd2efc99a44d02325d85fc8a867f",
+        "07-no-reinstate.serial.log": "417472bdaba96f246a31e12d0bde302fed6db9bea10ce2932991d384d97c967a",
+        "console.log": "5edaffd8742ac55165f86d4a36bd1f4b928a86b715fa1fdd95322af5d29002b2",
+        "qemu.log": "54d7303cf98f0161a2bc37d938941b3a23661305aedd1f328fc881b5e159d039",
+        "qmp.jsonl": "c1e6a938664b8685323756b2e6773c808d99b3c0ab86a5397c04aec8ad49bfaf",
+        "report.json": "525f1f772c0dc0079ac45f37fa0dcc2dd30a58506504d174200471758542540b"
+      }
+    },
+    {
+      "run_id": "20260925-142459-kernel-probe-26533",
+      "classification": "failed",
+      "passed": false,
+      "explanation": "The initial legacy assertion expected ENOTTY. Actual 6.8 returned EINVAL(22), with no added read. The final run records EINVAL on stacked multipath, direct multipath, and plain USB block targets; it does not generalize EINVAL as unsupported on modern kernels.",
+      "report_sha256": "12653303f298e5396e536feb4ff947b72dbf3eebdcb37713b305ec9d367d34b5",
+      "runner_sha256": "7052218406022f0c151965aa6fc61bd86465e14ac1591fcbaf59938ba9ef69fb",
+      "checks": {
+        "unsupported_is_enotty": false,
+        "unsupported_does_not_read": true,
+        "path_still_active": true,
+        "ram_shell_alive": true
+      },
+      "local_evidence_directory": "lab/work/20260925-142459-kernel-probe-26533",
+      "raw_artifact_sha256": {
+        "01-setup.py": "5a64824ad66e39ac88dc32b3e11e9e94b8af2805b7908f81954978cbae801789",
+        "01-setup.serial.log": "b4f48666991df659f87baf4eb5b6e1135bb3559f7c7af2303afba68793c28b38",
+        "02-healthy.py": "d3b2503b7f5e13ea319f73572a74d715cb17690dfb22cd0958c9bf299027d98c",
+        "02-healthy.serial.log": "2cf82e277eea086cd8fa8e40484020bedad7557c63fd656a25c936c47ac03625",
+        "console.log": "4f282fff7faae9b33983a6498c7d13a4edc02ac201e91f23c824274eb90d1fe6",
+        "qemu.log": "794e1c391650ac323299f7cd80c42954a6700a57ccbf4c556cf18fd77b849165",
+        "qmp.jsonl": "d7daf353b7e86d308e0cd02fcfb5378b39985835fbe52073d71bcd3d7fd67bb1",
+        "report.json": "12653303f298e5396e536feb4ff947b72dbf3eebdcb37713b305ec9d367d34b5"
+      }
+    },
+    {
+      "run_id": "20260925-142646-kernel-probe-27039",
+      "classification": "failed",
+      "passed": false,
+      "explanation": "Hotplug sysfs size appeared before the block device was usable; creating the lower linear table failed ENXIO. Added a successful read of the serial-verified disposable disk before creating mappings.",
+      "report_sha256": "5f09f7c0fb3b30cab0fef9d1d0237184af02d2a0415d22c790afe7ae5d62b471",
+      "runner_sha256": "ac33ad516d2623e4800b13aa8e9217036911b1fd45f193cdeaf3a11f4c0bbe4d",
+      "checks": null,
+      "local_evidence_directory": "lab/work/20260925-142646-kernel-probe-27039",
+      "raw_artifact_sha256": {
+        "01-setup.py": "2f17a2a9243cbd4006475e1e0517fdeae83ed89c25e8ce1e7c0743f3719ee811",
+        "01-setup.serial.log": "9b86d0b2fa44947ffcc938a5d69db32fcf38fe46cd97e04201498086d1957858",
+        "console.log": "3d487b6f927c17d107b8b016ce1d007597ca30d0bff838fea01ab0fc57cf2029",
+        "qemu.log": "4d12c438db92d331132ab3f60ecde773f0fb4ca7b4a8a2ebf66f6e5a4f134e2d",
+        "qmp.jsonl": "8a447ae3385518810e283506845e6e7b0f17bb7fbec3f8207c19bd7513cfec1a",
+        "report.json": "5f09f7c0fb3b30cab0fef9d1d0237184af02d2a0415d22c790afe7ae5d62b471"
+      }
+    }
+  ],
+  "source_context": [
+    {
+      "url": "https://github.com/torvalds/linux/blob/v7.0/drivers/md/dm-mpath.c",
+      "purpose": "Kernel probe implementation; runtime observations above are tied to the actual Ubuntu guest kernel image hashes."
+    },
+    {
+      "url": "https://github.com/torvalds/linux/blob/v6.8/drivers/md/dm.c#L429",
+      "purpose": "Old DM core forwards ioctls to the lower block-device driver after prepare_ioctl; therefore unsupported requests do not uniformly yield ENOTTY."
+    },
+    {
+      "url": "https://github.com/torvalds/linux/blob/v6.8/drivers/md/dm-mpath.c#L1906",
+      "purpose": "Old multipath prepare_ioctl selects a lower path for forwarding."
+    }
+  ],
+  "limitations": [
+    "One final deterministic run per kernel build; earlier debugging runs are disclosed separately. No statistical reliability estimate.",
+    "Minimal RAM-rescue guests, not a full Ubuntu application workload or an actual USB cable disconnection. The probe disk used QEMU usb-storage; the guest root used the existing separate UAS disk.",
+    "A lower DM suspend models a request that cannot complete; it does not reproduce all SCSI/UAS error handling or physical driver hangs. The error target models a path-class read error, not every block error class.",
+    "Single-path/single-priority-group fixtures only. ALUA, multiple paths/groups, concurrent probes, target removal, and real transport recovery are outside this matrix.",
+    "Elapsed values are observations of these runs, not a CPU, memory, or latency benchmark, timeout guarantee, or resource-budget acceptance test.",
+    "No identity matching, LVM correctness, filesystem integrity, application survival, host protection, or Guard capability fallback is established by these direct ABI runs.",
+    "The legacy assertion accepts EINVAL or ENOTTY only in a fixture explicitly selected as an unsupported kernel; it is not a suggested production capability detector.",
+    "Raw logs and generated guest source are retained locally under ignored lab/work. This public summary includes their content hashes but does not publish the raw files or virtual disk images."
+  ],
+  "passed": true,
+  "total_checks": 17
+}

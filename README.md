@@ -8,6 +8,8 @@
 
 各部件的职责、我们新增的工作、复用的开源实现与可替换边界见 [`ARCHITECTURE.md`](ARCHITECTURE.md)。
 
+实验 Guard 已接入新内核的 `DM_MPATH_PROBE_PATHS`，替换换表后直接宣布就绪的分支；健康期不主动读盘，旧内核明确降级。机制和 QEMU 验收见 [路径探测接入](lab/KERNEL-PROBE.md)。
+
 完整 Ubuntu Server 用户空间和真实 Git 克隆场景见 [`lab/UBUNTU.md`](lab/UBUNTU.md)，使用 systemd 管理服务并从虚拟 USB/LVM 根卷运行。
 
 2026-09-25 的系统性调研、故障分类、组件选型和新增边界实验见 [技术路线报告](research/2026-09-25/TECHNICAL-ROUTE.md)。报告区分已测能力与待验证情形，不代表实机部署完成。

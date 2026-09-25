@@ -119,6 +119,8 @@ python3 lab/research_probe.py suspended-manager-death \
 
 ## 9. 实机更新后新增可用的路径探测接口
 
+后续已完成 Guard 接入和隔离实验，见 [新内核路径探测接入](../../lab/KERNEL-PROBE.md)。以下保留接入前的源码研究时点；“尚未实测/接入”不再表示最新状态。
+
 本节是首启、旧内核清退之后的补充源码核验，**不计入上述九次 VM 实验，也没有执行新接口的故障测试**。当前运行 `7.0.0-34-generic`；宿主 multipath-tools/kpartx 仍是 `0.9.4-5ubuntu8.2`，LVM2 为 `2.03.16-3ubuntu3.2`，libdevmapper/dmsetup 为 `1.02.185-3ubuntu3.2`。0.15 仍只用于隔离研究构建。宿主根卷仍为 USB 分区 → LVM → ext4，尚无项目 multipath 保护层；daemon 运行不表示根卷已受保护。
 
 ### 9.1 新机制及准确职责

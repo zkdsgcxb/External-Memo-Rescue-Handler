@@ -252,7 +252,9 @@ def main():
                 checks.update(automatic_recovery=after['path_guard']['state']=='ready' and after['path_guard']['recoveries']==args.cycles,
                     zero_application_errors=report['failed_writes']==0,
                     writes_continued=len(writes)>len(before['workload'].splitlines()),
-                    block_read=report.get('block_after',{}).get('ok',False),
+                    block_read=report.get('block_after',{}).get('ok',False) and
+                        report['block_after'].get('result',{}).get('bytes')==4096 and
+                        report['block_after'].get('result',{}).get('ext4_magic')=='53ef',
                     root_read=report.get('root_after',{}).get('ok',False),
                     filesystem_writable=report.get('filesystem_after',{}).get('result',{}).get('write_fsync_ok',False),
                     no_journal_abort='Aborting journal' not in after['kernel'])
@@ -263,6 +265,11 @@ def main():
                     checks['services_survived']=ua.get('services')==ub['services']
                     checks['no_failed_units']=not ub['failed_units'].strip() and not ua.get('failed_units','missing').strip()
                 checks['acknowledged_data_present']=report.get('data_audit',{}).get('result',{}).get('prefix_matches',False)
+                checks['post_swap_confirmation']=all(
+                    e['outcome']['path_guard'].get('confirmation') in
+                        ('kernel-probe-and-state','state-only-unsupported') and
+                    e['outcome']['path_guard'].get('kernel_probe',{}).get('token')==e['index']
+                    for e in report['cycles'])
             else:
                 checks.update(deadline_released_queue=(args.kill_manager or after['path_guard']['state']=='expired') and report['failed_writes']>0,
                     no_recovery_after_failure=after['path_guard']['recoveries']==0,
