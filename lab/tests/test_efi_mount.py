@@ -1,5 +1,4 @@
 """EFI integration safety boundaries, with all devices and host paths isolated."""
-import copy
 from contextlib import nullcontext
 import importlib.util
 import json
@@ -75,7 +74,8 @@ class EFIMountTests(unittest.TestCase):
         self.preparation.write_text(json.dumps(self.prepared))
         self.vm_report = self.root / 'vm-report.json'
         self.vm = {'passed': True, 'scope': 'native EFI path-triggered mount',
-                   'rule_renderer_sha256': installer.sha256(Path(installer.__file__))}
+                   'rule_renderer_sha256': installer.sha256(Path(installer.__file__)),
+                   'source_sha256': installer.source_hashes()}
         self.vm_report.write_text(json.dumps(self.vm))
         self.failure = None
         self.mount_result = '1234-ABCD vfat rw,relatime\n'
@@ -142,13 +142,22 @@ class EFIMountTests(unittest.TestCase):
     def install(self):
         installer.install(self.preparation, self.vm_report)
 
-    def assert_no_mutation(self):
-        self.assertFalse(self.rule.exists())
-        self.assertFalse(self.path_unit.exists())
-        self.assertFalse(self.enabled.is_symlink())
-        self.assertFalse(self.dropin.exists())
-        self.assertFalse(self.state.exists())
+    def record(self):
+        return json.loads((self.state / 'install.json').read_text())
+
+    def assert_configuration_absent(self):
+        for path in (self.rule, self.path_unit, self.enabled, self.dropin):
+            with self.subTest(path=path.relative_to(self.root)):
+                self.assertFalse(path.exists() or path.is_symlink())
         self.assertEqual(self.fstab.read_bytes(), self.original)
+
+    def assert_cleanup_complete(self, state='failed_removed'):
+        self.assert_configuration_absent()
+        self.assertEqual(self.record()['state'], state)
+
+    def assert_no_mutation(self):
+        self.assert_configuration_absent()
+        self.assertFalse(self.state.exists())
         self.assert_no_mutating_commands()
 
     def assert_no_mutating_commands(self):
@@ -214,7 +223,7 @@ class EFIMountTests(unittest.TestCase):
                 self.assert_no_mutation()
 
     def test_changed_partition_or_filesystem_is_rejected(self):
-        original = copy.deepcopy(self.props)
+        original = self.props.copy()
         for key, value in (('ID_FS_UUID', 'ABCD-1234'), ('ID_PART_ENTRY_UUID', 'other'),
                            ('ID_FS_TYPE', 'ext4'), ('ID_PART_ENTRY_NUMBER', '2')):
             with self.subTest(key=key):
@@ -240,7 +249,8 @@ class EFIMountTests(unittest.TestCase):
 
     def test_failed_wrong_scope_or_stale_vm_report_precedes_installation(self):
         for change in ({'passed': False}, {'passed': 1}, {'scope': 'other experiment'},
-                       {'rule_renderer_sha256': 'old renderer hash'}):
+                       {'rule_renderer_sha256': 'old renderer hash'},
+                       {'source_sha256': {'guard/efi_mount.py': self.vm['rule_renderer_sha256']}}):
             with self.subTest(change=change):
                 self.vm_report.write_text(json.dumps({**self.vm, **change}))
                 with self.assertRaises(RuntimeError):
@@ -249,7 +259,7 @@ class EFIMountTests(unittest.TestCase):
 
     def test_installation_preserves_fstab_and_existing_native_mount(self):
         self.install()
-        record = json.loads((self.state / 'install.json').read_text())
+        record = self.record()
         self.assertEqual(record['state'], 'installed')
         self.assertEqual(self.rule.read_text(), installer.render_rule(self.identity))
         self.assertEqual(self.path_unit.read_text(), installer.render_path())
@@ -315,10 +325,7 @@ class EFIMountTests(unittest.TestCase):
         self.assertNotIn(['systemctl', 'stop', self.fsck_unit], commands)
         self.assertLess(commands.index(['systemctl', 'stop', 'boot-efi.mount']),
                         commands.index(['systemctl', 'start', 'boot-efi.mount']))
-        self.assertFalse(self.rule.exists())
-        self.assertFalse(self.path_unit.exists())
-        self.assertFalse(self.dropin.exists())
-        self.assertEqual(self.fstab.read_bytes(), self.original)
+        self.assert_cleanup_complete()
 
     def test_failed_fsck_cache_reset_restores_mount_before_withdrawing_configuration(self):
         def fail_fsck_stop(args):
@@ -332,10 +339,7 @@ class EFIMountTests(unittest.TestCase):
                         commands.index(['systemctl', 'start', 'boot-efi.mount']))
         self.assertLess(commands.index(['systemctl', 'start', 'boot-efi.mount']),
                         commands.index(['systemctl', 'stop', self.path_unit.name]))
-        self.assertFalse(self.rule.exists())
-        self.assertFalse(self.path_unit.exists())
-        self.assertFalse(self.dropin.exists())
-        self.assertEqual(self.fstab.read_bytes(), self.original)
+        self.assert_cleanup_complete()
 
     def test_remaining_fsck_cache_is_rejected_before_path_monitor_enable(self):
         self.remain_after_exit = 'yes'
@@ -343,10 +347,7 @@ class EFIMountTests(unittest.TestCase):
             self.install()
         commands = [call.args[0] for call in self.commands.call_args_list]
         self.assertNotIn(['systemctl', 'enable', '--now', self.path_unit.name], commands)
-        self.assertFalse(self.rule.exists())
-        self.assertFalse(self.path_unit.exists())
-        self.assertFalse(self.dropin.exists())
-        self.assertEqual(self.fstab.read_bytes(), self.original)
+        self.assert_cleanup_complete()
 
     def test_existing_fsck_dropin_is_not_overwritten(self):
         self.dropin.parent.mkdir()
@@ -366,24 +367,14 @@ class EFIMountTests(unittest.TestCase):
         self.failure = fail_verify
         with self.assertRaises(subprocess.CalledProcessError):
             self.install()
-        self.assertFalse(self.rule.exists())
-        self.assertFalse(self.path_unit.exists())
-        self.assertFalse(self.enabled.is_symlink())
-        self.assertFalse(self.dropin.exists())
-        self.assertEqual(self.fstab.read_bytes(), self.original)
-        self.assertEqual(json.loads((self.state / 'install.json').read_text())['state'], 'failed_removed')
+        self.assert_cleanup_complete()
         self.commands.assert_any_call(['udevadm', 'control', '--reload-rules'])
 
     def test_wrong_mount_after_start_removes_rule_without_editing_fstab(self):
         self.mount_result = '1234-ABCD vfat ro,relatime\n'
         with self.assertRaisesRegex(RuntimeError, 'not mounted read-write'):
             self.install()
-        self.assertFalse(self.rule.exists())
-        self.assertFalse(self.path_unit.exists())
-        self.assertFalse(self.enabled.is_symlink())
-        self.assertFalse(self.dropin.exists())
-        self.assertEqual(self.fstab.read_bytes(), self.original)
-        self.assertEqual(json.loads((self.state / 'install.json').read_text())['state'], 'failed_removed')
+        self.assert_cleanup_complete()
 
     def test_failure_after_enable_removes_unit_enable_link_and_rule(self):
         failed = False
@@ -397,24 +388,14 @@ class EFIMountTests(unittest.TestCase):
         with self.assertRaises(subprocess.CalledProcessError):
             self.install()
         self.assertTrue(failed)
-        self.assertFalse(self.rule.exists())
-        self.assertFalse(self.path_unit.exists())
-        self.assertFalse(self.enabled.is_symlink())
-        self.assertFalse(self.dropin.exists())
-        self.assertEqual(self.fstab.read_bytes(), self.original)
-        self.assertEqual(json.loads((self.state / 'install.json').read_text())['state'], 'failed_removed')
+        self.assert_cleanup_complete()
 
     def test_remove_preserves_the_native_mount_and_fstab(self):
         self.install()
         self.commands.reset_mock()
         installer.remove()
-        self.assertFalse(self.rule.exists())
-        self.assertFalse(self.path_unit.exists())
-        self.assertFalse(self.enabled.is_symlink())
-        self.assertFalse(self.dropin.exists())
+        self.assert_cleanup_complete('removed')
         self.assertFalse(self.alias.exists())
-        self.assertEqual(self.fstab.read_bytes(), self.original)
-        self.assertEqual(json.loads((self.state / 'install.json').read_text())['state'], 'removed')
         self.commands.assert_any_call(['udevadm', 'control', '--reload-rules'])
         self.commands.assert_any_call(['systemctl', 'stop', self.path_unit.name])
         self.assertFalse(any(call.args[0] == ['systemctl', 'stop', 'boot-efi.mount']
@@ -423,10 +404,12 @@ class EFIMountTests(unittest.TestCase):
     def test_remove_refuses_to_delete_an_edited_rule(self):
         self.install()
         self.rule.write_text('# independently edited\n')
+        original_record = (self.state / 'install.json').read_bytes()
         self.commands.reset_mock()
         with self.assertRaisesRegex(RuntimeError, 'changed'):
             installer.remove()
         self.assertEqual(self.rule.read_text(), '# independently edited\n')
+        self.assertEqual((self.state / 'install.json').read_bytes(), original_record)
         self.assert_no_mutating_commands()
 
     def test_remove_checks_edited_path_unit_before_stopping_or_removing_anything(self):
@@ -475,6 +458,24 @@ class EFIMountTests(unittest.TestCase):
         self.assertTrue(self.path_unit.exists())
         self.assert_no_mutating_commands()
 
+    def test_remove_recovers_an_interrupted_partial_installation(self):
+        self.install()
+        record = self.record()
+        record['state'] = 'preparing'
+        (self.state / 'install.json').write_text(json.dumps(record))
+        # Model process death after writing the first managed file. The record
+        # identifies its ownership even though installation never completed.
+        self.enabled.unlink()
+        self.path_unit.unlink()
+        self.dropin.unlink()
+        self.commands.reset_mock()
+
+        installer.remove()
+
+        self.assert_cleanup_complete('removed')
+        self.assertFalse(self.alias.exists())
+        self.commands.assert_any_call(['udevadm', 'control', '--reload-rules'])
+
     def test_remove_stop_failure_leaves_files_available_for_retry(self):
         self.install()
         def fail_stop(args):
@@ -504,7 +505,7 @@ class EFIMountTests(unittest.TestCase):
         self.failure = None
         installer.remove()
         self.assertFalse(self.rule.exists())
-        self.assertEqual(json.loads((self.state / 'install.json').read_text())['state'], 'removed')
+        self.assertEqual(self.record()['state'], 'removed')
         self.assertEqual(self.fstab.read_bytes(), self.original)
 
     def test_failed_install_cleanup_can_retry_when_reload_is_unavailable(self):
@@ -515,13 +516,36 @@ class EFIMountTests(unittest.TestCase):
         with self.assertRaises(subprocess.CalledProcessError):
             self.install()
         self.assertFalse(self.rule.exists())
-        self.assertEqual(json.loads((self.state / 'install.json').read_text())['state'],
+        self.assertEqual(self.record()['state'],
                          'failed_pending_reload')
         self.failure = None
         installer.remove()
         self.assertFalse(self.rule.exists())
-        self.assertEqual(json.loads((self.state / 'install.json').read_text())['state'], 'removed')
+        self.assertEqual(self.record()['state'], 'removed')
         self.assertEqual(self.fstab.read_bytes(), self.original)
+
+    def test_cleanup_failure_preserves_the_install_error_and_allows_retry(self):
+        install_error = subprocess.CalledProcessError(1, ['udevadm', 'verify', str(self.rule)])
+        cleanup_error = subprocess.CalledProcessError(2, ['systemctl', 'stop', self.path_unit.name])
+
+        def fail_install_and_cleanup(args):
+            if args == install_error.cmd:
+                raise install_error
+            if args == cleanup_error.cmd:
+                raise cleanup_error
+
+        self.failure = fail_install_and_cleanup
+        with self.assertRaises(subprocess.CalledProcessError) as caught:
+            self.install()
+
+        self.assertIs(caught.exception, install_error)
+        self.assertIn(repr(cleanup_error), '\n'.join(caught.exception.__notes__))
+        self.assertEqual(self.record()['state'], 'failed_pending_reload')
+        self.assertTrue(self.path_unit.exists())
+
+        self.failure = None
+        installer.remove()
+        self.assert_cleanup_complete('removed')
 
 
 if __name__ == '__main__':

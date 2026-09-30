@@ -10,18 +10,12 @@ import subprocess
 import sys
 import time
 
+from host_files import sha256
+
 BASE=Path(__file__).resolve().parent
 sys.path[:0]=[str(BASE/'runtime'),str(BASE.parent/'ram-rescue-demo/src')]
 from admission import Admission, layout, readonly
 from rescue import Recovery
-
-
-def sha256(path):
-    h=hashlib.sha256()
-    with Path(path).open('rb') as stream:
-        for chunk in iter(lambda:stream.read(1024*1024),b''):
-            h.update(chunk)
-    return h.hexdigest()
 
 
 def collect(identity):
@@ -77,7 +71,7 @@ def main():
     profile['baseline']={'kernel_sha256':sha256(out/'vmlinuz'),
         'initrd_sha256':sha256(out/'original-initrd.img'),
         'grub_default_path':'/boot/grub/grub.cfg',
-        'lvmlocal_sha256':sha256('/etc/lvm/lvmlocal.conf')}
+        'lvmlocal_sha256':sha256(Path('/etc/lvm/lvmlocal.conf'))}
     (out/'enrollment.json').write_text(json.dumps(profile,indent=2)+'\n')
     for path in [out,*out.iterdir()]:
         os.chmod(path,0o700 if path.is_dir() else 0o600)

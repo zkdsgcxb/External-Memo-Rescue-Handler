@@ -1,7 +1,6 @@
 #!/usr/bin/python3
 """Build an isolated Ubuntu protection initrd; never installs or changes disks."""
 import argparse
-import hashlib
 import json
 import os
 from pathlib import Path
@@ -9,17 +8,11 @@ import shutil
 import subprocess
 import tarfile
 
+from host_files import sha256
+
 BASE=Path(__file__).resolve().parent
 PROJECT=BASE.parent
 WORK=PROJECT/'lab/work'
-
-
-def sha256(path):
-    h=hashlib.sha256()
-    with Path(path).open('rb') as stream:
-        for chunk in iter(lambda:stream.read(1024*1024),b''):
-            h.update(chunk)
-    return h.hexdigest()
 
 
 def payload(profile,root):
@@ -92,7 +85,7 @@ def build(enrollment,work,kernel):
                     output.addfile(item,data)
             else:
                 output.addfile(item)
-    sources=[BASE/'build.py',PROJECT/'ram-rescue-demo/src/rescue.py',
+    sources=[BASE/'build.py',BASE/'host_files.py',PROJECT/'ram-rescue-demo/src/rescue.py',
              *sorted((BASE/'runtime').glob('*.py')),*sorted(p for p in templates.iterdir() if p.is_file())]
     source_hashes={str(p.relative_to(PROJECT)):sha256(p) for p in sources}
     temporary=work/'tmp'

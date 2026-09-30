@@ -10,6 +10,8 @@ EFI 第一分区仍使用 Ubuntu 原来的普通 FAT 挂载。定向 udev 规则
 
 安装入口 [`efi_mount.py`](efi_mount.py) 要求：已验证整分区备份、未挂载时 FAT 只读检查通过、原挂载恢复成功，且测试报告确实通过当前源码的 VM 验收。它再次核对 EFI 是当前根盘保护映射所在 USB 磁盘的第一分区，避免登记资料和实际设备不一致。
 
+VM 报告同时绑定安装器和 `host_files.py` 公共文件工具的源码哈希；源码重构后，应使用对应的新报告。2026-10-01 的代码清理保留了三个配置的原始内容，已安装的配置无需重装。改动和复核见 [代码审阅记录](../research/2026-10-01/CODE-REVIEW.md)。
+
 ```bash
 # 根据本机私有检查记录生成规则预览，不改系统。
 python3 guard/efi_mount.py --preparation lab/work/efi-recovery-20261001/preparation.json
@@ -26,6 +28,8 @@ pkexec python3 guard/efi_mount.py --remove
 安装记录位于 `/var/lib/ram-rescue-efi`。除规则和 path unit 外，只为登记 EFI 的 `systemd-fsck@` 实例添加 `RemainAfterExit=no`：避免快速重接时沿用上次“已检查”的状态，每次新挂载事务都请求原生检查。fsck 命令、修复策略和其他文件系统的检查单元不变；其原生 `-M` 会跳过已挂载设备。
 
 安装锁定 dpkg，通过一次正常卸载、停止旧 fsck 缓存状态、原生检查并挂回的流程，使新行为当场生效。它不改 fstab、GRUB、内置 rEFInd、Guard 或内核，无需重启。移除会同时撤除该精确实例的 drop-in。规则重载失败会保留待收尾状态，不把它误报为已完成移除。
+
+若安装在写入 `preparing` 记录后中断，可以用 `--remove` 核验并撤除已有残留。发现配置被管理员改动时，撤除会保留文件和记录供审阅；不会覆盖修改。安装和回滚同时失败时，保留原始错误及回滚错误，并留下可重试的状态。移除后的记录仍用于留档；此入口不自动覆盖记录或重装。
 
 ## 离线维护与失败处理
 

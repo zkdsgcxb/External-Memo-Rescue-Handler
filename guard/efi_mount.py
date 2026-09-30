@@ -10,7 +10,7 @@ from pathlib import Path
 import re
 import subprocess
 
-from install import atomic, sha256
+from host_files import atomic, sha256
 
 RULE = Path('/etc/udev/rules.d/90-ram-rescue-efi.rules')
 PATH_UNIT = Path('/etc/systemd/system/ram-rescue-efi.path')
@@ -18,11 +18,25 @@ ENABLED = Path('/etc/systemd/system/local-fs.target.wants/ram-rescue-efi.path')
 STATE = Path('/var/lib/ram-rescue-efi')
 FSTAB = Path('/etc/fstab')
 MOUNT = '/boot/efi'
+MOUNT_UNIT = 'boot-efi.mount'
 KEYS = ('ID_FS_UUID', 'ID_PART_ENTRY_UUID', 'ID_USB_SERIAL_SHORT')
+REMOVAL_PENDING_STATES = {'preparing', 'removal_pending_reload', 'failed_pending_reload'}
 
 
 def command(args):
     return subprocess.check_output(args, text=True, stderr=subprocess.STDOUT, timeout=30)
+
+
+def source_hashes():
+    """Bind VM evidence to both the installer and its persistent file helpers."""
+    source = Path(__file__).resolve()
+    return {f'guard/{path.name}': sha256(path)
+            for path in (source, source.with_name('host_files.py'))}
+
+
+def save_record(record, state):
+    record['state'] = state
+    atomic(STATE / 'install.json', (json.dumps(record, indent=2) + '\n').encode())
 
 
 def properties(device):
@@ -81,6 +95,15 @@ def fsck_dropin(identity):
     return PATH_UNIT.parent / (fsck_unit(identity) + '.d') / '50-ram-rescue-efi.conf'
 
 
+def configuration_files(identity):
+    """Return the three owned files and their existing receipt field names."""
+    return (
+        (RULE, render_rule(identity), 'rule_sha256'),
+        (PATH_UNIT, render_path(), 'path_sha256'),
+        (fsck_dropin(identity), render_fsck(), 'fsck_sha256'),
+    )
+
+
 @contextmanager
 def maintenance_lock():
     # Prevent an apt/dpkg EFI update while resetting the old fsck cache through
@@ -99,26 +122,37 @@ def trigger(identity):
                  str(Path('/sys/class/block') / device.resolve(strict=True).name)])
 
 
-def withdraw(record):
-    # Check all ownership before stopping/removing anything. Missing files are
-    # permitted for retry after an interrupted or partially completed removal.
-    dropin = fsck_dropin(record['identity'])
-    for path, key in ((RULE, 'rule_sha256'), (PATH_UNIT, 'path_sha256'),
-                      (dropin, 'fsck_sha256')):
-        if os.path.lexists(path) and (path.is_symlink() or sha256(path) != record[key]):
+def verify_ownership(record, *, require_complete=False):
+    """Reject independent edits before changing either files or the receipt."""
+    files = configuration_files(record['identity'])
+    for path, _content, key in files:
+        exists = os.path.lexists(path)
+        if (require_complete and not exists) or (exists and (
+                path.is_symlink() or not path.is_file() or sha256(path) != record[key])):
             raise RuntimeError('Integration changed; review before removing: ' + str(path))
-    if os.path.lexists(ENABLED) and (
-            not ENABLED.is_symlink() or ENABLED.readlink() != PATH_UNIT):
+    enabled_exists = os.path.lexists(ENABLED)
+    if (require_complete and not enabled_exists) or (enabled_exists and (
+            not ENABLED.is_symlink() or ENABLED.readlink() != PATH_UNIT)):
         raise RuntimeError('Enabled path unit changed; review before removing')
+    return files
+
+
+def withdraw(record):
+    """Stop the monitor and remove only unchanged files from this installation.
+
+    Missing files are allowed so interrupted installation/removal can be retried.
+    The ordinary EFI mount stays available throughout removal.
+    """
+    files = verify_ownership(record)
     # Reload first so an installation failure before its first daemon-reload
     # can still stop the newly written unit by its actual name.
     if PATH_UNIT.exists():
         command(['systemctl', 'daemon-reload'])
         command(['systemctl', 'stop', PATH_UNIT.name])
     ENABLED.unlink(missing_ok=True)
-    RULE.unlink(missing_ok=True)
-    PATH_UNIT.unlink(missing_ok=True)
-    dropin.unlink(missing_ok=True)
+    for path, _content, _key in files:
+        path.unlink(missing_ok=True)
+    dropin = fsck_dropin(record['identity'])
     if dropin.parent.is_dir() and not any(dropin.parent.iterdir()):
         dropin.parent.rmdir()
     command(['systemctl', 'daemon-reload'])
@@ -142,7 +176,8 @@ def fstab_entry(text):
     return entry
 
 
-def validate(preparation):
+def load_preparation(preparation):
+    """Require the clean, unmounted check and the exact verified backup."""
     saved = json.loads(preparation.read_text())
     if not saved.get('clean') or not saved.get('backup_verified'):
         raise RuntimeError('Requires a verified backup and clean unmounted fsck result')
@@ -151,6 +186,12 @@ def validate(preparation):
     backup = preparation.parent / 'efi-partition.img.zst'
     if sha256(backup) != saved['backup_compressed_sha256']:
         raise RuntimeError('EFI backup checksum differs')
+    return saved
+
+
+def validate(preparation):
+    """Match the checked EFI instance to fstab and the protected root disk."""
+    saved = load_preparation(preparation)
     entry = fstab_entry(FSTAB.read_text())
     old = saved['identity']
     if entry[0] != '/dev/disk/by-uuid/' + old['UUID']:
@@ -176,6 +217,57 @@ def validate(preparation):
     return render_rule(identity), identity
 
 
+def validate_vm_report(vm_report):
+    vm = json.loads(vm_report.read_text())
+    if vm.get('passed') is not True or vm.get('scope') != 'native EFI path-triggered mount':
+        raise RuntimeError('Requires the passed native path-triggered VM report')
+    if (vm.get('rule_renderer_sha256') != sha256(Path(__file__)) or
+            vm.get('source_sha256') != source_hashes()):
+        raise RuntimeError('VM did not test these installer and file helper sources')
+
+
+def reset_fsck_cache(unit):
+    """Recheck while unmounted; always attempt to restore the ordinary mount."""
+    # Reloading RemainAfterExit cannot clear the stock unit's old exited state.
+    try:
+        command(['systemctl', 'stop', MOUNT_UNIT])
+        command(['systemctl', 'stop', unit])
+    finally:
+        command(['systemctl', 'start', MOUNT_UNIT])
+    if command(['systemctl', 'show', unit, '--value', '-p', 'RemainAfterExit']).strip() != 'no':
+        raise RuntimeError('EFI filesystem check still caches completion')
+
+
+def verify_mount(identity):
+    result = command(['findmnt', '-rn', '-M', MOUNT, '-o', 'UUID,FSTYPE,OPTIONS']).split()
+    if (len(result) != 3 or result[:2] != [identity['ID_FS_UUID'], 'vfat'] or
+            'rw' not in result[2].split(',')):
+        raise RuntimeError('EFI is not mounted read-write from the enrolled partition')
+
+
+def enable_monitor(identity):
+    command(['systemctl', 'enable', '--now', PATH_UNIT.name])
+    trigger(identity)
+    if (not ENABLED.is_symlink() or ENABLED.readlink() != PATH_UNIT or
+            command(['systemctl', 'is-active', PATH_UNIT.name]).strip() != 'active'):
+        raise RuntimeError('Native EFI path monitor is not enabled and active')
+    expected = Path('/dev/disk/by-uuid') / identity['ID_FS_UUID']
+    if Path('/dev/ram-rescue-efi').resolve(strict=True) != expected.resolve(strict=True):
+        raise RuntimeError('Enrolled EFI symlink was not created correctly')
+
+
+def rollback_install(record, original_error):
+    """Keep the initiating failure visible if rollback itself is interrupted."""
+    try:
+        save_record(record, 'failed_pending_reload')
+        withdraw(record)
+        save_record(record, 'failed_removed')
+    except BaseException as rollback_error:
+        original_error.add_note(
+            f'EFI cleanup is incomplete: {rollback_error!r}. '
+            'The installation record is retained for inspection and --remove retry.')
+
+
 def install(preparation, vm_report):
     if os.geteuid() != 0:
         raise RuntimeError('Use local administrator authentication')
@@ -184,65 +276,37 @@ def install(preparation, vm_report):
 
 
 def install_locked(preparation, vm_report):
-    rule, identity = validate(preparation)
-    vm = json.loads(vm_report.read_text())
-    if vm.get('passed') is not True or vm.get('scope') != 'native EFI path-triggered mount':
-        raise RuntimeError('Requires the passed native path-triggered VM report')
-    if vm.get('rule_renderer_sha256') != sha256(Path(__file__)):
-        raise RuntimeError('VM did not test this rule renderer and installer version')
-    dropin = fsck_dropin(identity)
-    if any(os.path.lexists(p) for p in (RULE, PATH_UNIT, ENABLED, dropin, STATE)):
+    _rule, identity = validate(preparation)
+    validate_vm_report(vm_report)
+    files = configuration_files(identity)
+    destinations = [path for path, _content, _key in files]
+    if any(os.path.lexists(path) for path in (*destinations, ENABLED, STATE)):
         raise RuntimeError('EFI event integration already exists; refusing to overwrite it')
     original_fstab = FSTAB.read_bytes()
     STATE.mkdir(mode=0o700)
     atomic(STATE / 'fstab.before', original_fstab)
-    record = {'state': 'preparing', 'identity': identity,
-              'rule_sha256': hashlib.sha256(rule.encode()).hexdigest(),
-              'path_sha256': hashlib.sha256(render_path().encode()).hexdigest(),
-              'fsck_sha256': hashlib.sha256(render_fsck().encode()).hexdigest(),
+    record = {'identity': identity,
               'fstab_sha256': hashlib.sha256(original_fstab).hexdigest(),
               'preparation_sha256': sha256(preparation), 'vm_report_sha256': sha256(vm_report)}
-    atomic(STATE / 'install.json', (json.dumps(record, indent=2) + '\n').encode())
+    record.update({key: hashlib.sha256(content.encode()).hexdigest()
+                   for _path, content, key in files})
+    save_record(record, 'preparing')
     try:
-        atomic(RULE, rule.encode(), 0o644)
-        atomic(PATH_UNIT, render_path().encode(), 0o644)
-        dropin.parent.mkdir(exist_ok=True)
-        atomic(dropin, render_fsck().encode(), 0o644)
+        for path, content, _key in files:
+            path.parent.mkdir(exist_ok=True)
+            atomic(path, content.encode(), 0o644)
         command(['udevadm', 'verify', str(RULE)])
         command(['systemd-analyze', 'verify', str(PATH_UNIT)])
         command(['systemctl', 'daemon-reload'])
         command(['udevadm', 'control', '--reload-rules'])
-        # Clear the already-active stock fsck cache while EFI is unmounted.
-        # Reloading RemainAfterExit alone cannot undo its previous exited state.
-        try:
-            command(['systemctl', 'stop', 'boot-efi.mount'])
-            command(['systemctl', 'stop', fsck_unit(identity)])
-        finally:
-            command(['systemctl', 'start', 'boot-efi.mount'])
-        if command(['systemctl', 'show', fsck_unit(identity), '--value',
-                    '-p', 'RemainAfterExit']).strip() != 'no':
-            raise RuntimeError('EFI filesystem check still caches completion')
-        result = command(['findmnt', '-rn', '-M', MOUNT, '-o', 'UUID,FSTYPE,OPTIONS']).split()
-        if len(result) != 3 or result[:2] != [identity['ID_FS_UUID'], 'vfat'] or 'rw' not in result[2].split(','):
-            raise RuntimeError('EFI is not mounted read-write from the enrolled partition')
-        command(['systemctl', 'enable', '--now', PATH_UNIT.name])
-        trigger(identity)
-        if (not ENABLED.is_symlink() or ENABLED.readlink() != PATH_UNIT or
-                command(['systemctl', 'is-active', PATH_UNIT.name]).strip() != 'active'):
-            raise RuntimeError('Native EFI path monitor is not enabled and active')
-        if Path('/dev/ram-rescue-efi').resolve(strict=True) != (
-                Path('/dev/disk/by-uuid') / identity['ID_FS_UUID']).resolve(strict=True):
-            raise RuntimeError('Enrolled EFI symlink was not created correctly')
+        reset_fsck_cache(fsck_unit(identity))
+        verify_mount(identity)
+        enable_monitor(identity)
         if FSTAB.read_bytes() != original_fstab:
             raise RuntimeError('fstab changed during installation')
-        record['state'] = 'installed'
-        atomic(STATE / 'install.json', (json.dumps(record, indent=2) + '\n').encode())
-    except BaseException:
-        record['state'] = 'failed_pending_reload'
-        atomic(STATE / 'install.json', (json.dumps(record, indent=2) + '\n').encode())
-        withdraw(record)
-        record['state'] = 'failed_removed'
-        atomic(STATE / 'install.json', (json.dumps(record, indent=2) + '\n').encode())
+        save_record(record, 'installed')
+    except BaseException as error:
+        rollback_install(record, error)
         raise
     print(json.dumps({'installed': True, 'efi_mounted_rw': True,
                       'fstab_changed': False, 'guard_changed': False,
@@ -253,16 +317,13 @@ def remove():
     if os.geteuid() != 0:
         raise RuntimeError('Use local administrator authentication')
     record = json.loads((STATE / 'install.json').read_text())
-    pending = record['state'] in ('removal_pending_reload', 'failed_pending_reload')
-    if (record['state'] != 'installed' and not pending) or (not pending and
-            (not RULE.exists() or not PATH_UNIT.exists() or not ENABLED.is_symlink()
-             or not fsck_dropin(record['identity']).exists())):
+    pending = record['state'] in REMOVAL_PENDING_STATES
+    if record['state'] != 'installed' and not pending:
         raise RuntimeError('Integration changed; review before removing')
-    record['state'] = 'removal_pending_reload'
-    atomic(STATE / 'install.json', (json.dumps(record, indent=2) + '\n').encode())
+    verify_ownership(record, require_complete=not pending)
+    save_record(record, 'removal_pending_reload')
     withdraw(record)
-    record['state'] = 'removed'
-    atomic(STATE / 'install.json', (json.dumps(record, indent=2) + '\n').encode())
+    save_record(record, 'removed')
     print('EFI event rule and path unit removed; the ordinary mount and fstab are unchanged.')
 
 

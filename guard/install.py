@@ -8,37 +8,13 @@ from pathlib import Path
 import re
 import shutil
 import subprocess
-import tempfile
 
 from enroll import collect
+from host_files import atomic, sha256
 
 STATE=Path('/var/lib/ram-rescue-guard')
 HOOK=Path('/etc/grub.d/42_ram_rescue_guard')
 GRUB=Path('/boot/grub/grub.cfg')
-
-
-def sha256(path):
-    h=hashlib.sha256()
-    with Path(path).open('rb') as stream:
-        for chunk in iter(lambda:stream.read(1024*1024),b''):
-            h.update(chunk)
-    return h.hexdigest()
-
-
-def atomic(path,data,mode=0o600):
-    fd,name=tempfile.mkstemp(prefix='.'+path.name+'-',dir=path.parent)
-    try:
-        with os.fdopen(fd,'wb') as output:
-            output.write(data)
-            output.flush()
-            os.fsync(output.fileno())
-        os.chmod(name,mode)
-        os.replace(name,path)
-        directory=os.open(path.parent,os.O_RDONLY|os.O_DIRECTORY)
-        try: os.fsync(directory)
-        finally: os.close(directory)
-    finally:
-        Path(name).unlink(missing_ok=True)
 
 
 def menu(profile,image_name):
@@ -120,7 +96,7 @@ def install(build_dir,enrollment,vm_report):
     baseline=profile['baseline']
     if sha256(Path('/boot')/('initrd.img-'+release))!=baseline['initrd_sha256']:
         raise RuntimeError('Normal initrd changed since enrollment')
-    if sha256('/etc/lvm/lvmlocal.conf')!=baseline['lvmlocal_sha256']:
+    if sha256(Path('/etc/lvm/lvmlocal.conf'))!=baseline['lvmlocal_sha256']:
         raise RuntimeError('Host LVM configuration changed since enrollment')
     if "set default=\"0\"" not in GRUB.read_text():
         raise RuntimeError('Review the current GRUB default before adding a new entry')
