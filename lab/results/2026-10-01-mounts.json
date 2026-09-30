@@ -1,0 +1,138 @@
+{
+  "schema": 1,
+  "scope": "native mount and child-bind retention across registered USB reconnects",
+  "passed": true,
+  "checks": {
+    "unit_syntax_verified_by_guest_systemd": true,
+    "initial_mount_absent_until_automount_access": true,
+    "initial_mount_and_nested_mounts_created": true,
+    "all_original_mount_ids_and_options_preserved": true,
+    "wrong_identity_kept_original_mounts": true,
+    "wrong_identity_was_not_committed": true,
+    "all_three_controllers_maintained": true,
+    "same_boot_and_pid1": true,
+    "same_root_guard_process": true,
+    "root_recovered_and_writable": true,
+    "root_durable_data_matches": true,
+    "readonly_mount_not_changed_by_start": true,
+    "readonly_mount_still_readonly_after_recovery": true,
+    "terminal_guard_prevents_new_mount": true,
+    "orderly_unmounts_completed": true,
+    "rr-data-vm-ext4_original_open_fd_process": true,
+    "rr-data-vm-ext4_no_io_errors": true,
+    "rr-data-vm-ext4_durable_data_matches": true,
+    "rr-data-vm-vfat_original_open_fd_process": true,
+    "rr-data-vm-vfat_no_io_errors": true,
+    "rr-data-vm-vfat_durable_data_matches": true,
+    "child-ext4_original_open_fd_process": true,
+    "child-ext4_no_io_errors": true,
+    "child-ext4_durable_data_matches": true,
+    "child-vfat_original_open_fd_process": true,
+    "child-vfat_no_io_errors": true,
+    "child-vfat_durable_data_matches": true,
+    "shutdown_clean": true
+  },
+  "source_sha256": {
+    "lab/unified_guard_probe.py": "7201171e25080087caded7d3364469d4e65a8d02750ba1cdaa8fa20c3a54a1ec",
+    "lab/guest/unified_probe.py": "b3727e7ad51421103a2d2e2615612ad6261d7932c2e0e70dae2533053402d4d6",
+    "lab/guest/data_probe.py": "26adbb97a045adfed4f0dc4a44116ead84170c65e73550526bf70c09960422e4",
+    "lab/data_guard_probe.py": "390b56708658bf5b1777139e0406744deaba641fee08a2c1ebb7aa643c0bcad9",
+    "lab/host_boot_probe.py": "dbe403279ba4baea88733b1d4a1b1d700b7f33c353c82f0dd3b3f6c030ababab",
+    "ram-rescue-demo/src/rescue.py": "e71b91ff4d0fce653bd64fb9c742583648d89ed704bd0a285edd0f6ccc0765f0",
+    "guard/build.py": "5cc3a11d40da96ec12721690ba4111826e20ab79be13453532c653b66206635c",
+    "guard/data.py": "42ecd64c8918bfe2542dcd400b6cd9e27aed8eefd29a268860d12099fce6c9cc",
+    "guard/efi_mount.py": "8f89422897a3b1bb6379e5e035210f13a9923732adb3906659e94997d4a9cd26",
+    "guard/enroll.py": "71e23451af931b7d9ca034160f68a7e6c0cde4143a26e67b2d05fb372eb12f9d",
+    "guard/host_files.py": "16466bb5327e3f1a0ffdda7d0c97246f05e5d665606c640ea7d9880ab4693497",
+    "guard/install.py": "152e8208b4e191121fa88349eed4e402099cfff5fab47e66f6cfec023a4219ac",
+    "guard/manage.py": "9bb1cee7096634d4d70efd4b3b9d18c384a08617f6c1c992b448ca1f702176e1",
+    "guard/mounts.py": "0d1a9082338d827815c05c797abb7ea2b8ba9b12b93bb9f758b88c6220b8d4be",
+    "guard/runtime/admission.py": "e2d3c9d5cb89c0538bc4d69bf154b247b42ab568c06d74688fc7fa3e9f194dbc",
+    "guard/runtime/boot.py": "1b6848a8d7a42eabb70bf60d5f4a0326d76aa496725fd02e710b02efa06d7044",
+    "guard/runtime/data_guard.py": "82c9dd23b2abfc2cb9dead8eef0c58c18a3208646cc1260ffd6c8c6cd50f45d1",
+    "guard/runtime/data_recovery.py": "59e8fb51c9136f56824f520a20c17c74a4d39c65113cc28fa7dcbe5270260c91",
+    "guard/runtime/dm_monitor.py": "1cbae0c2ef907a8e870c714e6cc229b003d5550f810e607c6c7b4e081f1eda1a",
+    "guard/runtime/guard_state.py": "30290869d36485b7e5face65faa0120a3b06e6bb47c8351f52befc13a20f99ac",
+    "guard/runtime/linux_abi.py": "71bcd973c15a517038a30a3750a8219a54d1c347724b6ab3365d6b0ecd989711",
+    "guard/runtime/maintain.py": "c5bc45eedc45f9cd6c2f9ac5376f4a5e909c78ae610945694bd23862c03eb029",
+    "guard/runtime/owned_operation.py": "1c3febc34cd036d5e921ab7f49bf11eab9b85ee1085c1a7c21764d7270a4daf1",
+    "guard/runtime/path_guard.py": "41c4a397818cf31d4aee87ce465c96c5c8638599d267de1cf1254f3e49709403",
+    "guard/runtime/registry.py": "8b1b0b50578d4d9a0ced87ceb62c3404b933788926f81e04b5dea121380f3c94",
+    "guard/integration/58-ram-rescue-guard.rules": "433c883e46fc92216d81b41dd1fc2fc7e8df4380266092613efdbb2666e1be0c",
+    "guard/integration/init-bottom": "b201c060684471ef22d04800a74c10b12a9457e398e106bd091d7b78f7ab5c55",
+    "guard/integration/initramfs-hook": "20cd37a63cbafde69e0c5e0654e884c54340517b7c8eecc0d7152c5ec30ee93d",
+    "guard/integration/local-top": "bf41c4da8f8b1fa5eac7ce4096c9f98a863e608515ddece940f62f776f05cd0d",
+    "guard/integration/lvmlocal.conf": "ff4e3848b3c5033b9a8a79b5349701b676a1fd1b9e51941460ef2a2945cb7ded",
+    "guard/integration/manual-rescue-guard.conf": "0455e5a22543f595800df0a9caaf6b684f0363d3f2e05dbb1afb30f2f1bdfde0",
+    "guard/integration/prepare-shared-rescue": "9e18e3d302325eb1bfa26a43506fd431f121e9ad8b7e7939ec159c6eb53a48b6",
+    "guard/integration/ram-rescue-guard.service": "524faa4661911265ebf8cb96ba216c2bd6027f707e307f39ea10521fc6765e61",
+    "lab/mount_guard_probe.py": "0acb43d315b1a0ff2d4a204c104ae10c81a7a628d55cf6db7a361ada3d1671b5",
+    "lab/guest/mount_probe.py": "accdb0200c9462140d808d49d3ffda1ac484774aaa160b73c89494e6815f2f84"
+  },
+  "source_image_sha256_before": "513b2bf70e53ef993cc287eb2479ed04c0f5b49074e78f93627c30a6ec9f2284",
+  "source_image_unchanged": true,
+  "sources_unchanged": true,
+  "readonly_filesystem_audit": {
+    "rr-data-vm-ext4": {
+      "returncode": 0,
+      "output": "e2fsck 1.47.0 (5-Feb-2023)\nPass 1: Checking inodes, blocks, and sizes\nPass 2: Checking directory structure\nPass 3: Checking directory connectivity\nPass 4: Checking reference counts\nPass 5: Checking group summary information\nDATA-VM-EXT4: 15/16384 files (20.0% non-contiguous), 2195/16384 blocks\n"
+    },
+    "rr-data-vm-vfat": {
+      "returncode": 0,
+      "output": "fsck.fat 4.2 (2021-01-31)\n/workspace/Project/External-Memo-Rescue-Handler/lab/work/mounts-1001-054201-1011629/rr-data-vm-vfat-audit.raw: 4 files, 778/129022 clusters\n"
+    }
+  },
+  "raw_report": "lab/work/mounts-1001-054201-1011629/report.json",
+  "previous_report": "lab/work/mounts-1001-044047-609585/report.json",
+  "mount_graph_before": {
+    "/mnt/rr-data-vm-ext4": "178 117 252:3 / /mnt/rr-data-vm-ext4 rw,nosuid,nodev,relatime shared:420 - ext4 /dev/mapper/rr-data-vm-ext4 rw",
+    "/mnt/rr-data-vm-ext4/nested-vfat": "485 178 252:4 / /mnt/rr-data-vm-ext4/nested-vfat rw,nosuid,nodev,relatime shared:429 - vfat /dev/mapper/rr-data-vm-vfat rw,fmask=0022,dmask=0022,codepage=437,iocharset=iso8859-1,shortname=mixed,errors=remount-ro",
+    "/mnt/rr-data-vm-vfat": "499 36 252:4 / /mnt/rr-data-vm-vfat rw,nosuid,nodev,relatime shared:429 - vfat /dev/mapper/rr-data-vm-vfat rw,fmask=0022,dmask=0022,codepage=437,iocharset=iso8859-1,shortname=mixed,errors=remount-ro",
+    "/mnt/ext4-bind": "508 36 252:3 /work /mnt/ext4-bind rw,nosuid,nodev,relatime shared:420 - ext4 /dev/mapper/rr-data-vm-ext4 rw",
+    "/mnt/vfat-bind": "517 36 252:4 /work /mnt/vfat-bind rw,nosuid,nodev,relatime shared:429 - vfat /dev/mapper/rr-data-vm-vfat rw,fmask=0022,dmask=0022,codepage=437,iocharset=iso8859-1,shortname=mixed,errors=remount-ro"
+  },
+  "mount_graph_after": {
+    "/mnt/rr-data-vm-ext4": "178 117 252:3 / /mnt/rr-data-vm-ext4 rw,nosuid,nodev,relatime shared:420 - ext4 /dev/mapper/rr-data-vm-ext4 rw",
+    "/mnt/rr-data-vm-ext4/nested-vfat": "485 178 252:4 / /mnt/rr-data-vm-ext4/nested-vfat rw,nosuid,nodev,relatime shared:429 - vfat /dev/mapper/rr-data-vm-vfat rw,fmask=0022,dmask=0022,codepage=437,iocharset=iso8859-1,shortname=mixed,errors=remount-ro",
+    "/mnt/rr-data-vm-vfat": "499 36 252:4 / /mnt/rr-data-vm-vfat rw,nosuid,nodev,relatime shared:429 - vfat /dev/mapper/rr-data-vm-vfat rw,fmask=0022,dmask=0022,codepage=437,iocharset=iso8859-1,shortname=mixed,errors=remount-ro",
+    "/mnt/ext4-bind": "508 36 252:3 /work /mnt/ext4-bind rw,nosuid,nodev,relatime shared:420 - ext4 /dev/mapper/rr-data-vm-ext4 rw",
+    "/mnt/vfat-bind": "517 36 252:4 /work /mnt/vfat-bind rw,nosuid,nodev,relatime shared:429 - vfat /dev/mapper/rr-data-vm-vfat rw,fmask=0022,dmask=0022,codepage=437,iocharset=iso8859-1,shortname=mixed,errors=remount-ro"
+  },
+  "data_audits": {
+    "rr-data-vm-ext4": {
+      "ack_count": 64,
+      "bytes": 262144,
+      "hash_matches": true,
+      "sha256": "bcd4ff2db0b368d6c829d6742dab440b750ea2db6e4566a496c966fa745f6d55",
+      "max_write_and_direct_read_seconds": 1.971251688999999
+    },
+    "rr-data-vm-vfat": {
+      "ack_count": 49,
+      "bytes": 200704,
+      "hash_matches": true,
+      "sha256": "f548640196534614cb804d6a4fa242841dd04a404342b3b7d674fcb855f0da69",
+      "max_write_and_direct_read_seconds": 3.675036016
+    }
+  },
+  "child_audits": {
+    "child-ext4": {
+      "acks": 62,
+      "hash_matches": true,
+      "max_write_and_direct_read_seconds": 2.033826348
+    },
+    "child-vfat": {
+      "acks": 48,
+      "hash_matches": true,
+      "max_write_and_direct_read_seconds": 3.6750852299999988
+    }
+  },
+  "root_audit": {
+    "acknowledged_records": 72,
+    "acknowledged_bytes": 295119,
+    "prefix_matches": true,
+    "prefix_sha256": "83f1de33c925caf731a3a2b5ad7c85623156d22271e87c661cd5d76e141dc884",
+    "root_write_fsync": true,
+    "max_write_seconds": 1.3992476080000014
+  },
+  "kernel_error_lines": []
+}

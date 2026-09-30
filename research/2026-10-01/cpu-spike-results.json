@@ -1,0 +1,2169 @@
+{
+  "schema": 1,
+  "report": "lab/work/cpudiag-1001-052303-876020/report.json",
+  "passed": true,
+  "sources_unchanged": true,
+  "checks": {
+    "all_requested_faults_recovered": true,
+    "same_boot": true,
+    "root_recoveries": true,
+    "root_original_process": true,
+    "root_original_mount": true,
+    "root_durable_data": true,
+    "root_writable": true,
+    "rr-data-vm-ext4_original_process": true,
+    "rr-data-vm-ext4_original_mount": true,
+    "rr-data-vm-ext4_zero_io_errors": true,
+    "rr-data-vm-ext4_durable_data": true,
+    "rr-data-vm-ext4_recoveries": true,
+    "rr-data-vm-vfat_original_process": true,
+    "rr-data-vm-vfat_original_mount": true,
+    "rr-data-vm-vfat_zero_io_errors": true,
+    "rr-data-vm-vfat_durable_data": true,
+    "rr-data-vm-vfat_recoveries": true,
+    "clean_shutdown": true
+  },
+  "rounds": 6,
+  "source_sha256": {
+    "lab/unified_guard_probe.py": "7201171e25080087caded7d3364469d4e65a8d02750ba1cdaa8fa20c3a54a1ec",
+    "lab/guest/unified_probe.py": "b3727e7ad51421103a2d2e2615612ad6261d7932c2e0e70dae2533053402d4d6",
+    "lab/guest/data_probe.py": "26adbb97a045adfed4f0dc4a44116ead84170c65e73550526bf70c09960422e4",
+    "lab/data_guard_probe.py": "390b56708658bf5b1777139e0406744deaba641fee08a2c1ebb7aa643c0bcad9",
+    "lab/host_boot_probe.py": "dbe403279ba4baea88733b1d4a1b1d700b7f33c353c82f0dd3b3f6c030ababab",
+    "ram-rescue-demo/src/rescue.py": "e71b91ff4d0fce653bd64fb9c742583648d89ed704bd0a285edd0f6ccc0765f0",
+    "guard/build.py": "5cc3a11d40da96ec12721690ba4111826e20ab79be13453532c653b66206635c",
+    "guard/data.py": "42ecd64c8918bfe2542dcd400b6cd9e27aed8eefd29a268860d12099fce6c9cc",
+    "guard/efi_mount.py": "8f89422897a3b1bb6379e5e035210f13a9923732adb3906659e94997d4a9cd26",
+    "guard/enroll.py": "71e23451af931b7d9ca034160f68a7e6c0cde4143a26e67b2d05fb372eb12f9d",
+    "guard/host_files.py": "16466bb5327e3f1a0ffdda7d0c97246f05e5d665606c640ea7d9880ab4693497",
+    "guard/install.py": "152e8208b4e191121fa88349eed4e402099cfff5fab47e66f6cfec023a4219ac",
+    "guard/manage.py": "9bb1cee7096634d4d70efd4b3b9d18c384a08617f6c1c992b448ca1f702176e1",
+    "guard/mounts.py": "0d1a9082338d827815c05c797abb7ea2b8ba9b12b93bb9f758b88c6220b8d4be",
+    "guard/runtime/admission.py": "e2d3c9d5cb89c0538bc4d69bf154b247b42ab568c06d74688fc7fa3e9f194dbc",
+    "guard/runtime/boot.py": "1b6848a8d7a42eabb70bf60d5f4a0326d76aa496725fd02e710b02efa06d7044",
+    "guard/runtime/data_guard.py": "82c9dd23b2abfc2cb9dead8eef0c58c18a3208646cc1260ffd6c8c6cd50f45d1",
+    "guard/runtime/data_recovery.py": "59e8fb51c9136f56824f520a20c17c74a4d39c65113cc28fa7dcbe5270260c91",
+    "guard/runtime/dm_monitor.py": "1cbae0c2ef907a8e870c714e6cc229b003d5550f810e607c6c7b4e081f1eda1a",
+    "guard/runtime/guard_state.py": "30290869d36485b7e5face65faa0120a3b06e6bb47c8351f52befc13a20f99ac",
+    "guard/runtime/linux_abi.py": "71bcd973c15a517038a30a3750a8219a54d1c347724b6ab3365d6b0ecd989711",
+    "guard/runtime/maintain.py": "c5bc45eedc45f9cd6c2f9ac5376f4a5e909c78ae610945694bd23862c03eb029",
+    "guard/runtime/owned_operation.py": "d06d8da0d7203e52fbb761d704aab882c630a53b4676dd9050fe5933a0fa9d90",
+    "guard/runtime/path_guard.py": "41c4a397818cf31d4aee87ce465c96c5c8638599d267de1cf1254f3e49709403",
+    "guard/runtime/registry.py": "8b1b0b50578d4d9a0ced87ceb62c3404b933788926f81e04b5dea121380f3c94",
+    "guard/integration/58-ram-rescue-guard.rules": "433c883e46fc92216d81b41dd1fc2fc7e8df4380266092613efdbb2666e1be0c",
+    "guard/integration/init-bottom": "b201c060684471ef22d04800a74c10b12a9457e398e106bd091d7b78f7ab5c55",
+    "guard/integration/initramfs-hook": "20cd37a63cbafde69e0c5e0654e884c54340517b7c8eecc0d7152c5ec30ee93d",
+    "guard/integration/local-top": "bf41c4da8f8b1fa5eac7ce4096c9f98a863e608515ddece940f62f776f05cd0d",
+    "guard/integration/lvmlocal.conf": "ff4e3848b3c5033b9a8a79b5349701b676a1fd1b9e51941460ef2a2945cb7ded",
+    "guard/integration/manual-rescue-guard.conf": "0455e5a22543f595800df0a9caaf6b684f0363d3f2e05dbb1afb30f2f1bdfde0",
+    "guard/integration/prepare-shared-rescue": "9e18e3d302325eb1bfa26a43506fd431f121e9ad8b7e7939ec159c6eb53a48b6",
+    "guard/integration/ram-rescue-guard.service": "524faa4661911265ebf8cb96ba216c2bd6027f707e307f39ea10521fc6765e61",
+    "lab/cpu_diagnostic.py": "871ee039ee0f9e1054a2a6c021913ad35f07adde285cc6be12bdafdebb12e4f3",
+    "lab/guest/cpu_diagnostic.py": "40694f09ca5feec5a3f2a12cfcc8939cf0e7e9c3e6d5f6f32e48de030d6ea291",
+    "lab/performance_probe.py": "914682ede40768ba7c78ce7cfdde0850abe26dd0e4420195c2d221d09b2cbddd"
+  },
+  "artifacts_sha256": {
+    "report.json": "7aeed022f1219cc700360695d9d4bc4017753f1f55a7acc0ee24be4657296580",
+    "accounting.json.gz": "ca1d35bd9d2af9b070abf09d898e17465455054e7236288ac093f173261beece",
+    "trace.txt.gz": "6b1c46ce0c66fc433246e8af95e259af41720718226a31ab4a577b281ed27d8b",
+    "analysis.json": "5c88a363dcff09450faa97d7e43684e83f55f947e4a9ca5e72c6ab25fd961702"
+  },
+  "kernel_release": "7.0.0-34-generic",
+  "kernel_image_sha256": "73d9c6e40b210deb638070d6af591a68bb6d7ff0280d0ec34c9ccf705a4f47ac",
+  "matching_release_config_sha256": "354a25b259e8245db07f99c132a3f8325ac887d00a6fca9360105defbe2ca2b3",
+  "matching_release_config_lines": [
+    "# CONFIG_IRQ_TIME_ACCOUNTING is not set",
+    "# CONFIG_PARAVIRT_TIME_ACCOUNTING is not set"
+  ],
+  "analysis": {
+    "schema": 1,
+    "config": {
+      "pids": {
+        "root": 492,
+        "rr-data-vm-ext4": 1070,
+        "rr-data-vm-vfat": 1093
+      },
+      "groups": {
+        "root": "/proc/1/root/sys/fs/cgroup/system.slice/ram-rescue-guard.service",
+        "rr-data-vm-ext4": "/proc/1/root/sys/fs/cgroup/ramrescuedata.slice/ram-rescue-maintain@rr-data-vm-ext4.service",
+        "rr-data-vm-vfat": "/proc/1/root/sys/fs/cgroup/ramrescuedata.slice/ram-rescue-maintain@rr-data-vm-vfat.service",
+        "data_slice": "/proc/1/root/sys/fs/cgroup/ramrescuedata.slice"
+      },
+      "events": [
+        "sched/sched_switch",
+        "sched/sched_stat_runtime",
+        "sched/sched_process_fork",
+        "sched/sched_process_exec",
+        "sched/sched_process_exit",
+        "sched/sched_pi_setprio",
+        "cgroup/cgroup_attach_task",
+        "syscalls/sys_enter_ioctl",
+        "syscalls/sys_exit_ioctl",
+        "syscalls/sys_enter_sched_setscheduler",
+        "syscalls/sys_exit_sched_setscheduler",
+        "syscalls/sys_enter_sched_setattr",
+        "syscalls/sys_exit_sched_setattr",
+        "irq/irq_handler_entry",
+        "irq/irq_handler_exit",
+        "irq/softirq_entry",
+        "irq/softirq_exit"
+      ],
+      "trace_clock": "local global counter uptime perf [mono] mono_raw boot tai x86-tsc\n",
+      "tracer": "function",
+      "cpu_max": {
+        "root": "4000 20000",
+        "rr-data-vm-ext4": null,
+        "rr-data-vm-vfat": null,
+        "data_slice": "4000 20000"
+      },
+      "cpu_max_burst": "0",
+      "initial_tasks": {
+        "root": [
+          {
+            "tid": 492,
+            "comm": "python3",
+            "policy": 0,
+            "priority": 0,
+            "nice": 0,
+            "start_ticks": 345,
+            "cgroup": "0::/system.slice/ram-rescue-guard.service",
+            "cmdline": "/usr/bin/python3 /opt/guard/path_guard.py --config /run/ram-rescue-guard/config.json "
+          }
+        ],
+        "rr-data-vm-ext4": [
+          {
+            "tid": 1070,
+            "comm": "python3",
+            "policy": 0,
+            "priority": 0,
+            "nice": 0,
+            "start_ticks": 531,
+            "cgroup": "0::/ramrescuedata.slice/ram-rescue-maintain@rr-data-vm-ext4.service",
+            "cmdline": "/usr/bin/python3 /opt/manager/maintain.py --record /run/ram-rescue-manager/entries/rr-data-vm-ext4.json "
+          }
+        ],
+        "rr-data-vm-vfat": [
+          {
+            "tid": 1093,
+            "comm": "python3",
+            "policy": 0,
+            "priority": 0,
+            "nice": 0,
+            "start_ticks": 599,
+            "cgroup": "0::/ramrescuedata.slice/ram-rescue-maintain@rr-data-vm-vfat.service",
+            "cmdline": "/usr/bin/python3 /opt/manager/maintain.py --record /run/ram-rescue-manager/entries/rr-data-vm-vfat.json "
+          }
+        ]
+      },
+      "scope": "Diagnostic tracing adds overhead; these are not production performance samples"
+    },
+    "samples": 1376,
+    "trace_events": 347736,
+    "trace_stats": {
+      "cpu0": "entries: 142338\noverrun: 0\ncommit overrun: 0\nbytes: 4394880\noldest event ts:     8.028005\nnow ts:    35.567984\ndropped events: 0\nread events: 0\n",
+      "cpu1": "entries: 205398\noverrun: 0\ncommit overrun: 0\nbytes: 8613612\noldest event ts:     8.028288\nnow ts:    35.568021\ndropped events: 0\nread events: 0\n"
+    },
+    "sched_switch_continuity_errors": 0,
+    "tracked_tasks": 302,
+    "policies_observed": [
+      0
+    ],
+    "policy_change_syscalls": [],
+    "cgroup_moves": [],
+    "scheduler_priorities_observed": [
+      120
+    ],
+    "longest_traced_interrupts": [
+      {
+        "start": 19.456145,
+        "end": 19.504316,
+        "cpu": 0,
+        "usec": 48170.99999999996
+      },
+      {
+        "start": 24.223514,
+        "end": 24.268837,
+        "cpu": 0,
+        "usec": 45322.99999999978
+      },
+      {
+        "start": 29.203647,
+        "end": 29.242359,
+        "cpu": 0,
+        "usec": 38712.0000000003
+      },
+      {
+        "start": 30.058896,
+        "end": 30.095995,
+        "cpu": 0,
+        "usec": 37098.99999999777
+      },
+      {
+        "start": 30.021813,
+        "end": 30.058858,
+        "cpu": 0,
+        "usec": 37044.999999999105
+      },
+      {
+        "start": 25.523252,
+        "end": 25.558723,
+        "cpu": 0,
+        "usec": 35471.00000000114
+      },
+      {
+        "start": 16.58205,
+        "end": 16.617021,
+        "cpu": 0,
+        "usec": 34971.00000000231
+      },
+      {
+        "start": 11.61726,
+        "end": 11.651338,
+        "cpu": 0,
+        "usec": 34078.00000000094
+      },
+      {
+        "start": 21.148803,
+        "end": 21.182827,
+        "cpu": 0,
+        "usec": 34023.99999999872
+      },
+      {
+        "start": 21.182843,
+        "end": 21.216577,
+        "cpu": 0,
+        "usec": 33734.0000000026
+      }
+    ],
+    "throttle_callback_count": 224,
+    "runtime_event_count": 8744,
+    "first_cpu_stat": [
+      "cpu  300 0 320 864 14 0 30 1 0 0",
+      "cpu0 133 0 212 382 2 0 26 0 0 0",
+      "cpu1 166 0 107 481 11 0 4 0 0 0"
+    ],
+    "last_cpu_stat": [
+      "cpu  718 0 2398 2504 1041 0 61 5 0 0",
+      "cpu0 205 0 1820 1064 68 0 54 2 0 0",
+      "cpu1 512 0 578 1440 973 0 7 3 0 0"
+    ],
+    "groups": {
+      "root": {
+        "peak_windows": [
+          {
+            "start": 28.068111745000003,
+            "end": 28.122236698000002,
+            "usage_usec": 30557,
+            "percent_midpoints": 56.45640006375747,
+            "percent_widest_read_bounds": 56.35589334050199,
+            "percent_narrowest_read_bounds": 56.557265920672045,
+            "first_read_usec": 72.16999999926088,
+            "second_read_usec": 120.88600000126348,
+            "nr_periods_delta": 3,
+            "nr_throttled_delta": 0,
+            "scheduled_residence_usec": 30570.99999999835,
+            "traced_irq_overlap_usec": 26786.99999999523,
+            "residence_minus_traced_irq_usec": 3784.000000003118,
+            "top_tasks": [
+              {
+                "pid": 1770,
+                "residence_usec": 28207.999999999345,
+                "metadata": {
+                  "tid": 1770,
+                  "comm": "lvm",
+                  "policy": 0,
+                  "priority": 0,
+                  "nice": 0,
+                  "start_ticks": 2808,
+                  "cgroup": "0::/system.slice/ram-rescue-guard.service",
+                  "cmdline": "/sbin/lvm pvs --readonly --devices /dev/sdb1 --reportformat json -o pv_uuid,vg_uuid,vg_name --config devices { multipath_component_detection=0 } "
+                }
+              },
+              {
+                "pid": 1768,
+                "residence_usec": 1875.0000000054001,
+                "metadata": {
+                  "tid": 1768,
+                  "comm": "python3",
+                  "policy": 0,
+                  "priority": 0,
+                  "nice": 0,
+                  "start_ticks": 2806,
+                  "cgroup": "0::/system.slice/ram-rescue-guard.service",
+                  "cmdline": "/usr/bin/python3 /opt/guard/path_guard.py --config /run/ram-rescue-guard/config.json "
+                }
+              },
+              {
+                "pid": 1767,
+                "residence_usec": 448.9999999925942,
+                "metadata": {
+                  "tid": 1767,
+                  "comm": "python3",
+                  "policy": 0,
+                  "priority": 0,
+                  "nice": 0,
+                  "start_ticks": 2803,
+                  "cgroup": "0::/system.slice/ram-rescue-guard.service",
+                  "cmdline": "/usr/bin/python3 /opt/guard/path_guard.py --config /run/ram-rescue-guard/config.json "
+                }
+              },
+              {
+                "pid": 492,
+                "residence_usec": 39.00000000101045,
+                "metadata": {
+                  "tid": 492,
+                  "comm": "python3",
+                  "policy": 0,
+                  "priority": 0,
+                  "nice": 0,
+                  "start_ticks": 345,
+                  "cgroup": "0::/system.slice/ram-rescue-guard.service",
+                  "cmdline": "/usr/bin/python3 /opt/guard/path_guard.py --config /run/ram-rescue-guard/config.json "
+                }
+              }
+            ],
+            "runtime_events_usec": 30556.78,
+            "throttle_callbacks": [
+              {
+                "time": 28.128014,
+                "pid": 1770,
+                "cpu": 0
+              }
+            ]
+          },
+          {
+            "start": 13.9081348325,
+            "end": 13.9291242045,
+            "usage_usec": 8901,
+            "percent_midpoints": 42.407176355727515,
+            "percent_widest_read_bounds": 42.23627430222717,
+            "percent_narrowest_read_bounds": 42.579467081683575,
+            "first_read_usec": 86.94699999978184,
+            "second_read_usec": 82.91299999996227,
+            "nr_periods_delta": 1,
+            "nr_throttled_delta": 0,
+            "scheduled_residence_usec": 8905.000000000386,
+            "traced_irq_overlap_usec": 475.00000000866294,
+            "residence_minus_traced_irq_usec": 8429.999999991722,
+            "top_tasks": [
+              {
+                "pid": 1330,
+                "residence_usec": 4031.999999996927,
+                "metadata": {
+                  "tid": 1330,
+                  "comm": "python3",
+                  "policy": 0,
+                  "priority": 0,
+                  "nice": 0,
+                  "start_ticks": 1390,
+                  "cgroup": "0::/system.slice/ram-rescue-guard.service",
+                  "cmdline": "/usr/bin/python3 /opt/guard/path_guard.py --config /run/ram-rescue-guard/config.json "
+                }
+              },
+              {
+                "pid": 1332,
+                "residence_usec": 2920.000000001366,
+                "metadata": {
+                  "tid": 1332,
+                  "comm": "lvm",
+                  "policy": 0,
+                  "priority": 0,
+                  "nice": 0,
+                  "start_ticks": 1392,
+                  "cgroup": "0::/system.slice/ram-rescue-guard.service",
+                  "cmdline": "/sbin/lvm pvs --readonly --devices /dev/sdb1 --reportformat json -o pv_uuid,vg_uuid,vg_name --config devices { multipath_component_detection=0 } "
+                }
+              },
+              {
+                "pid": 1331,
+                "residence_usec": 1628.0000000001849,
+                "metadata": null
+              },
+              {
+                "pid": 492,
+                "residence_usec": 325.0000000019071,
+                "metadata": {
+                  "tid": 492,
+                  "comm": "python3",
+                  "policy": 0,
+                  "priority": 0,
+                  "nice": 0,
+                  "start_ticks": 345,
+                  "cgroup": "0::/system.slice/ram-rescue-guard.service",
+                  "cmdline": "/usr/bin/python3 /opt/guard/path_guard.py --config /run/ram-rescue-guard/config.json "
+                }
+              }
+            ],
+            "runtime_events_usec": 8900.724,
+            "throttle_callbacks": [
+              {
+                "time": 13.966161,
+                "pid": 1336,
+                "cpu": 0
+              },
+              {
+                "time": 14.000869,
+                "pid": 1330,
+                "cpu": 1
+              },
+              {
+                "time": 14.000871,
+                "pid": 1339,
+                "cpu": 1
+              }
+            ]
+          },
+          {
+            "start": 18.5076329555,
+            "end": 18.527669959,
+            "usage_usec": 8042,
+            "percent_midpoints": 40.13574185381442,
+            "percent_widest_read_bounds": 40.0027497538,
+            "percent_narrowest_read_bounds": 40.269621187647516,
+            "first_read_usec": 56.198999999423904,
+            "second_read_usec": 77.02999999992244,
+            "nr_periods_delta": 1,
+            "nr_throttled_delta": 0,
+            "scheduled_residence_usec": 8039.000000007235,
+            "traced_irq_overlap_usec": 28.000000007466497,
+            "residence_minus_traced_irq_usec": 8010.999999999768,
+            "top_tasks": [
+              {
+                "pid": 1473,
+                "residence_usec": 3632.000000006741,
+                "metadata": {
+                  "tid": 1473,
+                  "comm": "python3",
+                  "policy": 0,
+                  "priority": 0,
+                  "nice": 0,
+                  "start_ticks": 1850,
+                  "cgroup": "0::/system.slice/ram-rescue-guard.service",
+                  "cmdline": "/usr/bin/python3 /opt/guard/path_guard.py --config /run/ram-rescue-guard/config.json "
+                }
+              },
+              {
+                "pid": 1478,
+                "residence_usec": 3194.9999999945076,
+                "metadata": {
+                  "tid": 1478,
+                  "comm": "lvm",
+                  "policy": 0,
+                  "priority": 0,
+                  "nice": 0,
+                  "start_ticks": 1851,
+                  "cgroup": "0::/system.slice/ram-rescue-guard.service",
+                  "cmdline": "/sbin/lvm pvs --readonly --devices /dev/sdd1 --reportformat json -o pv_uuid,vg_uuid,vg_name --config devices { multipath_component_detection=0 } "
+                }
+              },
+              {
+                "pid": 1477,
+                "residence_usec": 1212.000000005986,
+                "metadata": null
+              }
+            ],
+            "runtime_events_usec": 8042.441,
+            "throttle_callbacks": [
+              {
+                "time": 18.522011,
+                "pid": 1478,
+                "cpu": 1
+              },
+              {
+                "time": 18.542995,
+                "pid": 1479,
+                "cpu": 1
+              },
+              {
+                "time": 18.552017,
+                "pid": 1473,
+                "cpu": 1
+              },
+              {
+                "time": 18.555055,
+                "pid": 1479,
+                "cpu": 1
+              },
+              {
+                "time": 18.598195,
+                "pid": 1473,
+                "cpu": 1
+              },
+              {
+                "time": 18.598197,
+                "pid": 1482,
+                "cpu": 1
+              }
+            ]
+          },
+          {
+            "start": 13.9477055545,
+            "end": 13.968122346,
+            "usage_usec": 7082,
+            "percent_midpoints": 34.687134851724345,
+            "percent_widest_read_bounds": 34.55995977341753,
+            "percent_narrowest_read_bounds": 34.81524935451473,
+            "first_read_usec": 81.00900000052036,
+            "second_read_usec": 69.25199999940901,
+            "nr_periods_delta": 1,
+            "nr_throttled_delta": 0,
+            "scheduled_residence_usec": 7083.99999999898,
+            "traced_irq_overlap_usec": 24.999999999053557,
+            "residence_minus_traced_irq_usec": 7058.999999999926,
+            "top_tasks": [
+              {
+                "pid": 1336,
+                "residence_usec": 4075.000000002049,
+                "metadata": {
+                  "tid": 1336,
+                  "comm": "lvm",
+                  "policy": 0,
+                  "priority": 0,
+                  "nice": 0,
+                  "start_ticks": 1395,
+                  "cgroup": "0::/system.slice/ram-rescue-guard.service",
+                  "cmdline": "/sbin/lvm lvs --readonly --devices /dev/sdb1 --segments --reportformat json --units s --nosuffix -o lv_name,lv_uuid,vg_uuid,segtype,seg_start,seg_size,seg_pe_ranges --config devices { multipath_component_detection=0 } "
+                }
+              },
+              {
+                "pid": 1330,
+                "residence_usec": 2332.9999999983643,
+                "metadata": {
+                  "tid": 1330,
+                  "comm": "python3",
+                  "policy": 0,
+                  "priority": 0,
+                  "nice": 0,
+                  "start_ticks": 1390,
+                  "cgroup": "0::/system.slice/ram-rescue-guard.service",
+                  "cmdline": "/usr/bin/python3 /opt/guard/path_guard.py --config /run/ram-rescue-guard/config.json "
+                }
+              },
+              {
+                "pid": 1332,
+                "residence_usec": 675.9999999985666,
+                "metadata": {
+                  "tid": 1332,
+                  "comm": "lvm",
+                  "policy": 0,
+                  "priority": 0,
+                  "nice": 0,
+                  "start_ticks": 1392,
+                  "cgroup": "0::/system.slice/ram-rescue-guard.service",
+                  "cmdline": "/sbin/lvm pvs --readonly --devices /dev/sdb1 --reportformat json -o pv_uuid,vg_uuid,vg_name --config devices { multipath_component_detection=0 } "
+                }
+              }
+            ],
+            "runtime_events_usec": 7081.971,
+            "throttle_callbacks": [
+              {
+                "time": 13.966161,
+                "pid": 1336,
+                "cpu": 0
+              },
+              {
+                "time": 14.000869,
+                "pid": 1330,
+                "cpu": 1
+              },
+              {
+                "time": 14.000871,
+                "pid": 1339,
+                "cpu": 1
+              },
+              {
+                "time": 14.040011,
+                "pid": 1340,
+                "cpu": 1
+              }
+            ]
+          },
+          {
+            "start": 28.388146363,
+            "end": 28.4081147475,
+            "usage_usec": 6424,
+            "percent_midpoints": 32.17085488312745,
+            "percent_widest_read_bounds": 32.03603195843687,
+            "percent_narrowest_read_bounds": 32.30681740230817,
+            "first_read_usec": 87.4079999988453,
+            "second_read_usec": 80.66499999870302,
+            "nr_periods_delta": 1,
+            "nr_throttled_delta": 0,
+            "scheduled_residence_usec": 6425.0000000001255,
+            "traced_irq_overlap_usec": 9.999999999621423,
+            "residence_minus_traced_irq_usec": 6415.000000000504,
+            "top_tasks": [
+              {
+                "pid": 1779,
+                "residence_usec": 3960.0000000028504,
+                "metadata": {
+                  "tid": 1779,
+                  "comm": "lvm",
+                  "policy": 0,
+                  "priority": 0,
+                  "nice": 0,
+                  "start_ticks": 2839,
+                  "cgroup": "0::/system.slice/ram-rescue-guard.service",
+                  "cmdline": "/sbin/lvm lvs --readonly --devices /dev/sdb1 --segments --reportformat json --units s --nosuffix -o lv_name,lv_uuid,vg_uuid,segtype,seg_start,seg_size,seg_pe_ranges --config devices { multipath_component_detection=0 } "
+                }
+              },
+              {
+                "pid": 1778,
+                "residence_usec": 2372.999999998626,
+                "metadata": {
+                  "tid": 1778,
+                  "comm": "python3",
+                  "policy": 0,
+                  "priority": 0,
+                  "nice": 0,
+                  "start_ticks": 2838,
+                  "cgroup": "0::/system.slice/ram-rescue-guard.service",
+                  "cmdline": "/usr/bin/python3 /opt/guard/path_guard.py --config /run/ram-rescue-guard/config.json "
+                }
+              },
+              {
+                "pid": 1776,
+                "residence_usec": 64.00000000184036,
+                "metadata": {
+                  "tid": 1776,
+                  "comm": "python3",
+                  "policy": 0,
+                  "priority": 0,
+                  "nice": 0,
+                  "start_ticks": 2837,
+                  "cgroup": "0::/system.slice/ram-rescue-guard.service",
+                  "cmdline": "/usr/bin/python3 /opt/guard/path_guard.py --config /run/ram-rescue-guard/config.json "
+                }
+              },
+              {
+                "pid": 492,
+                "residence_usec": 27.999999996808356,
+                "metadata": {
+                  "tid": 492,
+                  "comm": "python3",
+                  "policy": 0,
+                  "priority": 0,
+                  "nice": 0,
+                  "start_ticks": 345,
+                  "cgroup": "0::/system.slice/ram-rescue-guard.service",
+                  "cmdline": "/usr/bin/python3 /opt/guard/path_guard.py --config /run/ram-rescue-guard/config.json "
+                }
+              }
+            ],
+            "runtime_events_usec": 6423.584,
+            "throttle_callbacks": [
+              {
+                "time": 28.403009,
+                "pid": 1779,
+                "cpu": 0
+              },
+              {
+                "time": 28.437013,
+                "pid": 1780,
+                "cpu": 1
+              },
+              {
+                "time": 28.442013,
+                "pid": 492,
+                "cpu": 1
+              }
+            ]
+          }
+        ],
+        "max_cpu_stat_read_usec": 2457.6120000006085
+      },
+      "rr-data-vm-ext4": {
+        "peak_windows": [
+          {
+            "start": 9.387842489,
+            "end": 9.407894871,
+            "usage_usec": 9266,
+            "percent_midpoints": 46.20897407599901,
+            "percent_widest_read_bounds": 46.13954288788958,
+            "percent_narrowest_read_bounds": 46.278614540344584,
+            "first_read_usec": 26.482000000882522,
+            "second_read_usec": 33.86799999915979,
+            "nr_periods_delta": 0,
+            "nr_throttled_delta": 0,
+            "scheduled_residence_usec": 9267.999999998721,
+            "traced_irq_overlap_usec": 18.000000000739647,
+            "residence_minus_traced_irq_usec": 9249.999999997983,
+            "top_tasks": [
+              {
+                "pid": 1169,
+                "residence_usec": 8444.99999999293,
+                "metadata": {
+                  "tid": 1169,
+                  "comm": "python3",
+                  "policy": 0,
+                  "priority": 0,
+                  "nice": 0,
+                  "start_ticks": 939,
+                  "cgroup": "0::/ramrescuedata.slice/ram-rescue-maintain@rr-data-vm-ext4.service",
+                  "cmdline": "/usr/bin/python3 /opt/manager/maintain.py --record /run/ram-rescue-manager/entries/rr-data-vm-ext4.json "
+                }
+              },
+              {
+                "pid": 1070,
+                "residence_usec": 823.0000000057913,
+                "metadata": {
+                  "tid": 1070,
+                  "comm": "python3",
+                  "policy": 0,
+                  "priority": 0,
+                  "nice": 0,
+                  "start_ticks": 531,
+                  "cgroup": "0::/ramrescuedata.slice/ram-rescue-maintain@rr-data-vm-ext4.service",
+                  "cmdline": "/usr/bin/python3 /opt/manager/maintain.py --record /run/ram-rescue-manager/entries/rr-data-vm-ext4.json "
+                }
+              }
+            ],
+            "runtime_events_usec": 9266.3,
+            "throttle_callbacks": [
+              {
+                "time": 9.407544,
+                "pid": 1169,
+                "cpu": 1
+              },
+              {
+                "time": 9.426012,
+                "pid": 1169,
+                "cpu": 1
+              }
+            ]
+          },
+          {
+            "start": 24.268012102,
+            "end": 24.2878176235,
+            "usage_usec": 8608,
+            "percent_midpoints": 43.46262732844394,
+            "percent_widest_read_bounds": 43.362181004865505,
+            "percent_narrowest_read_bounds": 43.56354009027294,
+            "first_read_usec": 63.1420000019034,
+            "second_read_usec": 28.614999997955692,
+            "nr_periods_delta": 0,
+            "nr_throttled_delta": 0,
+            "scheduled_residence_usec": 8599.999999994168,
+            "traced_irq_overlap_usec": 18.99999999821489,
+            "residence_minus_traced_irq_usec": 8580.999999995953,
+            "top_tasks": [
+              {
+                "pid": 1664,
+                "residence_usec": 5675.999999990467,
+                "metadata": {
+                  "tid": 1664,
+                  "comm": "python3",
+                  "policy": 0,
+                  "priority": 0,
+                  "nice": 0,
+                  "start_ticks": 2419,
+                  "cgroup": "0::/ramrescuedata.slice/ram-rescue-maintain@rr-data-vm-ext4.service",
+                  "cmdline": "/usr/bin/python3 /opt/manager/maintain.py --record /run/ram-rescue-manager/entries/rr-data-vm-ext4.json "
+                }
+              },
+              {
+                "pid": 1666,
+                "residence_usec": 1025.000000002052,
+                "metadata": null
+              },
+              {
+                "pid": 1667,
+                "residence_usec": 1025.000000002052,
+                "metadata": null
+              },
+              {
+                "pid": 1665,
+                "residence_usec": 873.9999999995973,
+                "metadata": {
+                  "tid": 1665,
+                  "comm": "blkid",
+                  "policy": 0,
+                  "priority": 0,
+                  "nice": 0,
+                  "start_ticks": 2420,
+                  "cgroup": "0::/ramrescuedata.slice/ram-rescue-maintain@rr-data-vm-ext4.service",
+                  "cmdline": "/sbin/blkid -p -o export /dev/sdd1 "
+                }
+              }
+            ],
+            "runtime_events_usec": 8608.734,
+            "throttle_callbacks": [
+              {
+                "time": 24.278021,
+                "pid": 1664,
+                "cpu": 1
+              },
+              {
+                "time": 24.289007,
+                "pid": 1664,
+                "cpu": 1
+              },
+              {
+                "time": 24.307015,
+                "pid": 1668,
+                "cpu": 1
+              },
+              {
+                "time": 24.325996,
+                "pid": 1668,
+                "cpu": 1
+              },
+              {
+                "time": 24.325997,
+                "pid": 1070,
+                "cpu": 1
+              },
+              {
+                "time": 24.348738,
+                "pid": 1671,
+                "cpu": 1
+              },
+              {
+                "time": 24.348781,
+                "pid": 1672,
+                "cpu": 1
+              },
+              {
+                "time": 24.370918,
+                "pid": 1671,
+                "cpu": 1
+              }
+            ]
+          },
+          {
+            "start": 15.06822113,
+            "end": 15.088236109,
+            "usage_usec": 7105,
+            "percent_midpoints": 35.49841346323525,
+            "percent_widest_read_bounds": 35.392797284302475,
+            "percent_narrowest_read_bounds": 35.60466187046754,
+            "first_read_usec": 90.20399999926099,
+            "second_read_usec": 29.250000000757836,
+            "nr_periods_delta": 0,
+            "nr_throttled_delta": 0,
+            "scheduled_residence_usec": 7108.000000000558,
+            "traced_irq_overlap_usec": 12.000000001677336,
+            "residence_minus_traced_irq_usec": 7095.999999998881,
+            "top_tasks": [
+              {
+                "pid": 1378,
+                "residence_usec": 5808.000000001812,
+                "metadata": {
+                  "tid": 1378,
+                  "comm": "python3",
+                  "policy": 0,
+                  "priority": 0,
+                  "nice": 0,
+                  "start_ticks": 1505,
+                  "cgroup": "0::/ramrescuedata.slice/ram-rescue-maintain@rr-data-vm-ext4.service",
+                  "cmdline": "/usr/bin/python3 /opt/manager/maintain.py --record /run/ram-rescue-manager/entries/rr-data-vm-ext4.json "
+                }
+              },
+              {
+                "pid": 1381,
+                "residence_usec": 1299.9999999987467,
+                "metadata": null
+              }
+            ],
+            "runtime_events_usec": 7105.271,
+            "throttle_callbacks": [
+              {
+                "time": 15.057074,
+                "pid": 1379,
+                "cpu": 1
+              },
+              {
+                "time": 15.072028,
+                "pid": 1378,
+                "cpu": 1
+              },
+              {
+                "time": 15.088551,
+                "pid": 1378,
+                "cpu": 1
+              },
+              {
+                "time": 15.109008,
+                "pid": 1378,
+                "cpu": 1
+              },
+              {
+                "time": 15.134011,
+                "pid": 1384,
+                "cpu": 1
+              },
+              {
+                "time": 15.154858,
+                "pid": 1386,
+                "cpu": 1
+              },
+              {
+                "time": 15.16701,
+                "pid": 1386,
+                "cpu": 1
+              },
+              {
+                "time": 15.187015,
+                "pid": 1389,
+                "cpu": 1
+              }
+            ]
+          },
+          {
+            "start": 15.0511846375,
+            "end": 15.06822113,
+            "usage_usec": 5980,
+            "percent_midpoints": 35.101121900534,
+            "percent_widest_read_bounds": 34.9755852283961,
+            "percent_narrowest_read_bounds": 35.227562987824236,
+            "first_read_usec": 32.09299999973325,
+            "second_read_usec": 90.20399999926099,
+            "nr_periods_delta": 0,
+            "nr_throttled_delta": 0,
+            "scheduled_residence_usec": 5983.000000004068,
+            "traced_irq_overlap_usec": 15.999999998683734,
+            "residence_minus_traced_irq_usec": 5967.000000005384,
+            "top_tasks": [
+              {
+                "pid": 1378,
+                "residence_usec": 4453.999999995517,
+                "metadata": {
+                  "tid": 1378,
+                  "comm": "python3",
+                  "policy": 0,
+                  "priority": 0,
+                  "nice": 0,
+                  "start_ticks": 1505,
+                  "cgroup": "0::/ramrescuedata.slice/ram-rescue-maintain@rr-data-vm-ext4.service",
+                  "cmdline": "/usr/bin/python3 /opt/manager/maintain.py --record /run/ram-rescue-manager/entries/rr-data-vm-ext4.json "
+                }
+              },
+              {
+                "pid": 1379,
+                "residence_usec": 1479.000000008668,
+                "metadata": null
+              },
+              {
+                "pid": 1070,
+                "residence_usec": 49.99999999988347,
+                "metadata": {
+                  "tid": 1070,
+                  "comm": "python3",
+                  "policy": 0,
+                  "priority": 0,
+                  "nice": 0,
+                  "start_ticks": 531,
+                  "cgroup": "0::/ramrescuedata.slice/ram-rescue-maintain@rr-data-vm-ext4.service",
+                  "cmdline": "/usr/bin/python3 /opt/manager/maintain.py --record /run/ram-rescue-manager/entries/rr-data-vm-ext4.json "
+                }
+              }
+            ],
+            "runtime_events_usec": 5979.291,
+            "throttle_callbacks": [
+              {
+                "time": 15.057074,
+                "pid": 1379,
+                "cpu": 1
+              },
+              {
+                "time": 15.072028,
+                "pid": 1378,
+                "cpu": 1
+              },
+              {
+                "time": 15.088551,
+                "pid": 1378,
+                "cpu": 1
+              },
+              {
+                "time": 15.109008,
+                "pid": 1378,
+                "cpu": 1
+              },
+              {
+                "time": 15.134011,
+                "pid": 1384,
+                "cpu": 1
+              },
+              {
+                "time": 15.154858,
+                "pid": 1386,
+                "cpu": 1
+              },
+              {
+                "time": 15.16701,
+                "pid": 1386,
+                "cpu": 1
+              }
+            ]
+          },
+          {
+            "start": 29.6293853805,
+            "end": 29.64832419,
+            "usage_usec": 6485,
+            "percent_midpoints": 34.24185664890954,
+            "percent_widest_read_bounds": 34.17325413007686,
+            "percent_narrowest_read_bounds": 34.31073515974729,
+            "first_read_usec": 47.166999998182746,
+            "second_read_usec": 28.8720000014564,
+            "nr_periods_delta": 0,
+            "nr_throttled_delta": 0,
+            "scheduled_residence_usec": 6486.000000002434,
+            "traced_irq_overlap_usec": 25.000000000829914,
+            "residence_minus_traced_irq_usec": 6461.000000001604,
+            "top_tasks": [
+              {
+                "pid": 1840,
+                "residence_usec": 5201.000000006672,
+                "metadata": {
+                  "tid": 1840,
+                  "comm": "python3",
+                  "policy": 0,
+                  "priority": 0,
+                  "nice": 0,
+                  "start_ticks": 2960,
+                  "cgroup": "0::/ramrescuedata.slice/ram-rescue-maintain@rr-data-vm-ext4.service",
+                  "cmdline": "/usr/bin/python3 /opt/manager/maintain.py --record /run/ram-rescue-manager/entries/rr-data-vm-ext4.json "
+                }
+              },
+              {
+                "pid": 1843,
+                "residence_usec": 1220.999999997474,
+                "metadata": null
+              },
+              {
+                "pid": 1841,
+                "residence_usec": 63.99999999828765,
+                "metadata": {
+                  "tid": 1841,
+                  "comm": "blkid",
+                  "policy": 0,
+                  "priority": 0,
+                  "nice": 0,
+                  "start_ticks": 2960,
+                  "cgroup": "0::/ramrescuedata.slice/ram-rescue-maintain@rr-data-vm-ext4.service",
+                  "cmdline": "/sbin/blkid -p -o export /dev/sda1 "
+                }
+              }
+            ],
+            "runtime_events_usec": 6484.95,
+            "throttle_callbacks": [
+              {
+                "time": 29.61044,
+                "pid": 1841,
+                "cpu": 1
+              },
+              {
+                "time": 29.623511,
+                "pid": 1840,
+                "cpu": 1
+              },
+              {
+                "time": 29.638092,
+                "pid": 1843,
+                "cpu": 1
+              },
+              {
+                "time": 29.638095,
+                "pid": 1840,
+                "cpu": 1
+              },
+              {
+                "time": 29.649137,
+                "pid": 1844,
+                "cpu": 1
+              },
+              {
+                "time": 29.64914,
+                "pid": 1840,
+                "cpu": 1
+              },
+              {
+                "time": 29.672844,
+                "pid": 1840,
+                "cpu": 1
+              },
+              {
+                "time": 29.672848,
+                "pid": 1070,
+                "cpu": 1
+              },
+              {
+                "time": 29.687036,
+                "pid": 1845,
+                "cpu": 1
+              },
+              {
+                "time": 29.707015,
+                "pid": 1848,
+                "cpu": 1
+              },
+              {
+                "time": 29.728589,
+                "pid": 1070,
+                "cpu": 1
+              },
+              {
+                "time": 29.728591,
+                "pid": 1849,
+                "cpu": 1
+              }
+            ]
+          }
+        ],
+        "max_cpu_stat_read_usec": 1991.6840000036018
+      },
+      "rr-data-vm-vfat": {
+        "peak_windows": [
+          {
+            "start": 34.0885717635,
+            "end": 34.1083215365,
+            "usage_usec": 8732,
+            "percent_midpoints": 44.21316639942948,
+            "percent_widest_read_bounds": 44.08956685434259,
+            "percent_narrowest_read_bounds": 44.337460884208696,
+            "first_read_usec": 54.39099999904329,
+            "second_read_usec": 56.34100000406761,
+            "nr_periods_delta": 0,
+            "nr_throttled_delta": 0,
+            "scheduled_residence_usec": 8731.000000004486,
+            "traced_irq_overlap_usec": 19.000000001767603,
+            "residence_minus_traced_irq_usec": 8712.000000002718,
+            "top_tasks": [
+              {
+                "pid": 1981,
+                "residence_usec": 8293.000000008988,
+                "metadata": {
+                  "tid": 1981,
+                  "comm": "python3",
+                  "policy": 0,
+                  "priority": 0,
+                  "nice": 0,
+                  "start_ticks": 3409,
+                  "cgroup": "0::/ramrescuedata.slice/ram-rescue-maintain@rr-data-vm-vfat.service",
+                  "cmdline": "/usr/bin/python3 /opt/manager/maintain.py --record /run/ram-rescue-manager/entries/rr-data-vm-vfat.json "
+                }
+              },
+              {
+                "pid": 1093,
+                "residence_usec": 437.99999999549755,
+                "metadata": {
+                  "tid": 1093,
+                  "comm": "python3",
+                  "policy": 0,
+                  "priority": 0,
+                  "nice": 0,
+                  "start_ticks": 599,
+                  "cgroup": "0::/ramrescuedata.slice/ram-rescue-maintain@rr-data-vm-vfat.service",
+                  "cmdline": "/usr/bin/python3 /opt/manager/maintain.py --record /run/ram-rescue-manager/entries/rr-data-vm-vfat.json "
+                }
+              }
+            ],
+            "runtime_events_usec": 8731.887,
+            "throttle_callbacks": [
+              {
+                "time": 34.100021,
+                "pid": 1981,
+                "cpu": 1
+              },
+              {
+                "time": 34.107019,
+                "pid": 1981,
+                "cpu": 1
+              },
+              {
+                "time": 34.129658,
+                "pid": 1983,
+                "cpu": 1
+              },
+              {
+                "time": 34.149047,
+                "pid": 1984,
+                "cpu": 1
+              },
+              {
+                "time": 34.168659,
+                "pid": 1981,
+                "cpu": 1
+              },
+              {
+                "time": 34.16866,
+                "pid": 1985,
+                "cpu": 1
+              },
+              {
+                "time": 34.195028,
+                "pid": 1987,
+                "cpu": 1
+              }
+            ]
+          },
+          {
+            "start": 11.4084027135,
+            "end": 11.4284730965,
+            "usage_usec": 7802,
+            "percent_midpoints": 38.87319938040009,
+            "percent_widest_read_bounds": 38.77017159552935,
+            "percent_narrowest_read_bounds": 38.976776195971134,
+            "first_read_usec": 50.03699999939215,
+            "second_read_usec": 56.63299999980609,
+            "nr_periods_delta": 0,
+            "nr_throttled_delta": 0,
+            "scheduled_residence_usec": 7806.999999999675,
+            "traced_irq_overlap_usec": 2.9999999995311555,
+            "residence_minus_traced_irq_usec": 7804.000000000144,
+            "top_tasks": [
+              {
+                "pid": 1257,
+                "residence_usec": 7436.999999999472,
+                "metadata": {
+                  "tid": 1257,
+                  "comm": "python3",
+                  "policy": 0,
+                  "priority": 0,
+                  "nice": 0,
+                  "start_ticks": 1140,
+                  "cgroup": "0::/ramrescuedata.slice/ram-rescue-maintain@rr-data-vm-vfat.service",
+                  "cmdline": "/usr/bin/python3 /opt/manager/maintain.py --record /run/ram-rescue-manager/entries/rr-data-vm-vfat.json "
+                }
+              },
+              {
+                "pid": 1093,
+                "residence_usec": 370.0000000002035,
+                "metadata": {
+                  "tid": 1093,
+                  "comm": "python3",
+                  "policy": 0,
+                  "priority": 0,
+                  "nice": 0,
+                  "start_ticks": 599,
+                  "cgroup": "0::/ramrescuedata.slice/ram-rescue-maintain@rr-data-vm-vfat.service",
+                  "cmdline": "/usr/bin/python3 /opt/manager/maintain.py --record /run/ram-rescue-manager/entries/rr-data-vm-vfat.json "
+                }
+              }
+            ],
+            "runtime_events_usec": 7802.415,
+            "throttle_callbacks": [
+              {
+                "time": 11.415016,
+                "pid": 1257,
+                "cpu": 1
+              },
+              {
+                "time": 11.426025,
+                "pid": 1257,
+                "cpu": 1
+              },
+              {
+                "time": 11.452836,
+                "pid": 1257,
+                "cpu": 1
+              },
+              {
+                "time": 11.452838,
+                "pid": 1267,
+                "cpu": 1
+              },
+              {
+                "time": 11.469039,
+                "pid": 1272,
+                "cpu": 1
+              },
+              {
+                "time": 11.489152,
+                "pid": 1274,
+                "cpu": 1
+              },
+              {
+                "time": 11.489155,
+                "pid": 1257,
+                "cpu": 1
+              },
+              {
+                "time": 11.506012,
+                "pid": 1274,
+                "cpu": 1
+              },
+              {
+                "time": 11.52728,
+                "pid": 1093,
+                "cpu": 1
+              },
+              {
+                "time": 11.527282,
+                "pid": 1276,
+                "cpu": 1
+              }
+            ]
+          },
+          {
+            "start": 16.028502148999998,
+            "end": 16.048325708,
+            "usage_usec": 6286,
+            "percent_midpoints": 31.70974495548064,
+            "percent_widest_read_bounds": 31.670738786737974,
+            "percent_narrowest_read_bounds": 31.748847323904076,
+            "first_read_usec": 26.11999999757586,
+            "second_read_usec": 22.710000003201003,
+            "nr_periods_delta": 0,
+            "nr_throttled_delta": 0,
+            "scheduled_residence_usec": 6277.999999998229,
+            "traced_irq_overlap_usec": 14.000000003733248,
+            "residence_minus_traced_irq_usec": 6263.999999994496,
+            "top_tasks": [
+              {
+                "pid": 1417,
+                "residence_usec": 4093.9999999984875,
+                "metadata": {
+                  "tid": 1417,
+                  "comm": "python3",
+                  "policy": 0,
+                  "priority": 0,
+                  "nice": 0,
+                  "start_ticks": 1598,
+                  "cgroup": "0::/ramrescuedata.slice/ram-rescue-maintain@rr-data-vm-vfat.service",
+                  "cmdline": "/usr/bin/python3 /opt/manager/maintain.py --record /run/ram-rescue-manager/entries/rr-data-vm-vfat.json "
+                }
+              },
+              {
+                "pid": 1419,
+                "residence_usec": 1173.9999999953454,
+                "metadata": null
+              },
+              {
+                "pid": 1418,
+                "residence_usec": 1010.0000000043963,
+                "metadata": {
+                  "tid": 1418,
+                  "comm": "blkid",
+                  "policy": 0,
+                  "priority": 0,
+                  "nice": 0,
+                  "start_ticks": 1600,
+                  "cgroup": "0::/ramrescuedata.slice/ram-rescue-maintain@rr-data-vm-vfat.service",
+                  "cmdline": "/sbin/blkid -p -o export /dev/sda1 "
+                }
+              }
+            ],
+            "runtime_events_usec": 6285.997,
+            "throttle_callbacks": [
+              {
+                "time": 15.998019,
+                "pid": 1417,
+                "cpu": 1
+              },
+              {
+                "time": 16.048529,
+                "pid": 1417,
+                "cpu": 1
+              },
+              {
+                "time": 16.068236,
+                "pid": 1417,
+                "cpu": 1
+              },
+              {
+                "time": 16.086978,
+                "pid": 1422,
+                "cpu": 1
+              },
+              {
+                "time": 16.103785,
+                "pid": 1421,
+                "cpu": 1
+              },
+              {
+                "time": 16.108625,
+                "pid": 1424,
+                "cpu": 1
+              },
+              {
+                "time": 16.124057,
+                "pid": 1423,
+                "cpu": 1
+              },
+              {
+                "time": 16.128597,
+                "pid": 1093,
+                "cpu": 1
+              },
+              {
+                "time": 16.128599,
+                "pid": 1423,
+                "cpu": 1
+              },
+              {
+                "time": 16.146063,
+                "pid": 1426,
+                "cpu": 1
+              },
+              {
+                "time": 16.146125,
+                "pid": 1427,
+                "cpu": 1
+              }
+            ]
+          },
+          {
+            "start": 28.928126024500003,
+            "end": 28.9479330015,
+            "usage_usec": 6129,
+            "percent_midpoints": 30.943641727864627,
+            "percent_widest_read_bounds": 30.897988091796947,
+            "percent_narrowest_read_bounds": 30.98943047554944,
+            "first_read_usec": 26.446999999762966,
+            "second_read_usec": 32.085000000847685,
+            "nr_periods_delta": 0,
+            "nr_throttled_delta": 0,
+            "scheduled_residence_usec": 6135.999999994368,
+            "traced_irq_overlap_usec": 1.999999998503199,
+            "residence_minus_traced_irq_usec": 6133.999999995865,
+            "top_tasks": [
+              {
+                "pid": 1806,
+                "residence_usec": 4595.999999995825,
+                "metadata": {
+                  "tid": 1806,
+                  "comm": "python3",
+                  "policy": 0,
+                  "priority": 0,
+                  "nice": 0,
+                  "start_ticks": 2893,
+                  "cgroup": "0::/ramrescuedata.slice/ram-rescue-maintain@rr-data-vm-vfat.service",
+                  "cmdline": "/usr/bin/python3 /opt/manager/maintain.py --record /run/ram-rescue-manager/entries/rr-data-vm-vfat.json "
+                }
+              },
+              {
+                "pid": 1807,
+                "residence_usec": 1285.9999999967897,
+                "metadata": {
+                  "tid": 1807,
+                  "comm": "blkid",
+                  "policy": 0,
+                  "priority": 0,
+                  "nice": 0,
+                  "start_ticks": 2893,
+                  "cgroup": "0::/ramrescuedata.slice/ram-rescue-maintain@rr-data-vm-vfat.service",
+                  "cmdline": "/sbin/blkid -p -o export /dev/sdc1 "
+                }
+              },
+              {
+                "pid": 1093,
+                "residence_usec": 254.00000000175282,
+                "metadata": {
+                  "tid": 1093,
+                  "comm": "python3",
+                  "policy": 0,
+                  "priority": 0,
+                  "nice": 0,
+                  "start_ticks": 599,
+                  "cgroup": "0::/ramrescuedata.slice/ram-rescue-maintain@rr-data-vm-vfat.service",
+                  "cmdline": "/usr/bin/python3 /opt/manager/maintain.py --record /run/ram-rescue-manager/entries/rr-data-vm-vfat.json "
+                }
+              }
+            ],
+            "runtime_events_usec": 6128.908,
+            "throttle_callbacks": [
+              {
+                "time": 28.937186,
+                "pid": 1807,
+                "cpu": 1
+              },
+              {
+                "time": 28.959255,
+                "pid": 1809,
+                "cpu": 1
+              },
+              {
+                "time": 28.959738,
+                "pid": 1806,
+                "cpu": 1
+              },
+              {
+                "time": 28.979051,
+                "pid": 1810,
+                "cpu": 1
+              },
+              {
+                "time": 28.979053,
+                "pid": 1806,
+                "cpu": 1
+              },
+              {
+                "time": 29.008489,
+                "pid": 1811,
+                "cpu": 1
+              },
+              {
+                "time": 29.030926,
+                "pid": 1813,
+                "cpu": 1
+              }
+            ]
+          },
+          {
+            "start": 34.2298113485,
+            "end": 34.247948261000005,
+            "usage_usec": 5490,
+            "percent_midpoints": 30.26976063317617,
+            "percent_widest_read_bounds": 30.229857595349156,
+            "percent_narrowest_read_bounds": 30.30976915328235,
+            "first_read_usec": 23.15099999350423,
+            "second_read_usec": 24.729999999806296,
+            "nr_periods_delta": 0,
+            "nr_throttled_delta": 0,
+            "scheduled_residence_usec": 5484.999999978868,
+            "traced_irq_overlap_usec": 9.000000005698894,
+            "residence_minus_traced_irq_usec": 5475.999999973169,
+            "top_tasks": [
+              {
+                "pid": 1989,
+                "residence_usec": 2802.9999999930055,
+                "metadata": {
+                  "tid": 1989,
+                  "comm": "python3",
+                  "policy": 0,
+                  "priority": 0,
+                  "nice": 0,
+                  "start_ticks": 3420,
+                  "cgroup": "0::/ramrescuedata.slice/ram-rescue-maintain@rr-data-vm-vfat.service",
+                  "cmdline": "/usr/bin/python3 /opt/manager/maintain.py --record /run/ram-rescue-manager/entries/rr-data-vm-vfat.json "
+                }
+              },
+              {
+                "pid": 1991,
+                "residence_usec": 1361.0000000028322,
+                "metadata": {
+                  "tid": 1991,
+                  "comm": "python3",
+                  "policy": 0,
+                  "priority": 0,
+                  "nice": 0,
+                  "start_ticks": 3424,
+                  "cgroup": "0::/ramrescuedata.slice/ram-rescue-maintain@rr-data-vm-vfat.service",
+                  "cmdline": "/usr/bin/python3 /opt/manager/maintain.py --record /run/ram-rescue-manager/entries/rr-data-vm-vfat.json "
+                }
+              },
+              {
+                "pid": 1990,
+                "residence_usec": 1124.9999999805027,
+                "metadata": {
+                  "tid": 1990,
+                  "comm": "python3",
+                  "policy": 0,
+                  "priority": 0,
+                  "nice": 0,
+                  "start_ticks": 3422,
+                  "cgroup": "0::/ramrescuedata.slice/ram-rescue-maintain@rr-data-vm-vfat.service",
+                  "cmdline": "/usr/bin/python3 /opt/manager/maintain.py --record /run/ram-rescue-manager/entries/rr-data-vm-vfat.json "
+                }
+              },
+              {
+                "pid": 1093,
+                "residence_usec": 196.00000000252749,
+                "metadata": {
+                  "tid": 1093,
+                  "comm": "python3",
+                  "policy": 0,
+                  "priority": 0,
+                  "nice": 0,
+                  "start_ticks": 599,
+                  "cgroup": "0::/ramrescuedata.slice/ram-rescue-maintain@rr-data-vm-vfat.service",
+                  "cmdline": "/usr/bin/python3 /opt/manager/maintain.py --record /run/ram-rescue-manager/entries/rr-data-vm-vfat.json "
+                }
+              }
+            ],
+            "runtime_events_usec": 5489.855,
+            "throttle_callbacks": [
+              {
+                "time": 34.195028,
+                "pid": 1987,
+                "cpu": 1
+              },
+              {
+                "time": 34.210103,
+                "pid": 1989,
+                "cpu": 1
+              },
+              {
+                "time": 34.242646,
+                "pid": 1989,
+                "cpu": 1
+              },
+              {
+                "time": 34.247008,
+                "pid": 1991,
+                "cpu": 1
+              },
+              {
+                "time": 34.278044,
+                "pid": 1995,
+                "cpu": 1
+              }
+            ]
+          }
+        ],
+        "max_cpu_stat_read_usec": 2111.277999999217
+      },
+      "data_slice": {
+        "peak_windows": [
+          {
+            "start": 9.3880534495,
+            "end": 9.408214597499999,
+            "usage_usec": 9372,
+            "percent_midpoints": 46.48544815007631,
+            "percent_widest_read_bounds": 46.424020418249576,
+            "percent_narrowest_read_bounds": 46.547038658228466,
+            "first_read_usec": 24.6189999995039,
+            "second_read_usec": 28.734999999002753,
+            "nr_periods_delta": 1,
+            "nr_throttled_delta": 0,
+            "scheduled_residence_usec": 9371.999999999047,
+            "traced_irq_overlap_usec": 18.000000000739647,
+            "residence_minus_traced_irq_usec": 9353.999999998308,
+            "top_tasks": [
+              {
+                "pid": 1169,
+                "residence_usec": 8444.99999999293,
+                "metadata": {
+                  "tid": 1169,
+                  "comm": "python3",
+                  "policy": 0,
+                  "priority": 0,
+                  "nice": 0,
+                  "start_ticks": 939,
+                  "cgroup": "0::/ramrescuedata.slice/ram-rescue-maintain@rr-data-vm-ext4.service",
+                  "cmdline": "/usr/bin/python3 /opt/manager/maintain.py --record /run/ram-rescue-manager/entries/rr-data-vm-ext4.json "
+                }
+              },
+              {
+                "pid": 1070,
+                "residence_usec": 823.0000000057913,
+                "metadata": {
+                  "tid": 1070,
+                  "comm": "python3",
+                  "policy": 0,
+                  "priority": 0,
+                  "nice": 0,
+                  "start_ticks": 531,
+                  "cgroup": "0::/ramrescuedata.slice/ram-rescue-maintain@rr-data-vm-ext4.service",
+                  "cmdline": "/usr/bin/python3 /opt/manager/maintain.py --record /run/ram-rescue-manager/entries/rr-data-vm-ext4.json "
+                }
+              },
+              {
+                "pid": 1093,
+                "residence_usec": 104.00000000032605,
+                "metadata": {
+                  "tid": 1093,
+                  "comm": "python3",
+                  "policy": 0,
+                  "priority": 0,
+                  "nice": 0,
+                  "start_ticks": 599,
+                  "cgroup": "0::/ramrescuedata.slice/ram-rescue-maintain@rr-data-vm-vfat.service",
+                  "cmdline": "/usr/bin/python3 /opt/manager/maintain.py --record /run/ram-rescue-manager/entries/rr-data-vm-vfat.json "
+                }
+              }
+            ],
+            "runtime_events_usec": 9371.848,
+            "throttle_callbacks": [
+              {
+                "time": 9.407544,
+                "pid": 1169,
+                "cpu": 1
+              },
+              {
+                "time": 9.426012,
+                "pid": 1169,
+                "cpu": 1
+              }
+            ]
+          },
+          {
+            "start": 11.40855348,
+            "end": 11.428859379,
+            "usage_usec": 9100,
+            "percent_midpoints": 44.81456349211573,
+            "percent_widest_read_bounds": 44.70636588682148,
+            "percent_narrowest_read_bounds": 44.9232860840739,
+            "first_read_usec": 36.71800000049075,
+            "second_read_usec": 61.56999999973323,
+            "nr_periods_delta": 1,
+            "nr_throttled_delta": 1,
+            "scheduled_residence_usec": 9103.99999999889,
+            "traced_irq_overlap_usec": 5.999999999062311,
+            "residence_minus_traced_irq_usec": 9097.999999999829,
+            "top_tasks": [
+              {
+                "pid": 1257,
+                "residence_usec": 7436.999999999472,
+                "metadata": {
+                  "tid": 1257,
+                  "comm": "python3",
+                  "policy": 0,
+                  "priority": 0,
+                  "nice": 0,
+                  "start_ticks": 1140,
+                  "cgroup": "0::/ramrescuedata.slice/ram-rescue-maintain@rr-data-vm-vfat.service",
+                  "cmdline": "/usr/bin/python3 /opt/manager/maintain.py --record /run/ram-rescue-manager/entries/rr-data-vm-vfat.json "
+                }
+              },
+              {
+                "pid": 1258,
+                "residence_usec": 754.0000000005875,
+                "metadata": {
+                  "tid": 1258,
+                  "comm": "python3",
+                  "policy": 0,
+                  "priority": 0,
+                  "nice": 0,
+                  "start_ticks": 1142,
+                  "cgroup": "0::/ramrescuedata.slice/ram-rescue-maintain@rr-data-vm-ext4.service",
+                  "cmdline": "/usr/bin/python3 /opt/manager/maintain.py --record /run/ram-rescue-manager/entries/rr-data-vm-ext4.json "
+                }
+              },
+              {
+                "pid": 1070,
+                "residence_usec": 483.9999999983746,
+                "metadata": {
+                  "tid": 1070,
+                  "comm": "python3",
+                  "policy": 0,
+                  "priority": 0,
+                  "nice": 0,
+                  "start_ticks": 531,
+                  "cgroup": "0::/ramrescuedata.slice/ram-rescue-maintain@rr-data-vm-ext4.service",
+                  "cmdline": "/usr/bin/python3 /opt/manager/maintain.py --record /run/ram-rescue-manager/entries/rr-data-vm-ext4.json "
+                }
+              },
+              {
+                "pid": 1093,
+                "residence_usec": 370.0000000002035,
+                "metadata": {
+                  "tid": 1093,
+                  "comm": "python3",
+                  "policy": 0,
+                  "priority": 0,
+                  "nice": 0,
+                  "start_ticks": 599,
+                  "cgroup": "0::/ramrescuedata.slice/ram-rescue-maintain@rr-data-vm-vfat.service",
+                  "cmdline": "/usr/bin/python3 /opt/manager/maintain.py --record /run/ram-rescue-manager/entries/rr-data-vm-vfat.json "
+                }
+              },
+              {
+                "pid": 1250,
+                "residence_usec": 59.000000000253294,
+                "metadata": {
+                  "tid": 1250,
+                  "comm": "python3",
+                  "policy": 0,
+                  "priority": 0,
+                  "nice": 0,
+                  "start_ticks": 1132,
+                  "cgroup": "0::/ramrescuedata.slice/ram-rescue-maintain@rr-data-vm-ext4.service",
+                  "cmdline": "/usr/bin/python3 /opt/manager/maintain.py --record /run/ram-rescue-manager/entries/rr-data-vm-ext4.json "
+                }
+              }
+            ],
+            "runtime_events_usec": 9100.09,
+            "throttle_callbacks": [
+              {
+                "time": 11.415012,
+                "pid": 1070,
+                "cpu": 1
+              },
+              {
+                "time": 11.415016,
+                "pid": 1257,
+                "cpu": 1
+              },
+              {
+                "time": 11.426022,
+                "pid": 1258,
+                "cpu": 1
+              },
+              {
+                "time": 11.426025,
+                "pid": 1257,
+                "cpu": 1
+              },
+              {
+                "time": 11.452836,
+                "pid": 1257,
+                "cpu": 1
+              },
+              {
+                "time": 11.452838,
+                "pid": 1267,
+                "cpu": 1
+              },
+              {
+                "time": 11.455021,
+                "pid": 1070,
+                "cpu": 1
+              },
+              {
+                "time": 11.467319,
+                "pid": 1268,
+                "cpu": 0
+              },
+              {
+                "time": 11.469039,
+                "pid": 1272,
+                "cpu": 1
+              },
+              {
+                "time": 11.487012,
+                "pid": 1070,
+                "cpu": 1
+              },
+              {
+                "time": 11.489152,
+                "pid": 1274,
+                "cpu": 1
+              },
+              {
+                "time": 11.489155,
+                "pid": 1257,
+                "cpu": 1
+              },
+              {
+                "time": 11.506012,
+                "pid": 1274,
+                "cpu": 1
+              },
+              {
+                "time": 11.506015,
+                "pid": 1273,
+                "cpu": 1
+              },
+              {
+                "time": 11.52728,
+                "pid": 1093,
+                "cpu": 1
+              },
+              {
+                "time": 11.527282,
+                "pid": 1276,
+                "cpu": 1
+              }
+            ]
+          },
+          {
+            "start": 34.0888118725,
+            "end": 34.1087251785,
+            "usage_usec": 8732,
+            "percent_midpoints": 43.8500769284631,
+            "percent_widest_read_bounds": 43.72319969900019,
+            "percent_narrowest_read_bounds": 43.977692652831145,
+            "first_read_usec": 55.21099999583612,
+            "second_read_usec": 60.359000002563334,
+            "nr_periods_delta": 1,
+            "nr_throttled_delta": 1,
+            "scheduled_residence_usec": 8731.000000004486,
+            "traced_irq_overlap_usec": 19.000000001767603,
+            "residence_minus_traced_irq_usec": 8712.000000002718,
+            "top_tasks": [
+              {
+                "pid": 1981,
+                "residence_usec": 8293.000000008988,
+                "metadata": {
+                  "tid": 1981,
+                  "comm": "python3",
+                  "policy": 0,
+                  "priority": 0,
+                  "nice": 0,
+                  "start_ticks": 3409,
+                  "cgroup": "0::/ramrescuedata.slice/ram-rescue-maintain@rr-data-vm-vfat.service",
+                  "cmdline": "/usr/bin/python3 /opt/manager/maintain.py --record /run/ram-rescue-manager/entries/rr-data-vm-vfat.json "
+                }
+              },
+              {
+                "pid": 1093,
+                "residence_usec": 437.99999999549755,
+                "metadata": {
+                  "tid": 1093,
+                  "comm": "python3",
+                  "policy": 0,
+                  "priority": 0,
+                  "nice": 0,
+                  "start_ticks": 599,
+                  "cgroup": "0::/ramrescuedata.slice/ram-rescue-maintain@rr-data-vm-vfat.service",
+                  "cmdline": "/usr/bin/python3 /opt/manager/maintain.py --record /run/ram-rescue-manager/entries/rr-data-vm-vfat.json "
+                }
+              }
+            ],
+            "runtime_events_usec": 8731.887,
+            "throttle_callbacks": [
+              {
+                "time": 34.100021,
+                "pid": 1981,
+                "cpu": 1
+              },
+              {
+                "time": 34.107019,
+                "pid": 1981,
+                "cpu": 1
+              },
+              {
+                "time": 34.129658,
+                "pid": 1983,
+                "cpu": 1
+              },
+              {
+                "time": 34.149047,
+                "pid": 1984,
+                "cpu": 1
+              },
+              {
+                "time": 34.168659,
+                "pid": 1981,
+                "cpu": 1
+              },
+              {
+                "time": 34.16866,
+                "pid": 1985,
+                "cpu": 1
+              },
+              {
+                "time": 34.195028,
+                "pid": 1987,
+                "cpu": 1
+              }
+            ]
+          },
+          {
+            "start": 24.2683665265,
+            "end": 24.288083872,
+            "usage_usec": 8609,
+            "percent_midpoints": 43.66206394262939,
+            "percent_widest_read_bounds": 43.60234920888047,
+            "percent_narrowest_read_bounds": 43.72194246295859,
+            "first_read_usec": 27.79300000099738,
+            "second_read_usec": 26.213999998248028,
+            "nr_periods_delta": 1,
+            "nr_throttled_delta": 1,
+            "scheduled_residence_usec": 8599.999999994168,
+            "traced_irq_overlap_usec": 18.99999999821489,
+            "residence_minus_traced_irq_usec": 8580.999999995953,
+            "top_tasks": [
+              {
+                "pid": 1664,
+                "residence_usec": 5675.999999990467,
+                "metadata": {
+                  "tid": 1664,
+                  "comm": "python3",
+                  "policy": 0,
+                  "priority": 0,
+                  "nice": 0,
+                  "start_ticks": 2419,
+                  "cgroup": "0::/ramrescuedata.slice/ram-rescue-maintain@rr-data-vm-ext4.service",
+                  "cmdline": "/usr/bin/python3 /opt/manager/maintain.py --record /run/ram-rescue-manager/entries/rr-data-vm-ext4.json "
+                }
+              },
+              {
+                "pid": 1666,
+                "residence_usec": 1025.000000002052,
+                "metadata": null
+              },
+              {
+                "pid": 1667,
+                "residence_usec": 1025.000000002052,
+                "metadata": null
+              },
+              {
+                "pid": 1665,
+                "residence_usec": 873.9999999995973,
+                "metadata": {
+                  "tid": 1665,
+                  "comm": "blkid",
+                  "policy": 0,
+                  "priority": 0,
+                  "nice": 0,
+                  "start_ticks": 2420,
+                  "cgroup": "0::/ramrescuedata.slice/ram-rescue-maintain@rr-data-vm-ext4.service",
+                  "cmdline": "/sbin/blkid -p -o export /dev/sdd1 "
+                }
+              }
+            ],
+            "runtime_events_usec": 8608.734,
+            "throttle_callbacks": [
+              {
+                "time": 24.278021,
+                "pid": 1664,
+                "cpu": 1
+              },
+              {
+                "time": 24.289007,
+                "pid": 1664,
+                "cpu": 1
+              },
+              {
+                "time": 24.307015,
+                "pid": 1668,
+                "cpu": 1
+              },
+              {
+                "time": 24.319386,
+                "pid": 1093,
+                "cpu": 1
+              },
+              {
+                "time": 24.325994,
+                "pid": 1669,
+                "cpu": 1
+              },
+              {
+                "time": 24.325996,
+                "pid": 1668,
+                "cpu": 1
+              },
+              {
+                "time": 24.325997,
+                "pid": 1070,
+                "cpu": 1
+              },
+              {
+                "time": 24.348738,
+                "pid": 1671,
+                "cpu": 1
+              },
+              {
+                "time": 24.348781,
+                "pid": 1672,
+                "cpu": 1
+              },
+              {
+                "time": 24.370918,
+                "pid": 1671,
+                "cpu": 1
+              }
+            ]
+          },
+          {
+            "start": 15.068941221,
+            "end": 15.088505034,
+            "usage_usec": 7106,
+            "percent_midpoints": 36.322162760396054,
+            "percent_widest_read_bounds": 36.24542673098696,
+            "percent_narrowest_read_bounds": 36.39922439839949,
+            "first_read_usec": 58.6980000001347,
+            "second_read_usec": 24.13999999895111,
+            "nr_periods_delta": 1,
+            "nr_throttled_delta": 1,
+            "scheduled_residence_usec": 7108.000000000558,
+            "traced_irq_overlap_usec": 12.000000001677336,
+            "residence_minus_traced_irq_usec": 7095.999999998881,
+            "top_tasks": [
+              {
+                "pid": 1378,
+                "residence_usec": 5808.000000001812,
+                "metadata": {
+                  "tid": 1378,
+                  "comm": "python3",
+                  "policy": 0,
+                  "priority": 0,
+                  "nice": 0,
+                  "start_ticks": 1505,
+                  "cgroup": "0::/ramrescuedata.slice/ram-rescue-maintain@rr-data-vm-ext4.service",
+                  "cmdline": "/usr/bin/python3 /opt/manager/maintain.py --record /run/ram-rescue-manager/entries/rr-data-vm-ext4.json "
+                }
+              },
+              {
+                "pid": 1381,
+                "residence_usec": 1299.9999999987467,
+                "metadata": null
+              }
+            ],
+            "runtime_events_usec": 7105.271,
+            "throttle_callbacks": [
+              {
+                "time": 15.057074,
+                "pid": 1379,
+                "cpu": 1
+              },
+              {
+                "time": 15.072028,
+                "pid": 1378,
+                "cpu": 1
+              },
+              {
+                "time": 15.088551,
+                "pid": 1378,
+                "cpu": 1
+              },
+              {
+                "time": 15.109008,
+                "pid": 1378,
+                "cpu": 1
+              },
+              {
+                "time": 15.134011,
+                "pid": 1384,
+                "cpu": 1
+              },
+              {
+                "time": 15.154858,
+                "pid": 1386,
+                "cpu": 1
+              },
+              {
+                "time": 15.167008,
+                "pid": 1387,
+                "cpu": 1
+              },
+              {
+                "time": 15.16701,
+                "pid": 1386,
+                "cpu": 1
+              },
+              {
+                "time": 15.187015,
+                "pid": 1389,
+                "cpu": 1
+              }
+            ]
+          }
+        ],
+        "max_cpu_stat_read_usec": 2135.197000001199
+      }
+    },
+    "limitations": [
+      "Diagnostic tracing adds overhead.",
+      "sched_switch residency includes VM steal and untraced interrupt overhead.",
+      "Subtracting traced IRQ/softirq duration leaves an upper bound, not exact CPU cycles.",
+      "cpu.stat counters can account runtime accrued before a read interval.",
+      "This run cannot retroactively prove the cause of a separate historical outlier."
+    ]
+  },
+  "original_outlier": {
+    "report": "lab/work/perf-c20-1001-045728-742669/report.json",
+    "guest_start": 86.165377861,
+    "guest_end": 86.187196037,
+    "ext4_cpu_delta_usec": 34571,
+    "data_slice_cpu_delta_usec": 34570,
+    "aggregate_percent": 158.44587558548926,
+    "specific_cause": "unresolved; later diagnostic IRQ attribution does not establish original cause"
+  },
+  "observed_irq_example": {
+    "guest_cpu": 0,
+    "current_task": "lvm",
+    "pid": 1770,
+    "irq": 4,
+    "irq_name": "ttyS0",
+    "start": 28.085944,
+    "end": 28.112207,
+    "duration_ms": 26.263,
+    "following_runtime_event_time": 28.112213,
+    "following_runtime_ns": 26764019
+  },
+  "analysis_source_sha256": {
+    "lab/analyze_cpu_diagnostic.py": "a6b16eb112d16856c453103a92963ce33b77b451e32772170c059424250e0d05",
+    "lab/tests/test_cpu_diagnostic.py": "391de515f6a262a5c6e76575a7c70d648654b1086fe72aab29802422a5085763"
+  },
+  "analyzer_tests": {
+    "passed": true,
+    "tests": 3,
+    "command": "python3 -m unittest discover -s lab/tests -p test_cpu_diagnostic.py -v"
+  }
+}

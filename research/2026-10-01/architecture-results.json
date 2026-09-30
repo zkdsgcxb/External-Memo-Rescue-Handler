@@ -1,0 +1,283 @@
+{
+  "schema": 1,
+  "date": "2026-10-01",
+  "scope": "Shared Linux LP64 little-endian Guard ABI; ARM64 RAM-only full kernel USB test; RISC-V64 user mode only",
+  "abi": {
+    "source_report": "lab/work/architecture-1001/abi-final87/report.json",
+    "source_report_sha256": "b172f5e3e5fe3812ca6fe1d170e94b35548edab0b925ed99ba07fa6a42243a5c",
+    "architectures": {
+      "x86_64": {
+        "matches_native_headers": true,
+        "tests_passed": true,
+        "test_count": 87,
+        "test_modules": [
+          "test_linux_abi",
+          "test_admission",
+          "test_data_recovery",
+          "test_guard_state",
+          "test_monitor",
+          "test_owned_operation"
+        ],
+        "abi": {
+          "machine": "x86_64",
+          "byteorder": "little",
+          "pointer_bytes": 8,
+          "size_t_bytes": 8,
+          "int_bytes": 4,
+          "BLKGETSIZE64": 2148012658,
+          "BLKSSZGET": 4712,
+          "BLKGETDISKSEQ": 2148012672,
+          "DM_MPATH_PROBE_PATHS": 64786,
+          "dm_info_size": 48,
+          "dm_info_alignment": 4,
+          "dm_info_offsets": {
+            "exists": 0,
+            "suspended": 4,
+            "live_table": 8,
+            "inactive_table": 12,
+            "open_count": 16,
+            "event_nr": 20,
+            "major": 24,
+            "minor": 28,
+            "read_only": 32,
+            "target_count": 36,
+            "deferred_remove": 40,
+            "internal_suspend": 44
+          }
+        }
+      },
+      "aarch64": {
+        "matches_native_headers": true,
+        "tests_passed": true,
+        "test_count": 87,
+        "test_modules": [
+          "test_linux_abi",
+          "test_admission",
+          "test_data_recovery",
+          "test_guard_state",
+          "test_monitor",
+          "test_owned_operation"
+        ],
+        "abi": {
+          "machine": "aarch64",
+          "byteorder": "little",
+          "pointer_bytes": 8,
+          "size_t_bytes": 8,
+          "int_bytes": 4,
+          "BLKGETSIZE64": 2148012658,
+          "BLKSSZGET": 4712,
+          "BLKGETDISKSEQ": 2148012672,
+          "DM_MPATH_PROBE_PATHS": 64786,
+          "dm_info_size": 48,
+          "dm_info_alignment": 4,
+          "dm_info_offsets": {
+            "exists": 0,
+            "suspended": 4,
+            "live_table": 8,
+            "inactive_table": 12,
+            "open_count": 16,
+            "event_nr": 20,
+            "major": 24,
+            "minor": 28,
+            "read_only": 32,
+            "target_count": 36,
+            "deferred_remove": 40,
+            "internal_suspend": 44
+          }
+        }
+      },
+      "riscv64": {
+        "matches_native_headers": true,
+        "tests_passed": true,
+        "test_count": 87,
+        "test_modules": [
+          "test_linux_abi",
+          "test_admission",
+          "test_data_recovery",
+          "test_guard_state",
+          "test_monitor",
+          "test_owned_operation"
+        ],
+        "abi": {
+          "machine": "riscv64",
+          "byteorder": "little",
+          "pointer_bytes": 8,
+          "size_t_bytes": 8,
+          "int_bytes": 4,
+          "BLKGETSIZE64": 2148012658,
+          "BLKSSZGET": 4712,
+          "BLKGETDISKSEQ": 2148012672,
+          "DM_MPATH_PROBE_PATHS": 64786,
+          "dm_info_size": 48,
+          "dm_info_alignment": 4,
+          "dm_info_offsets": {
+            "exists": 0,
+            "suspended": 4,
+            "live_table": 8,
+            "inactive_table": 12,
+            "open_count": 16,
+            "event_nr": 20,
+            "major": 24,
+            "minor": 28,
+            "read_only": 32,
+            "target_count": 36,
+            "deferred_remove": 40,
+            "internal_suspend": 44
+          }
+        }
+      }
+    },
+    "sources_unchanged": true,
+    "sources": {
+      "/workspace/Project/External-Memo-Rescue-Handler/lab/architecture_probe.py": "7b63eb2e998c13af9a9f78bfac7a00fb03b84366ecda6d2363aaab0743594490",
+      "/workspace/Project/External-Memo-Rescue-Handler/lab/abi_probe.c": "7d26d684ee92260df7c787e89109114c41d81e5c137e5774d7ecdd5302e29483",
+      "/workspace/Project/External-Memo-Rescue-Handler/ram-rescue-demo/src/rescue.py": "e71b91ff4d0fce653bd64fb9c742583648d89ed704bd0a285edd0f6ccc0765f0",
+      "/workspace/Project/External-Memo-Rescue-Handler/guard/runtime/admission.py": "e2d3c9d5cb89c0538bc4d69bf154b247b42ab568c06d74688fc7fa3e9f194dbc",
+      "/workspace/Project/External-Memo-Rescue-Handler/guard/runtime/boot.py": "1b6848a8d7a42eabb70bf60d5f4a0326d76aa496725fd02e710b02efa06d7044",
+      "/workspace/Project/External-Memo-Rescue-Handler/guard/runtime/data_guard.py": "82c9dd23b2abfc2cb9dead8eef0c58c18a3208646cc1260ffd6c8c6cd50f45d1",
+      "/workspace/Project/External-Memo-Rescue-Handler/guard/runtime/data_recovery.py": "59e8fb51c9136f56824f520a20c17c74a4d39c65113cc28fa7dcbe5270260c91",
+      "/workspace/Project/External-Memo-Rescue-Handler/guard/runtime/dm_monitor.py": "1cbae0c2ef907a8e870c714e6cc229b003d5550f810e607c6c7b4e081f1eda1a",
+      "/workspace/Project/External-Memo-Rescue-Handler/guard/runtime/guard_state.py": "30290869d36485b7e5face65faa0120a3b06e6bb47c8351f52befc13a20f99ac",
+      "/workspace/Project/External-Memo-Rescue-Handler/guard/runtime/linux_abi.py": "71bcd973c15a517038a30a3750a8219a54d1c347724b6ab3365d6b0ecd989711",
+      "/workspace/Project/External-Memo-Rescue-Handler/guard/runtime/maintain.py": "c5bc45eedc45f9cd6c2f9ac5376f4a5e909c78ae610945694bd23862c03eb029",
+      "/workspace/Project/External-Memo-Rescue-Handler/guard/runtime/owned_operation.py": "1c3febc34cd036d5e921ab7f49bf11eab9b85ee1085c1a7c21764d7270a4daf1",
+      "/workspace/Project/External-Memo-Rescue-Handler/guard/runtime/path_guard.py": "41c4a397818cf31d4aee87ce465c96c5c8638599d267de1cf1254f3e49709403",
+      "/workspace/Project/External-Memo-Rescue-Handler/guard/runtime/registry.py": "8b1b0b50578d4d9a0ced87ceb62c3404b933788926f81e04b5dea121380f3c94",
+      "/workspace/Project/External-Memo-Rescue-Handler/lab/tests/test_linux_abi.py": "40fd4822f5b43ee2e06e7b95733fd6ae2c1ee8ccbc4c416a62e2c438386ce9c5",
+      "/workspace/Project/External-Memo-Rescue-Handler/lab/tests/test_admission.py": "1956501eb0b05996f81ffd2cd8121b8fd82a81f28c9fc6a00575ef05971f6757",
+      "/workspace/Project/External-Memo-Rescue-Handler/lab/tests/test_data_recovery.py": "882add359288883ed7cab72817290aff122f30340edf8e07e2f2ca418580a986",
+      "/workspace/Project/External-Memo-Rescue-Handler/lab/tests/test_guard_state.py": "4484356445737a7144ed1a3bfb2600bf8ebf81f4277248a09d64b54958644a0a",
+      "/workspace/Project/External-Memo-Rescue-Handler/lab/tests/test_monitor.py": "b5350d22bf2912849ab7c77b8aaefc0214894f390cd99b48d35c94d0a58f8fd9",
+      "/workspace/Project/External-Memo-Rescue-Handler/lab/tests/test_owned_operation.py": "93e995e22ea8ef116b921f536e65213dc91d04461eae17e007678ad1bd2c8f26",
+      "/home/lx320/.local/share/ram-rescue-abi-tools/linux7/linux/fs.h": "ec979d2572126093527a9cf72d41b323909bc034dfa79541a6c7924525984a0e",
+      "/home/lx320/.local/share/ram-rescue-abi-tools/linux7/linux/dm-ioctl.h": "31b03523fec094e3980c52c7a09b0bb4e5cd18019aeea3ab5207b7162d98d7c1",
+      "/home/lx320/.local/share/ram-rescue-abi-tools/root/usr/include/libdevmapper.h": "c934c3ac9b642eeb1d0eec8fd3f09c694f5cc83894b1b1f59ce344ddcf3b6bf2"
+    }
+  },
+  "cpp_parser": {
+    "scope": "Cross-compiled health_test.cpp executed in QEMU user mode; not a deployed recovery controller",
+    "source_sha256": "1ed57aee0f7243844971002d10dfbfb02bbf8768ecfee093e3ea953e0cde6286",
+    "header_sha256": "fc21235e1d8bb7fc5b8cf48ae590ce468584de66ad7ffd0338950f84c92767a8",
+    "architectures": {
+      "aarch64": {
+        "compiled": true,
+        "qemu_exit_code": 0,
+        "binary_sha256": "67a9a10de736e2012f8fb54842c57acbbcccc39444fca4ef578a2a53fdc65f9c"
+      },
+      "riscv64": {
+        "compiled": true,
+        "qemu_exit_code": 0,
+        "binary_sha256": "ff24a93c67961e7e35b5e76c5c186a3ce3bc4d8fd9a753d243f792aad76d529f"
+      }
+    }
+  },
+  "arm64_full_kernel": {
+    "source_report": "lab/work/architecture-1001/arm-final/report.json",
+    "source_report_sha256": "8e22476323492dcdf06b971b9748023bd2e8476121ecb3f138e725df1898d2f6",
+    "passed": true,
+    "checks": {
+      "arm64_kernel": true,
+      "native_probe_ioctl": true,
+      "original_guard": true,
+      "original_worker": true,
+      "all_io_successful": true,
+      "durable_data_matches": true,
+      "mount_preserved": true,
+      "cleanly_unmounted": true,
+      "recovered": true,
+      "sources_unchanged": true,
+      "offline_fsck_clean": true
+    },
+    "kernel_release": "7.0.0-34-generic",
+    "boot_image_sha256": "c49cb6197c8a3313762199e057179610bceebff6d88205c6badcc0f7e3d7faaf",
+    "initramfs_sha256": "878fff3d7f974e40f811eb2ebedc3f6c2fdc148c0b98bda751354c30f1dd00bf",
+    "source_sha256": {
+      "guard/runtime/admission.py": "e2d3c9d5cb89c0538bc4d69bf154b247b42ab568c06d74688fc7fa3e9f194dbc",
+      "guard/runtime/boot.py": "1b6848a8d7a42eabb70bf60d5f4a0326d76aa496725fd02e710b02efa06d7044",
+      "guard/runtime/data_guard.py": "82c9dd23b2abfc2cb9dead8eef0c58c18a3208646cc1260ffd6c8c6cd50f45d1",
+      "guard/runtime/data_recovery.py": "59e8fb51c9136f56824f520a20c17c74a4d39c65113cc28fa7dcbe5270260c91",
+      "guard/runtime/dm_monitor.py": "1cbae0c2ef907a8e870c714e6cc229b003d5550f810e607c6c7b4e081f1eda1a",
+      "guard/runtime/guard_state.py": "30290869d36485b7e5face65faa0120a3b06e6bb47c8351f52befc13a20f99ac",
+      "guard/runtime/linux_abi.py": "71bcd973c15a517038a30a3750a8219a54d1c347724b6ab3365d6b0ecd989711",
+      "guard/runtime/maintain.py": "c5bc45eedc45f9cd6c2f9ac5376f4a5e909c78ae610945694bd23862c03eb029",
+      "guard/runtime/owned_operation.py": "1c3febc34cd036d5e921ab7f49bf11eab9b85ee1085c1a7c21764d7270a4daf1",
+      "guard/runtime/path_guard.py": "41c4a397818cf31d4aee87ce465c96c5c8638599d267de1cf1254f3e49709403",
+      "guard/runtime/registry.py": "8b1b0b50578d4d9a0ced87ceb62c3404b933788926f81e04b5dea121380f3c94",
+      "ram-rescue-demo/src/rescue.py": "e71b91ff4d0fce653bd64fb9c742583648d89ed704bd0a285edd0f6ccc0765f0",
+      "lab/guest/arm64_probe.py": "cfcb2aae2793bcf819f04ee131fef9519a85733d0b3e04f1296a6dc67de8a468",
+      "lab/guest/data_probe.py": "26adbb97a045adfed4f0dc4a44116ead84170c65e73550526bf70c09960422e4"
+    },
+    "runner_sha256": "a499163111d33bf74d929ca96936e217927e1c1224d24b7a7eff35ea708153f5",
+    "requested_gap_seconds": 0.2,
+    "host_reinsert_gap_seconds": 0.2517176199980895,
+    "max_io_seconds": 5.154850927999998,
+    "acknowledged_direct_verified_writes": 25,
+    "workload_block_bytes": 4096,
+    "workload_errors": 0,
+    "old_node": "/dev/sda1",
+    "new_node": "/dev/sdb1",
+    "old_diskseq": 9,
+    "new_diskseq": 11,
+    "dm_probe": {
+      "token": 1,
+      "errno": 0,
+      "elapsed": 0.0028251679999975465,
+      "status": "completed",
+      "source": "ioctl"
+    },
+    "offline_fsck_returncode": 0,
+    "kernel_console_sha256": "e507efa2a0a29e646767094ed3fe229ac0e53935553fc4c30d7c5e52de7d63ff",
+    "kernel_error_pattern_matches": [],
+    "signed_kernel_file_sha256": "2141ad39cf4f1f7c7c9dc2de3a6a22b0ffda11d69c530a78bdf9e740c3df9efa"
+  },
+  "kernel_packages": [
+    {
+      "Package": "linux-image-7.0.0-34-generic",
+      "Architecture": "arm64",
+      "Version": "7.0.0-34.34~24.04.1",
+      "Filename": "pool/main/l/linux-signed-hwe-7.0/linux-image-7.0.0-34-generic_7.0.0-34.34~24.04.1_arm64.deb",
+      "SHA256": "e8e7d6a2e208429091f4ea84e5af7f807c5bcd7d9dea3af7aeffdc6c298ff077"
+    },
+    {
+      "Package": "linux-modules-7.0.0-34-generic",
+      "Architecture": "arm64",
+      "Version": "7.0.0-34.34~24.04.1",
+      "Filename": "pool/main/l/linux-hwe-7.0/linux-modules-7.0.0-34-generic_7.0.0-34.34~24.04.1_arm64.deb",
+      "SHA256": "5c811cee2750c6c8490249b52589bba3693fd2b02be7a7bebf27f304b426891b"
+    }
+  ],
+  "foreign_python_packages": [
+    {
+      "Package": "python3.12-minimal",
+      "Version": "3.12.3-1ubuntu0.17",
+      "Architecture": "arm64",
+      "Filename": "pool/main/p/python3.12/python3.12-minimal_3.12.3-1ubuntu0.17_arm64.deb",
+      "SHA256": "be39fa8380f1e65fc02701cdbc8652acd924d8576b4ba1bd772141040a22b15f"
+    },
+    {
+      "Package": "python3.12-minimal",
+      "Version": "3.12.3-1ubuntu0.17",
+      "Architecture": "riscv64",
+      "Filename": "pool/main/p/python3.12/python3.12-minimal_3.12.3-1ubuntu0.17_riscv64.deb",
+      "SHA256": "01bec98ced0659deeca647d087c0f77a2050448f9c13f8abcd1c5649ed232b71"
+    }
+  ],
+  "limitations": [
+    "ARM64 guest uses RAM root and USB data ext4, without desktop/systemd installer validation",
+    "ARM64 TCG latency is correctness evidence, not a hardware performance prediction",
+    "RISC-V64 full kernel USB recovery not tested",
+    "Existing machine-specific rescue image builder is not a cross-architecture installer"
+  ],
+  "earlier_passing_runs": [
+    {
+      "scope": "ABI plus61 selected tests on each architecture",
+      "report": "lab/work/architecture-1001/abi-results/report.json",
+      "sha256": "d5a78dba67d1853a89a4402d9afa46454f8911dfc03a8181402a191754640e6d"
+    },
+    {
+      "scope": "ARM64 same kernel USB recovery before final traceback optimization",
+      "report": "lab/work/architecture-1001/arm-vm6/report.json",
+      "sha256": "a6cf1f1b76da3d0ccf25bd040b74a9cde571407dbbdfa8bcb175ad8c055d9ab2"
+    }
+  ]
+}

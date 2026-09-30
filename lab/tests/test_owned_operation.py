@@ -15,7 +15,46 @@ BASE = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(BASE / 'guest'))
 sys.path.insert(0, str(Path(__file__).resolve().parents[2] / 'guard/runtime'))
 from guard_state import Owner
-from owned_operation import OwnedOperation
+from owned_operation import OwnedOperation, _error
+
+
+class ErrorLocationTests(unittest.TestCase):
+    def test_diagnostics_keep_locations_without_imports_or_source_reads(self):
+        def rejected_candidate():
+            raise ValueError('disk identity differs')
+        try:
+            rejected_candidate()
+        except ValueError as exc:
+            last = exc.__traceback__
+            while last.tb_next is not None:
+                last = last.tb_next
+            expected_line = last.tb_lineno
+            with patch('builtins.__import__', side_effect=AssertionError('diagnostic import')), \
+                    patch('builtins.open', side_effect=AssertionError('source read')):
+                value = _error(exc)
+        self.assertEqual(value['type'], 'ValueError')
+        self.assertEqual(value['message'], 'disk identity differs')
+        self.assertIn(__file__, value['traceback'])
+        self.assertIn(f'line {expected_line}, in rejected_candidate', value['traceback'])
+        self.assertTrue(all(isinstance(field, str) for field in value.values()))
+
+    def test_deep_trace_and_long_unicode_metadata_have_bounded_work_and_output(self):
+        namespace = {}
+        name = 'recursive_' + '函' * 200
+        source = (f'def {name}(depth):\n'
+                  f'    if depth: return {name}(depth-1)\n'
+                  '    raise RuntimeError("refused")\n')
+        exec(compile(source, '/virtual/' + '路' * 2000 + '.py', 'exec'), namespace)
+        try:
+            namespace[name](40)
+        except RuntimeError as exc:
+            value = _error(exc)
+        self.assertEqual(value['type'], 'RuntimeError')
+        self.assertEqual(value['message'], 'refused')
+        self.assertLessEqual(len(value['traceback'].encode()), 4096)
+        self.assertLessEqual(value['traceback'].count('File "'), 16)
+        self.assertIn('recursive_', value['traceback'])
+        self.assertNotIn('\ufffd', value['traceback'])
 
 
 class OwnedOperationTests(unittest.TestCase):

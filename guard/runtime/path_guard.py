@@ -215,8 +215,9 @@ class Guard:
     def current_present(self):
         path=Path('/sys/class/block')/Path(self.current).name
         try:
-            return (path.exists() and str(path.resolve())==self.current_sys and
-                    int((path.resolve().parent/'diskseq').read_text())==self.current_diskseq and
+            resolved=path.resolve(strict=True)
+            return (str(resolved)==self.current_sys and
+                    int((resolved.parent/'diskseq').read_text())==self.current_diskseq and
                     os.stat(self.current).st_rdev==self.current_dev)
         except (OSError,ValueError):
             return False
@@ -484,6 +485,8 @@ def run_owned(config, owner, taking_over=False):
             manager.event('failed',reason=str(exc),outcome='startup_notification_failed')
             raise
         events=Events()
+        info=manager.mapper.last_info
+        map_sys=os.path.realpath(f"/sys/dev/block/{info['major']}:{info['minor']}")
         schedule=Schedule(time.monotonic())
         pending=False
         completed=False
@@ -491,6 +494,10 @@ def run_owned(config, owner, taking_over=False):
             now=time.monotonic()
             if completed or schedule.due(now,pending) or manager.deadline is not None and now>=manager.deadline:
                 manager.step()
+                # Unrelated disks do not justify extra healthy DM/sysfs scans.
+                # During recovery every block event can announce the new path.
+                events.watch(() if manager.deadline is not None else
+                             (map_sys,str(Path(manager.current_sys).parent)))
                 schedule.completed(time.monotonic(),manager.deadline is not None)
                 pending=False
                 completed=False

@@ -122,6 +122,7 @@ class HostProfileTests(unittest.TestCase):
 
     def manager(self):
         manager = Mock(current='/dev/mock3', state='ready')
+        manager.mapper.last_info = {'major': 252, 'minor': 0}
         manager.check_map.return_value = 'enrolled active status'
         manager.current_present.return_value = True
         manager.current_active.return_value = True

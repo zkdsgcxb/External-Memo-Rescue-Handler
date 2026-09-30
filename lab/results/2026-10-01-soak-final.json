@@ -1,0 +1,5300 @@
+{
+  "schema": 1,
+  "source_report": "lab/work/soak-1001-052736-895957/report.json",
+  "comparison_report": "lab/work/soak-1001-050658-817605/report.json",
+  "passed": true,
+  "requested_cycles": 10,
+  "scope": "root service + aggregate data slice; process PSS/RSS separate from cgroup charges; settled checkpoints, not peaks",
+  "settle_seconds": 0.75,
+  "source_sha256": {
+    "lab/unified_guard_probe.py": "7201171e25080087caded7d3364469d4e65a8d02750ba1cdaa8fa20c3a54a1ec",
+    "lab/guest/unified_probe.py": "b3727e7ad51421103a2d2e2615612ad6261d7932c2e0e70dae2533053402d4d6",
+    "lab/guest/data_probe.py": "26adbb97a045adfed4f0dc4a44116ead84170c65e73550526bf70c09960422e4",
+    "lab/data_guard_probe.py": "390b56708658bf5b1777139e0406744deaba641fee08a2c1ebb7aa643c0bcad9",
+    "lab/host_boot_probe.py": "dbe403279ba4baea88733b1d4a1b1d700b7f33c353c82f0dd3b3f6c030ababab",
+    "ram-rescue-demo/src/rescue.py": "e71b91ff4d0fce653bd64fb9c742583648d89ed704bd0a285edd0f6ccc0765f0",
+    "guard/build.py": "5cc3a11d40da96ec12721690ba4111826e20ab79be13453532c653b66206635c",
+    "guard/data.py": "42ecd64c8918bfe2542dcd400b6cd9e27aed8eefd29a268860d12099fce6c9cc",
+    "guard/efi_mount.py": "8f89422897a3b1bb6379e5e035210f13a9923732adb3906659e94997d4a9cd26",
+    "guard/enroll.py": "71e23451af931b7d9ca034160f68a7e6c0cde4143a26e67b2d05fb372eb12f9d",
+    "guard/host_files.py": "16466bb5327e3f1a0ffdda7d0c97246f05e5d665606c640ea7d9880ab4693497",
+    "guard/install.py": "152e8208b4e191121fa88349eed4e402099cfff5fab47e66f6cfec023a4219ac",
+    "guard/manage.py": "9bb1cee7096634d4d70efd4b3b9d18c384a08617f6c1c992b448ca1f702176e1",
+    "guard/mounts.py": "0d1a9082338d827815c05c797abb7ea2b8ba9b12b93bb9f758b88c6220b8d4be",
+    "guard/runtime/admission.py": "e2d3c9d5cb89c0538bc4d69bf154b247b42ab568c06d74688fc7fa3e9f194dbc",
+    "guard/runtime/boot.py": "1b6848a8d7a42eabb70bf60d5f4a0326d76aa496725fd02e710b02efa06d7044",
+    "guard/runtime/data_guard.py": "82c9dd23b2abfc2cb9dead8eef0c58c18a3208646cc1260ffd6c8c6cd50f45d1",
+    "guard/runtime/data_recovery.py": "59e8fb51c9136f56824f520a20c17c74a4d39c65113cc28fa7dcbe5270260c91",
+    "guard/runtime/dm_monitor.py": "1cbae0c2ef907a8e870c714e6cc229b003d5550f810e607c6c7b4e081f1eda1a",
+    "guard/runtime/guard_state.py": "30290869d36485b7e5face65faa0120a3b06e6bb47c8351f52befc13a20f99ac",
+    "guard/runtime/linux_abi.py": "71bcd973c15a517038a30a3750a8219a54d1c347724b6ab3365d6b0ecd989711",
+    "guard/runtime/maintain.py": "c5bc45eedc45f9cd6c2f9ac5376f4a5e909c78ae610945694bd23862c03eb029",
+    "guard/runtime/owned_operation.py": "1c3febc34cd036d5e921ab7f49bf11eab9b85ee1085c1a7c21764d7270a4daf1",
+    "guard/runtime/path_guard.py": "41c4a397818cf31d4aee87ce465c96c5c8638599d267de1cf1254f3e49709403",
+    "guard/runtime/registry.py": "8b1b0b50578d4d9a0ced87ceb62c3404b933788926f81e04b5dea121380f3c94",
+    "guard/integration/58-ram-rescue-guard.rules": "433c883e46fc92216d81b41dd1fc2fc7e8df4380266092613efdbb2666e1be0c",
+    "guard/integration/init-bottom": "b201c060684471ef22d04800a74c10b12a9457e398e106bd091d7b78f7ab5c55",
+    "guard/integration/initramfs-hook": "20cd37a63cbafde69e0c5e0654e884c54340517b7c8eecc0d7152c5ec30ee93d",
+    "guard/integration/local-top": "bf41c4da8f8b1fa5eac7ce4096c9f98a863e608515ddece940f62f776f05cd0d",
+    "guard/integration/lvmlocal.conf": "ff4e3848b3c5033b9a8a79b5349701b676a1fd1b9e51941460ef2a2945cb7ded",
+    "guard/integration/manual-rescue-guard.conf": "0455e5a22543f595800df0a9caaf6b684f0363d3f2e05dbb1afb30f2f1bdfde0",
+    "guard/integration/prepare-shared-rescue": "9e18e3d302325eb1bfa26a43506fd431f121e9ad8b7e7939ec159c6eb53a48b6",
+    "guard/integration/ram-rescue-guard.service": "524faa4661911265ebf8cb96ba216c2bd6027f707e307f39ea10521fc6765e61",
+    "lab/soak_guard_probe.py": "171f99716998ad26967f1d05929b03d8ee4ec8b6837017e8541e27ab871ea84e",
+    "lab/guest/soak_probe.py": "a21d241b00cd98fb4d650125d8dd392988497502b2ecd397364e8d5ce5fc3e7f",
+    "lab/performance_probe.py": "914682ede40768ba7c78ce7cfdde0850abe26dd0e4420195c2d221d09b2cbddd",
+    "lab/guest/performance_probe.py": "56f1594fed295c353f033b22379b8449d7c5b4847f9b5750bda7b8cef4f3c95f",
+    "lab/measure_guard.py": "de0f9b7958bffdbc8f0989f56d6b7f17f973efa94c86293ad21c86b746585346"
+  },
+  "runtime_payload_sha256": {
+    "admission.py": "e2d3c9d5cb89c0538bc4d69bf154b247b42ab568c06d74688fc7fa3e9f194dbc",
+    "boot.py": "1b6848a8d7a42eabb70bf60d5f4a0326d76aa496725fd02e710b02efa06d7044",
+    "data_guard.py": "82c9dd23b2abfc2cb9dead8eef0c58c18a3208646cc1260ffd6c8c6cd50f45d1",
+    "data_recovery.py": "59e8fb51c9136f56824f520a20c17c74a4d39c65113cc28fa7dcbe5270260c91",
+    "dm_monitor.py": "1cbae0c2ef907a8e870c714e6cc229b003d5550f810e607c6c7b4e081f1eda1a",
+    "guard_state.py": "30290869d36485b7e5face65faa0120a3b06e6bb47c8351f52befc13a20f99ac",
+    "linux_abi.py": "71bcd973c15a517038a30a3750a8219a54d1c347724b6ab3365d6b0ecd989711",
+    "maintain.py": "c5bc45eedc45f9cd6c2f9ac5376f4a5e909c78ae610945694bd23862c03eb029",
+    "owned_operation.py": "1c3febc34cd036d5e921ab7f49bf11eab9b85ee1085c1a7c21764d7270a4daf1",
+    "path_guard.py": "41c4a397818cf31d4aee87ce465c96c5c8638599d267de1cf1254f3e49709403",
+    "registry.py": "8b1b0b50578d4d9a0ced87ceb62c3404b933788926f81e04b5dea121380f3c94",
+    "rescue.py": "e71b91ff4d0fce653bd64fb9c742583648d89ed704bd0a285edd0f6ccc0765f0"
+  },
+  "changed_runtime_files": {
+    "owned_operation.py": {
+      "before": "d06d8da0d7203e52fbb761d704aab882c630a53b4676dd9050fe5933a0fa9d90",
+      "after": "1c3febc34cd036d5e921ab7f49bf11eab9b85ee1085c1a7c21764d7270a4daf1"
+    }
+  },
+  "checkpoints": [
+    {
+      "cycle": 0,
+      "memory_current_bytes": 46612480,
+      "cpu_usage_usec": 317113,
+      "cpu_throttled_usec": 1135641,
+      "process_pids": [
+        480,
+        1079,
+        1102
+      ],
+      "Rss_bytes": 64708608,
+      "Pss_bytes": 39729152,
+      "Swap_bytes": 0,
+      "SwapPss_bytes": 0,
+      "memory_stat_anon_bytes": 30412800,
+      "memory_stat_file_bytes": 1159168,
+      "memory_stat_kernel_bytes": 14098432,
+      "memory_stat_shmem_bytes": 73728,
+      "memory_stat_slab_bytes": 13773768,
+      "memory_stat_pagetables_bytes": 303104,
+      "memory_stat_kernel_stack_bytes": 0,
+      "controllers": {
+        "root": {
+          "fd_count": 7,
+          "threads": 1,
+          "mappings": {
+            "groups_bytes": {
+              "file": {
+                "mapping_count": 100,
+                "Size": 19148800,
+                "Rss": 13152256,
+                "Pss": 4876288,
+                "Anonymous": 1826816,
+                "Private_Dirty": 1892352
+              },
+              "anonymous": {
+                "mapping_count": 9,
+                "Size": 5980160,
+                "Rss": 4411392,
+                "Pss": 4411392,
+                "Anonymous": 4411392,
+                "Private_Dirty": 4411392
+              },
+              "heap": {
+                "mapping_count": 1,
+                "Size": 3706880,
+                "Rss": 3694592,
+                "Pss": 3694592,
+                "Anonymous": 3694592,
+                "Private_Dirty": 3694592
+              },
+              "special": {
+                "mapping_count": 4,
+                "Size": 36864,
+                "Rss": 8192,
+                "Pss": 0,
+                "Anonymous": 0,
+                "Private_Dirty": 0
+              },
+              "stack": {
+                "mapping_count": 1,
+                "Size": 135168,
+                "Rss": 77824,
+                "Pss": 77824,
+                "Anonymous": 77824,
+                "Private_Dirty": 77824
+              }
+            },
+            "mapping_count": 115,
+            "largest_resident_anonymous_regions": [
+              {
+                "kind": "anonymous",
+                "name": "",
+                "permissions": "rw-p",
+                "Size": 4620288,
+                "Rss": 4091904,
+                "Pss": 4091904,
+                "Anonymous": 4091904,
+                "Private_Dirty": 4091904
+              },
+              {
+                "kind": "heap",
+                "name": "[heap]",
+                "permissions": "rw-p",
+                "Size": 3706880,
+                "Rss": 3694592,
+                "Pss": 3694592,
+                "Anonymous": 3694592,
+                "Private_Dirty": 3694592
+              },
+              {
+                "kind": "anonymous",
+                "name": "",
+                "permissions": "rw-p",
+                "Size": 208896,
+                "Rss": 208896,
+                "Pss": 208896,
+                "Anonymous": 208896,
+                "Private_Dirty": 208896
+              },
+              {
+                "kind": "stack",
+                "name": "[stack]",
+                "permissions": "rw-p",
+                "Size": 135168,
+                "Rss": 77824,
+                "Pss": 77824,
+                "Anonymous": 77824,
+                "Private_Dirty": 77824
+              },
+              {
+                "kind": "anonymous",
+                "name": "",
+                "permissions": "rw-p",
+                "Size": 1048576,
+                "Rss": 57344,
+                "Pss": 57344,
+                "Anonymous": 57344,
+                "Private_Dirty": 57344
+              },
+              {
+                "kind": "anonymous",
+                "name": "",
+                "permissions": "rw-p",
+                "Size": 53248,
+                "Rss": 24576,
+                "Pss": 24576,
+                "Anonymous": 24576,
+                "Private_Dirty": 24576
+              },
+              {
+                "kind": "anonymous",
+                "name": "",
+                "permissions": "rw-p",
+                "Size": 12288,
+                "Rss": 12288,
+                "Pss": 12288,
+                "Anonymous": 12288,
+                "Private_Dirty": 12288
+              },
+              {
+                "kind": "anonymous",
+                "name": "",
+                "permissions": "rw-p",
+                "Size": 8192,
+                "Rss": 8192,
+                "Pss": 8192,
+                "Anonymous": 8192,
+                "Private_Dirty": 8192
+              }
+            ]
+          }
+        },
+        "rr-data-vm-ext4": {
+          "fd_count": 7,
+          "threads": 1,
+          "mappings": {
+            "groups_bytes": {
+              "file": {
+                "mapping_count": 100,
+                "Size": 19148800,
+                "Rss": 13225984,
+                "Pss": 4884480,
+                "Anonymous": 1830912,
+                "Private_Dirty": 1871872
+              },
+              "anonymous": {
+                "mapping_count": 9,
+                "Size": 5980160,
+                "Rss": 4722688,
+                "Pss": 4722688,
+                "Anonymous": 4722688,
+                "Private_Dirty": 4722688
+              },
+              "heap": {
+                "mapping_count": 1,
+                "Size": 3624960,
+                "Rss": 3567616,
+                "Pss": 3567616,
+                "Anonymous": 3567616,
+                "Private_Dirty": 3567616
+              },
+              "special": {
+                "mapping_count": 4,
+                "Size": 36864,
+                "Rss": 8192,
+                "Pss": 0,
+                "Anonymous": 0,
+                "Private_Dirty": 0
+              },
+              "stack": {
+                "mapping_count": 1,
+                "Size": 135168,
+                "Rss": 81920,
+                "Pss": 81920,
+                "Anonymous": 81920,
+                "Private_Dirty": 81920
+              }
+            },
+            "mapping_count": 115,
+            "largest_resident_anonymous_regions": [
+              {
+                "kind": "heap",
+                "name": "[heap]",
+                "permissions": "rw-p",
+                "Size": 3624960,
+                "Rss": 3567616,
+                "Pss": 3567616,
+                "Anonymous": 3567616,
+                "Private_Dirty": 3567616
+              },
+              {
+                "kind": "anonymous",
+                "name": "",
+                "permissions": "rw-p",
+                "Size": 3571712,
+                "Rss": 3117056,
+                "Pss": 3117056,
+                "Anonymous": 3117056,
+                "Private_Dirty": 3117056
+              },
+              {
+                "kind": "anonymous",
+                "name": "",
+                "permissions": "rw-p",
+                "Size": 1257472,
+                "Rss": 1236992,
+                "Pss": 1236992,
+                "Anonymous": 1236992,
+                "Private_Dirty": 1236992
+              },
+              {
+                "kind": "anonymous",
+                "name": "",
+                "permissions": "rw-p",
+                "Size": 1048576,
+                "Rss": 315392,
+                "Pss": 315392,
+                "Anonymous": 315392,
+                "Private_Dirty": 315392
+              },
+              {
+                "kind": "stack",
+                "name": "[stack]",
+                "permissions": "rw-p",
+                "Size": 135168,
+                "Rss": 81920,
+                "Pss": 81920,
+                "Anonymous": 81920,
+                "Private_Dirty": 81920
+              },
+              {
+                "kind": "anonymous",
+                "name": "",
+                "permissions": "rw-p",
+                "Size": 53248,
+                "Rss": 24576,
+                "Pss": 24576,
+                "Anonymous": 24576,
+                "Private_Dirty": 24576
+              },
+              {
+                "kind": "anonymous",
+                "name": "",
+                "permissions": "rw-p",
+                "Size": 12288,
+                "Rss": 12288,
+                "Pss": 12288,
+                "Anonymous": 12288,
+                "Private_Dirty": 12288
+              },
+              {
+                "kind": "anonymous",
+                "name": "",
+                "permissions": "rw-p",
+                "Size": 8192,
+                "Rss": 8192,
+                "Pss": 8192,
+                "Anonymous": 8192,
+                "Private_Dirty": 8192
+              }
+            ]
+          }
+        },
+        "rr-data-vm-vfat": {
+          "fd_count": 7,
+          "threads": 1,
+          "mappings": {
+            "groups_bytes": {
+              "file": {
+                "mapping_count": 100,
+                "Size": 19148800,
+                "Rss": 13381632,
+                "Pss": 4966400,
+                "Anonymous": 1830912,
+                "Private_Dirty": 1900544
+              },
+              "anonymous": {
+                "mapping_count": 10,
+                "Size": 5980160,
+                "Rss": 4722688,
+                "Pss": 4722688,
+                "Anonymous": 4722688,
+                "Private_Dirty": 4722688
+              },
+              "heap": {
+                "mapping_count": 1,
+                "Size": 3624960,
+                "Rss": 3567616,
+                "Pss": 3567616,
+                "Anonymous": 3567616,
+                "Private_Dirty": 3567616
+              },
+              "special": {
+                "mapping_count": 4,
+                "Size": 36864,
+                "Rss": 8192,
+                "Pss": 0,
+                "Anonymous": 0,
+                "Private_Dirty": 0
+              },
+              "stack": {
+                "mapping_count": 1,
+                "Size": 135168,
+                "Rss": 77824,
+                "Pss": 77824,
+                "Anonymous": 77824,
+                "Private_Dirty": 77824
+              }
+            },
+            "mapping_count": 116,
+            "largest_resident_anonymous_regions": [
+              {
+                "kind": "heap",
+                "name": "[heap]",
+                "permissions": "rw-p",
+                "Size": 3624960,
+                "Rss": 3567616,
+                "Pss": 3567616,
+                "Anonymous": 3567616,
+                "Private_Dirty": 3567616
+              },
+              {
+                "kind": "anonymous",
+                "name": "",
+                "permissions": "rw-p",
+                "Size": 2523136,
+                "Rss": 2101248,
+                "Pss": 2101248,
+                "Anonymous": 2101248,
+                "Private_Dirty": 2101248
+              },
+              {
+                "kind": "anonymous",
+                "name": "",
+                "permissions": "rw-p",
+                "Size": 1257472,
+                "Rss": 1236992,
+                "Pss": 1236992,
+                "Anonymous": 1236992,
+                "Private_Dirty": 1236992
+              },
+              {
+                "kind": "anonymous",
+                "name": "",
+                "permissions": "rw-p",
+                "Size": 1048576,
+                "Rss": 1032192,
+                "Pss": 1032192,
+                "Anonymous": 1032192,
+                "Private_Dirty": 1032192
+              },
+              {
+                "kind": "anonymous",
+                "name": "",
+                "permissions": "rw-p",
+                "Size": 1048576,
+                "Rss": 299008,
+                "Pss": 299008,
+                "Anonymous": 299008,
+                "Private_Dirty": 299008
+              },
+              {
+                "kind": "stack",
+                "name": "[stack]",
+                "permissions": "rw-p",
+                "Size": 135168,
+                "Rss": 77824,
+                "Pss": 77824,
+                "Anonymous": 77824,
+                "Private_Dirty": 77824
+              },
+              {
+                "kind": "anonymous",
+                "name": "",
+                "permissions": "rw-p",
+                "Size": 53248,
+                "Rss": 24576,
+                "Pss": 24576,
+                "Anonymous": 24576,
+                "Private_Dirty": 24576
+              },
+              {
+                "kind": "anonymous",
+                "name": "",
+                "permissions": "rw-p",
+                "Size": 12288,
+                "Rss": 12288,
+                "Pss": 12288,
+                "Anonymous": 12288,
+                "Private_Dirty": 12288
+              }
+            ]
+          }
+        }
+      },
+      "checkpoint_guest_monotonic": 11.06040324
+    },
+    {
+      "cycle": 1,
+      "memory_current_bytes": 47251456,
+      "cpu_usage_usec": 476991,
+      "cpu_throttled_usec": 1397876,
+      "process_pids": [
+        480,
+        1079,
+        1102
+      ],
+      "Rss_bytes": 65282048,
+      "Pss_bytes": 40292352,
+      "Swap_bytes": 0,
+      "SwapPss_bytes": 0,
+      "memory_stat_anon_bytes": 30859264,
+      "memory_stat_file_bytes": 2318336,
+      "memory_stat_kernel_bytes": 13434880,
+      "memory_stat_shmem_bytes": 73728,
+      "memory_stat_slab_bytes": 13066632,
+      "memory_stat_pagetables_bytes": 356352,
+      "memory_stat_kernel_stack_bytes": 0,
+      "controllers": {
+        "root": {
+          "fd_count": 7,
+          "threads": 1,
+          "mappings": {
+            "groups_bytes": {
+              "file": {
+                "mapping_count": 100,
+                "Size": 19148800,
+                "Rss": 13217792,
+                "Pss": 4881408,
+                "Anonymous": 1830912,
+                "Private_Dirty": 1900544
+              },
+              "anonymous": {
+                "mapping_count": 17,
+                "Size": 156983296,
+                "Rss": 4587520,
+                "Pss": 4587520,
+                "Anonymous": 4587520,
+                "Private_Dirty": 4587520
+              },
+              "heap": {
+                "mapping_count": 1,
+                "Size": 3706880,
+                "Rss": 3694592,
+                "Pss": 3694592,
+                "Anonymous": 3694592,
+                "Private_Dirty": 3694592
+              },
+              "special": {
+                "mapping_count": 4,
+                "Size": 36864,
+                "Rss": 8192,
+                "Pss": 0,
+                "Anonymous": 0,
+                "Private_Dirty": 0
+              },
+              "stack": {
+                "mapping_count": 1,
+                "Size": 135168,
+                "Rss": 77824,
+                "Pss": 77824,
+                "Anonymous": 77824,
+                "Private_Dirty": 77824
+              }
+            },
+            "mapping_count": 123,
+            "largest_resident_anonymous_regions": [
+              {
+                "kind": "anonymous",
+                "name": "",
+                "permissions": "rw-p",
+                "Size": 4620288,
+                "Rss": 4091904,
+                "Pss": 4091904,
+                "Anonymous": 4091904,
+                "Private_Dirty": 4091904
+              },
+              {
+                "kind": "heap",
+                "name": "[heap]",
+                "permissions": "rw-p",
+                "Size": 3706880,
+                "Rss": 3694592,
+                "Pss": 3694592,
+                "Anonymous": 3694592,
+                "Private_Dirty": 3694592
+              },
+              {
+                "kind": "anonymous",
+                "name": "",
+                "permissions": "rw-p",
+                "Size": 208896,
+                "Rss": 208896,
+                "Pss": 208896,
+                "Anonymous": 208896,
+                "Private_Dirty": 208896
+              },
+              {
+                "kind": "anonymous",
+                "name": "",
+                "permissions": "rw-p",
+                "Size": 1048576,
+                "Rss": 81920,
+                "Pss": 81920,
+                "Anonymous": 81920,
+                "Private_Dirty": 81920
+              },
+              {
+                "kind": "stack",
+                "name": "[stack]",
+                "permissions": "rw-p",
+                "Size": 135168,
+                "Rss": 77824,
+                "Pss": 77824,
+                "Anonymous": 77824,
+                "Private_Dirty": 77824
+              },
+              {
+                "kind": "anonymous",
+                "name": "",
+                "permissions": "rw-p",
+                "Size": 135168,
+                "Rss": 65536,
+                "Pss": 65536,
+                "Anonymous": 65536,
+                "Private_Dirty": 65536
+              },
+              {
+                "kind": "anonymous",
+                "name": "",
+                "permissions": "rw-p",
+                "Size": 135168,
+                "Rss": 61440,
+                "Pss": 61440,
+                "Anonymous": 61440,
+                "Private_Dirty": 61440
+              },
+              {
+                "kind": "anonymous",
+                "name": "",
+                "permissions": "rw-p",
+                "Size": 53248,
+                "Rss": 24576,
+                "Pss": 24576,
+                "Anonymous": 24576,
+                "Private_Dirty": 24576
+              }
+            ]
+          }
+        },
+        "rr-data-vm-ext4": {
+          "fd_count": 7,
+          "threads": 1,
+          "mappings": {
+            "groups_bytes": {
+              "file": {
+                "mapping_count": 100,
+                "Size": 19148800,
+                "Rss": 13291520,
+                "Pss": 4862976,
+                "Anonymous": 1830912,
+                "Private_Dirty": 1847296
+              },
+              "anonymous": {
+                "mapping_count": 17,
+                "Size": 156983296,
+                "Rss": 4853760,
+                "Pss": 4853760,
+                "Anonymous": 4853760,
+                "Private_Dirty": 4853760
+              },
+              "heap": {
+                "mapping_count": 1,
+                "Size": 3624960,
+                "Rss": 3567616,
+                "Pss": 3567616,
+                "Anonymous": 3567616,
+                "Private_Dirty": 3567616
+              },
+              "special": {
+                "mapping_count": 4,
+                "Size": 36864,
+                "Rss": 8192,
+                "Pss": 0,
+                "Anonymous": 0,
+                "Private_Dirty": 0
+              },
+              "stack": {
+                "mapping_count": 1,
+                "Size": 135168,
+                "Rss": 81920,
+                "Pss": 81920,
+                "Anonymous": 81920,
+                "Private_Dirty": 81920
+              }
+            },
+            "mapping_count": 123,
+            "largest_resident_anonymous_regions": [
+              {
+                "kind": "heap",
+                "name": "[heap]",
+                "permissions": "rw-p",
+                "Size": 3624960,
+                "Rss": 3567616,
+                "Pss": 3567616,
+                "Anonymous": 3567616,
+                "Private_Dirty": 3567616
+              },
+              {
+                "kind": "anonymous",
+                "name": "",
+                "permissions": "rw-p",
+                "Size": 3571712,
+                "Rss": 3117056,
+                "Pss": 3117056,
+                "Anonymous": 3117056,
+                "Private_Dirty": 3117056
+              },
+              {
+                "kind": "anonymous",
+                "name": "",
+                "permissions": "rw-p",
+                "Size": 1257472,
+                "Rss": 1236992,
+                "Pss": 1236992,
+                "Anonymous": 1236992,
+                "Private_Dirty": 1236992
+              },
+              {
+                "kind": "anonymous",
+                "name": "",
+                "permissions": "rw-p",
+                "Size": 1048576,
+                "Rss": 315392,
+                "Pss": 315392,
+                "Anonymous": 315392,
+                "Private_Dirty": 315392
+              },
+              {
+                "kind": "stack",
+                "name": "[stack]",
+                "permissions": "rw-p",
+                "Size": 135168,
+                "Rss": 81920,
+                "Pss": 81920,
+                "Anonymous": 81920,
+                "Private_Dirty": 81920
+              },
+              {
+                "kind": "anonymous",
+                "name": "",
+                "permissions": "rw-p",
+                "Size": 135168,
+                "Rss": 69632,
+                "Pss": 69632,
+                "Anonymous": 69632,
+                "Private_Dirty": 69632
+              },
+              {
+                "kind": "anonymous",
+                "name": "",
+                "permissions": "rw-p",
+                "Size": 135168,
+                "Rss": 36864,
+                "Pss": 36864,
+                "Anonymous": 36864,
+                "Private_Dirty": 36864
+              },
+              {
+                "kind": "anonymous",
+                "name": "",
+                "permissions": "rw-p",
+                "Size": 53248,
+                "Rss": 24576,
+                "Pss": 24576,
+                "Anonymous": 24576,
+                "Private_Dirty": 24576
+              }
+            ]
+          }
+        },
+        "rr-data-vm-vfat": {
+          "fd_count": 7,
+          "threads": 1,
+          "mappings": {
+            "groups_bytes": {
+              "file": {
+                "mapping_count": 100,
+                "Size": 19148800,
+                "Rss": 13381632,
+                "Pss": 5102592,
+                "Anonymous": 1830912,
+                "Private_Dirty": 2154496
+              },
+              "anonymous": {
+                "mapping_count": 18,
+                "Size": 156983296,
+                "Rss": 4857856,
+                "Pss": 4857856,
+                "Anonymous": 4857856,
+                "Private_Dirty": 4857856
+              },
+              "heap": {
+                "mapping_count": 1,
+                "Size": 3624960,
+                "Rss": 3567616,
+                "Pss": 3567616,
+                "Anonymous": 3567616,
+                "Private_Dirty": 3567616
+              },
+              "special": {
+                "mapping_count": 4,
+                "Size": 36864,
+                "Rss": 8192,
+                "Pss": 0,
+                "Anonymous": 0,
+                "Private_Dirty": 0
+              },
+              "stack": {
+                "mapping_count": 1,
+                "Size": 135168,
+                "Rss": 77824,
+                "Pss": 77824,
+                "Anonymous": 77824,
+                "Private_Dirty": 77824
+              }
+            },
+            "mapping_count": 124,
+            "largest_resident_anonymous_regions": [
+              {
+                "kind": "heap",
+                "name": "[heap]",
+                "permissions": "rw-p",
+                "Size": 3624960,
+                "Rss": 3567616,
+                "Pss": 3567616,
+                "Anonymous": 3567616,
+                "Private_Dirty": 3567616
+              },
+              {
+                "kind": "anonymous",
+                "name": "",
+                "permissions": "rw-p",
+                "Size": 2523136,
+                "Rss": 2101248,
+                "Pss": 2101248,
+                "Anonymous": 2101248,
+                "Private_Dirty": 2101248
+              },
+              {
+                "kind": "anonymous",
+                "name": "",
+                "permissions": "rw-p",
+                "Size": 1257472,
+                "Rss": 1236992,
+                "Pss": 1236992,
+                "Anonymous": 1236992,
+                "Private_Dirty": 1236992
+              },
+              {
+                "kind": "anonymous",
+                "name": "",
+                "permissions": "rw-p",
+                "Size": 1048576,
+                "Rss": 1032192,
+                "Pss": 1032192,
+                "Anonymous": 1032192,
+                "Private_Dirty": 1032192
+              },
+              {
+                "kind": "anonymous",
+                "name": "",
+                "permissions": "rw-p",
+                "Size": 1048576,
+                "Rss": 299008,
+                "Pss": 299008,
+                "Anonymous": 299008,
+                "Private_Dirty": 299008
+              },
+              {
+                "kind": "stack",
+                "name": "[stack]",
+                "permissions": "rw-p",
+                "Size": 135168,
+                "Rss": 77824,
+                "Pss": 77824,
+                "Anonymous": 77824,
+                "Private_Dirty": 77824
+              },
+              {
+                "kind": "anonymous",
+                "name": "",
+                "permissions": "rw-p",
+                "Size": 135168,
+                "Rss": 69632,
+                "Pss": 69632,
+                "Anonymous": 69632,
+                "Private_Dirty": 69632
+              },
+              {
+                "kind": "anonymous",
+                "name": "",
+                "permissions": "rw-p",
+                "Size": 135168,
+                "Rss": 40960,
+                "Pss": 40960,
+                "Anonymous": 40960,
+                "Private_Dirty": 40960
+              }
+            ]
+          }
+        }
+      },
+      "checkpoint_guest_monotonic": 15.622622552
+    },
+    {
+      "cycle": 2,
+      "memory_current_bytes": 47149056,
+      "cpu_usage_usec": 685001,
+      "cpu_throttled_usec": 1796288,
+      "process_pids": [
+        480,
+        1079,
+        1102
+      ],
+      "Rss_bytes": 65363968,
+      "Pss_bytes": 40346624,
+      "Swap_bytes": 0,
+      "SwapPss_bytes": 0,
+      "memory_stat_anon_bytes": 30941184,
+      "memory_stat_file_bytes": 2330624,
+      "memory_stat_kernel_bytes": 13418496,
+      "memory_stat_shmem_bytes": 86016,
+      "memory_stat_slab_bytes": 13041744,
+      "memory_stat_pagetables_bytes": 356352,
+      "memory_stat_kernel_stack_bytes": 0,
+      "controllers": {
+        "root": {
+          "fd_count": 7,
+          "threads": 1,
+          "mappings": {
+            "groups_bytes": {
+              "file": {
+                "mapping_count": 100,
+                "Size": 19148800,
+                "Rss": 13217792,
+                "Pss": 4825088,
+                "Anonymous": 1830912,
+                "Private_Dirty": 1847296
+              },
+              "anonymous": {
+                "mapping_count": 17,
+                "Size": 156983296,
+                "Rss": 4599808,
+                "Pss": 4599808,
+                "Anonymous": 4599808,
+                "Private_Dirty": 4599808
+              },
+              "heap": {
+                "mapping_count": 1,
+                "Size": 3706880,
+                "Rss": 3694592,
+                "Pss": 3694592,
+                "Anonymous": 3694592,
+                "Private_Dirty": 3694592
+              },
+              "special": {
+                "mapping_count": 4,
+                "Size": 36864,
+                "Rss": 8192,
+                "Pss": 0,
+                "Anonymous": 0,
+                "Private_Dirty": 0
+              },
+              "stack": {
+                "mapping_count": 1,
+                "Size": 135168,
+                "Rss": 77824,
+                "Pss": 77824,
+                "Anonymous": 77824,
+                "Private_Dirty": 77824
+              }
+            },
+            "mapping_count": 123,
+            "largest_resident_anonymous_regions": [
+              {
+                "kind": "anonymous",
+                "name": "",
+                "permissions": "rw-p",
+                "Size": 4620288,
+                "Rss": 4091904,
+                "Pss": 4091904,
+                "Anonymous": 4091904,
+                "Private_Dirty": 4091904
+              },
+              {
+                "kind": "heap",
+                "name": "[heap]",
+                "permissions": "rw-p",
+                "Size": 3706880,
+                "Rss": 3694592,
+                "Pss": 3694592,
+                "Anonymous": 3694592,
+                "Private_Dirty": 3694592
+              },
+              {
+                "kind": "anonymous",
+                "name": "",
+                "permissions": "rw-p",
+                "Size": 208896,
+                "Rss": 208896,
+                "Pss": 208896,
+                "Anonymous": 208896,
+                "Private_Dirty": 208896
+              },
+              {
+                "kind": "anonymous",
+                "name": "",
+                "permissions": "rw-p",
+                "Size": 1048576,
+                "Rss": 81920,
+                "Pss": 81920,
+                "Anonymous": 81920,
+                "Private_Dirty": 81920
+              },
+              {
+                "kind": "anonymous",
+                "name": "",
+                "permissions": "rw-p",
+                "Size": 135168,
+                "Rss": 77824,
+                "Pss": 77824,
+                "Anonymous": 77824,
+                "Private_Dirty": 77824
+              },
+              {
+                "kind": "stack",
+                "name": "[stack]",
+                "permissions": "rw-p",
+                "Size": 135168,
+                "Rss": 77824,
+                "Pss": 77824,
+                "Anonymous": 77824,
+                "Private_Dirty": 77824
+              },
+              {
+                "kind": "anonymous",
+                "name": "",
+                "permissions": "rw-p",
+                "Size": 135168,
+                "Rss": 61440,
+                "Pss": 61440,
+                "Anonymous": 61440,
+                "Private_Dirty": 61440
+              },
+              {
+                "kind": "anonymous",
+                "name": "",
+                "permissions": "rw-p",
+                "Size": 53248,
+                "Rss": 24576,
+                "Pss": 24576,
+                "Anonymous": 24576,
+                "Private_Dirty": 24576
+              }
+            ]
+          }
+        },
+        "rr-data-vm-ext4": {
+          "fd_count": 7,
+          "threads": 1,
+          "mappings": {
+            "groups_bytes": {
+              "file": {
+                "mapping_count": 100,
+                "Size": 19148800,
+                "Rss": 13291520,
+                "Pss": 4856832,
+                "Anonymous": 1830912,
+                "Private_Dirty": 1851392
+              },
+              "anonymous": {
+                "mapping_count": 17,
+                "Size": 156983296,
+                "Rss": 4890624,
+                "Pss": 4890624,
+                "Anonymous": 4890624,
+                "Private_Dirty": 4890624
+              },
+              "heap": {
+                "mapping_count": 1,
+                "Size": 3624960,
+                "Rss": 3567616,
+                "Pss": 3567616,
+                "Anonymous": 3567616,
+                "Private_Dirty": 3567616
+              },
+              "special": {
+                "mapping_count": 4,
+                "Size": 36864,
+                "Rss": 8192,
+                "Pss": 0,
+                "Anonymous": 0,
+                "Private_Dirty": 0
+              },
+              "stack": {
+                "mapping_count": 1,
+                "Size": 135168,
+                "Rss": 81920,
+                "Pss": 81920,
+                "Anonymous": 81920,
+                "Private_Dirty": 81920
+              }
+            },
+            "mapping_count": 123,
+            "largest_resident_anonymous_regions": [
+              {
+                "kind": "heap",
+                "name": "[heap]",
+                "permissions": "rw-p",
+                "Size": 3624960,
+                "Rss": 3567616,
+                "Pss": 3567616,
+                "Anonymous": 3567616,
+                "Private_Dirty": 3567616
+              },
+              {
+                "kind": "anonymous",
+                "name": "",
+                "permissions": "rw-p",
+                "Size": 3571712,
+                "Rss": 3117056,
+                "Pss": 3117056,
+                "Anonymous": 3117056,
+                "Private_Dirty": 3117056
+              },
+              {
+                "kind": "anonymous",
+                "name": "",
+                "permissions": "rw-p",
+                "Size": 1257472,
+                "Rss": 1236992,
+                "Pss": 1236992,
+                "Anonymous": 1236992,
+                "Private_Dirty": 1236992
+              },
+              {
+                "kind": "anonymous",
+                "name": "",
+                "permissions": "rw-p",
+                "Size": 1048576,
+                "Rss": 315392,
+                "Pss": 315392,
+                "Anonymous": 315392,
+                "Private_Dirty": 315392
+              },
+              {
+                "kind": "stack",
+                "name": "[stack]",
+                "permissions": "rw-p",
+                "Size": 135168,
+                "Rss": 81920,
+                "Pss": 81920,
+                "Anonymous": 81920,
+                "Private_Dirty": 81920
+              },
+              {
+                "kind": "anonymous",
+                "name": "",
+                "permissions": "rw-p",
+                "Size": 135168,
+                "Rss": 73728,
+                "Pss": 73728,
+                "Anonymous": 73728,
+                "Private_Dirty": 73728
+              },
+              {
+                "kind": "anonymous",
+                "name": "",
+                "permissions": "rw-p",
+                "Size": 135168,
+                "Rss": 69632,
+                "Pss": 69632,
+                "Anonymous": 69632,
+                "Private_Dirty": 69632
+              },
+              {
+                "kind": "anonymous",
+                "name": "",
+                "permissions": "rw-p",
+                "Size": 53248,
+                "Rss": 24576,
+                "Pss": 24576,
+                "Anonymous": 24576,
+                "Private_Dirty": 24576
+              }
+            ]
+          }
+        },
+        "rr-data-vm-vfat": {
+          "fd_count": 7,
+          "threads": 1,
+          "mappings": {
+            "groups_bytes": {
+              "file": {
+                "mapping_count": 100,
+                "Size": 19148800,
+                "Rss": 13381632,
+                "Pss": 5136384,
+                "Anonymous": 1830912,
+                "Private_Dirty": 2220032
+              },
+              "anonymous": {
+                "mapping_count": 18,
+                "Size": 156983296,
+                "Rss": 4890624,
+                "Pss": 4890624,
+                "Anonymous": 4890624,
+                "Private_Dirty": 4890624
+              },
+              "heap": {
+                "mapping_count": 1,
+                "Size": 3624960,
+                "Rss": 3567616,
+                "Pss": 3567616,
+                "Anonymous": 3567616,
+                "Private_Dirty": 3567616
+              },
+              "special": {
+                "mapping_count": 4,
+                "Size": 36864,
+                "Rss": 8192,
+                "Pss": 0,
+                "Anonymous": 0,
+                "Private_Dirty": 0
+              },
+              "stack": {
+                "mapping_count": 1,
+                "Size": 135168,
+                "Rss": 77824,
+                "Pss": 77824,
+                "Anonymous": 77824,
+                "Private_Dirty": 77824
+              }
+            },
+            "mapping_count": 124,
+            "largest_resident_anonymous_regions": [
+              {
+                "kind": "heap",
+                "name": "[heap]",
+                "permissions": "rw-p",
+                "Size": 3624960,
+                "Rss": 3567616,
+                "Pss": 3567616,
+                "Anonymous": 3567616,
+                "Private_Dirty": 3567616
+              },
+              {
+                "kind": "anonymous",
+                "name": "",
+                "permissions": "rw-p",
+                "Size": 2523136,
+                "Rss": 2101248,
+                "Pss": 2101248,
+                "Anonymous": 2101248,
+                "Private_Dirty": 2101248
+              },
+              {
+                "kind": "anonymous",
+                "name": "",
+                "permissions": "rw-p",
+                "Size": 1257472,
+                "Rss": 1236992,
+                "Pss": 1236992,
+                "Anonymous": 1236992,
+                "Private_Dirty": 1236992
+              },
+              {
+                "kind": "anonymous",
+                "name": "",
+                "permissions": "rw-p",
+                "Size": 1048576,
+                "Rss": 1032192,
+                "Pss": 1032192,
+                "Anonymous": 1032192,
+                "Private_Dirty": 1032192
+              },
+              {
+                "kind": "anonymous",
+                "name": "",
+                "permissions": "rw-p",
+                "Size": 1048576,
+                "Rss": 299008,
+                "Pss": 299008,
+                "Anonymous": 299008,
+                "Private_Dirty": 299008
+              },
+              {
+                "kind": "stack",
+                "name": "[stack]",
+                "permissions": "rw-p",
+                "Size": 135168,
+                "Rss": 77824,
+                "Pss": 77824,
+                "Anonymous": 77824,
+                "Private_Dirty": 77824
+              },
+              {
+                "kind": "anonymous",
+                "name": "",
+                "permissions": "rw-p",
+                "Size": 135168,
+                "Rss": 73728,
+                "Pss": 73728,
+                "Anonymous": 73728,
+                "Private_Dirty": 73728
+              },
+              {
+                "kind": "anonymous",
+                "name": "",
+                "permissions": "rw-p",
+                "Size": 135168,
+                "Rss": 69632,
+                "Pss": 69632,
+                "Anonymous": 69632,
+                "Private_Dirty": 69632
+              }
+            ]
+          }
+        }
+      },
+      "checkpoint_guest_monotonic": 20.352865738
+    },
+    {
+      "cycle": 3,
+      "memory_current_bytes": 47411200,
+      "cpu_usage_usec": 845282,
+      "cpu_throttled_usec": 2087634,
+      "process_pids": [
+        480,
+        1079,
+        1102
+      ],
+      "Rss_bytes": 65392640,
+      "Pss_bytes": 40398848,
+      "Swap_bytes": 0,
+      "SwapPss_bytes": 0,
+      "memory_stat_anon_bytes": 30969856,
+      "memory_stat_file_bytes": 2342912,
+      "memory_stat_kernel_bytes": 13422592,
+      "memory_stat_shmem_bytes": 98304,
+      "memory_stat_slab_bytes": 13043032,
+      "memory_stat_pagetables_bytes": 356352,
+      "memory_stat_kernel_stack_bytes": 0,
+      "controllers": {
+        "root": {
+          "fd_count": 7,
+          "threads": 1,
+          "mappings": {
+            "groups_bytes": {
+              "file": {
+                "mapping_count": 100,
+                "Size": 19148800,
+                "Rss": 13217792,
+                "Pss": 4812800,
+                "Anonymous": 1830912,
+                "Private_Dirty": 1830912
+              },
+              "anonymous": {
+                "mapping_count": 17,
+                "Size": 156983296,
+                "Rss": 4624384,
+                "Pss": 4624384,
+                "Anonymous": 4624384,
+                "Private_Dirty": 4624384
+              },
+              "heap": {
+                "mapping_count": 1,
+                "Size": 3706880,
+                "Rss": 3694592,
+                "Pss": 3694592,
+                "Anonymous": 3694592,
+                "Private_Dirty": 3694592
+              },
+              "special": {
+                "mapping_count": 4,
+                "Size": 36864,
+                "Rss": 8192,
+                "Pss": 0,
+                "Anonymous": 0,
+                "Private_Dirty": 0
+              },
+              "stack": {
+                "mapping_count": 1,
+                "Size": 135168,
+                "Rss": 77824,
+                "Pss": 77824,
+                "Anonymous": 77824,
+                "Private_Dirty": 77824
+              }
+            },
+            "mapping_count": 123,
+            "largest_resident_anonymous_regions": [
+              {
+                "kind": "anonymous",
+                "name": "",
+                "permissions": "rw-p",
+                "Size": 4620288,
+                "Rss": 4091904,
+                "Pss": 4091904,
+                "Anonymous": 4091904,
+                "Private_Dirty": 4091904
+              },
+              {
+                "kind": "heap",
+                "name": "[heap]",
+                "permissions": "rw-p",
+                "Size": 3706880,
+                "Rss": 3694592,
+                "Pss": 3694592,
+                "Anonymous": 3694592,
+                "Private_Dirty": 3694592
+              },
+              {
+                "kind": "anonymous",
+                "name": "",
+                "permissions": "rw-p",
+                "Size": 208896,
+                "Rss": 208896,
+                "Pss": 208896,
+                "Anonymous": 208896,
+                "Private_Dirty": 208896
+              },
+              {
+                "kind": "anonymous",
+                "name": "",
+                "permissions": "rw-p",
+                "Size": 135168,
+                "Rss": 86016,
+                "Pss": 86016,
+                "Anonymous": 86016,
+                "Private_Dirty": 86016
+              },
+              {
+                "kind": "anonymous",
+                "name": "",
+                "permissions": "rw-p",
+                "Size": 1048576,
+                "Rss": 81920,
+                "Pss": 81920,
+                "Anonymous": 81920,
+                "Private_Dirty": 81920
+              },
+              {
+                "kind": "anonymous",
+                "name": "",
+                "permissions": "rw-p",
+                "Size": 135168,
+                "Rss": 77824,
+                "Pss": 77824,
+                "Anonymous": 77824,
+                "Private_Dirty": 77824
+              },
+              {
+                "kind": "stack",
+                "name": "[stack]",
+                "permissions": "rw-p",
+                "Size": 135168,
+                "Rss": 77824,
+                "Pss": 77824,
+                "Anonymous": 77824,
+                "Private_Dirty": 77824
+              },
+              {
+                "kind": "anonymous",
+                "name": "",
+                "permissions": "rw-p",
+                "Size": 53248,
+                "Rss": 24576,
+                "Pss": 24576,
+                "Anonymous": 24576,
+                "Private_Dirty": 24576
+              }
+            ]
+          }
+        },
+        "rr-data-vm-ext4": {
+          "fd_count": 7,
+          "threads": 1,
+          "mappings": {
+            "groups_bytes": {
+              "file": {
+                "mapping_count": 100,
+                "Size": 19148800,
+                "Rss": 13291520,
+                "Pss": 4881408,
+                "Anonymous": 1830912,
+                "Private_Dirty": 1871872
+              },
+              "anonymous": {
+                "mapping_count": 17,
+                "Size": 156983296,
+                "Rss": 4894720,
+                "Pss": 4894720,
+                "Anonymous": 4894720,
+                "Private_Dirty": 4894720
+              },
+              "heap": {
+                "mapping_count": 1,
+                "Size": 3624960,
+                "Rss": 3567616,
+                "Pss": 3567616,
+                "Anonymous": 3567616,
+                "Private_Dirty": 3567616
+              },
+              "special": {
+                "mapping_count": 4,
+                "Size": 36864,
+                "Rss": 8192,
+                "Pss": 0,
+                "Anonymous": 0,
+                "Private_Dirty": 0
+              },
+              "stack": {
+                "mapping_count": 1,
+                "Size": 135168,
+                "Rss": 81920,
+                "Pss": 81920,
+                "Anonymous": 81920,
+                "Private_Dirty": 81920
+              }
+            },
+            "mapping_count": 123,
+            "largest_resident_anonymous_regions": [
+              {
+                "kind": "heap",
+                "name": "[heap]",
+                "permissions": "rw-p",
+                "Size": 3624960,
+                "Rss": 3567616,
+                "Pss": 3567616,
+                "Anonymous": 3567616,
+                "Private_Dirty": 3567616
+              },
+              {
+                "kind": "anonymous",
+                "name": "",
+                "permissions": "rw-p",
+                "Size": 3571712,
+                "Rss": 3117056,
+                "Pss": 3117056,
+                "Anonymous": 3117056,
+                "Private_Dirty": 3117056
+              },
+              {
+                "kind": "anonymous",
+                "name": "",
+                "permissions": "rw-p",
+                "Size": 1257472,
+                "Rss": 1236992,
+                "Pss": 1236992,
+                "Anonymous": 1236992,
+                "Private_Dirty": 1236992
+              },
+              {
+                "kind": "anonymous",
+                "name": "",
+                "permissions": "rw-p",
+                "Size": 1048576,
+                "Rss": 315392,
+                "Pss": 315392,
+                "Anonymous": 315392,
+                "Private_Dirty": 315392
+              },
+              {
+                "kind": "stack",
+                "name": "[stack]",
+                "permissions": "rw-p",
+                "Size": 135168,
+                "Rss": 81920,
+                "Pss": 81920,
+                "Anonymous": 81920,
+                "Private_Dirty": 81920
+              },
+              {
+                "kind": "anonymous",
+                "name": "",
+                "permissions": "rw-p",
+                "Size": 135168,
+                "Rss": 73728,
+                "Pss": 73728,
+                "Anonymous": 73728,
+                "Private_Dirty": 73728
+              },
+              {
+                "kind": "anonymous",
+                "name": "",
+                "permissions": "rw-p",
+                "Size": 135168,
+                "Rss": 73728,
+                "Pss": 73728,
+                "Anonymous": 73728,
+                "Private_Dirty": 73728
+              },
+              {
+                "kind": "anonymous",
+                "name": "",
+                "permissions": "rw-p",
+                "Size": 53248,
+                "Rss": 24576,
+                "Pss": 24576,
+                "Anonymous": 24576,
+                "Private_Dirty": 24576
+              }
+            ]
+          }
+        },
+        "rr-data-vm-vfat": {
+          "fd_count": 7,
+          "threads": 1,
+          "mappings": {
+            "groups_bytes": {
+              "file": {
+                "mapping_count": 100,
+                "Size": 19148800,
+                "Rss": 13381632,
+                "Pss": 5148672,
+                "Anonymous": 1830912,
+                "Private_Dirty": 2220032
+              },
+              "anonymous": {
+                "mapping_count": 18,
+                "Size": 156983296,
+                "Rss": 4890624,
+                "Pss": 4890624,
+                "Anonymous": 4890624,
+                "Private_Dirty": 4890624
+              },
+              "heap": {
+                "mapping_count": 1,
+                "Size": 3624960,
+                "Rss": 3567616,
+                "Pss": 3567616,
+                "Anonymous": 3567616,
+                "Private_Dirty": 3567616
+              },
+              "special": {
+                "mapping_count": 4,
+                "Size": 36864,
+                "Rss": 8192,
+                "Pss": 0,
+                "Anonymous": 0,
+                "Private_Dirty": 0
+              },
+              "stack": {
+                "mapping_count": 1,
+                "Size": 135168,
+                "Rss": 77824,
+                "Pss": 77824,
+                "Anonymous": 77824,
+                "Private_Dirty": 77824
+              }
+            },
+            "mapping_count": 124,
+            "largest_resident_anonymous_regions": [
+              {
+                "kind": "heap",
+                "name": "[heap]",
+                "permissions": "rw-p",
+                "Size": 3624960,
+                "Rss": 3567616,
+                "Pss": 3567616,
+                "Anonymous": 3567616,
+                "Private_Dirty": 3567616
+              },
+              {
+                "kind": "anonymous",
+                "name": "",
+                "permissions": "rw-p",
+                "Size": 2523136,
+                "Rss": 2101248,
+                "Pss": 2101248,
+                "Anonymous": 2101248,
+                "Private_Dirty": 2101248
+              },
+              {
+                "kind": "anonymous",
+                "name": "",
+                "permissions": "rw-p",
+                "Size": 1257472,
+                "Rss": 1236992,
+                "Pss": 1236992,
+                "Anonymous": 1236992,
+                "Private_Dirty": 1236992
+              },
+              {
+                "kind": "anonymous",
+                "name": "",
+                "permissions": "rw-p",
+                "Size": 1048576,
+                "Rss": 1032192,
+                "Pss": 1032192,
+                "Anonymous": 1032192,
+                "Private_Dirty": 1032192
+              },
+              {
+                "kind": "anonymous",
+                "name": "",
+                "permissions": "rw-p",
+                "Size": 1048576,
+                "Rss": 299008,
+                "Pss": 299008,
+                "Anonymous": 299008,
+                "Private_Dirty": 299008
+              },
+              {
+                "kind": "stack",
+                "name": "[stack]",
+                "permissions": "rw-p",
+                "Size": 135168,
+                "Rss": 77824,
+                "Pss": 77824,
+                "Anonymous": 77824,
+                "Private_Dirty": 77824
+              },
+              {
+                "kind": "anonymous",
+                "name": "",
+                "permissions": "rw-p",
+                "Size": 135168,
+                "Rss": 73728,
+                "Pss": 73728,
+                "Anonymous": 73728,
+                "Private_Dirty": 73728
+              },
+              {
+                "kind": "anonymous",
+                "name": "",
+                "permissions": "rw-p",
+                "Size": 135168,
+                "Rss": 69632,
+                "Pss": 69632,
+                "Anonymous": 69632,
+                "Private_Dirty": 69632
+              }
+            ]
+          }
+        }
+      },
+      "checkpoint_guest_monotonic": 25.011155328
+    },
+    {
+      "cycle": 4,
+      "memory_current_bytes": 47763456,
+      "cpu_usage_usec": 1003669,
+      "cpu_throttled_usec": 2329287,
+      "process_pids": [
+        480,
+        1079,
+        1102
+      ],
+      "Rss_bytes": 65409024,
+      "Pss_bytes": 40315904,
+      "Swap_bytes": 0,
+      "SwapPss_bytes": 0,
+      "memory_stat_anon_bytes": 30986240,
+      "memory_stat_file_bytes": 2347008,
+      "memory_stat_kernel_bytes": 13426688,
+      "memory_stat_shmem_bytes": 102400,
+      "memory_stat_slab_bytes": 13046064,
+      "memory_stat_pagetables_bytes": 356352,
+      "memory_stat_kernel_stack_bytes": 0,
+      "controllers": {
+        "root": {
+          "fd_count": 7,
+          "threads": 1,
+          "mappings": {
+            "groups_bytes": {
+              "file": {
+                "mapping_count": 100,
+                "Size": 19148800,
+                "Rss": 13217792,
+                "Pss": 4893696,
+                "Anonymous": 1830912,
+                "Private_Dirty": 1896448
+              },
+              "anonymous": {
+                "mapping_count": 17,
+                "Size": 156983296,
+                "Rss": 4628480,
+                "Pss": 4628480,
+                "Anonymous": 4628480,
+                "Private_Dirty": 4628480
+              },
+              "heap": {
+                "mapping_count": 1,
+                "Size": 3706880,
+                "Rss": 3694592,
+                "Pss": 3694592,
+                "Anonymous": 3694592,
+                "Private_Dirty": 3694592
+              },
+              "special": {
+                "mapping_count": 4,
+                "Size": 36864,
+                "Rss": 8192,
+                "Pss": 0,
+                "Anonymous": 0,
+                "Private_Dirty": 0
+              },
+              "stack": {
+                "mapping_count": 1,
+                "Size": 135168,
+                "Rss": 77824,
+                "Pss": 77824,
+                "Anonymous": 77824,
+                "Private_Dirty": 77824
+              }
+            },
+            "mapping_count": 123,
+            "largest_resident_anonymous_regions": [
+              {
+                "kind": "anonymous",
+                "name": "",
+                "permissions": "rw-p",
+                "Size": 4620288,
+                "Rss": 4096000,
+                "Pss": 4096000,
+                "Anonymous": 4096000,
+                "Private_Dirty": 4096000
+              },
+              {
+                "kind": "heap",
+                "name": "[heap]",
+                "permissions": "rw-p",
+                "Size": 3706880,
+                "Rss": 3694592,
+                "Pss": 3694592,
+                "Anonymous": 3694592,
+                "Private_Dirty": 3694592
+              },
+              {
+                "kind": "anonymous",
+                "name": "",
+                "permissions": "rw-p",
+                "Size": 208896,
+                "Rss": 208896,
+                "Pss": 208896,
+                "Anonymous": 208896,
+                "Private_Dirty": 208896
+              },
+              {
+                "kind": "anonymous",
+                "name": "",
+                "permissions": "rw-p",
+                "Size": 135168,
+                "Rss": 86016,
+                "Pss": 86016,
+                "Anonymous": 86016,
+                "Private_Dirty": 86016
+              },
+              {
+                "kind": "anonymous",
+                "name": "",
+                "permissions": "rw-p",
+                "Size": 1048576,
+                "Rss": 81920,
+                "Pss": 81920,
+                "Anonymous": 81920,
+                "Private_Dirty": 81920
+              },
+              {
+                "kind": "anonymous",
+                "name": "",
+                "permissions": "rw-p",
+                "Size": 135168,
+                "Rss": 77824,
+                "Pss": 77824,
+                "Anonymous": 77824,
+                "Private_Dirty": 77824
+              },
+              {
+                "kind": "stack",
+                "name": "[stack]",
+                "permissions": "rw-p",
+                "Size": 135168,
+                "Rss": 77824,
+                "Pss": 77824,
+                "Anonymous": 77824,
+                "Private_Dirty": 77824
+              },
+              {
+                "kind": "anonymous",
+                "name": "",
+                "permissions": "rw-p",
+                "Size": 53248,
+                "Rss": 24576,
+                "Pss": 24576,
+                "Anonymous": 24576,
+                "Private_Dirty": 24576
+              }
+            ]
+          }
+        },
+        "rr-data-vm-ext4": {
+          "fd_count": 7,
+          "threads": 1,
+          "mappings": {
+            "groups_bytes": {
+              "file": {
+                "mapping_count": 100,
+                "Size": 19148800,
+                "Rss": 13291520,
+                "Pss": 4900864,
+                "Anonymous": 1830912,
+                "Private_Dirty": 1871872
+              },
+              "anonymous": {
+                "mapping_count": 17,
+                "Size": 156983296,
+                "Rss": 4898816,
+                "Pss": 4898816,
+                "Anonymous": 4898816,
+                "Private_Dirty": 4898816
+              },
+              "heap": {
+                "mapping_count": 1,
+                "Size": 3624960,
+                "Rss": 3567616,
+                "Pss": 3567616,
+                "Anonymous": 3567616,
+                "Private_Dirty": 3567616
+              },
+              "special": {
+                "mapping_count": 4,
+                "Size": 36864,
+                "Rss": 8192,
+                "Pss": 0,
+                "Anonymous": 0,
+                "Private_Dirty": 0
+              },
+              "stack": {
+                "mapping_count": 1,
+                "Size": 135168,
+                "Rss": 81920,
+                "Pss": 81920,
+                "Anonymous": 81920,
+                "Private_Dirty": 81920
+              }
+            },
+            "mapping_count": 123,
+            "largest_resident_anonymous_regions": [
+              {
+                "kind": "heap",
+                "name": "[heap]",
+                "permissions": "rw-p",
+                "Size": 3624960,
+                "Rss": 3567616,
+                "Pss": 3567616,
+                "Anonymous": 3567616,
+                "Private_Dirty": 3567616
+              },
+              {
+                "kind": "anonymous",
+                "name": "",
+                "permissions": "rw-p",
+                "Size": 3571712,
+                "Rss": 3117056,
+                "Pss": 3117056,
+                "Anonymous": 3117056,
+                "Private_Dirty": 3117056
+              },
+              {
+                "kind": "anonymous",
+                "name": "",
+                "permissions": "rw-p",
+                "Size": 1257472,
+                "Rss": 1236992,
+                "Pss": 1236992,
+                "Anonymous": 1236992,
+                "Private_Dirty": 1236992
+              },
+              {
+                "kind": "anonymous",
+                "name": "",
+                "permissions": "rw-p",
+                "Size": 1048576,
+                "Rss": 315392,
+                "Pss": 315392,
+                "Anonymous": 315392,
+                "Private_Dirty": 315392
+              },
+              {
+                "kind": "stack",
+                "name": "[stack]",
+                "permissions": "rw-p",
+                "Size": 135168,
+                "Rss": 81920,
+                "Pss": 81920,
+                "Anonymous": 81920,
+                "Private_Dirty": 81920
+              },
+              {
+                "kind": "anonymous",
+                "name": "",
+                "permissions": "rw-p",
+                "Size": 135168,
+                "Rss": 77824,
+                "Pss": 77824,
+                "Anonymous": 77824,
+                "Private_Dirty": 77824
+              },
+              {
+                "kind": "anonymous",
+                "name": "",
+                "permissions": "rw-p",
+                "Size": 135168,
+                "Rss": 73728,
+                "Pss": 73728,
+                "Anonymous": 73728,
+                "Private_Dirty": 73728
+              },
+              {
+                "kind": "anonymous",
+                "name": "",
+                "permissions": "rw-p",
+                "Size": 53248,
+                "Rss": 24576,
+                "Pss": 24576,
+                "Anonymous": 24576,
+                "Private_Dirty": 24576
+              }
+            ]
+          }
+        },
+        "rr-data-vm-vfat": {
+          "fd_count": 7,
+          "threads": 1,
+          "mappings": {
+            "groups_bytes": {
+              "file": {
+                "mapping_count": 100,
+                "Size": 19148800,
+                "Rss": 13381632,
+                "Pss": 4950016,
+                "Anonymous": 1830912,
+                "Private_Dirty": 1900544
+              },
+              "anonymous": {
+                "mapping_count": 18,
+                "Size": 156983296,
+                "Rss": 4898816,
+                "Pss": 4898816,
+                "Anonymous": 4898816,
+                "Private_Dirty": 4898816
+              },
+              "heap": {
+                "mapping_count": 1,
+                "Size": 3624960,
+                "Rss": 3567616,
+                "Pss": 3567616,
+                "Anonymous": 3567616,
+                "Private_Dirty": 3567616
+              },
+              "special": {
+                "mapping_count": 4,
+                "Size": 36864,
+                "Rss": 8192,
+                "Pss": 0,
+                "Anonymous": 0,
+                "Private_Dirty": 0
+              },
+              "stack": {
+                "mapping_count": 1,
+                "Size": 135168,
+                "Rss": 77824,
+                "Pss": 77824,
+                "Anonymous": 77824,
+                "Private_Dirty": 77824
+              }
+            },
+            "mapping_count": 124,
+            "largest_resident_anonymous_regions": [
+              {
+                "kind": "heap",
+                "name": "[heap]",
+                "permissions": "rw-p",
+                "Size": 3624960,
+                "Rss": 3567616,
+                "Pss": 3567616,
+                "Anonymous": 3567616,
+                "Private_Dirty": 3567616
+              },
+              {
+                "kind": "anonymous",
+                "name": "",
+                "permissions": "rw-p",
+                "Size": 2523136,
+                "Rss": 2101248,
+                "Pss": 2101248,
+                "Anonymous": 2101248,
+                "Private_Dirty": 2101248
+              },
+              {
+                "kind": "anonymous",
+                "name": "",
+                "permissions": "rw-p",
+                "Size": 1257472,
+                "Rss": 1236992,
+                "Pss": 1236992,
+                "Anonymous": 1236992,
+                "Private_Dirty": 1236992
+              },
+              {
+                "kind": "anonymous",
+                "name": "",
+                "permissions": "rw-p",
+                "Size": 1048576,
+                "Rss": 1032192,
+                "Pss": 1032192,
+                "Anonymous": 1032192,
+                "Private_Dirty": 1032192
+              },
+              {
+                "kind": "anonymous",
+                "name": "",
+                "permissions": "rw-p",
+                "Size": 1048576,
+                "Rss": 299008,
+                "Pss": 299008,
+                "Anonymous": 299008,
+                "Private_Dirty": 299008
+              },
+              {
+                "kind": "anonymous",
+                "name": "",
+                "permissions": "rw-p",
+                "Size": 135168,
+                "Rss": 77824,
+                "Pss": 77824,
+                "Anonymous": 77824,
+                "Private_Dirty": 77824
+              },
+              {
+                "kind": "stack",
+                "name": "[stack]",
+                "permissions": "rw-p",
+                "Size": 135168,
+                "Rss": 77824,
+                "Pss": 77824,
+                "Anonymous": 77824,
+                "Private_Dirty": 77824
+              },
+              {
+                "kind": "anonymous",
+                "name": "",
+                "permissions": "rw-p",
+                "Size": 135168,
+                "Rss": 73728,
+                "Pss": 73728,
+                "Anonymous": 73728,
+                "Private_Dirty": 73728
+              }
+            ]
+          }
+        }
+      },
+      "checkpoint_guest_monotonic": 29.656186242
+    },
+    {
+      "cycle": 5,
+      "memory_current_bytes": 47800320,
+      "cpu_usage_usec": 1162822,
+      "cpu_throttled_usec": 2542476,
+      "process_pids": [
+        480,
+        1079,
+        1102
+      ],
+      "Rss_bytes": 65417216,
+      "Pss_bytes": 40440832,
+      "Swap_bytes": 0,
+      "SwapPss_bytes": 0,
+      "memory_stat_anon_bytes": 30994432,
+      "memory_stat_file_bytes": 2355200,
+      "memory_stat_kernel_bytes": 13418496,
+      "memory_stat_shmem_bytes": 110592,
+      "memory_stat_slab_bytes": 13040296,
+      "memory_stat_pagetables_bytes": 356352,
+      "memory_stat_kernel_stack_bytes": 0,
+      "controllers": {
+        "root": {
+          "fd_count": 7,
+          "threads": 1,
+          "mappings": {
+            "groups_bytes": {
+              "file": {
+                "mapping_count": 100,
+                "Size": 19148800,
+                "Rss": 13217792,
+                "Pss": 4828160,
+                "Anonymous": 1830912,
+                "Private_Dirty": 1835008
+              },
+              "anonymous": {
+                "mapping_count": 17,
+                "Size": 156983296,
+                "Rss": 4632576,
+                "Pss": 4632576,
+                "Anonymous": 4632576,
+                "Private_Dirty": 4632576
+              },
+              "heap": {
+                "mapping_count": 1,
+                "Size": 3706880,
+                "Rss": 3694592,
+                "Pss": 3694592,
+                "Anonymous": 3694592,
+                "Private_Dirty": 3694592
+              },
+              "special": {
+                "mapping_count": 4,
+                "Size": 36864,
+                "Rss": 8192,
+                "Pss": 0,
+                "Anonymous": 0,
+                "Private_Dirty": 0
+              },
+              "stack": {
+                "mapping_count": 1,
+                "Size": 135168,
+                "Rss": 77824,
+                "Pss": 77824,
+                "Anonymous": 77824,
+                "Private_Dirty": 77824
+              }
+            },
+            "mapping_count": 123,
+            "largest_resident_anonymous_regions": [
+              {
+                "kind": "anonymous",
+                "name": "",
+                "permissions": "rw-p",
+                "Size": 4620288,
+                "Rss": 4100096,
+                "Pss": 4100096,
+                "Anonymous": 4100096,
+                "Private_Dirty": 4100096
+              },
+              {
+                "kind": "heap",
+                "name": "[heap]",
+                "permissions": "rw-p",
+                "Size": 3706880,
+                "Rss": 3694592,
+                "Pss": 3694592,
+                "Anonymous": 3694592,
+                "Private_Dirty": 3694592
+              },
+              {
+                "kind": "anonymous",
+                "name": "",
+                "permissions": "rw-p",
+                "Size": 208896,
+                "Rss": 208896,
+                "Pss": 208896,
+                "Anonymous": 208896,
+                "Private_Dirty": 208896
+              },
+              {
+                "kind": "anonymous",
+                "name": "",
+                "permissions": "rw-p",
+                "Size": 135168,
+                "Rss": 86016,
+                "Pss": 86016,
+                "Anonymous": 86016,
+                "Private_Dirty": 86016
+              },
+              {
+                "kind": "anonymous",
+                "name": "",
+                "permissions": "rw-p",
+                "Size": 1048576,
+                "Rss": 81920,
+                "Pss": 81920,
+                "Anonymous": 81920,
+                "Private_Dirty": 81920
+              },
+              {
+                "kind": "anonymous",
+                "name": "",
+                "permissions": "rw-p",
+                "Size": 135168,
+                "Rss": 77824,
+                "Pss": 77824,
+                "Anonymous": 77824,
+                "Private_Dirty": 77824
+              },
+              {
+                "kind": "stack",
+                "name": "[stack]",
+                "permissions": "rw-p",
+                "Size": 135168,
+                "Rss": 77824,
+                "Pss": 77824,
+                "Anonymous": 77824,
+                "Private_Dirty": 77824
+              },
+              {
+                "kind": "anonymous",
+                "name": "",
+                "permissions": "rw-p",
+                "Size": 53248,
+                "Rss": 24576,
+                "Pss": 24576,
+                "Anonymous": 24576,
+                "Private_Dirty": 24576
+              }
+            ]
+          }
+        },
+        "rr-data-vm-ext4": {
+          "fd_count": 7,
+          "threads": 1,
+          "mappings": {
+            "groups_bytes": {
+              "file": {
+                "mapping_count": 100,
+                "Size": 19148800,
+                "Rss": 13291520,
+                "Pss": 4893696,
+                "Anonymous": 1830912,
+                "Private_Dirty": 1871872
+              },
+              "anonymous": {
+                "mapping_count": 17,
+                "Size": 156983296,
+                "Rss": 4902912,
+                "Pss": 4902912,
+                "Anonymous": 4902912,
+                "Private_Dirty": 4902912
+              },
+              "heap": {
+                "mapping_count": 1,
+                "Size": 3624960,
+                "Rss": 3567616,
+                "Pss": 3567616,
+                "Anonymous": 3567616,
+                "Private_Dirty": 3567616
+              },
+              "special": {
+                "mapping_count": 4,
+                "Size": 36864,
+                "Rss": 8192,
+                "Pss": 0,
+                "Anonymous": 0,
+                "Private_Dirty": 0
+              },
+              "stack": {
+                "mapping_count": 1,
+                "Size": 135168,
+                "Rss": 81920,
+                "Pss": 81920,
+                "Anonymous": 81920,
+                "Private_Dirty": 81920
+              }
+            },
+            "mapping_count": 123,
+            "largest_resident_anonymous_regions": [
+              {
+                "kind": "heap",
+                "name": "[heap]",
+                "permissions": "rw-p",
+                "Size": 3624960,
+                "Rss": 3567616,
+                "Pss": 3567616,
+                "Anonymous": 3567616,
+                "Private_Dirty": 3567616
+              },
+              {
+                "kind": "anonymous",
+                "name": "",
+                "permissions": "rw-p",
+                "Size": 3571712,
+                "Rss": 3117056,
+                "Pss": 3117056,
+                "Anonymous": 3117056,
+                "Private_Dirty": 3117056
+              },
+              {
+                "kind": "anonymous",
+                "name": "",
+                "permissions": "rw-p",
+                "Size": 1257472,
+                "Rss": 1236992,
+                "Pss": 1236992,
+                "Anonymous": 1236992,
+                "Private_Dirty": 1236992
+              },
+              {
+                "kind": "anonymous",
+                "name": "",
+                "permissions": "rw-p",
+                "Size": 1048576,
+                "Rss": 315392,
+                "Pss": 315392,
+                "Anonymous": 315392,
+                "Private_Dirty": 315392
+              },
+              {
+                "kind": "stack",
+                "name": "[stack]",
+                "permissions": "rw-p",
+                "Size": 135168,
+                "Rss": 81920,
+                "Pss": 81920,
+                "Anonymous": 81920,
+                "Private_Dirty": 81920
+              },
+              {
+                "kind": "anonymous",
+                "name": "",
+                "permissions": "rw-p",
+                "Size": 135168,
+                "Rss": 77824,
+                "Pss": 77824,
+                "Anonymous": 77824,
+                "Private_Dirty": 77824
+              },
+              {
+                "kind": "anonymous",
+                "name": "",
+                "permissions": "rw-p",
+                "Size": 135168,
+                "Rss": 77824,
+                "Pss": 77824,
+                "Anonymous": 77824,
+                "Private_Dirty": 77824
+              },
+              {
+                "kind": "anonymous",
+                "name": "",
+                "permissions": "rw-p",
+                "Size": 53248,
+                "Rss": 24576,
+                "Pss": 24576,
+                "Anonymous": 24576,
+                "Private_Dirty": 24576
+              }
+            ]
+          }
+        },
+        "rr-data-vm-vfat": {
+          "fd_count": 7,
+          "threads": 1,
+          "mappings": {
+            "groups_bytes": {
+              "file": {
+                "mapping_count": 100,
+                "Size": 19148800,
+                "Rss": 13381632,
+                "Pss": 5140480,
+                "Anonymous": 1830912,
+                "Private_Dirty": 2191360
+              },
+              "anonymous": {
+                "mapping_count": 18,
+                "Size": 156983296,
+                "Rss": 4898816,
+                "Pss": 4898816,
+                "Anonymous": 4898816,
+                "Private_Dirty": 4898816
+              },
+              "heap": {
+                "mapping_count": 1,
+                "Size": 3624960,
+                "Rss": 3567616,
+                "Pss": 3567616,
+                "Anonymous": 3567616,
+                "Private_Dirty": 3567616
+              },
+              "special": {
+                "mapping_count": 4,
+                "Size": 36864,
+                "Rss": 8192,
+                "Pss": 0,
+                "Anonymous": 0,
+                "Private_Dirty": 0
+              },
+              "stack": {
+                "mapping_count": 1,
+                "Size": 135168,
+                "Rss": 77824,
+                "Pss": 77824,
+                "Anonymous": 77824,
+                "Private_Dirty": 77824
+              }
+            },
+            "mapping_count": 124,
+            "largest_resident_anonymous_regions": [
+              {
+                "kind": "heap",
+                "name": "[heap]",
+                "permissions": "rw-p",
+                "Size": 3624960,
+                "Rss": 3567616,
+                "Pss": 3567616,
+                "Anonymous": 3567616,
+                "Private_Dirty": 3567616
+              },
+              {
+                "kind": "anonymous",
+                "name": "",
+                "permissions": "rw-p",
+                "Size": 2523136,
+                "Rss": 2101248,
+                "Pss": 2101248,
+                "Anonymous": 2101248,
+                "Private_Dirty": 2101248
+              },
+              {
+                "kind": "anonymous",
+                "name": "",
+                "permissions": "rw-p",
+                "Size": 1257472,
+                "Rss": 1236992,
+                "Pss": 1236992,
+                "Anonymous": 1236992,
+                "Private_Dirty": 1236992
+              },
+              {
+                "kind": "anonymous",
+                "name": "",
+                "permissions": "rw-p",
+                "Size": 1048576,
+                "Rss": 1032192,
+                "Pss": 1032192,
+                "Anonymous": 1032192,
+                "Private_Dirty": 1032192
+              },
+              {
+                "kind": "anonymous",
+                "name": "",
+                "permissions": "rw-p",
+                "Size": 1048576,
+                "Rss": 299008,
+                "Pss": 299008,
+                "Anonymous": 299008,
+                "Private_Dirty": 299008
+              },
+              {
+                "kind": "anonymous",
+                "name": "",
+                "permissions": "rw-p",
+                "Size": 135168,
+                "Rss": 77824,
+                "Pss": 77824,
+                "Anonymous": 77824,
+                "Private_Dirty": 77824
+              },
+              {
+                "kind": "stack",
+                "name": "[stack]",
+                "permissions": "rw-p",
+                "Size": 135168,
+                "Rss": 77824,
+                "Pss": 77824,
+                "Anonymous": 77824,
+                "Private_Dirty": 77824
+              },
+              {
+                "kind": "anonymous",
+                "name": "",
+                "permissions": "rw-p",
+                "Size": 135168,
+                "Rss": 73728,
+                "Pss": 73728,
+                "Anonymous": 73728,
+                "Private_Dirty": 73728
+              }
+            ]
+          }
+        }
+      },
+      "checkpoint_guest_monotonic": 34.447420014
+    },
+    {
+      "cycle": 6,
+      "memory_current_bytes": 47632384,
+      "cpu_usage_usec": 1319279,
+      "cpu_throttled_usec": 2737708,
+      "process_pids": [
+        480,
+        1079,
+        1102
+      ],
+      "Rss_bytes": 65421312,
+      "Pss_bytes": 40427520,
+      "Swap_bytes": 0,
+      "SwapPss_bytes": 0,
+      "memory_stat_anon_bytes": 30998528,
+      "memory_stat_file_bytes": 2363392,
+      "memory_stat_kernel_bytes": 13312000,
+      "memory_stat_shmem_bytes": 118784,
+      "memory_stat_slab_bytes": 12935600,
+      "memory_stat_pagetables_bytes": 356352,
+      "memory_stat_kernel_stack_bytes": 0,
+      "controllers": {
+        "root": {
+          "fd_count": 7,
+          "threads": 1,
+          "mappings": {
+            "groups_bytes": {
+              "file": {
+                "mapping_count": 100,
+                "Size": 19148800,
+                "Rss": 13217792,
+                "Pss": 4812800,
+                "Anonymous": 1830912,
+                "Private_Dirty": 1830912
+              },
+              "anonymous": {
+                "mapping_count": 17,
+                "Size": 156983296,
+                "Rss": 4636672,
+                "Pss": 4636672,
+                "Anonymous": 4636672,
+                "Private_Dirty": 4636672
+              },
+              "heap": {
+                "mapping_count": 1,
+                "Size": 3706880,
+                "Rss": 3694592,
+                "Pss": 3694592,
+                "Anonymous": 3694592,
+                "Private_Dirty": 3694592
+              },
+              "special": {
+                "mapping_count": 4,
+                "Size": 36864,
+                "Rss": 8192,
+                "Pss": 0,
+                "Anonymous": 0,
+                "Private_Dirty": 0
+              },
+              "stack": {
+                "mapping_count": 1,
+                "Size": 135168,
+                "Rss": 77824,
+                "Pss": 77824,
+                "Anonymous": 77824,
+                "Private_Dirty": 77824
+              }
+            },
+            "mapping_count": 123,
+            "largest_resident_anonymous_regions": [
+              {
+                "kind": "anonymous",
+                "name": "",
+                "permissions": "rw-p",
+                "Size": 4620288,
+                "Rss": 4104192,
+                "Pss": 4104192,
+                "Anonymous": 4104192,
+                "Private_Dirty": 4104192
+              },
+              {
+                "kind": "heap",
+                "name": "[heap]",
+                "permissions": "rw-p",
+                "Size": 3706880,
+                "Rss": 3694592,
+                "Pss": 3694592,
+                "Anonymous": 3694592,
+                "Private_Dirty": 3694592
+              },
+              {
+                "kind": "anonymous",
+                "name": "",
+                "permissions": "rw-p",
+                "Size": 208896,
+                "Rss": 208896,
+                "Pss": 208896,
+                "Anonymous": 208896,
+                "Private_Dirty": 208896
+              },
+              {
+                "kind": "anonymous",
+                "name": "",
+                "permissions": "rw-p",
+                "Size": 135168,
+                "Rss": 86016,
+                "Pss": 86016,
+                "Anonymous": 86016,
+                "Private_Dirty": 86016
+              },
+              {
+                "kind": "anonymous",
+                "name": "",
+                "permissions": "rw-p",
+                "Size": 1048576,
+                "Rss": 81920,
+                "Pss": 81920,
+                "Anonymous": 81920,
+                "Private_Dirty": 81920
+              },
+              {
+                "kind": "anonymous",
+                "name": "",
+                "permissions": "rw-p",
+                "Size": 135168,
+                "Rss": 77824,
+                "Pss": 77824,
+                "Anonymous": 77824,
+                "Private_Dirty": 77824
+              },
+              {
+                "kind": "stack",
+                "name": "[stack]",
+                "permissions": "rw-p",
+                "Size": 135168,
+                "Rss": 77824,
+                "Pss": 77824,
+                "Anonymous": 77824,
+                "Private_Dirty": 77824
+              },
+              {
+                "kind": "anonymous",
+                "name": "",
+                "permissions": "rw-p",
+                "Size": 53248,
+                "Rss": 24576,
+                "Pss": 24576,
+                "Anonymous": 24576,
+                "Private_Dirty": 24576
+              }
+            ]
+          }
+        },
+        "rr-data-vm-ext4": {
+          "fd_count": 7,
+          "threads": 1,
+          "mappings": {
+            "groups_bytes": {
+              "file": {
+                "mapping_count": 100,
+                "Size": 19148800,
+                "Rss": 13291520,
+                "Pss": 4881408,
+                "Anonymous": 1830912,
+                "Private_Dirty": 1871872
+              },
+              "anonymous": {
+                "mapping_count": 17,
+                "Size": 156983296,
+                "Rss": 4902912,
+                "Pss": 4902912,
+                "Anonymous": 4902912,
+                "Private_Dirty": 4902912
+              },
+              "heap": {
+                "mapping_count": 1,
+                "Size": 3624960,
+                "Rss": 3567616,
+                "Pss": 3567616,
+                "Anonymous": 3567616,
+                "Private_Dirty": 3567616
+              },
+              "special": {
+                "mapping_count": 4,
+                "Size": 36864,
+                "Rss": 8192,
+                "Pss": 0,
+                "Anonymous": 0,
+                "Private_Dirty": 0
+              },
+              "stack": {
+                "mapping_count": 1,
+                "Size": 135168,
+                "Rss": 81920,
+                "Pss": 81920,
+                "Anonymous": 81920,
+                "Private_Dirty": 81920
+              }
+            },
+            "mapping_count": 123,
+            "largest_resident_anonymous_regions": [
+              {
+                "kind": "heap",
+                "name": "[heap]",
+                "permissions": "rw-p",
+                "Size": 3624960,
+                "Rss": 3567616,
+                "Pss": 3567616,
+                "Anonymous": 3567616,
+                "Private_Dirty": 3567616
+              },
+              {
+                "kind": "anonymous",
+                "name": "",
+                "permissions": "rw-p",
+                "Size": 3571712,
+                "Rss": 3117056,
+                "Pss": 3117056,
+                "Anonymous": 3117056,
+                "Private_Dirty": 3117056
+              },
+              {
+                "kind": "anonymous",
+                "name": "",
+                "permissions": "rw-p",
+                "Size": 1257472,
+                "Rss": 1236992,
+                "Pss": 1236992,
+                "Anonymous": 1236992,
+                "Private_Dirty": 1236992
+              },
+              {
+                "kind": "anonymous",
+                "name": "",
+                "permissions": "rw-p",
+                "Size": 1048576,
+                "Rss": 315392,
+                "Pss": 315392,
+                "Anonymous": 315392,
+                "Private_Dirty": 315392
+              },
+              {
+                "kind": "stack",
+                "name": "[stack]",
+                "permissions": "rw-p",
+                "Size": 135168,
+                "Rss": 81920,
+                "Pss": 81920,
+                "Anonymous": 81920,
+                "Private_Dirty": 81920
+              },
+              {
+                "kind": "anonymous",
+                "name": "",
+                "permissions": "rw-p",
+                "Size": 135168,
+                "Rss": 77824,
+                "Pss": 77824,
+                "Anonymous": 77824,
+                "Private_Dirty": 77824
+              },
+              {
+                "kind": "anonymous",
+                "name": "",
+                "permissions": "rw-p",
+                "Size": 135168,
+                "Rss": 77824,
+                "Pss": 77824,
+                "Anonymous": 77824,
+                "Private_Dirty": 77824
+              },
+              {
+                "kind": "anonymous",
+                "name": "",
+                "permissions": "rw-p",
+                "Size": 53248,
+                "Rss": 24576,
+                "Pss": 24576,
+                "Anonymous": 24576,
+                "Private_Dirty": 24576
+              }
+            ]
+          }
+        },
+        "rr-data-vm-vfat": {
+          "fd_count": 7,
+          "threads": 1,
+          "mappings": {
+            "groups_bytes": {
+              "file": {
+                "mapping_count": 100,
+                "Size": 19148800,
+                "Rss": 13381632,
+                "Pss": 5148672,
+                "Anonymous": 1830912,
+                "Private_Dirty": 2220032
+              },
+              "anonymous": {
+                "mapping_count": 18,
+                "Size": 156983296,
+                "Rss": 4898816,
+                "Pss": 4898816,
+                "Anonymous": 4898816,
+                "Private_Dirty": 4898816
+              },
+              "heap": {
+                "mapping_count": 1,
+                "Size": 3624960,
+                "Rss": 3567616,
+                "Pss": 3567616,
+                "Anonymous": 3567616,
+                "Private_Dirty": 3567616
+              },
+              "special": {
+                "mapping_count": 4,
+                "Size": 36864,
+                "Rss": 8192,
+                "Pss": 0,
+                "Anonymous": 0,
+                "Private_Dirty": 0
+              },
+              "stack": {
+                "mapping_count": 1,
+                "Size": 135168,
+                "Rss": 77824,
+                "Pss": 77824,
+                "Anonymous": 77824,
+                "Private_Dirty": 77824
+              }
+            },
+            "mapping_count": 124,
+            "largest_resident_anonymous_regions": [
+              {
+                "kind": "heap",
+                "name": "[heap]",
+                "permissions": "rw-p",
+                "Size": 3624960,
+                "Rss": 3567616,
+                "Pss": 3567616,
+                "Anonymous": 3567616,
+                "Private_Dirty": 3567616
+              },
+              {
+                "kind": "anonymous",
+                "name": "",
+                "permissions": "rw-p",
+                "Size": 2523136,
+                "Rss": 2101248,
+                "Pss": 2101248,
+                "Anonymous": 2101248,
+                "Private_Dirty": 2101248
+              },
+              {
+                "kind": "anonymous",
+                "name": "",
+                "permissions": "rw-p",
+                "Size": 1257472,
+                "Rss": 1236992,
+                "Pss": 1236992,
+                "Anonymous": 1236992,
+                "Private_Dirty": 1236992
+              },
+              {
+                "kind": "anonymous",
+                "name": "",
+                "permissions": "rw-p",
+                "Size": 1048576,
+                "Rss": 1032192,
+                "Pss": 1032192,
+                "Anonymous": 1032192,
+                "Private_Dirty": 1032192
+              },
+              {
+                "kind": "anonymous",
+                "name": "",
+                "permissions": "rw-p",
+                "Size": 1048576,
+                "Rss": 299008,
+                "Pss": 299008,
+                "Anonymous": 299008,
+                "Private_Dirty": 299008
+              },
+              {
+                "kind": "anonymous",
+                "name": "",
+                "permissions": "rw-p",
+                "Size": 135168,
+                "Rss": 77824,
+                "Pss": 77824,
+                "Anonymous": 77824,
+                "Private_Dirty": 77824
+              },
+              {
+                "kind": "stack",
+                "name": "[stack]",
+                "permissions": "rw-p",
+                "Size": 135168,
+                "Rss": 77824,
+                "Pss": 77824,
+                "Anonymous": 77824,
+                "Private_Dirty": 77824
+              },
+              {
+                "kind": "anonymous",
+                "name": "",
+                "permissions": "rw-p",
+                "Size": 135168,
+                "Rss": 73728,
+                "Pss": 73728,
+                "Anonymous": 73728,
+                "Private_Dirty": 73728
+              }
+            ]
+          }
+        }
+      },
+      "checkpoint_guest_monotonic": 39.209395398
+    },
+    {
+      "cycle": 7,
+      "memory_current_bytes": 47120384,
+      "cpu_usage_usec": 1472649,
+      "cpu_throttled_usec": 2954503,
+      "process_pids": [
+        480,
+        1079,
+        1102
+      ],
+      "Rss_bytes": 65425408,
+      "Pss_bytes": 40344576,
+      "Swap_bytes": 0,
+      "SwapPss_bytes": 0,
+      "memory_stat_anon_bytes": 31002624,
+      "memory_stat_file_bytes": 2371584,
+      "memory_stat_kernel_bytes": 13324288,
+      "memory_stat_shmem_bytes": 126976,
+      "memory_stat_slab_bytes": 12946048,
+      "memory_stat_pagetables_bytes": 356352,
+      "memory_stat_kernel_stack_bytes": 0,
+      "controllers": {
+        "root": {
+          "fd_count": 7,
+          "threads": 1,
+          "mappings": {
+            "groups_bytes": {
+              "file": {
+                "mapping_count": 100,
+                "Size": 19148800,
+                "Rss": 13217792,
+                "Pss": 4846592,
+                "Anonymous": 1830912,
+                "Private_Dirty": 1859584
+              },
+              "anonymous": {
+                "mapping_count": 17,
+                "Size": 156983296,
+                "Rss": 4636672,
+                "Pss": 4636672,
+                "Anonymous": 4636672,
+                "Private_Dirty": 4636672
+              },
+              "heap": {
+                "mapping_count": 1,
+                "Size": 3706880,
+                "Rss": 3694592,
+                "Pss": 3694592,
+                "Anonymous": 3694592,
+                "Private_Dirty": 3694592
+              },
+              "special": {
+                "mapping_count": 4,
+                "Size": 36864,
+                "Rss": 8192,
+                "Pss": 0,
+                "Anonymous": 0,
+                "Private_Dirty": 0
+              },
+              "stack": {
+                "mapping_count": 1,
+                "Size": 135168,
+                "Rss": 77824,
+                "Pss": 77824,
+                "Anonymous": 77824,
+                "Private_Dirty": 77824
+              }
+            },
+            "mapping_count": 123,
+            "largest_resident_anonymous_regions": [
+              {
+                "kind": "anonymous",
+                "name": "",
+                "permissions": "rw-p",
+                "Size": 4620288,
+                "Rss": 4104192,
+                "Pss": 4104192,
+                "Anonymous": 4104192,
+                "Private_Dirty": 4104192
+              },
+              {
+                "kind": "heap",
+                "name": "[heap]",
+                "permissions": "rw-p",
+                "Size": 3706880,
+                "Rss": 3694592,
+                "Pss": 3694592,
+                "Anonymous": 3694592,
+                "Private_Dirty": 3694592
+              },
+              {
+                "kind": "anonymous",
+                "name": "",
+                "permissions": "rw-p",
+                "Size": 208896,
+                "Rss": 208896,
+                "Pss": 208896,
+                "Anonymous": 208896,
+                "Private_Dirty": 208896
+              },
+              {
+                "kind": "anonymous",
+                "name": "",
+                "permissions": "rw-p",
+                "Size": 135168,
+                "Rss": 86016,
+                "Pss": 86016,
+                "Anonymous": 86016,
+                "Private_Dirty": 86016
+              },
+              {
+                "kind": "anonymous",
+                "name": "",
+                "permissions": "rw-p",
+                "Size": 1048576,
+                "Rss": 81920,
+                "Pss": 81920,
+                "Anonymous": 81920,
+                "Private_Dirty": 81920
+              },
+              {
+                "kind": "anonymous",
+                "name": "",
+                "permissions": "rw-p",
+                "Size": 135168,
+                "Rss": 77824,
+                "Pss": 77824,
+                "Anonymous": 77824,
+                "Private_Dirty": 77824
+              },
+              {
+                "kind": "stack",
+                "name": "[stack]",
+                "permissions": "rw-p",
+                "Size": 135168,
+                "Rss": 77824,
+                "Pss": 77824,
+                "Anonymous": 77824,
+                "Private_Dirty": 77824
+              },
+              {
+                "kind": "anonymous",
+                "name": "",
+                "permissions": "rw-p",
+                "Size": 53248,
+                "Rss": 24576,
+                "Pss": 24576,
+                "Anonymous": 24576,
+                "Private_Dirty": 24576
+              }
+            ]
+          }
+        },
+        "rr-data-vm-ext4": {
+          "fd_count": 7,
+          "threads": 1,
+          "mappings": {
+            "groups_bytes": {
+              "file": {
+                "mapping_count": 100,
+                "Size": 19148800,
+                "Rss": 13291520,
+                "Pss": 4884480,
+                "Anonymous": 1830912,
+                "Private_Dirty": 1871872
+              },
+              "anonymous": {
+                "mapping_count": 17,
+                "Size": 156983296,
+                "Rss": 4902912,
+                "Pss": 4902912,
+                "Anonymous": 4902912,
+                "Private_Dirty": 4902912
+              },
+              "heap": {
+                "mapping_count": 1,
+                "Size": 3624960,
+                "Rss": 3567616,
+                "Pss": 3567616,
+                "Anonymous": 3567616,
+                "Private_Dirty": 3567616
+              },
+              "special": {
+                "mapping_count": 4,
+                "Size": 36864,
+                "Rss": 8192,
+                "Pss": 0,
+                "Anonymous": 0,
+                "Private_Dirty": 0
+              },
+              "stack": {
+                "mapping_count": 1,
+                "Size": 135168,
+                "Rss": 81920,
+                "Pss": 81920,
+                "Anonymous": 81920,
+                "Private_Dirty": 81920
+              }
+            },
+            "mapping_count": 123,
+            "largest_resident_anonymous_regions": [
+              {
+                "kind": "heap",
+                "name": "[heap]",
+                "permissions": "rw-p",
+                "Size": 3624960,
+                "Rss": 3567616,
+                "Pss": 3567616,
+                "Anonymous": 3567616,
+                "Private_Dirty": 3567616
+              },
+              {
+                "kind": "anonymous",
+                "name": "",
+                "permissions": "rw-p",
+                "Size": 3571712,
+                "Rss": 3117056,
+                "Pss": 3117056,
+                "Anonymous": 3117056,
+                "Private_Dirty": 3117056
+              },
+              {
+                "kind": "anonymous",
+                "name": "",
+                "permissions": "rw-p",
+                "Size": 1257472,
+                "Rss": 1236992,
+                "Pss": 1236992,
+                "Anonymous": 1236992,
+                "Private_Dirty": 1236992
+              },
+              {
+                "kind": "anonymous",
+                "name": "",
+                "permissions": "rw-p",
+                "Size": 1048576,
+                "Rss": 315392,
+                "Pss": 315392,
+                "Anonymous": 315392,
+                "Private_Dirty": 315392
+              },
+              {
+                "kind": "stack",
+                "name": "[stack]",
+                "permissions": "rw-p",
+                "Size": 135168,
+                "Rss": 81920,
+                "Pss": 81920,
+                "Anonymous": 81920,
+                "Private_Dirty": 81920
+              },
+              {
+                "kind": "anonymous",
+                "name": "",
+                "permissions": "rw-p",
+                "Size": 135168,
+                "Rss": 77824,
+                "Pss": 77824,
+                "Anonymous": 77824,
+                "Private_Dirty": 77824
+              },
+              {
+                "kind": "anonymous",
+                "name": "",
+                "permissions": "rw-p",
+                "Size": 135168,
+                "Rss": 77824,
+                "Pss": 77824,
+                "Anonymous": 77824,
+                "Private_Dirty": 77824
+              },
+              {
+                "kind": "anonymous",
+                "name": "",
+                "permissions": "rw-p",
+                "Size": 53248,
+                "Rss": 24576,
+                "Pss": 24576,
+                "Anonymous": 24576,
+                "Private_Dirty": 24576
+              }
+            ]
+          }
+        },
+        "rr-data-vm-vfat": {
+          "fd_count": 7,
+          "threads": 1,
+          "mappings": {
+            "groups_bytes": {
+              "file": {
+                "mapping_count": 100,
+                "Size": 19148800,
+                "Rss": 13381632,
+                "Pss": 5024768,
+                "Anonymous": 1830912,
+                "Private_Dirty": 2015232
+              },
+              "anonymous": {
+                "mapping_count": 18,
+                "Size": 156983296,
+                "Rss": 4902912,
+                "Pss": 4902912,
+                "Anonymous": 4902912,
+                "Private_Dirty": 4902912
+              },
+              "heap": {
+                "mapping_count": 1,
+                "Size": 3624960,
+                "Rss": 3567616,
+                "Pss": 3567616,
+                "Anonymous": 3567616,
+                "Private_Dirty": 3567616
+              },
+              "special": {
+                "mapping_count": 4,
+                "Size": 36864,
+                "Rss": 8192,
+                "Pss": 0,
+                "Anonymous": 0,
+                "Private_Dirty": 0
+              },
+              "stack": {
+                "mapping_count": 1,
+                "Size": 135168,
+                "Rss": 77824,
+                "Pss": 77824,
+                "Anonymous": 77824,
+                "Private_Dirty": 77824
+              }
+            },
+            "mapping_count": 124,
+            "largest_resident_anonymous_regions": [
+              {
+                "kind": "heap",
+                "name": "[heap]",
+                "permissions": "rw-p",
+                "Size": 3624960,
+                "Rss": 3567616,
+                "Pss": 3567616,
+                "Anonymous": 3567616,
+                "Private_Dirty": 3567616
+              },
+              {
+                "kind": "anonymous",
+                "name": "",
+                "permissions": "rw-p",
+                "Size": 2523136,
+                "Rss": 2101248,
+                "Pss": 2101248,
+                "Anonymous": 2101248,
+                "Private_Dirty": 2101248
+              },
+              {
+                "kind": "anonymous",
+                "name": "",
+                "permissions": "rw-p",
+                "Size": 1257472,
+                "Rss": 1236992,
+                "Pss": 1236992,
+                "Anonymous": 1236992,
+                "Private_Dirty": 1236992
+              },
+              {
+                "kind": "anonymous",
+                "name": "",
+                "permissions": "rw-p",
+                "Size": 1048576,
+                "Rss": 1032192,
+                "Pss": 1032192,
+                "Anonymous": 1032192,
+                "Private_Dirty": 1032192
+              },
+              {
+                "kind": "anonymous",
+                "name": "",
+                "permissions": "rw-p",
+                "Size": 1048576,
+                "Rss": 299008,
+                "Pss": 299008,
+                "Anonymous": 299008,
+                "Private_Dirty": 299008
+              },
+              {
+                "kind": "anonymous",
+                "name": "",
+                "permissions": "rw-p",
+                "Size": 135168,
+                "Rss": 77824,
+                "Pss": 77824,
+                "Anonymous": 77824,
+                "Private_Dirty": 77824
+              },
+              {
+                "kind": "anonymous",
+                "name": "",
+                "permissions": "rw-p",
+                "Size": 135168,
+                "Rss": 77824,
+                "Pss": 77824,
+                "Anonymous": 77824,
+                "Private_Dirty": 77824
+              },
+              {
+                "kind": "stack",
+                "name": "[stack]",
+                "permissions": "rw-p",
+                "Size": 135168,
+                "Rss": 77824,
+                "Pss": 77824,
+                "Anonymous": 77824,
+                "Private_Dirty": 77824
+              }
+            ]
+          }
+        }
+      },
+      "checkpoint_guest_monotonic": 43.899485482
+    },
+    {
+      "cycle": 8,
+      "memory_current_bytes": 47624192,
+      "cpu_usage_usec": 1634474,
+      "cpu_throttled_usec": 3246604,
+      "process_pids": [
+        480,
+        1079,
+        1102
+      ],
+      "Rss_bytes": 65425408,
+      "Pss_bytes": 40342528,
+      "Swap_bytes": 0,
+      "SwapPss_bytes": 0,
+      "memory_stat_anon_bytes": 31002624,
+      "memory_stat_file_bytes": 2379776,
+      "memory_stat_kernel_bytes": 13213696,
+      "memory_stat_shmem_bytes": 135168,
+      "memory_stat_slab_bytes": 12835720,
+      "memory_stat_pagetables_bytes": 356352,
+      "memory_stat_kernel_stack_bytes": 0,
+      "controllers": {
+        "root": {
+          "fd_count": 7,
+          "threads": 1,
+          "mappings": {
+            "groups_bytes": {
+              "file": {
+                "mapping_count": 100,
+                "Size": 19148800,
+                "Rss": 13217792,
+                "Pss": 4859904,
+                "Anonymous": 1830912,
+                "Private_Dirty": 1871872
+              },
+              "anonymous": {
+                "mapping_count": 17,
+                "Size": 156983296,
+                "Rss": 4636672,
+                "Pss": 4636672,
+                "Anonymous": 4636672,
+                "Private_Dirty": 4636672
+              },
+              "heap": {
+                "mapping_count": 1,
+                "Size": 3706880,
+                "Rss": 3694592,
+                "Pss": 3694592,
+                "Anonymous": 3694592,
+                "Private_Dirty": 3694592
+              },
+              "special": {
+                "mapping_count": 4,
+                "Size": 36864,
+                "Rss": 8192,
+                "Pss": 0,
+                "Anonymous": 0,
+                "Private_Dirty": 0
+              },
+              "stack": {
+                "mapping_count": 1,
+                "Size": 135168,
+                "Rss": 77824,
+                "Pss": 77824,
+                "Anonymous": 77824,
+                "Private_Dirty": 77824
+              }
+            },
+            "mapping_count": 123,
+            "largest_resident_anonymous_regions": [
+              {
+                "kind": "anonymous",
+                "name": "",
+                "permissions": "rw-p",
+                "Size": 4620288,
+                "Rss": 4104192,
+                "Pss": 4104192,
+                "Anonymous": 4104192,
+                "Private_Dirty": 4104192
+              },
+              {
+                "kind": "heap",
+                "name": "[heap]",
+                "permissions": "rw-p",
+                "Size": 3706880,
+                "Rss": 3694592,
+                "Pss": 3694592,
+                "Anonymous": 3694592,
+                "Private_Dirty": 3694592
+              },
+              {
+                "kind": "anonymous",
+                "name": "",
+                "permissions": "rw-p",
+                "Size": 208896,
+                "Rss": 208896,
+                "Pss": 208896,
+                "Anonymous": 208896,
+                "Private_Dirty": 208896
+              },
+              {
+                "kind": "anonymous",
+                "name": "",
+                "permissions": "rw-p",
+                "Size": 135168,
+                "Rss": 86016,
+                "Pss": 86016,
+                "Anonymous": 86016,
+                "Private_Dirty": 86016
+              },
+              {
+                "kind": "anonymous",
+                "name": "",
+                "permissions": "rw-p",
+                "Size": 1048576,
+                "Rss": 81920,
+                "Pss": 81920,
+                "Anonymous": 81920,
+                "Private_Dirty": 81920
+              },
+              {
+                "kind": "anonymous",
+                "name": "",
+                "permissions": "rw-p",
+                "Size": 135168,
+                "Rss": 77824,
+                "Pss": 77824,
+                "Anonymous": 77824,
+                "Private_Dirty": 77824
+              },
+              {
+                "kind": "stack",
+                "name": "[stack]",
+                "permissions": "rw-p",
+                "Size": 135168,
+                "Rss": 77824,
+                "Pss": 77824,
+                "Anonymous": 77824,
+                "Private_Dirty": 77824
+              },
+              {
+                "kind": "anonymous",
+                "name": "",
+                "permissions": "rw-p",
+                "Size": 53248,
+                "Rss": 24576,
+                "Pss": 24576,
+                "Anonymous": 24576,
+                "Private_Dirty": 24576
+              }
+            ]
+          }
+        },
+        "rr-data-vm-ext4": {
+          "fd_count": 7,
+          "threads": 1,
+          "mappings": {
+            "groups_bytes": {
+              "file": {
+                "mapping_count": 100,
+                "Size": 19148800,
+                "Rss": 13291520,
+                "Pss": 4882432,
+                "Anonymous": 1830912,
+                "Private_Dirty": 1871872
+              },
+              "anonymous": {
+                "mapping_count": 17,
+                "Size": 156983296,
+                "Rss": 4902912,
+                "Pss": 4902912,
+                "Anonymous": 4902912,
+                "Private_Dirty": 4902912
+              },
+              "heap": {
+                "mapping_count": 1,
+                "Size": 3624960,
+                "Rss": 3567616,
+                "Pss": 3567616,
+                "Anonymous": 3567616,
+                "Private_Dirty": 3567616
+              },
+              "special": {
+                "mapping_count": 4,
+                "Size": 36864,
+                "Rss": 8192,
+                "Pss": 0,
+                "Anonymous": 0,
+                "Private_Dirty": 0
+              },
+              "stack": {
+                "mapping_count": 1,
+                "Size": 135168,
+                "Rss": 81920,
+                "Pss": 81920,
+                "Anonymous": 81920,
+                "Private_Dirty": 81920
+              }
+            },
+            "mapping_count": 123,
+            "largest_resident_anonymous_regions": [
+              {
+                "kind": "heap",
+                "name": "[heap]",
+                "permissions": "rw-p",
+                "Size": 3624960,
+                "Rss": 3567616,
+                "Pss": 3567616,
+                "Anonymous": 3567616,
+                "Private_Dirty": 3567616
+              },
+              {
+                "kind": "anonymous",
+                "name": "",
+                "permissions": "rw-p",
+                "Size": 3571712,
+                "Rss": 3117056,
+                "Pss": 3117056,
+                "Anonymous": 3117056,
+                "Private_Dirty": 3117056
+              },
+              {
+                "kind": "anonymous",
+                "name": "",
+                "permissions": "rw-p",
+                "Size": 1257472,
+                "Rss": 1236992,
+                "Pss": 1236992,
+                "Anonymous": 1236992,
+                "Private_Dirty": 1236992
+              },
+              {
+                "kind": "anonymous",
+                "name": "",
+                "permissions": "rw-p",
+                "Size": 1048576,
+                "Rss": 315392,
+                "Pss": 315392,
+                "Anonymous": 315392,
+                "Private_Dirty": 315392
+              },
+              {
+                "kind": "stack",
+                "name": "[stack]",
+                "permissions": "rw-p",
+                "Size": 135168,
+                "Rss": 81920,
+                "Pss": 81920,
+                "Anonymous": 81920,
+                "Private_Dirty": 81920
+              },
+              {
+                "kind": "anonymous",
+                "name": "",
+                "permissions": "rw-p",
+                "Size": 135168,
+                "Rss": 77824,
+                "Pss": 77824,
+                "Anonymous": 77824,
+                "Private_Dirty": 77824
+              },
+              {
+                "kind": "anonymous",
+                "name": "",
+                "permissions": "rw-p",
+                "Size": 135168,
+                "Rss": 77824,
+                "Pss": 77824,
+                "Anonymous": 77824,
+                "Private_Dirty": 77824
+              },
+              {
+                "kind": "anonymous",
+                "name": "",
+                "permissions": "rw-p",
+                "Size": 53248,
+                "Rss": 24576,
+                "Pss": 24576,
+                "Anonymous": 24576,
+                "Private_Dirty": 24576
+              }
+            ]
+          }
+        },
+        "rr-data-vm-vfat": {
+          "fd_count": 7,
+          "threads": 1,
+          "mappings": {
+            "groups_bytes": {
+              "file": {
+                "mapping_count": 100,
+                "Size": 19148800,
+                "Rss": 13381632,
+                "Pss": 5010432,
+                "Anonymous": 1830912,
+                "Private_Dirty": 1998848
+              },
+              "anonymous": {
+                "mapping_count": 18,
+                "Size": 156983296,
+                "Rss": 4902912,
+                "Pss": 4902912,
+                "Anonymous": 4902912,
+                "Private_Dirty": 4902912
+              },
+              "heap": {
+                "mapping_count": 1,
+                "Size": 3624960,
+                "Rss": 3567616,
+                "Pss": 3567616,
+                "Anonymous": 3567616,
+                "Private_Dirty": 3567616
+              },
+              "special": {
+                "mapping_count": 4,
+                "Size": 36864,
+                "Rss": 8192,
+                "Pss": 0,
+                "Anonymous": 0,
+                "Private_Dirty": 0
+              },
+              "stack": {
+                "mapping_count": 1,
+                "Size": 135168,
+                "Rss": 77824,
+                "Pss": 77824,
+                "Anonymous": 77824,
+                "Private_Dirty": 77824
+              }
+            },
+            "mapping_count": 124,
+            "largest_resident_anonymous_regions": [
+              {
+                "kind": "heap",
+                "name": "[heap]",
+                "permissions": "rw-p",
+                "Size": 3624960,
+                "Rss": 3567616,
+                "Pss": 3567616,
+                "Anonymous": 3567616,
+                "Private_Dirty": 3567616
+              },
+              {
+                "kind": "anonymous",
+                "name": "",
+                "permissions": "rw-p",
+                "Size": 2523136,
+                "Rss": 2101248,
+                "Pss": 2101248,
+                "Anonymous": 2101248,
+                "Private_Dirty": 2101248
+              },
+              {
+                "kind": "anonymous",
+                "name": "",
+                "permissions": "rw-p",
+                "Size": 1257472,
+                "Rss": 1236992,
+                "Pss": 1236992,
+                "Anonymous": 1236992,
+                "Private_Dirty": 1236992
+              },
+              {
+                "kind": "anonymous",
+                "name": "",
+                "permissions": "rw-p",
+                "Size": 1048576,
+                "Rss": 1032192,
+                "Pss": 1032192,
+                "Anonymous": 1032192,
+                "Private_Dirty": 1032192
+              },
+              {
+                "kind": "anonymous",
+                "name": "",
+                "permissions": "rw-p",
+                "Size": 1048576,
+                "Rss": 299008,
+                "Pss": 299008,
+                "Anonymous": 299008,
+                "Private_Dirty": 299008
+              },
+              {
+                "kind": "anonymous",
+                "name": "",
+                "permissions": "rw-p",
+                "Size": 135168,
+                "Rss": 77824,
+                "Pss": 77824,
+                "Anonymous": 77824,
+                "Private_Dirty": 77824
+              },
+              {
+                "kind": "anonymous",
+                "name": "",
+                "permissions": "rw-p",
+                "Size": 135168,
+                "Rss": 77824,
+                "Pss": 77824,
+                "Anonymous": 77824,
+                "Private_Dirty": 77824
+              },
+              {
+                "kind": "stack",
+                "name": "[stack]",
+                "permissions": "rw-p",
+                "Size": 135168,
+                "Rss": 77824,
+                "Pss": 77824,
+                "Anonymous": 77824,
+                "Private_Dirty": 77824
+              }
+            ]
+          }
+        }
+      },
+      "checkpoint_guest_monotonic": 48.598522569
+    },
+    {
+      "cycle": 9,
+      "memory_current_bytes": 47534080,
+      "cpu_usage_usec": 1787481,
+      "cpu_throttled_usec": 3514067,
+      "process_pids": [
+        480,
+        1079,
+        1102
+      ],
+      "Rss_bytes": 65425408,
+      "Pss_bytes": 40349696,
+      "Swap_bytes": 0,
+      "SwapPss_bytes": 0,
+      "memory_stat_anon_bytes": 31002624,
+      "memory_stat_file_bytes": 2387968,
+      "memory_stat_kernel_bytes": 13209600,
+      "memory_stat_shmem_bytes": 143360,
+      "memory_stat_slab_bytes": 12832424,
+      "memory_stat_pagetables_bytes": 356352,
+      "memory_stat_kernel_stack_bytes": 0,
+      "controllers": {
+        "root": {
+          "fd_count": 7,
+          "threads": 1,
+          "mappings": {
+            "groups_bytes": {
+              "file": {
+                "mapping_count": 100,
+                "Size": 19148800,
+                "Rss": 13217792,
+                "Pss": 4871168,
+                "Anonymous": 1830912,
+                "Private_Dirty": 1900544
+              },
+              "anonymous": {
+                "mapping_count": 17,
+                "Size": 156983296,
+                "Rss": 4636672,
+                "Pss": 4636672,
+                "Anonymous": 4636672,
+                "Private_Dirty": 4636672
+              },
+              "heap": {
+                "mapping_count": 1,
+                "Size": 3706880,
+                "Rss": 3694592,
+                "Pss": 3694592,
+                "Anonymous": 3694592,
+                "Private_Dirty": 3694592
+              },
+              "special": {
+                "mapping_count": 4,
+                "Size": 36864,
+                "Rss": 8192,
+                "Pss": 0,
+                "Anonymous": 0,
+                "Private_Dirty": 0
+              },
+              "stack": {
+                "mapping_count": 1,
+                "Size": 135168,
+                "Rss": 77824,
+                "Pss": 77824,
+                "Anonymous": 77824,
+                "Private_Dirty": 77824
+              }
+            },
+            "mapping_count": 123,
+            "largest_resident_anonymous_regions": [
+              {
+                "kind": "anonymous",
+                "name": "",
+                "permissions": "rw-p",
+                "Size": 4620288,
+                "Rss": 4104192,
+                "Pss": 4104192,
+                "Anonymous": 4104192,
+                "Private_Dirty": 4104192
+              },
+              {
+                "kind": "heap",
+                "name": "[heap]",
+                "permissions": "rw-p",
+                "Size": 3706880,
+                "Rss": 3694592,
+                "Pss": 3694592,
+                "Anonymous": 3694592,
+                "Private_Dirty": 3694592
+              },
+              {
+                "kind": "anonymous",
+                "name": "",
+                "permissions": "rw-p",
+                "Size": 208896,
+                "Rss": 208896,
+                "Pss": 208896,
+                "Anonymous": 208896,
+                "Private_Dirty": 208896
+              },
+              {
+                "kind": "anonymous",
+                "name": "",
+                "permissions": "rw-p",
+                "Size": 135168,
+                "Rss": 86016,
+                "Pss": 86016,
+                "Anonymous": 86016,
+                "Private_Dirty": 86016
+              },
+              {
+                "kind": "anonymous",
+                "name": "",
+                "permissions": "rw-p",
+                "Size": 1048576,
+                "Rss": 81920,
+                "Pss": 81920,
+                "Anonymous": 81920,
+                "Private_Dirty": 81920
+              },
+              {
+                "kind": "anonymous",
+                "name": "",
+                "permissions": "rw-p",
+                "Size": 135168,
+                "Rss": 77824,
+                "Pss": 77824,
+                "Anonymous": 77824,
+                "Private_Dirty": 77824
+              },
+              {
+                "kind": "stack",
+                "name": "[stack]",
+                "permissions": "rw-p",
+                "Size": 135168,
+                "Rss": 77824,
+                "Pss": 77824,
+                "Anonymous": 77824,
+                "Private_Dirty": 77824
+              },
+              {
+                "kind": "anonymous",
+                "name": "",
+                "permissions": "rw-p",
+                "Size": 53248,
+                "Rss": 24576,
+                "Pss": 24576,
+                "Anonymous": 24576,
+                "Private_Dirty": 24576
+              }
+            ]
+          }
+        },
+        "rr-data-vm-ext4": {
+          "fd_count": 7,
+          "threads": 1,
+          "mappings": {
+            "groups_bytes": {
+              "file": {
+                "mapping_count": 100,
+                "Size": 19148800,
+                "Rss": 13291520,
+                "Pss": 4855808,
+                "Anonymous": 1830912,
+                "Private_Dirty": 1847296
+              },
+              "anonymous": {
+                "mapping_count": 17,
+                "Size": 156983296,
+                "Rss": 4902912,
+                "Pss": 4902912,
+                "Anonymous": 4902912,
+                "Private_Dirty": 4902912
+              },
+              "heap": {
+                "mapping_count": 1,
+                "Size": 3624960,
+                "Rss": 3567616,
+                "Pss": 3567616,
+                "Anonymous": 3567616,
+                "Private_Dirty": 3567616
+              },
+              "special": {
+                "mapping_count": 4,
+                "Size": 36864,
+                "Rss": 8192,
+                "Pss": 0,
+                "Anonymous": 0,
+                "Private_Dirty": 0
+              },
+              "stack": {
+                "mapping_count": 1,
+                "Size": 135168,
+                "Rss": 81920,
+                "Pss": 81920,
+                "Anonymous": 81920,
+                "Private_Dirty": 81920
+              }
+            },
+            "mapping_count": 123,
+            "largest_resident_anonymous_regions": [
+              {
+                "kind": "heap",
+                "name": "[heap]",
+                "permissions": "rw-p",
+                "Size": 3624960,
+                "Rss": 3567616,
+                "Pss": 3567616,
+                "Anonymous": 3567616,
+                "Private_Dirty": 3567616
+              },
+              {
+                "kind": "anonymous",
+                "name": "",
+                "permissions": "rw-p",
+                "Size": 3571712,
+                "Rss": 3117056,
+                "Pss": 3117056,
+                "Anonymous": 3117056,
+                "Private_Dirty": 3117056
+              },
+              {
+                "kind": "anonymous",
+                "name": "",
+                "permissions": "rw-p",
+                "Size": 1257472,
+                "Rss": 1236992,
+                "Pss": 1236992,
+                "Anonymous": 1236992,
+                "Private_Dirty": 1236992
+              },
+              {
+                "kind": "anonymous",
+                "name": "",
+                "permissions": "rw-p",
+                "Size": 1048576,
+                "Rss": 315392,
+                "Pss": 315392,
+                "Anonymous": 315392,
+                "Private_Dirty": 315392
+              },
+              {
+                "kind": "stack",
+                "name": "[stack]",
+                "permissions": "rw-p",
+                "Size": 135168,
+                "Rss": 81920,
+                "Pss": 81920,
+                "Anonymous": 81920,
+                "Private_Dirty": 81920
+              },
+              {
+                "kind": "anonymous",
+                "name": "",
+                "permissions": "rw-p",
+                "Size": 135168,
+                "Rss": 77824,
+                "Pss": 77824,
+                "Anonymous": 77824,
+                "Private_Dirty": 77824
+              },
+              {
+                "kind": "anonymous",
+                "name": "",
+                "permissions": "rw-p",
+                "Size": 135168,
+                "Rss": 77824,
+                "Pss": 77824,
+                "Anonymous": 77824,
+                "Private_Dirty": 77824
+              },
+              {
+                "kind": "anonymous",
+                "name": "",
+                "permissions": "rw-p",
+                "Size": 53248,
+                "Rss": 24576,
+                "Pss": 24576,
+                "Anonymous": 24576,
+                "Private_Dirty": 24576
+              }
+            ]
+          }
+        },
+        "rr-data-vm-vfat": {
+          "fd_count": 7,
+          "threads": 1,
+          "mappings": {
+            "groups_bytes": {
+              "file": {
+                "mapping_count": 100,
+                "Size": 19148800,
+                "Rss": 13381632,
+                "Pss": 5032960,
+                "Anonymous": 1830912,
+                "Private_Dirty": 2039808
+              },
+              "anonymous": {
+                "mapping_count": 18,
+                "Size": 156983296,
+                "Rss": 4902912,
+                "Pss": 4902912,
+                "Anonymous": 4902912,
+                "Private_Dirty": 4902912
+              },
+              "heap": {
+                "mapping_count": 1,
+                "Size": 3624960,
+                "Rss": 3567616,
+                "Pss": 3567616,
+                "Anonymous": 3567616,
+                "Private_Dirty": 3567616
+              },
+              "special": {
+                "mapping_count": 4,
+                "Size": 36864,
+                "Rss": 8192,
+                "Pss": 0,
+                "Anonymous": 0,
+                "Private_Dirty": 0
+              },
+              "stack": {
+                "mapping_count": 1,
+                "Size": 135168,
+                "Rss": 77824,
+                "Pss": 77824,
+                "Anonymous": 77824,
+                "Private_Dirty": 77824
+              }
+            },
+            "mapping_count": 124,
+            "largest_resident_anonymous_regions": [
+              {
+                "kind": "heap",
+                "name": "[heap]",
+                "permissions": "rw-p",
+                "Size": 3624960,
+                "Rss": 3567616,
+                "Pss": 3567616,
+                "Anonymous": 3567616,
+                "Private_Dirty": 3567616
+              },
+              {
+                "kind": "anonymous",
+                "name": "",
+                "permissions": "rw-p",
+                "Size": 2523136,
+                "Rss": 2101248,
+                "Pss": 2101248,
+                "Anonymous": 2101248,
+                "Private_Dirty": 2101248
+              },
+              {
+                "kind": "anonymous",
+                "name": "",
+                "permissions": "rw-p",
+                "Size": 1257472,
+                "Rss": 1236992,
+                "Pss": 1236992,
+                "Anonymous": 1236992,
+                "Private_Dirty": 1236992
+              },
+              {
+                "kind": "anonymous",
+                "name": "",
+                "permissions": "rw-p",
+                "Size": 1048576,
+                "Rss": 1032192,
+                "Pss": 1032192,
+                "Anonymous": 1032192,
+                "Private_Dirty": 1032192
+              },
+              {
+                "kind": "anonymous",
+                "name": "",
+                "permissions": "rw-p",
+                "Size": 1048576,
+                "Rss": 299008,
+                "Pss": 299008,
+                "Anonymous": 299008,
+                "Private_Dirty": 299008
+              },
+              {
+                "kind": "anonymous",
+                "name": "",
+                "permissions": "rw-p",
+                "Size": 135168,
+                "Rss": 77824,
+                "Pss": 77824,
+                "Anonymous": 77824,
+                "Private_Dirty": 77824
+              },
+              {
+                "kind": "anonymous",
+                "name": "",
+                "permissions": "rw-p",
+                "Size": 135168,
+                "Rss": 77824,
+                "Pss": 77824,
+                "Anonymous": 77824,
+                "Private_Dirty": 77824
+              },
+              {
+                "kind": "stack",
+                "name": "[stack]",
+                "permissions": "rw-p",
+                "Size": 135168,
+                "Rss": 77824,
+                "Pss": 77824,
+                "Anonymous": 77824,
+                "Private_Dirty": 77824
+              }
+            ]
+          }
+        }
+      },
+      "checkpoint_guest_monotonic": 53.079403075
+    },
+    {
+      "cycle": 10,
+      "memory_current_bytes": 47435776,
+      "cpu_usage_usec": 1954739,
+      "cpu_throttled_usec": 3916576,
+      "process_pids": [
+        480,
+        1079,
+        1102
+      ],
+      "Rss_bytes": 65429504,
+      "Pss_bytes": 40435712,
+      "Swap_bytes": 0,
+      "SwapPss_bytes": 0,
+      "memory_stat_anon_bytes": 31006720,
+      "memory_stat_file_bytes": 2396160,
+      "memory_stat_kernel_bytes": 13209600,
+      "memory_stat_shmem_bytes": 151552,
+      "memory_stat_slab_bytes": 12831400,
+      "memory_stat_pagetables_bytes": 356352,
+      "memory_stat_kernel_stack_bytes": 0,
+      "controllers": {
+        "root": {
+          "fd_count": 7,
+          "threads": 1,
+          "mappings": {
+            "groups_bytes": {
+              "file": {
+                "mapping_count": 100,
+                "Size": 19148800,
+                "Rss": 13217792,
+                "Pss": 4812800,
+                "Anonymous": 1830912,
+                "Private_Dirty": 1830912
+              },
+              "anonymous": {
+                "mapping_count": 17,
+                "Size": 156983296,
+                "Rss": 4640768,
+                "Pss": 4640768,
+                "Anonymous": 4640768,
+                "Private_Dirty": 4640768
+              },
+              "heap": {
+                "mapping_count": 1,
+                "Size": 3706880,
+                "Rss": 3694592,
+                "Pss": 3694592,
+                "Anonymous": 3694592,
+                "Private_Dirty": 3694592
+              },
+              "special": {
+                "mapping_count": 4,
+                "Size": 36864,
+                "Rss": 8192,
+                "Pss": 0,
+                "Anonymous": 0,
+                "Private_Dirty": 0
+              },
+              "stack": {
+                "mapping_count": 1,
+                "Size": 135168,
+                "Rss": 77824,
+                "Pss": 77824,
+                "Anonymous": 77824,
+                "Private_Dirty": 77824
+              }
+            },
+            "mapping_count": 123,
+            "largest_resident_anonymous_regions": [
+              {
+                "kind": "anonymous",
+                "name": "",
+                "permissions": "rw-p",
+                "Size": 4620288,
+                "Rss": 4104192,
+                "Pss": 4104192,
+                "Anonymous": 4104192,
+                "Private_Dirty": 4104192
+              },
+              {
+                "kind": "heap",
+                "name": "[heap]",
+                "permissions": "rw-p",
+                "Size": 3706880,
+                "Rss": 3694592,
+                "Pss": 3694592,
+                "Anonymous": 3694592,
+                "Private_Dirty": 3694592
+              },
+              {
+                "kind": "anonymous",
+                "name": "",
+                "permissions": "rw-p",
+                "Size": 208896,
+                "Rss": 208896,
+                "Pss": 208896,
+                "Anonymous": 208896,
+                "Private_Dirty": 208896
+              },
+              {
+                "kind": "anonymous",
+                "name": "",
+                "permissions": "rw-p",
+                "Size": 135168,
+                "Rss": 86016,
+                "Pss": 86016,
+                "Anonymous": 86016,
+                "Private_Dirty": 86016
+              },
+              {
+                "kind": "anonymous",
+                "name": "",
+                "permissions": "rw-p",
+                "Size": 1048576,
+                "Rss": 86016,
+                "Pss": 86016,
+                "Anonymous": 86016,
+                "Private_Dirty": 86016
+              },
+              {
+                "kind": "anonymous",
+                "name": "",
+                "permissions": "rw-p",
+                "Size": 135168,
+                "Rss": 77824,
+                "Pss": 77824,
+                "Anonymous": 77824,
+                "Private_Dirty": 77824
+              },
+              {
+                "kind": "stack",
+                "name": "[stack]",
+                "permissions": "rw-p",
+                "Size": 135168,
+                "Rss": 77824,
+                "Pss": 77824,
+                "Anonymous": 77824,
+                "Private_Dirty": 77824
+              },
+              {
+                "kind": "anonymous",
+                "name": "",
+                "permissions": "rw-p",
+                "Size": 53248,
+                "Rss": 24576,
+                "Pss": 24576,
+                "Anonymous": 24576,
+                "Private_Dirty": 24576
+              }
+            ]
+          }
+        },
+        "rr-data-vm-ext4": {
+          "fd_count": 7,
+          "threads": 1,
+          "mappings": {
+            "groups_bytes": {
+              "file": {
+                "mapping_count": 100,
+                "Size": 19148800,
+                "Rss": 13291520,
+                "Pss": 4881408,
+                "Anonymous": 1830912,
+                "Private_Dirty": 1871872
+              },
+              "anonymous": {
+                "mapping_count": 17,
+                "Size": 156983296,
+                "Rss": 4902912,
+                "Pss": 4902912,
+                "Anonymous": 4902912,
+                "Private_Dirty": 4902912
+              },
+              "heap": {
+                "mapping_count": 1,
+                "Size": 3624960,
+                "Rss": 3567616,
+                "Pss": 3567616,
+                "Anonymous": 3567616,
+                "Private_Dirty": 3567616
+              },
+              "special": {
+                "mapping_count": 4,
+                "Size": 36864,
+                "Rss": 8192,
+                "Pss": 0,
+                "Anonymous": 0,
+                "Private_Dirty": 0
+              },
+              "stack": {
+                "mapping_count": 1,
+                "Size": 135168,
+                "Rss": 81920,
+                "Pss": 81920,
+                "Anonymous": 81920,
+                "Private_Dirty": 81920
+              }
+            },
+            "mapping_count": 123,
+            "largest_resident_anonymous_regions": [
+              {
+                "kind": "heap",
+                "name": "[heap]",
+                "permissions": "rw-p",
+                "Size": 3624960,
+                "Rss": 3567616,
+                "Pss": 3567616,
+                "Anonymous": 3567616,
+                "Private_Dirty": 3567616
+              },
+              {
+                "kind": "anonymous",
+                "name": "",
+                "permissions": "rw-p",
+                "Size": 3571712,
+                "Rss": 3117056,
+                "Pss": 3117056,
+                "Anonymous": 3117056,
+                "Private_Dirty": 3117056
+              },
+              {
+                "kind": "anonymous",
+                "name": "",
+                "permissions": "rw-p",
+                "Size": 1257472,
+                "Rss": 1236992,
+                "Pss": 1236992,
+                "Anonymous": 1236992,
+                "Private_Dirty": 1236992
+              },
+              {
+                "kind": "anonymous",
+                "name": "",
+                "permissions": "rw-p",
+                "Size": 1048576,
+                "Rss": 315392,
+                "Pss": 315392,
+                "Anonymous": 315392,
+                "Private_Dirty": 315392
+              },
+              {
+                "kind": "stack",
+                "name": "[stack]",
+                "permissions": "rw-p",
+                "Size": 135168,
+                "Rss": 81920,
+                "Pss": 81920,
+                "Anonymous": 81920,
+                "Private_Dirty": 81920
+              },
+              {
+                "kind": "anonymous",
+                "name": "",
+                "permissions": "rw-p",
+                "Size": 135168,
+                "Rss": 77824,
+                "Pss": 77824,
+                "Anonymous": 77824,
+                "Private_Dirty": 77824
+              },
+              {
+                "kind": "anonymous",
+                "name": "",
+                "permissions": "rw-p",
+                "Size": 135168,
+                "Rss": 77824,
+                "Pss": 77824,
+                "Anonymous": 77824,
+                "Private_Dirty": 77824
+              },
+              {
+                "kind": "anonymous",
+                "name": "",
+                "permissions": "rw-p",
+                "Size": 53248,
+                "Rss": 24576,
+                "Pss": 24576,
+                "Anonymous": 24576,
+                "Private_Dirty": 24576
+              }
+            ]
+          }
+        },
+        "rr-data-vm-vfat": {
+          "fd_count": 7,
+          "threads": 1,
+          "mappings": {
+            "groups_bytes": {
+              "file": {
+                "mapping_count": 100,
+                "Size": 19148800,
+                "Rss": 13381632,
+                "Pss": 5148672,
+                "Anonymous": 1830912,
+                "Private_Dirty": 2220032
+              },
+              "anonymous": {
+                "mapping_count": 18,
+                "Size": 156983296,
+                "Rss": 4902912,
+                "Pss": 4902912,
+                "Anonymous": 4902912,
+                "Private_Dirty": 4902912
+              },
+              "heap": {
+                "mapping_count": 1,
+                "Size": 3624960,
+                "Rss": 3567616,
+                "Pss": 3567616,
+                "Anonymous": 3567616,
+                "Private_Dirty": 3567616
+              },
+              "special": {
+                "mapping_count": 4,
+                "Size": 36864,
+                "Rss": 8192,
+                "Pss": 0,
+                "Anonymous": 0,
+                "Private_Dirty": 0
+              },
+              "stack": {
+                "mapping_count": 1,
+                "Size": 135168,
+                "Rss": 77824,
+                "Pss": 77824,
+                "Anonymous": 77824,
+                "Private_Dirty": 77824
+              }
+            },
+            "mapping_count": 124,
+            "largest_resident_anonymous_regions": [
+              {
+                "kind": "heap",
+                "name": "[heap]",
+                "permissions": "rw-p",
+                "Size": 3624960,
+                "Rss": 3567616,
+                "Pss": 3567616,
+                "Anonymous": 3567616,
+                "Private_Dirty": 3567616
+              },
+              {
+                "kind": "anonymous",
+                "name": "",
+                "permissions": "rw-p",
+                "Size": 2523136,
+                "Rss": 2101248,
+                "Pss": 2101248,
+                "Anonymous": 2101248,
+                "Private_Dirty": 2101248
+              },
+              {
+                "kind": "anonymous",
+                "name": "",
+                "permissions": "rw-p",
+                "Size": 1257472,
+                "Rss": 1236992,
+                "Pss": 1236992,
+                "Anonymous": 1236992,
+                "Private_Dirty": 1236992
+              },
+              {
+                "kind": "anonymous",
+                "name": "",
+                "permissions": "rw-p",
+                "Size": 1048576,
+                "Rss": 1032192,
+                "Pss": 1032192,
+                "Anonymous": 1032192,
+                "Private_Dirty": 1032192
+              },
+              {
+                "kind": "anonymous",
+                "name": "",
+                "permissions": "rw-p",
+                "Size": 1048576,
+                "Rss": 299008,
+                "Pss": 299008,
+                "Anonymous": 299008,
+                "Private_Dirty": 299008
+              },
+              {
+                "kind": "anonymous",
+                "name": "",
+                "permissions": "rw-p",
+                "Size": 135168,
+                "Rss": 77824,
+                "Pss": 77824,
+                "Anonymous": 77824,
+                "Private_Dirty": 77824
+              },
+              {
+                "kind": "anonymous",
+                "name": "",
+                "permissions": "rw-p",
+                "Size": 135168,
+                "Rss": 77824,
+                "Pss": 77824,
+                "Anonymous": 77824,
+                "Private_Dirty": 77824
+              },
+              {
+                "kind": "stack",
+                "name": "[stack]",
+                "permissions": "rw-p",
+                "Size": 135168,
+                "Rss": 77824,
+                "Pss": 77824,
+                "Anonymous": 77824,
+                "Private_Dirty": 77824
+              }
+            ]
+          }
+        }
+      },
+      "checkpoint_guest_monotonic": 57.581350798
+    }
+  ],
+  "memory_trend": {
+    "memory_current_bytes": {
+      "initial": 46612480,
+      "after_first_recovery": 47251456,
+      "final": 47435776,
+      "first_recovery_delta": 638976,
+      "after_first_to_final_delta": 184320,
+      "post_recovery_min": 47120384,
+      "post_recovery_max": 47800320,
+      "last_five_range": 512000,
+      "post_recovery_linear_slope_bytes_per_cycle": 20132.460606060606
+    },
+    "Pss_bytes": {
+      "initial": 39729152,
+      "after_first_recovery": 40292352,
+      "final": 40435712,
+      "first_recovery_delta": 563200,
+      "after_first_to_final_delta": 143360,
+      "post_recovery_min": 40292352,
+      "post_recovery_max": 40440832,
+      "last_five_range": 93184,
+      "post_recovery_linear_slope_bytes_per_cycle": 6683.927272727273
+    },
+    "Rss_bytes": {
+      "initial": 64708608,
+      "after_first_recovery": 65282048,
+      "final": 65429504,
+      "first_recovery_delta": 573440,
+      "after_first_to_final_delta": 147456,
+      "post_recovery_min": 65282048,
+      "post_recovery_max": 65429504,
+      "last_five_range": 8192,
+      "post_recovery_linear_slope_bytes_per_cycle": 11965.28484848485
+    },
+    "memory_stat_anon_bytes": {
+      "initial": 30412800,
+      "after_first_recovery": 30859264,
+      "final": 31006720,
+      "first_recovery_delta": 446464,
+      "after_first_to_final_delta": 147456,
+      "post_recovery_min": 30859264,
+      "post_recovery_max": 31006720,
+      "last_five_range": 8192,
+      "post_recovery_linear_slope_bytes_per_cycle": 11965.28484848485
+    },
+    "memory_stat_file_bytes": {
+      "initial": 1159168,
+      "after_first_recovery": 2318336,
+      "final": 2396160,
+      "first_recovery_delta": 1159168,
+      "after_first_to_final_delta": 77824,
+      "post_recovery_min": 2318336,
+      "post_recovery_max": 2396160,
+      "last_five_range": 32768,
+      "post_recovery_linear_slope_bytes_per_cycle": 8291.29696969697
+    },
+    "memory_stat_kernel_bytes": {
+      "initial": 14098432,
+      "after_first_recovery": 13434880,
+      "final": 13209600,
+      "first_recovery_delta": -663552,
+      "after_first_to_final_delta": -225280,
+      "post_recovery_min": 13209600,
+      "post_recovery_max": 13434880,
+      "last_five_range": 114688,
+      "post_recovery_linear_slope_bytes_per_cycle": -29987.68484848485
+    }
+  },
+  "checks": {
+    "all_requested_cycles_completed": true,
+    "runtime_unchanged": true,
+    "only_three_controllers_after_each_settle": true,
+    "no_swap_at_settled_checkpoints": true,
+    "root_durable_data": true,
+    "root_writable": true,
+    "data_durable_hashes": true,
+    "cycle_1_same_owners_workloads_mounts_and_successful_recovery": true,
+    "cycle_2_same_owners_workloads_mounts_and_successful_recovery": true,
+    "cycle_3_same_owners_workloads_mounts_and_successful_recovery": true,
+    "cycle_4_same_owners_workloads_mounts_and_successful_recovery": true,
+    "cycle_5_same_owners_workloads_mounts_and_successful_recovery": true,
+    "cycle_6_same_owners_workloads_mounts_and_successful_recovery": true,
+    "cycle_7_same_owners_workloads_mounts_and_successful_recovery": true,
+    "cycle_8_same_owners_workloads_mounts_and_successful_recovery": true,
+    "cycle_9_same_owners_workloads_mounts_and_successful_recovery": true,
+    "cycle_10_same_owners_workloads_mounts_and_successful_recovery": true,
+    "settled_fd_and_thread_counts_do_not_grow_after_first_recovery": true,
+    "clean_shutdown": true
+  },
+  "cycles": [
+    {
+      "index": 1,
+      "fault": {
+        "root": {
+          "removed": 19310.589611785,
+          "attached": 19311.052071804,
+          "delete_requested": 19310.538468061,
+          "gap_seconds": 0.462460018999991,
+          "clock": "host monotonic: QMP deletion event received to attach reply received"
+        },
+        "rr-data-vm-ext4": {
+          "removed": 19310.589865054,
+          "attached": 19311.112343924,
+          "delete_requested": 19310.538987375,
+          "gap_seconds": 0.5224788699997589,
+          "clock": "host monotonic: QMP deletion event received to attach reply received"
+        },
+        "rr-data-vm-vfat": {
+          "removed": 19310.69075616,
+          "attached": 19311.172564426,
+          "delete_requested": 19310.639363816,
+          "gap_seconds": 0.48180826600219007,
+          "clock": "host monotonic: QMP deletion event received to attach reply received"
+        }
+      },
+      "request_to_observed_ready_seconds": 3.635005096999521,
+      "recovery_windows": {
+        "root": {
+          "waiting": 11.20638606,
+          "ready": 13.412974121,
+          "seconds": 2.2065880609999997,
+          "recoveries": 1
+        },
+        "rr-data-vm-ext4": {
+          "waiting": 11.526471694,
+          "ready": 14.400942105,
+          "seconds": 2.874470411000001,
+          "recoveries": 1
+        },
+        "rr-data-vm-vfat": {
+          "waiting": 11.662537558,
+          "ready": 13.737667625,
+          "seconds": 2.075130067,
+          "recoveries": 1
+        }
+      },
+      "accounting_including_settle": {
+        "seconds": 4.562219312,
+        "cpu_usec": 159878,
+        "cpu_mean_one_core_percent": 3.5043909349003255,
+        "throttled_usec": 262235
+      }
+    },
+    {
+      "index": 2,
+      "fault": {
+        "root": {
+          "removed": 19315.176487089,
+          "attached": 19315.639378795,
+          "delete_requested": 19315.124898659,
+          "gap_seconds": 0.4628917059999367,
+          "clock": "host monotonic: QMP deletion event received to attach reply received"
+        },
+        "rr-data-vm-ext4": {
+          "removed": 19315.176964238,
+          "attached": 19315.699188702,
+          "delete_requested": 19315.125639902,
+          "gap_seconds": 0.5222244640026474,
+          "clock": "host monotonic: QMP deletion event received to attach reply received"
+        },
+        "rr-data-vm-vfat": {
+          "removed": 19315.277833283,
+          "attached": 19315.759718007,
+          "delete_requested": 19315.226060815,
+          "gap_seconds": 0.4818847240021569,
+          "clock": "host monotonic: QMP deletion event received to attach reply received"
+        }
+      },
+      "request_to_observed_ready_seconds": 3.786977856001613,
+      "recovery_windows": {
+        "root": {
+          "waiting": 15.745422998,
+          "ready": 17.512972413,
+          "seconds": 1.7675494149999995,
+          "recoveries": 2
+        },
+        "rr-data-vm-ext4": {
+          "waiting": 16.132826854,
+          "ready": 19.167030571,
+          "seconds": 3.0342037170000005,
+          "recoveries": 2
+        },
+        "rr-data-vm-vfat": {
+          "waiting": 16.264867432,
+          "ready": 18.345233247,
+          "seconds": 2.0803658150000004,
+          "recoveries": 2
+        }
+      },
+      "accounting_including_settle": {
+        "seconds": 4.730243185999999,
+        "cpu_usec": 208010,
+        "cpu_mean_one_core_percent": 4.397448330260119,
+        "throttled_usec": 398412
+      }
+    },
+    {
+      "index": 3,
+      "fault": {
+        "root": {
+          "removed": 19319.896686321,
+          "attached": 19320.359904905,
+          "delete_requested": 19319.845478853,
+          "gap_seconds": 0.46321858399824123,
+          "clock": "host monotonic: QMP deletion event received to attach reply received"
+        },
+        "rr-data-vm-ext4": {
+          "removed": 19319.897119099,
+          "attached": 19320.419496276,
+          "delete_requested": 19319.845997515,
+          "gap_seconds": 0.5223771769997256,
+          "clock": "host monotonic: QMP deletion event received to attach reply received"
+        },
+        "rr-data-vm-vfat": {
+          "removed": 19320.000630506,
+          "attached": 19320.479780609,
+          "delete_requested": 19319.946553843,
+          "gap_seconds": 0.47915010299766436,
+          "clock": "host monotonic: QMP deletion event received to attach reply received"
+        }
+      },
+      "request_to_observed_ready_seconds": 3.7167886110000836,
+      "recovery_windows": {
+        "root": {
+          "waiting": 20.463484396,
+          "ready": 22.27270723,
+          "seconds": 1.8092228340000034,
+          "recoveries": 3
+        },
+        "rr-data-vm-ext4": {
+          "waiting": 20.84577307,
+          "ready": 23.711398822,
+          "seconds": 2.8656257519999997,
+          "recoveries": 3
+        },
+        "rr-data-vm-vfat": {
+          "waiting": 20.971774183,
+          "ready": 23.052417111,
+          "seconds": 2.0806429279999996,
+          "recoveries": 3
+        }
+      },
+      "accounting_including_settle": {
+        "seconds": 4.6582895900000025,
+        "cpu_usec": 160281,
+        "cpu_mean_one_core_percent": 3.4407693404050455,
+        "throttled_usec": 291346
+      }
+    },
+    {
+      "index": 4,
+      "fault": {
+        "root": {
+          "removed": 19324.555824599,
+          "attached": 19325.0191794,
+          "delete_requested": 19324.504576132,
+          "gap_seconds": 0.46335480099878623,
+          "clock": "host monotonic: QMP deletion event received to attach reply received"
+        },
+        "rr-data-vm-ext4": {
+          "removed": 19324.556325132,
+          "attached": 19325.07894061,
+          "delete_requested": 19324.504944146,
+          "gap_seconds": 0.5226154779993522,
+          "clock": "host monotonic: QMP deletion event received to attach reply received"
+        },
+        "rr-data-vm-vfat": {
+          "removed": 19324.656934663,
+          "attached": 19325.139350813,
+          "delete_requested": 19324.605476961,
+          "gap_seconds": 0.48241615000006277,
+          "clock": "host monotonic: QMP deletion event received to attach reply received"
+        }
+      },
+      "request_to_observed_ready_seconds": 3.706053369001893,
+      "recovery_windows": {
+        "root": {
+          "waiting": 25.124415311,
+          "ready": 26.9226153,
+          "seconds": 1.7981999890000004,
+          "recoveries": 4
+        },
+        "rr-data-vm-ext4": {
+          "waiting": 25.501835247,
+          "ready": 28.379709487,
+          "seconds": 2.8778742400000006,
+          "recoveries": 4
+        },
+        "rr-data-vm-vfat": {
+          "waiting": 25.628772476,
+          "ready": 27.706130749,
+          "seconds": 2.077358272999998,
+          "recoveries": 4
+        }
+      },
+      "accounting_including_settle": {
+        "seconds": 4.6450309139999995,
+        "cpu_usec": 158387,
+        "cpu_mean_one_core_percent": 3.409815842616371,
+        "throttled_usec": 241653
+      }
+    },
+    {
+      "index": 5,
+      "fault": {
+        "root": {
+          "removed": 19329.202408838,
+          "attached": 19329.666979173,
+          "delete_requested": 19329.1508574,
+          "gap_seconds": 0.46457033499973477,
+          "clock": "host monotonic: QMP deletion event received to attach reply received"
+        },
+        "rr-data-vm-ext4": {
+          "removed": 19329.202914587,
+          "attached": 19329.727044865,
+          "delete_requested": 19329.151490923,
+          "gap_seconds": 0.5241302780013939,
+          "clock": "host monotonic: QMP deletion event received to attach reply received"
+        },
+        "rr-data-vm-vfat": {
+          "removed": 19329.303853154,
+          "attached": 19329.788092397,
+          "delete_requested": 19329.252095283,
+          "gap_seconds": 0.4842392430000473,
+          "clock": "host monotonic: QMP deletion event received to attach reply received"
+        }
+      },
+      "request_to_observed_ready_seconds": 3.8555949770016014,
+      "recovery_windows": {
+        "root": {
+          "waiting": 29.81833112,
+          "ready": 31.255621431,
+          "seconds": 1.4372903110000017,
+          "recoveries": 5
+        },
+        "rr-data-vm-ext4": {
+          "waiting": 30.108434111,
+          "ready": 32.226187935,
+          "seconds": 2.1177538239999976,
+          "recoveries": 5
+        },
+        "rr-data-vm-vfat": {
+          "waiting": 30.19816512,
+          "ready": 33.158669398,
+          "seconds": 2.960504278000002,
+          "recoveries": 5
+        }
+      },
+      "accounting_including_settle": {
+        "seconds": 4.791233772000002,
+        "cpu_usec": 159153,
+        "cpu_mean_one_core_percent": 3.321754011045987,
+        "throttled_usec": 213189
+      }
+    },
+    {
+      "index": 6,
+      "fault": {
+        "root": {
+          "removed": 19333.997536765,
+          "attached": 19334.461011953,
+          "delete_requested": 19333.946070028,
+          "gap_seconds": 0.4634751880003023,
+          "clock": "host monotonic: QMP deletion event received to attach reply received"
+        },
+        "rr-data-vm-ext4": {
+          "removed": 19333.998116372,
+          "attached": 19334.52087712,
+          "delete_requested": 19333.946640772,
+          "gap_seconds": 0.5227607480010192,
+          "clock": "host monotonic: QMP deletion event received to attach reply received"
+        },
+        "rr-data-vm-vfat": {
+          "removed": 19334.098610798,
+          "attached": 19334.581223654,
+          "delete_requested": 19334.047175229,
+          "gap_seconds": 0.4826128560016514,
+          "clock": "host monotonic: QMP deletion event received to attach reply received"
+        }
+      },
+      "request_to_observed_ready_seconds": 3.819619900001271,
+      "recovery_windows": {
+        "root": {
+          "waiting": 34.613363332,
+          "ready": 36.023145431,
+          "seconds": 1.4097820990000045,
+          "recoveries": 6
+        },
+        "rr-data-vm-ext4": {
+          "waiting": 34.901467114,
+          "ready": 37.031252173,
+          "seconds": 2.1297850589999996,
+          "recoveries": 6
+        },
+        "rr-data-vm-vfat": {
+          "waiting": 35.038602192,
+          "ready": 37.878412622,
+          "seconds": 2.83981043,
+          "recoveries": 6
+        }
+      },
+      "accounting_including_settle": {
+        "seconds": 4.761975383999996,
+        "cpu_usec": 156457,
+        "cpu_mean_one_core_percent": 3.2855482732163606,
+        "throttled_usec": 195232
+      }
+    },
+    {
+      "index": 7,
+      "fault": {
+        "root": {
+          "removed": 19338.756045984,
+          "attached": 19339.21907303,
+          "delete_requested": 19338.704775355,
+          "gap_seconds": 0.4630270460002066,
+          "clock": "host monotonic: QMP deletion event received to attach reply received"
+        },
+        "rr-data-vm-ext4": {
+          "removed": 19338.75653917,
+          "attached": 19339.279060095,
+          "delete_requested": 19338.705294172,
+          "gap_seconds": 0.5225209249983891,
+          "clock": "host monotonic: QMP deletion event received to attach reply received"
+        },
+        "rr-data-vm-vfat": {
+          "removed": 19338.857339417,
+          "attached": 19339.339458943,
+          "delete_requested": 19338.805865212,
+          "gap_seconds": 0.4821195259974047,
+          "clock": "host monotonic: QMP deletion event received to attach reply received"
+        }
+      },
+      "request_to_observed_ready_seconds": 3.747186992000934,
+      "recovery_windows": {
+        "root": {
+          "waiting": 39.372088292,
+          "ready": 40.743588668,
+          "seconds": 1.3715003760000002,
+          "recoveries": 7
+        },
+        "rr-data-vm-ext4": {
+          "waiting": 39.661494815,
+          "ready": 41.74801289,
+          "seconds": 2.0865180750000007,
+          "recoveries": 7
+        },
+        "rr-data-vm-vfat": {
+          "waiting": 39.793486288,
+          "ready": 42.672509521,
+          "seconds": 2.879023233000005,
+          "recoveries": 7
+        }
+      },
+      "accounting_including_settle": {
+        "seconds": 4.690090084000005,
+        "cpu_usec": 153370,
+        "cpu_mean_one_core_percent": 3.270086442970758,
+        "throttled_usec": 216795
+      }
+    },
+    {
+      "index": 8,
+      "fault": {
+        "root": {
+          "removed": 19343.463154765,
+          "attached": 19343.925168607,
+          "delete_requested": 19343.411431528,
+          "gap_seconds": 0.4620138419995783,
+          "clock": "host monotonic: QMP deletion event received to attach reply received"
+        },
+        "rr-data-vm-ext4": {
+          "removed": 19343.463639438,
+          "attached": 19343.985383508,
+          "delete_requested": 19343.411795973,
+          "gap_seconds": 0.5217440699998406,
+          "clock": "host monotonic: QMP deletion event received to attach reply received"
+        },
+        "rr-data-vm-vfat": {
+          "removed": 19343.563566677,
+          "attached": 19344.04589882,
+          "delete_requested": 19343.512103717,
+          "gap_seconds": 0.4823321430012584,
+          "clock": "host monotonic: QMP deletion event received to attach reply received"
+        }
+      },
+      "request_to_observed_ready_seconds": 3.744331421003153,
+      "recovery_windows": {
+        "root": {
+          "waiting": 44.029365841,
+          "ready": 45.818334847,
+          "seconds": 1.788969006000002,
+          "recoveries": 8
+        },
+        "rr-data-vm-ext4": {
+          "waiting": 44.417848546,
+          "ready": 47.290942997,
+          "seconds": 2.873094451,
+          "recoveries": 8
+        },
+        "rr-data-vm-vfat": {
+          "waiting": 44.546858671,
+          "ready": 46.665403673,
+          "seconds": 2.1185450019999976,
+          "recoveries": 8
+        }
+      },
+      "accounting_including_settle": {
+        "seconds": 4.699037086999994,
+        "cpu_usec": 161825,
+        "cpu_mean_one_core_percent": 3.4437906533594513,
+        "throttled_usec": 292101
+      }
+    },
+    {
+      "index": 9,
+      "fault": {
+        "root": {
+          "removed": 19348.145643457,
+          "attached": 19348.609110106,
+          "delete_requested": 19348.094241857,
+          "gap_seconds": 0.4634666490019299,
+          "clock": "host monotonic: QMP deletion event received to attach reply received"
+        },
+        "rr-data-vm-ext4": {
+          "removed": 19348.146137327,
+          "attached": 19348.668939372,
+          "delete_requested": 19348.094911324,
+          "gap_seconds": 0.5228020450012991,
+          "clock": "host monotonic: QMP deletion event received to attach reply received"
+        },
+        "rr-data-vm-vfat": {
+          "removed": 19348.246865611,
+          "attached": 19348.729553217,
+          "delete_requested": 19348.195457985,
+          "gap_seconds": 0.4826876059996721,
+          "clock": "host monotonic: QMP deletion event received to attach reply received"
+        }
+      },
+      "request_to_observed_ready_seconds": 3.5379585689988744,
+      "recovery_windows": {
+        "root": {
+          "waiting": 48.970474334,
+          "ready": 49.933423983,
+          "seconds": 0.9629496489999951,
+          "recoveries": 9
+        },
+        "rr-data-vm-ext4": {
+          "waiting": 48.763942491,
+          "ready": 51.689245563,
+          "seconds": 2.9253030719999984,
+          "recoveries": 9
+        },
+        "rr-data-vm-vfat": {
+          "waiting": 48.89585492,
+          "ready": 51.820767517,
+          "seconds": 2.9249125970000023,
+          "recoveries": 9
+        }
+      },
+      "accounting_including_settle": {
+        "seconds": 4.480880506000005,
+        "cpu_usec": 153007,
+        "cpu_mean_one_core_percent": 3.4146636982423426,
+        "throttled_usec": 267463
+      }
+    },
+    {
+      "index": 10,
+      "fault": {
+        "root": {
+          "removed": 19352.629744386,
+          "attached": 19353.092827774,
+          "delete_requested": 19352.57832592,
+          "gap_seconds": 0.4630833880000864,
+          "clock": "host monotonic: QMP deletion event received to attach reply received"
+        },
+        "rr-data-vm-ext4": {
+          "removed": 19352.63021965,
+          "attached": 19353.153363175,
+          "delete_requested": 19352.578838123,
+          "gap_seconds": 0.5231435249988863,
+          "clock": "host monotonic: QMP deletion event received to attach reply received"
+        },
+        "rr-data-vm-vfat": {
+          "removed": 19352.731143509,
+          "attached": 19353.214149071,
+          "delete_requested": 19352.67937639,
+          "gap_seconds": 0.4830055619968334,
+          "clock": "host monotonic: QMP deletion event received to attach reply received"
+        }
+      },
+      "request_to_observed_ready_seconds": 3.557380334001209,
+      "recovery_windows": {
+        "root": {
+          "waiting": 53.451317173,
+          "ready": 54.409388989,
+          "seconds": 0.9580718160000004,
+          "recoveries": 10
+        },
+        "rr-data-vm-ext4": {
+          "waiting": 53.246113174,
+          "ready": 56.308543467,
+          "seconds": 3.0624302929999985,
+          "recoveries": 10
+        },
+        "rr-data-vm-vfat": {
+          "waiting": 53.370979163,
+          "ready": 56.37991442,
+          "seconds": 3.0089352569999974,
+          "recoveries": 10
+        }
+      },
+      "accounting_including_settle": {
+        "seconds": 4.501947723000001,
+        "cpu_usec": 167258,
+        "cpu_mean_one_core_percent": 3.7152363885856694,
+        "throttled_usec": 402509
+      }
+    }
+  ],
+  "filesystem_audits": {
+    "rr-data-vm-ext4": {
+      "returncode": 0,
+      "output": "e2fsck 1.47.0 (5-Feb-2023)\nPass 1: Checking inodes, blocks, and sizes\nPass 2: Checking directory structure\nPass 3: Checking directory connectivity\nPass 4: Checking reference counts\nPass 5: Checking group summary information\nDATA-VM-EXT4: 12/16384 files (16.7% non-contiguous), 2264/16384 blocks\n"
+    },
+    "rr-data-vm-vfat": {
+      "returncode": 0,
+      "output": "fsck.fat 4.2 (2021-01-31)\n/workspace/Project/External-Memo-Rescue-Handler/lab/work/soak-1001-052736-895957/rr-data-vm-vfat-audit.raw: 2 files, 1705/129022 clusters\n"
+    }
+  }
+}

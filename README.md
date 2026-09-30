@@ -2,6 +2,8 @@
 
 **统一后台入口：** 已有根盘保护和登记的数据映射统一查看与维护，无需选择根盘／普通设备模式。数据映射出现时由 systemd 自动启动恢复实例；没有新增定时扫盘总管。安装、登记及“映射必须预先建立”的边界见 [`guard/MANAGER.md`](guard/MANAGER.md)。
 
+**最新 QEMU 验收：** 根盘与两块普通数据盘同时断联、原挂载与 bind 子挂载继续读写、十轮连续恢复、CPU/内存对照和配额实验见 [本轮优化报告](research/2026-10-01/OVERNIGHT-OPTIMIZATION.md)。本轮增加 [原生 systemd 挂载计划](guard/MOUNTS.md)、[x86-64 / ARM64 / RISC-V64 分层兼容验证](guard/ARCHITECTURES.md) 和 [可选 C++ 只读观察器](guard/native/README.md)。这些源码更新已在隔离环境验证，尚未替换本机运行包；C++ 原型尚不承担完整恢复。
+
 针对本机 USB 外置根盘故障的 RAM 救援终端原型，实现在 [`ram-rescue-demo/`](ram-rescue-demo/README.md)。源码与开发数据放在 shared 卷的本项目目录；安装后的系统运行包位于 Ubuntu 的 `/usr/local/lib/ram-rescue-demo`，运行时工具位于 `/run/ram-rescue-demo` 的 RAM 文件系统。
 
 可重复的虚拟 USB/UAS 断联实验见 [`lab/README.md`](lab/README.md)：真实内核、USB 根盘、LVM/ext4、RAM 救援通道与 QMP 故障注入，实验只使用新建的虚拟磁盘。

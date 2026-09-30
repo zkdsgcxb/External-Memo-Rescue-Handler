@@ -14,13 +14,23 @@ def _bounded(text, size, *, tail=False):
     return (encoded[-size:] if tail else encoded[:size]).decode('utf-8', errors='ignore')
 
 
+def _traceback_locations(trace):
+    """Keep bounded frame locations without reading or caching source files."""
+    frames = []
+    while trace is not None and len(frames) < 16:
+        code = trace.tb_frame.f_code
+        filename = _bounded(code.co_filename, 1024, tail=True)
+        function = _bounded(code.co_name, 128)
+        frames.append(f'  File "{filename}", line {trace.tb_lineno}, in {function}\n')
+        trace = trace.tb_next
+    return _bounded(''.join(frames), 4096, tail=True)
+
+
 def _error(exc):
     try:
-        import traceback
         return {'type': _bounded(type(exc).__name__, 128),
                 'message': _bounded(str(exc), 3072),
-                'traceback': _bounded(''.join(traceback.format_tb(exc.__traceback__, limit=16)),
-                                      4096, tail=True)}
+                'traceback': _traceback_locations(exc.__traceback__)}
     except BaseException:
         # Formatting must not strand an owned fd or prevent late cleanup.
         return {'type': type(exc).__name__[:128],

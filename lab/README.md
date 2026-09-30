@@ -37,6 +37,17 @@ python3 lab/build.py --kernel "lab/work/kernel-package/extracted/boot/vmlinuz-$(
 
 恢复事务重构、准入边界、死亡接管与故障矩阵见 [TRANSACTIONS.md](TRANSACTIONS.md)；全内存与 CPU 统计口径见 [RESOURCE-MEASUREMENT.md](RESOURCE-MEASUREMENT.md)。
 
+新增的根盘＋两数据盘联合实验入口如下，均复用已验证的完整 Ubuntu 种子及私有构建产物；各脚本的 `--help` 列出可覆盖路径。性能实验应串行运行，避免 VM 之间争用资源。
+
+```bash
+python3 lab/mount_guard_probe.py
+python3 lab/soak_guard_probe.py --cycles 10
+python3 lab/performance_probe.py --variant baseline --quota-percent 20
+python3 lab/performance_probe.py --variant current --quota-percent 20
+```
+
+完整结果见 [本轮优化验收](../research/2026-10-01/OVERNIGHT-OPTIMIZATION.md)，跨指令集工具和 ARM64 独立内核实验见 [架构说明](../guard/ARCHITECTURES.md)，C++ 对照见 [观察器说明](../guard/native/README.md)。
+
 当前自动 Guard 以本机 `7.0.0-34-generic` 为验收基线，必须具备 `DM_MPATH_PROBE_PATHS`（multipath target ≥ 1.15.0），没有旧内核兼容降级。构建器仍可用于历史研究镜像，但不表示自动 Guard 支持这些内核。
 
 EFI 重接挂载验证使用 `python3 lab/efi_mount_probe.py`，依赖先前通过的完整 Ubuntu 保护启动种子、匹配的登记和构建；用 `--build-dir`、`--enrollment`、`--seed-report` 指向各自私有产物，不能仅从源码检出后直接运行。脚本创建根盘 overlay 和独立 FAT 镜像，复用生产配置，验证快速重接、根盘与 EFI 联合消失、旧卸载/新枚举交叠、原生 fsck 生命周期、失败限流以及关机。最终实测和配置选择见 [EFI 处理报告](../research/2026-10-01/EFI-RECOVERY.md)。额外需要宿主已有的 `dosfstools`，Ubuntu 种子内也必须提供 `fsck.vfat`；脚本不自动安装包、不接受宿主块设备。
@@ -92,6 +103,6 @@ python3 lab/run.py --scenario queued-write --gap 0.2
 
 1. 先扩大保活/映射恢复回归矩阵：更多间隔、重复拔插、错误身份、命令阻塞、更多 Ubuntu/systemd 服务与认证集成。
 2. 对已经中止 journal 或只读的卷，区分可读数据抢救与离线修复；不在线强行 fsck 或宣称系统恢复正常。
-3. “短暂断联无感”单独研究：需要在 I/O 错误到达 ext4/应用前实现有界等待/重试和稳定块设备身份。仅在错误之后 `lvchange --refresh` 无法撤销失败写入。[自动恢复原型](AUTOMATIC.md) 已在虚拟机中实现单 USB 路径的 dm-multipath 排队、身份核验、重接与超时。真实根盘启动集成、故障竞态、应用超时和长期压力仍待验证。
+3. 继续扩大“短暂断联时原工作负载存活”的覆盖：需要在 I/O 错误到达 ext4/应用前实现有界等待/重试和稳定块设备身份。仅在错误之后 `lvchange --refresh` 无法撤销失败写入。[自动恢复原型](AUTOMATIC.md) 已实现单 USB 路径的 dm-multipath 排队、身份核验、重接与超时，后续真实根盘启动集成及首次实盘拔插已经验证；任意故障竞态、应用自身超时和长期压力仍未完全覆盖。
 
 机制参考：[QEMU USB 热插拔文档](https://www.qemu.org/docs/master/system/devices/usb.html)、[Linux ext4 错误行为](https://www.kernel.org/doc/html/latest/admin-guide/ext4.html)。实测结果见 [VALIDATION.md](VALIDATION.md)。

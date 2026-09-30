@@ -7,19 +7,7 @@ import select
 import socket
 import time
 
-
-# Linux UAPI _IO(0xfd, 18), introduced in 6.16. Noble's userspace header
-# predates it. The shared runtime requires this interface on x86_64.
-DM_MPATH_PROBE_PATHS = 0xfd12
-
-
-class DMInfo(C.Structure):
-    # libdevmapper ABI, including the trailing internal_suspend member.
-    _fields_=[(name,kind) for name,kind in (
-        ('exists',C.c_int),('suspended',C.c_int),('live_table',C.c_int),
-        ('inactive_table',C.c_int),('open_count',C.c_int32),('event_nr',C.c_uint32),
-        ('major',C.c_uint32),('minor',C.c_uint32),('read_only',C.c_int),
-        ('target_count',C.c_int32),('deferred_remove',C.c_int),('internal_suspend',C.c_int))]
+from linux_abi import DMInfo, DM_MPATH_PROBE_PATHS
 
 
 def probe_paths(device, token):
@@ -133,6 +121,26 @@ class Events:
         self.sock=socket.socket(socket.AF_NETLINK,socket.SOCK_DGRAM,socket.NETLINK_KOBJECT_UEVENT if hasattr(socket,'NETLINK_KOBJECT_UEVENT') else 15)
         self.sock.setsockopt(socket.SOL_SOCKET,socket.SO_RCVBUF,256*1024)
         self.sock.bind((0,1));self.sock.setblocking(False)
+        self.paths=()
+
+    def watch(self,sys_paths=()):
+        """Limit healthy checks to enrolled paths; an empty scope sees all block events.
+
+        Keep the periodic check even with a scope: netlink can lose events.
+        Recovery clears the scope because re-enumeration can change USB ports.
+        """
+        self.paths=tuple(path.removeprefix('/sys').encode() for path in sys_paths)
+
+    def relevant(self,data):
+        fields=data.split(b'\0')
+        if b'SUBSYSTEM=block' not in fields:
+            return False
+        if not self.paths:
+            return True
+        path=next((field[8:] for field in fields if field.startswith(b'DEVPATH=')),None)
+        # A malformed block hint warrants reconciliation, never a healthy verdict.
+        return path is None or any(path==prefix or path.startswith(prefix+b'/')
+                                   for prefix in self.paths)
 
     def wait(self,seconds,completion_fd=None,*,defer_events=False):
         readers=[] if defer_events else [self.sock]
@@ -157,8 +165,8 @@ class Events:
                 if exc.errno==errno.ENOBUFS:
                     return True  # Reconcile once; the periodic check covers lost events.
                 raise
-            if peer[0]==0 and b'SUBSYSTEM=block' in data.split(b'\0'):
-                relevant=True  # Includes DM path change uevents and disk/partition changes.
+            if peer[0]==0 and self.relevant(data):
+                relevant=True
         if not relevant and not self.operation_ready:
             time.sleep(min(0.05,max(0,seconds)))
         return relevant

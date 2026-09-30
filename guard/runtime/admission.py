@@ -16,12 +16,7 @@ import threading
 import time
 
 from rescue import command, rows
-
-
-# Current x86_64 Linux UAPI; this project requires its kernel 7.0 baseline.
-BLKGETSIZE64 = 0x80081272
-BLKSSZGET = 0x1268
-BLKGETDISKSEQ = 0x80081280
+from linux_abi import BLKGETDISKSEQ, BLKGETSIZE64, BLKSSZGET
 
 
 class AdmissionError(RuntimeError):
