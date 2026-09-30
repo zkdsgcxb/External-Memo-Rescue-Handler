@@ -4,6 +4,7 @@ from pathlib import Path
 import shutil
 import tempfile
 import unittest
+from unittest.mock import Mock, patch
 
 BASE = Path(__file__).resolve().parents[1]
 spec = importlib.util.spec_from_file_location('rescue', BASE / 'src/rescue.py')
@@ -34,6 +35,12 @@ class RecoveryTests(unittest.TestCase):
         self.segtype = 'linear'
         self.lv_uuid = 'l' * 32
         self.r = mod.Recovery(self.c, self.sys, self.root / 'dev', self.runner)
+        self.cmdline = 'root=/dev/mapper/vgportable-ubuntu'
+        original_read = mod.read
+        cmdline = patch.object(mod, 'read', side_effect=lambda path:
+                               self.cmdline if str(path) == '/proc/cmdline' else original_read(path))
+        cmdline.start()
+        self.addCleanup(cmdline.stop)
 
     def disk(self, name, serial='demo-serial'):
         usb = self.sys / 'devices' / name / 'usb'
@@ -68,6 +75,16 @@ class RecoveryTests(unittest.TestCase):
     def test_reenumerated_device_with_matching_identity(self):
         self.assertTrue(self.r.verify().endswith('/dev/sdc3'))
         self.assert_no_write()
+
+    def test_protected_boot_refuses_manual_refresh_before_probe_or_prompt(self):
+        self.cmdline += ' ram_rescue_guard=1 nompath'
+        confirm = Mock()
+        with patch.object(self.r, 'verify') as verify:
+            with self.assertRaisesRegex(mod.Refuse, 'Protected boot owns'):
+                self.r.refresh('ubuntu', confirm)
+        verify.assert_not_called()
+        confirm.assert_not_called()
+        self.assertEqual(self.calls, [])
 
     def test_refresh_with_real_lvm_segment_report(self):
         # Captured from lvs in the disposable QEMU guest, not invented mock data.

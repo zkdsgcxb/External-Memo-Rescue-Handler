@@ -1,0 +1,52 @@
+#!/bin/sh
+# Used only by mkinitramfs -d with the dedicated protected-boot configuration.
+set -eu
+
+case "${1:-}" in
+    prereqs) exit 0 ;;
+esac
+
+. /usr/share/initramfs-tools/hook-functions
+
+SOURCE="${CONFDIR}/ram-rescue-guard"
+TEMPLATES="$SOURCE/integration"
+PAYLOAD="$DESTDIR/opt/ram-rescue-guard"
+mkdir -p "$PAYLOAD" "$DESTDIR/etc/ram-rescue-guard" \
+    "$DESTDIR/etc/lvm" "$DESTDIR/etc/udev/rules.d"
+cp "$SOURCE/tools.tar.gz" "$PAYLOAD/tools.tar.gz"
+(cd "$PAYLOAD" && sha256sum tools.tar.gz > tools.tar.gz.sha256)
+for item in ram-rescue-guard.service manual-rescue-guard.conf \
+            prepare-shared-rescue lvmlocal.conf 58-ram-rescue-guard.rules; do
+    cp "$TEMPLATES/$item" "$DESTDIR/etc/ram-rescue-guard/$item"
+done
+
+# This must exist before init-top/udev triggers the first PV event. A local-top
+# script alone is too late to prevent 69-lvm.rules from activating the bare PV.
+cp "$TEMPLATES/lvmlocal.conf" "$DESTDIR/etc/lvm/lvmlocal.conf"
+cp "$TEMPLATES/58-ram-rescue-guard.rules" "$DESTDIR/etc/udev/rules.d/"
+
+copy_exec /usr/bin/mount /bin/mount
+copy_exec /usr/bin/mountpoint /bin/mountpoint
+copy_exec /usr/sbin/chroot /sbin/chroot
+copy_exec /usr/bin/sha256sum /bin/sha256sum
+copy_exec /usr/bin/tar /bin/tar
+copy_exec /usr/bin/gzip /bin/gzip
+# Ubuntu's initramfs BusyBox is smaller than /usr/bin/busybox. Check the
+# remaining tools against this actual staged image, not the host's applets.
+for executable in /bin/sh /bin/cat /bin/chmod /bin/cp /bin/ln /bin/mkdir \
+                  /bin/sleep /sbin/modprobe /bin/mount /bin/mountpoint \
+                  /sbin/chroot /bin/sha256sum /bin/tar /bin/gzip /sbin/dmsetup; do
+    if [ ! -x "$DESTDIR$executable" ]; then
+        echo "Missing protected-boot executable: $executable" >&2
+        exit 1
+    fi
+done
+# Boot lvchange waits for udev's cookie completion, in the same IPC namespace.
+# Omitting these rules would leave LV aliases absent or the command waiting.
+for rules in 55-dm.rules 56-lvm.rules 95-dm-notify.rules; do
+    if [ ! -r "$DESTDIR/usr/lib/udev/rules.d/$rules" ]; then
+        echo "Missing protected-boot device-mapper rule: $rules" >&2
+        exit 1
+    fi
+done
+manual_add_modules dm_multipath dm_round_robin usb_storage uas

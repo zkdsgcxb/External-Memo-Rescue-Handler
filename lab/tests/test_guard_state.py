@@ -11,6 +11,7 @@ from unittest.mock import patch
 
 BASE = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(BASE / 'guest'))
+sys.path.insert(0, str(Path(__file__).resolve().parents[2] / 'guard/runtime'))
 import guard_state
 
 

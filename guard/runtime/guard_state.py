@@ -1,4 +1,4 @@
-"""Bounded RAM evidence and single-owner coordination for the disposable lab.
+"""Bounded RAM evidence and single-owner coordination for one configured map.
 
 The journal survives an owner process, not a reboot. An owner epoch is a fencing
 contract among our controllers; it cannot exclude an unrelated root dmsetup.
@@ -12,6 +12,7 @@ import time
 import uuid
 
 RUN = Path('/run')
+ENABLE_LAB_HOOKS = True
 LOG_LIMIT = 64 * 1024
 
 
@@ -37,8 +38,8 @@ def load_json(path):
 
 
 class Owner:
-    def __init__(self, run=RUN):
-        self.run=Path(run)
+    def __init__(self, run=None):
+        self.run=Path(RUN if run is None else run)
         self.fd=os.open(self.run/'path-owner.lock',os.O_CREAT|os.O_RDWR|os.O_CLOEXEC,0o600)
         try:
             fcntl.flock(self.fd,fcntl.LOCK_EX|fcntl.LOCK_NB)
@@ -77,8 +78,8 @@ class Journal:
 
 
 class Evidence:
-    def __init__(self,run=RUN):
-        self.run=Path(run)
+    def __init__(self,run=None):
+        self.run=Path(RUN if run is None else run)
 
     def event(self,entry):
         # Two files at most; one bounded record can exceed LOG_LIMIT only by
@@ -97,7 +98,7 @@ class Evidence:
 def table_digest(targets):
     """Normalize only kernel-mutated queue policy / selected path-group state.
 
-    This lab admits one group/one path. Every geometry, backend and selector
+    This controller admits one group/one path. Every geometry, backend and selector
     argument is retained. Raw tables remain in the journal for diagnosis.
     """
     result=[]
@@ -125,6 +126,8 @@ def describe(snapshot):
 
 def fault_hook(stage,journal):
     """Explicit guest-only phase pause; no healthy-path file polling."""
+    if not ENABLE_LAB_HOOKS:
+        return
     config=RUN/'lab-fault-config.json'
     if not config.exists():
         return

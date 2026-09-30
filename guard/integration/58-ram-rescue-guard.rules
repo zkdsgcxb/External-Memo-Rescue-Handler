@@ -1,0 +1,10 @@
+# Only the custom protection map is controlled here. Its contents are a PV,
+# never a filesystem to mount or a partition table for kpartx to rediscover.
+SUBSYSTEM!="block", GOTO="ram_rescue_guard_end"
+ACTION!="add|change", GOTO="ram_rescue_guard_end"
+ENV{DM_NAME}!="ram-rescue-path", GOTO="ram_rescue_guard_end"
+ENV{DM_UUID}!="RAMRESCUE-HOST-*", GOTO="ram_rescue_guard_end"
+IMPORT{cmdline}="ram_rescue_guard"
+ENV{ram_rescue_guard}!="1", GOTO="ram_rescue_guard_end"
+ENV{DM_NOSCAN}="1", ENV{DM_UDEV_DISABLE_OTHER_RULES_FLAG}="1", OPTIONS:="nowatch"
+LABEL="ram_rescue_guard_end"

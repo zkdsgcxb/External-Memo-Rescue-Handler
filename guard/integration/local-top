@@ -1,0 +1,56 @@
+#!/bin/sh
+set -eu
+
+case "${1:-}" in
+    prereqs) exit 0 ;;
+esac
+
+. /scripts/functions
+export PATH=/sbin:/bin:/usr/sbin:/usr/bin
+RUN=/run/ram-rescue-guard
+TOOLS=/run/ram-rescue-demo
+
+fail_closed() {
+    trap - EXIT HUP INT TERM
+    set +eu
+    # Returning nonzero from an initramfs script does not stop /init. Exiting
+    # the rescue shell must not silently continue to an unprotected root.
+    while :; do
+        panic "RAM Guard protected boot stopped: $*; use the normal GRUB entry to return."
+        sleep 1
+    done
+}
+trap 'fail_closed "early setup failed"' EXIT HUP INT TERM
+
+case " $(cat /proc/cmdline) " in
+    *" ram_rescue_guard=1 "*) ;;
+    *) fail_closed 'missing explicit protected-boot flag' ;;
+esac
+case " $(cat /proc/cmdline) " in
+    *" nompath "*) ;;
+    *) fail_closed 'nompath is required to exclude a second map controller' ;;
+esac
+
+[ ! -e "$RUN/boot-ready" ]
+! mountpoint -q "$TOOLS"
+mkdir -p "$RUN/state" "$TOOLS" /run/lock/lvm /run/lvm
+chmod 700 "$RUN" "$RUN/state" "$TOOLS"
+(cd /opt/ram-rescue-guard && sha256sum -c tools.tar.gz.sha256)
+mount -t tmpfs -o size=256M,noswap,mode=0700,nosuid,nodev ram-rescue-guard "$TOOLS"
+tar -xzf /opt/ram-rescue-guard/tools.tar.gz -C "$TOOLS"
+mkdir -p "$TOOLS/dev" "$TOOLS/proc" "$TOOLS/sys" "$TOOLS/run" "$TOOLS/opt/guard"
+cp /etc/ram-rescue-guard/prepare-shared-rescue "$TOOLS/opt/guard/prepare-shared-rescue"
+chmod 755 "$TOOLS/opt/guard/prepare-shared-rescue"
+mount --bind /dev "$TOOLS/dev"
+mount --bind /proc "$TOOLS/proc"
+mount --bind /sys "$TOOLS/sys"
+# Deliberately not --rbind: /run already contains TOOLS. This shares locks,
+# control state and future notification sockets without recursive mounts.
+mount --bind /run "$TOOLS/run"
+modprobe dm_multipath
+modprobe dm_round_robin
+chroot "$TOOLS" /usr/bin/python3 /opt/guard/boot.py --config /etc/rescue/enrollment.json
+[ -s "$RUN/config.json" ]
+cat /proc/sys/kernel/random/boot_id > "$RUN/boot-ready"
+chmod 600 "$RUN/boot-ready"
+trap - EXIT HUP INT TERM

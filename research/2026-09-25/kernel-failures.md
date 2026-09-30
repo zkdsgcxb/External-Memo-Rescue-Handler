@@ -70,7 +70,7 @@
 | **suspend 已成功、尚未 resume 时退出** | **DM core 可以持续保持 suspended；multipath timer 不负责 resume core** | 必测；需要独立、驻留 RAM 的监督/接管，不可无条件 resume 未核验表 |
 | resume/swap 出错或成功但用户态未记录 | 用户态布尔值和内核事实可能不同 | 状态以 active/inactive table、UUID、suspended 标志和候选身份为准 |
 
-当前 `lab/guest/path_guard.py` 的 `self.suspended` 只在 `dmsetup suspend` 成功返回后赋值；进程重启不能依靠它恢复。`expire()` 在该布尔值为真时先 resume 再关闭排队，必须专门审查此路径，不能宣称它是严格写入隔离操作。
+当时基线 `b06d7c7` 中 `lab/guest/path_guard.py` 的 `self.suspended` 只在 `dmsetup suspend` 成功返回后赋值；进程重启不能依靠它恢复。`expire()` 在该布尔值为真时先 resume 再关闭排队，必须专门审查此路径，不能宣称它是严格写入隔离操作。
 
 **可评估的改进，不是已经验证的解决方案**：内核的 resume ioctl 在存在 inactive table 时，支持内部执行 suspend、swap、resume。用一次正确设置 flags 的控制调用，可能缩短目前两个外部命令之间的用户态中断窗口；但它不提供任意错误下的自动回滚，也不消除下层在途等待。仍要进行每阶段故障注入。
 

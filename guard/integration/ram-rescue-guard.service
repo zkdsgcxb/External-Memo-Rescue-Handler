@@ -1,0 +1,28 @@
+[Unit]
+Description=Restore the enrolled USB root through its stable device-mapper path
+DefaultDependencies=no
+ConditionKernelCommandLine=ram_rescue_guard=1
+After=systemd-udevd.service systemd-remount-fs.service
+Before=local-fs-pre.target sysinit.target ram-rescue-prepare.service shutdown.target
+Conflicts=shutdown.target
+OnFailure=emergency.target
+
+[Service]
+Type=notify
+NotifyAccess=main
+RootDirectory=/run/ram-rescue-demo
+WorkingDirectory=/
+Environment=PYTHONDONTWRITEBYTECODE=1
+ExecStart=/usr/bin/python3 /opt/guard/path_guard.py --config /run/ram-rescue-guard/config.json
+ExecStopPost=/usr/bin/python3 /opt/guard/path_guard.py --config /run/ram-rescue-guard/config.json --takeover
+Restart=no
+TimeoutStartSec=30
+TimeoutStopSec=15
+CPUAccounting=yes
+CPUQuota=20%
+CPUQuotaPeriodSec=20ms
+MemoryAccounting=yes
+MemoryMax=128M
+MemorySwapMax=0
+StandardOutput=journal
+StandardError=journal

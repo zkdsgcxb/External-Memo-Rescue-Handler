@@ -28,12 +28,13 @@ class AdmissionError(RuntimeError):
     pass
 
 
-def readonly(args, timeout=3):
+def readonly(args, timeout=3, *, owner_fd=None):
     if args[0] == '/sbin/lvm':
         if '--readonly' not in args or '--devices' not in args:
             raise ValueError('guard may only read explicitly selected LVM devices')
         args = [*args, '--config', 'devices { multipath_component_detection=0 }']
-    return command(args, timeout=min(timeout, 3))
+    options = {} if owner_fd is None else {'pass_fds': (owner_fd,)}
+    return command(args, timeout=min(timeout, 3), **options)
 
 
 def layout(node, runner=readonly):

@@ -1,0 +1,42 @@
+#!/bin/sh
+set -eu
+
+case "${1:-}" in
+    prereqs) exit 0 ;;
+esac
+
+. /scripts/functions
+export PATH=/sbin:/bin:/usr/sbin:/usr/bin
+RUN=/run/ram-rescue-guard
+TEMPLATES=/etc/ram-rescue-guard
+
+fail_closed() {
+    trap - EXIT HUP INT TERM
+    set +eu
+    while :; do
+        panic "RAM Guard protected boot stopped: $*; use the normal GRUB entry to return."
+        sleep 1
+    done
+}
+trap 'fail_closed "root handoff failed"' EXIT HUP INT TERM
+
+[ -s "$RUN/config.json" ]
+[ "$(cat "$RUN/boot-ready")" = "$(cat /proc/sys/kernel/random/boot_id)" ]
+[ -f "${rootmnt:?}/etc/lvm/lvmlocal.conf" ]
+[ ! -L "${rootmnt}/etc/lvm/lvmlocal.conf" ]
+cp "$TEMPLATES/lvmlocal.conf" "$RUN/lvmlocal.conf"
+chmod 600 "$RUN/lvmlocal.conf"
+mount --bind "$RUN/lvmlocal.conf" "${rootmnt}/etc/lvm/lvmlocal.conf"
+mount -o remount,bind,ro "${rootmnt}/etc/lvm/lvmlocal.conf"
+
+# /run is moved into the real root after all init-bottom scripts. These
+# units, overrides and rules exist only for this protected boot.
+mkdir -p /run/udev/rules.d /run/systemd/system/sysinit.target.requires \
+    /run/systemd/system/ram-rescue-prepare.service.d
+cp "$TEMPLATES/58-ram-rescue-guard.rules" /run/udev/rules.d/
+cp "$TEMPLATES/ram-rescue-guard.service" /run/systemd/system/
+cp "$TEMPLATES/manual-rescue-guard.conf" \
+    /run/systemd/system/ram-rescue-prepare.service.d/ram-rescue-guard.conf
+ln -s ../ram-rescue-guard.service \
+    /run/systemd/system/sysinit.target.requires/ram-rescue-guard.service
+trap - EXIT HUP INT TERM

@@ -14,6 +14,7 @@ from unittest.mock import patch
 BASE = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(BASE.parent / 'ram-rescue-demo/src'))
 sys.path.insert(0, str(BASE / 'guest'))
+sys.path.insert(0, str(Path(__file__).resolve().parents[2] / 'guard/runtime'))
 import admission
 from rescue import Recovery, Refuse
 

@@ -9,7 +9,7 @@ import time
 
 
 # Linux UAPI _IO(0xfd, 18), introduced in 6.16. Noble's userspace header
-# predates it. This lab targets the current x86_64 kernel with this interface.
+# predates it. The shared runtime requires this interface on x86_64.
 DM_MPATH_PROBE_PATHS = 0xfd12
 
 
@@ -22,68 +22,26 @@ class DMInfo(C.Structure):
         ('target_count',C.c_int32),('deferred_remove',C.c_int),('internal_suspend',C.c_int))]
 
 
-class PathProbe:
-    """One on-demand ioctl; a blocked driver must never spawn more workers.
+def probe_paths(device, token):
+    """Blocking kernel probe, called only by the Guard's owned worker.
 
-    Success means the ioctl completed, not that a read or full health check
-    succeeded. The kernel can skip paths or ignore non-path read errors.
+    Completion does not establish full device health: the kernel can skip
+    paths and ignore errors which it does not classify as path failures.
     """
-    def __init__(self,owner_fd=None):
-        self._thread=None
-        self._result=None
-        self._owner_fd=owner_fd
-
-    @property
-    def busy(self):
-        return self._thread is not None or self._result is not None
-
-    def start(self,device,token):
-        if self.busy:
-            raise RuntimeError('Previous path probe has not been consumed')
-        # No worker or threading import during ordinary healthy monitoring.
-        import threading
-        fence=None
-        def run():
-            started=time.monotonic()
-            error=0
-            fd=None
-            try:
-                fd=os.open(device,os.O_RDONLY|os.O_NONBLOCK|os.O_CLOEXEC)
-                fcntl.ioctl(fd,DM_MPATH_PROBE_PATHS)
-            except OSError as exc:
-                error=exc.errno or errno.EIO
-            finally:
-                try:
-                    if fd is not None:
-                        os.close(fd)
-                finally:
-                    if fence is not None:
-                        os.close(fence)
-            status={0:'completed',errno.ENOTCONN:'no_paths'}.get(error,'error')
-            self._result={'token':token,'errno':error,'elapsed':time.monotonic()-started,'status':status,'source':'ioctl'}
-        # Import and construction can fail; acquire no fd until they succeed.
-        thread=threading.Thread(target=run,name='dm-path-probe',daemon=True)
-        # Closing the manager's fd must not authorize takeover while this
-        # worker still has a live-table reference inside the kernel ioctl.
-        fence=None if self._owner_fd is None else os.dup(self._owner_fd)
-        self._thread=thread
-        try:
-            self._thread.start()
-        except RuntimeError:
-            self._thread=None
-            if fence is not None:
-                os.close(fence)
-            raise
-
-    def poll(self):
-        if self._thread is not None:
-            if self._thread.is_alive():
-                return None
-            self._thread.join()
-            self._thread=None
-        result=self._result
-        self._result=None
-        return result
+    started=time.monotonic()
+    error=0
+    fd=None
+    try:
+        fd=os.open(device,os.O_RDONLY|os.O_NONBLOCK|os.O_CLOEXEC)
+        fcntl.ioctl(fd,DM_MPATH_PROBE_PATHS)
+    except OSError as exc:
+        error=exc.errno or errno.EIO
+    finally:
+        if fd is not None:
+            os.close(fd)
+    return {'token':token,'errno':error,'elapsed':time.monotonic()-started,
+            'status':{0:'completed',errno.ENOTCONN:'no_paths'}.get(error,'error'),
+            'source':'ioctl'}
 
 
 class DeviceMapper:
@@ -176,8 +134,18 @@ class Events:
         self.sock.setsockopt(socket.SOL_SOCKET,socket.SO_RCVBUF,256*1024)
         self.sock.bind((0,1));self.sock.setblocking(False)
 
-    def wait(self,seconds):
-        if not select.select([self.sock],[],[],max(0,seconds))[0]:
+    def wait(self,seconds,completion_fd=None,*,defer_events=False):
+        readers=[] if defer_events else [self.sock]
+        if completion_fd is not None:
+            readers.append(completion_fd)
+        self.operation_ready=False
+        ready=select.select(readers,[],[],max(0,seconds))[0]
+        if not ready:
+            return False
+        # The worker owns draining its eventfd; report it separately so
+        # completion bypasses event-storm coalescing and retry backoff.
+        self.operation_ready=completion_fd is not None and completion_fd in ready
+        if self.sock not in ready:
             return False
         relevant=False
         for _ in range(64):
@@ -191,7 +159,7 @@ class Events:
                 raise
             if peer[0]==0 and b'SUBSYSTEM=block' in data.split(b'\0'):
                 relevant=True  # Includes DM path change uevents and disk/partition changes.
-        if not relevant:
+        if not relevant and not self.operation_ready:
             time.sleep(min(0.05,max(0,seconds)))
         return relevant
 

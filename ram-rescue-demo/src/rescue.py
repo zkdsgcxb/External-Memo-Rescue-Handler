@@ -17,12 +17,12 @@ def read(path):
     return Path(path).read_text().strip()
 
 
-def command(args, timeout=12):
+def command(args, timeout=12, *, pass_fds=()):
     # A kernel task in uninterruptible sleep can outlive this timeout.
     # The second rescue terminal remains independent of this helper.
     try:
         result = subprocess.run(args, text=True, stdout=subprocess.PIPE,
-                                stderr=subprocess.PIPE, timeout=timeout,
+                                stderr=subprocess.PIPE, timeout=timeout, pass_fds=pass_fds,
                                 env={"PATH": "/bin:/sbin:/usr/bin:/usr/sbin",
                                      "LC_ALL": "C", "LVM_SYSTEM_DIR": "/etc/lvm"})
     except subprocess.TimeoutExpired as exc:
@@ -108,6 +108,8 @@ class Recovery:
     def refresh(self, target, confirm=input):
         if target not in self.c["lvs"]:
             raise Refuse("Unknown target.")
+        if "ram_rescue_guard=1" in read("/proc/cmdline").split():
+            raise Refuse("Protected boot owns the stable mapping. Direct LV refresh would bypass it; inspect the Guard state instead.")
         node = self.verify()
         mapping = self.mapping(target)
         slaves = [p.name for p in (mapping / "slaves").iterdir()]

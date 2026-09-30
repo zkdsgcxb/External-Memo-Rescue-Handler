@@ -69,7 +69,7 @@
 
 ### 4.3 实例与身份
 
-当前登记检查 USB VID/PID/serial、整盘扇区数、分区号/PARTUUID、PV/VG UUID/name，并比较 LV 段布局；只有一个候选才继续。[rescue.py](../../ram-rescue-demo/src/rescue.py)，46–98 行；[path_guard.py](../../lab/guest/path_guard.py)，39–49、105–118 行。
+当前登记检查 USB VID/PID/serial、整盘扇区数、分区号/PARTUUID、PV/VG UUID/name，并比较 LV 段布局；只有一个候选才继续。[rescue.py](../../ram-rescue-demo/src/rescue.py)，46–98 行；[path_guard.py](https://github.com/zkdsgcxb/External-Memo-Rescue-Handler/blob/b06d7c77ce40a2c7e558a1e22520265b248ecea6/lab/guest/path_guard.py)，39–49、105–118 行。
 
 尚缺独立 VM 覆盖：两个完全克隆的相同 UUID/PV 同时出现；USB 序列号空值/不稳定/多 LUN；盘名与 sysfs 路径全部复用；相同标识下逻辑扇区大小/分区起点改变；最后校验到切换间再次拔盘；核验期间 LVM 元数据改变。
 
@@ -79,7 +79,7 @@
 
 现有 kill-manager 只在已经移除设备、获得 waiting 观察后杀进程。[auto_run.py](../../lab/auto_run.py)，193–201 行。没有在 inactive table load、suspend、resume 各阶段杀死或挂起管理器，也没有模拟 DM ioctl 卡住、libdevmapper 错误、事件队列溢出与服务自动重启后恢复状态。
 
-Guard 到期后终态拒绝自动重接，是明确的策略；但不能将 `queue_seconds` 宣称为每个请求端到端延迟的硬上限。查盘命令、内核驱动在途请求、DM table swap 都可能先消耗时间；用户态 subprocess timeout 不证明不可中断内核等待一定被及时取消。当前 deadline 在切换前检查，`load → suspend → resume` 之间仍有执行间隔；应针对“内核已放出 EIO，但用户态随后宣布 ready”建立独立观测和故障测试。[path_guard.py](../../lab/guest/path_guard.py)，74–80、108–145 行。
+Guard 到期后终态拒绝自动重接，是明确的策略；但不能将 `queue_seconds` 宣称为每个请求端到端延迟的硬上限。查盘命令、内核驱动在途请求、DM table swap 都可能先消耗时间；用户态 subprocess timeout 不证明不可中断内核等待一定被及时取消。当前 deadline 在切换前检查，`load → suspend → resume` 之间仍有执行间隔；应针对“内核已放出 EIO，但用户态随后宣布 ready”建立独立观测和故障测试。[path_guard.py](https://github.com/zkdsgcxb/External-Memo-Rescue-Handler/blob/b06d7c77ce40a2c7e558a1e22520265b248ecea6/lab/guest/path_guard.py)，74–80、108–145 行。
 
 ### 4.5 系统拓扑与启动
 
@@ -119,7 +119,7 @@ CPUQuota=20%、周期 20 ms，对应 `cpu.max=4000 20000`。采样区间内 `nr_
 
 实验的 tmpfs noswap 保护文件页，不是自动保证所有匿名页与整个控制面都不会被 OOM 或 swap 影响；Ubuntu lab guard 服务目前只设置 CPU 配额，没有对应 memory/swap 参数。[ubuntu.py](../../lab/guest/ubuntu.py)，43–47 行。在真实根盘故障下，应把必要进程、其匿名页、工具文件和依赖服务一起纳入 RAM 可用性合同；先测量，再设置合理的内存保护与边界。
 
-降低日常干扰的下一步应先收窄事件过滤与界定预算，而不是无证据重写语言。当前接收所有 kernel `SUBSYSTEM=block` 消息，10 Hz 合并后查询所管 map；不是仅订阅登记磁盘事件。[dm_monitor.py](../../lab/guest/dm_monitor.py)，45–88 行。事件风暴测试仅生成受管 dm-0 的 change，仍需测非目标磁盘大量事件、非 block 事件、缓冲溢出、丢事件后的 1 s 兜底。
+降低日常干扰的下一步应先收窄事件过滤与界定预算，而不是无证据重写语言。当前接收所有 kernel `SUBSYSTEM=block` 消息，10 Hz 合并后查询所管 map；不是仅订阅登记磁盘事件。[dm_monitor.py](https://github.com/zkdsgcxb/External-Memo-Rescue-Handler/blob/b06d7c77ce40a2c7e558a1e22520265b248ecea6/lab/guest/dm_monitor.py)，45–88 行。事件风暴测试仅生成受管 dm-0 的 change，仍需测非目标磁盘大量事件、非 block 事件、缓冲溢出、丢事件后的 1 s 兜底。
 
 ## 6. 建议报告采用的责任合同
 

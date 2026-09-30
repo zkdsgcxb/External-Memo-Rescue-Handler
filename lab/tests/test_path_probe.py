@@ -1,8 +1,8 @@
-"""The synchronous kernel probe must never block the Guard's deadline loop."""
-import builtins
+"""Synchronous probe semantics; scheduling and fencing belong to OwnedOperation."""
 import errno
 import os
 from pathlib import Path
+import select
 import sys
 import tempfile
 import threading
@@ -10,215 +10,109 @@ import time
 import unittest
 from unittest.mock import patch
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'guest'))
-from dm_monitor import PathProbe
+BASE = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(BASE / 'guest'))
+sys.path.insert(0, str(Path(__file__).resolve().parents[2] / 'guard/runtime'))
+from dm_monitor import probe_paths
 from guard_state import Owner
+from owned_operation import OwnedOperation
 
 
 class PathProbeTests(unittest.TestCase):
-    def result(self, probe):
-        deadline = time.monotonic() + 2
-        while time.monotonic() < deadline:
-            result = probe.poll()
-            if result is not None:
-                return result
-            time.sleep(.005)
-        self.fail('Probe worker did not publish its result')
+    def test_success_returns_kernel_result_and_owns_only_its_device_fd(self):
+        with patch('dm_monitor.os.open', return_value=41) as opening, \
+                patch('dm_monitor.os.close') as closing, \
+                patch('dm_monitor.fcntl.ioctl', return_value=0) as ioctl, \
+                patch('threading.Thread') as thread:
+            result = probe_paths('/dev/mapper/example', 7)
+        opening.assert_called_once_with('/dev/mapper/example', os.O_RDONLY | os.O_NONBLOCK | os.O_CLOEXEC)
+        ioctl.assert_called_once_with(41, 0xfd12)
+        closing.assert_called_once_with(41)
+        thread.assert_not_called()
+        self.assertEqual((result['token'], result['status'], result['errno']), (7, 'completed', 0))
+        self.assertEqual(result['source'], 'ioctl')
+        self.assertGreaterEqual(result['elapsed'], 0)
 
-    def test_blocking_ioctl_is_async_and_only_one_result_can_be_outstanding(self):
-        entered = threading.Event()
-        release = threading.Event()
-        returned = threading.Event()
-        outcomes = []
-
-        def ioctl(*args):
-            entered.set()
-            release.wait(3)
-            return 0
-
-        probe = PathProbe()
-        with patch('dm_monitor.os.open', return_value=41), \
-             patch('dm_monitor.os.close') as close, \
-             patch('dm_monitor.fcntl.ioctl', side_effect=ioctl) as call:
-            def start():
-                outcomes.append(probe.start('/dev/mapper/example', 7))
-                returned.set()
-
-            starter = threading.Thread(target=start, daemon=True)
-            starter.start()
-            try:
-                self.assertTrue(entered.wait(1), 'Probe did not reach the mock ioctl')
-                self.assertTrue(returned.wait(1), 'start() waited for a blocked ioctl')
-                self.assertEqual(outcomes, [None])
-                self.assertTrue(probe.busy)
-                self.assertIsNone(probe.poll())
-                with self.assertRaises(RuntimeError):
-                    probe.start('/dev/mapper/example', 8)
-                call.assert_called_once()
-            finally:
-                release.set()
-                starter.join(2)
-            # Completing the syscall must not permit overwriting an unread result.
-            deadline = time.monotonic() + 2
-            while close.call_count == 0 and time.monotonic() < deadline:
-                time.sleep(.005)
-            self.assertTrue(probe.busy)
-            with self.assertRaises(RuntimeError):
-                probe.start('/dev/mapper/example', 9)
-            result = self.result(probe)
-            self.assertEqual(result['token'], 7)
-            self.assertEqual(result['errno'], 0)
-            self.assertEqual(result['status'], 'completed')
-            self.assertGreaterEqual(result['elapsed'], 0)
-            self.assertFalse(probe.busy)
-            close.assert_called_once_with(41)
-            self.assertEqual(call.call_args.args[:2], (41, 0xfd12))
-
-    def test_ioctl_error_is_not_a_success_and_closes_device(self):
+    def test_ioctl_errors_never_become_success_and_close_device(self):
         for error in (errno.ENOTTY, errno.EINVAL, errno.EIO):
-            with self.subTest(error=error):
-                probe = PathProbe()
-                with patch('dm_monitor.os.open', return_value=43), \
-                     patch('dm_monitor.os.close') as close, \
-                     patch('dm_monitor.fcntl.ioctl', side_effect=OSError(error, 'I/O failed')):
-                    probe.start('/dev/mapper/example', 3)
-                    result = self.result(probe)
+            with self.subTest(error=error), \
+                    patch('dm_monitor.os.open', return_value=43), \
+                    patch('dm_monitor.os.close') as closing, \
+                    patch('dm_monitor.fcntl.ioctl', side_effect=OSError(error, 'I/O failed')):
+                result = probe_paths('/dev/mapper/example', 3)
                 self.assertEqual((result['errno'], result['status']), (error, 'error'))
-                self.assertEqual(result['source'], 'ioctl')
-                close.assert_called_once_with(43)
+                closing.assert_called_once_with(43)
 
     def test_no_paths_has_distinct_result(self):
-        probe = PathProbe()
         with patch('dm_monitor.os.open', return_value=44), \
-             patch('dm_monitor.os.close') as close, \
-             patch('dm_monitor.fcntl.ioctl', side_effect=OSError(errno.ENOTCONN, 'no paths')):
-            probe.start('/dev/mapper/example', 4)
-            result = self.result(probe)
+                patch('dm_monitor.os.close') as closing, \
+                patch('dm_monitor.fcntl.ioctl', side_effect=OSError(errno.ENOTCONN, 'no paths')):
+            result = probe_paths('/dev/mapper/example', 4)
         self.assertEqual((result['errno'], result['status']), (errno.ENOTCONN, 'no_paths'))
-        close.assert_called_once_with(44)
+        closing.assert_called_once_with(44)
 
     def test_open_failure_never_closes_an_unowned_descriptor(self):
-        probe = PathProbe()
         with patch('dm_monitor.os.open', side_effect=OSError(errno.ENOENT, 'missing map')), \
-             patch('dm_monitor.os.close') as close, \
-             patch('dm_monitor.fcntl.ioctl') as ioctl:
-            probe.start('/dev/mapper/example', 5)
-            result = self.result(probe)
+                patch('dm_monitor.os.close') as closing, patch('dm_monitor.fcntl.ioctl') as ioctl:
+            result = probe_paths('/dev/mapper/example', 5)
         self.assertEqual((result['errno'], result['status']), (errno.ENOENT, 'error'))
-        close.assert_not_called()
+        closing.assert_not_called()
         ioctl.assert_not_called()
 
+    def test_unexpected_exception_closes_device_and_is_left_to_owned_executor(self):
+        with patch('dm_monitor.os.open', return_value=45), \
+                patch('dm_monitor.os.close') as closing, \
+                patch('dm_monitor.fcntl.ioctl', side_effect=RuntimeError('unexpected failure')):
+            with self.assertRaisesRegex(RuntimeError, 'unexpected failure'):
+                probe_paths('/dev/mapper/example', 6)
+        closing.assert_called_once_with(45)
 
-class PathProbeFenceTests(unittest.TestCase):
-    result = PathProbeTests.result
+    def test_blocked_probe_runs_under_one_owned_worker_and_rejects_late_result(self):
+        (BASE / 'work').mkdir(exist_ok=True)
+        with tempfile.TemporaryDirectory(dir=BASE / 'work') as temporary:
+            folder = Path(temporary)
+            device = folder / 'mock-block-device'
+            device.touch()
+            owner = Owner(folder)
+            operation = OwnedOperation(owner.fd)
+            entered, release = threading.Event(), threading.Event()
+            cleaned = []
 
-    def setUp(self):
-        work = Path(__file__).resolve().parents[1] / 'work'
-        work.mkdir(exist_ok=True)
-        temporary = tempfile.TemporaryDirectory(dir=work)
-        self.addCleanup(temporary.cleanup)
-        self.run = Path(temporary.name)
-        self.device = self.run / 'mock-block-device'
-        self.device.touch()
-        self.owner = Owner(self.run)
-        self.addCleanup(self.owner.close)
+            def ioctl(*args):
+                entered.set()
+                if not release.wait(3):
+                    raise OSError(errno.ETIMEDOUT, 'test did not release ioctl')
 
-    def assert_takeover_available(self):
-        with Owner(self.run):
-            pass
-
-    def test_blocked_ioctl_retains_lock_after_main_owner_closes(self):
-        entered = threading.Event()
-        release = threading.Event()
-        probe = PathProbe(owner_fd=self.owner.fd)
-
-        def ioctl(*args):
-            entered.set()
-            if not release.wait(3):
-                raise OSError(errno.ETIMEDOUT, 'test did not release ioctl')
-
-        with patch('dm_monitor.fcntl.ioctl', side_effect=ioctl):
-            probe.start(str(self.device), 1)
             try:
-                self.assertTrue(entered.wait(1))
-                self.owner.close()
-                with self.assertRaises(BlockingIOError):
-                    Owner(self.run)
-                self.assertTrue(probe.busy)
-                self.assertIsNone(probe.poll())
+                with patch('dm_monitor.fcntl.ioctl', side_effect=ioctl):
+                    operation.start('probe', lambda: probe_paths(str(device), 7))
+                    try:
+                        self.assertTrue(entered.wait(1))
+                        self.assertIsNone(operation.poll())
+                        self.assertEqual(select.select([operation.fileno()], [], [], 0)[0], [])
+                        with self.assertRaises(RuntimeError):
+                            operation.start('probe', lambda: probe_paths(str(device), 8))
+                        operation.abandon(cleaned.append)
+                        owner.close()
+                        with self.assertRaises(BlockingIOError):
+                            Owner(folder)
+                    finally:
+                        release.set()
+                    deadline = time.monotonic() + 3
+                    while operation.busy and time.monotonic() < deadline:
+                        time.sleep(.001)
+                self.assertFalse(operation.busy)
+                self.assertIsNone(operation.poll())
+                self.assertEqual(len(cleaned), 1)
+                self.assertIsNone(cleaned[0]['error'])
+                self.assertEqual(cleaned[0]['value']['token'], 7)
+                self.assertEqual(cleaned[0]['value']['status'], 'completed')
+                with Owner(folder):
+                    pass
             finally:
                 release.set()
-                result = self.result(probe)
-        self.assertEqual(result['status'], 'completed')
-        self.assert_takeover_available()
-
-    def test_thread_start_failure_closes_duplicated_lock_fd(self):
-        probe = PathProbe(owner_fd=self.owner.fd)
-        duplicates = []
-        original_dup = os.dup
-
-        def duplicate(fd):
-            result = original_dup(fd)
-            duplicates.append(result)
-            return result
-
-        with patch('dm_monitor.os.dup', side_effect=duplicate), \
-                patch('threading.Thread.start', side_effect=RuntimeError('no thread resources')):
-            with self.assertRaisesRegex(RuntimeError, 'no thread resources'):
-                probe.start(str(self.device), 1)
-        self.assertEqual(len(duplicates), 1)
-        with self.assertRaises(OSError) as exc:
-            os.fstat(duplicates[0])
-        self.assertEqual(exc.exception.errno, errno.EBADF)
-        self.assertFalse(probe.busy)
-        self.owner.close()
-        self.assert_takeover_available()
-
-    def test_thread_construction_failure_does_not_acquire_lock_reference(self):
-        probe = PathProbe(owner_fd=self.owner.fd)
-        with patch('dm_monitor.os.dup', wraps=os.dup) as duplicate, \
-                patch('threading.Thread', side_effect=MemoryError('construction failed')):
-            with self.assertRaises(MemoryError):
-                probe.start(str(self.device), 1)
-        duplicate.assert_not_called()
-        self.assertFalse(probe.busy)
-        self.owner.close()
-        self.assert_takeover_available()
-
-    def test_thread_import_failure_does_not_acquire_lock_reference(self):
-        probe = PathProbe(owner_fd=self.owner.fd)
-        original_import = builtins.__import__
-
-        def importing(name, *args, **kwargs):
-            if name == 'threading':
-                raise ImportError('threading unavailable')
-            return original_import(name, *args, **kwargs)
-
-        with patch('dm_monitor.os.dup', wraps=os.dup) as duplicate, \
-                patch('builtins.__import__', side_effect=importing):
-            with self.assertRaises(ImportError):
-                probe.start(str(self.device), 1)
-        duplicate.assert_not_called()
-        self.assertFalse(probe.busy)
-        self.owner.close()
-        self.assert_takeover_available()
-
-    def test_dup_failure_does_not_leave_probe_marked_busy(self):
-        probe = PathProbe(owner_fd=self.owner.fd)
-        with patch('dm_monitor.os.dup', side_effect=OSError(errno.EMFILE, 'fd limit')):
-            with self.assertRaises(OSError):
-                probe.start(str(self.device), 1)
-        self.assertFalse(probe.busy)
-        self.owner.close()
-        self.assert_takeover_available()
-
-    def test_device_open_failure_releases_worker_lock_reference(self):
-        probe = PathProbe(owner_fd=self.owner.fd)
-        probe.start(str(self.run / 'missing-device'), 1)
-        result = self.result(probe)
-        self.assertEqual(result['errno'], errno.ENOENT)
-        self.owner.close()
-        self.assert_takeover_available()
+                operation.abandon(lambda outcome: None)
+                owner.close()
 
 
 if __name__ == '__main__':

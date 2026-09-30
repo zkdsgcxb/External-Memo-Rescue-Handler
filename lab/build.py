@@ -13,6 +13,7 @@ import subprocess
 BASE = Path(__file__).resolve().parent
 PROJECT = BASE.parent
 WORK = BASE / 'work'
+RUNTIME = PROJECT / 'guard/runtime'
 MODULES = ['xhci_pci', 'usb_storage', 'uas', 'sd_mod', 'dm_mod', 'dm_multipath', 'dm_round_robin', 'ext4', 'virtio_pci', 'virtio_blk']
 
 
@@ -77,9 +78,12 @@ def main():
     (root / 'tmp').chmod(0o1777)
     payload.copy_file(PROJECT / 'ram-rescue-demo/src/lvm.conf', '/etc/lvm/lvm.conf')
     payload.copy_file(PROJECT / 'ram-rescue-demo/src/rescue.py', '/opt/lab/rescue.py')
-    for source in (BASE / 'guest').iterdir():
-        if source.is_file():
-            payload.copy_file(source, '/opt/lab/' + source.name)
+    sources = [*sorted(p for p in (BASE/'guest').iterdir() if p.is_file()),
+               *sorted(RUNTIME.glob('*.py'))]
+    if len({p.name for p in sources}) != len(sources):
+        raise RuntimeError('Guest and shared runtime must not duplicate modules')
+    for source in sources:
+        payload.copy_file(source, '/opt/lab/' + source.name)
     payload.copy_file(BASE / 'guest/init.sh', '/init')
     (root / 'init').chmod(0o755)
     (root / 'opt/lab/root-init.sh').chmod(0o755)
@@ -101,7 +105,7 @@ def main():
         'source_commit': subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=PROJECT, text=True).strip(),
         'source_sha256': {str(p.relative_to(PROJECT)):hashlib.sha256(p.read_bytes()).hexdigest()
             for p in [BASE/'build.py', PROJECT/'ram-rescue-demo/src/rescue.py', PROJECT/'ram-rescue-demo/src/lvm.conf',
-                      *sorted(p for p in (BASE/'guest').iterdir() if p.is_file())]},
+                      *sources]},
         'kernel_sha256': hashlib.sha256((work/'vmlinuz').read_bytes()).hexdigest(),
         'initramfs_sha256': hashlib.sha256((work/'initramfs.cpio.gz').read_bytes()).hexdigest(),
         'note': 'guest payload copied from working tree; no host identities or passwords'}, indent=2)+'\n')

@@ -1,0 +1,29 @@
+#!/bin/sh
+set -eu
+export PATH=/bin:/sbin:/usr/bin:/usr/sbin
+
+case " $(cat /proc/cmdline) " in
+    *" ram_rescue_guard=1 "*) ;;
+    *) echo 'Shared RAM rescue requires a protected boot.' >&2; exit 1 ;;
+esac
+RUN=/run/ram-rescue-guard
+[ "$(cat "$RUN/boot-ready")" = "$(cat /proc/sys/kernel/random/boot_id)" ]
+[ -s "$RUN/config.json" ]
+[ -x /sbin/rescue ]
+
+# PID 1's mount table names the host mount even inside this service's chroot.
+awk '$2 == "/run/ram-rescue-demo" && $3 == "tmpfs" {
+    count = split($4, options, ",")
+    for (i = 1; i <= count; i++) if (options[i] == "noswap") ready = 1
+} END { exit !ready }' /proc/1/mounts
+
+# The payload contains locked accounts. Only the actual root's existing
+# rescue password database is copied here; it is never embedded in an initrd.
+SHADOW=/proc/1/root/etc/ram-rescue-demo/shadow
+[ -f "$SHADOW" ]
+[ "$(stat -c %u "$SHADOW")" = 0 ]
+[ "$(stat -c %a "$SHADOW")" = 600 ]
+cp "$SHADOW" /etc/shadow.protected
+chmod 600 /etc/shadow.protected
+mv /etc/shadow.protected /etc/shadow
+echo 'Existing rescue authentication enabled in the shared protected RAM runtime.'

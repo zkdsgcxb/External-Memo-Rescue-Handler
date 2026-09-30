@@ -11,6 +11,7 @@
 | LVM、blkid | 读取登记设备的 PV/VG/LV 与分区元数据 | 克隆盘不可冒充 |
 | `admission.py` | 唯一候选、只读核验、持有 fd、带 diskseq/期限/epoch 的凭证与最终复核 | 将 fd 直接传给 DM 绑定内核对象 |
 | `path_guard.py` | 唯一 owner、有限准入、提交事务、原生探测确认、终态策略 | 整个文件系统和应用已经无错 |
+| `owned_operation.py` | 串行执行可能阻塞的核验、控制命令与探测；eventfd 完成通知、迟到结果清理 | 强制取消内核请求或保证线程按期退出 |
 | `guard_state.py` | flock/epoch、有界 RAM 记录、表摘要、分维度观察 | 掉电持久化、排斥其他 root 程序擅改 DM |
 | systemd / 最小 guest 的 BusyBox shell | owner 退出后的 RAM 接管启动；继承 cgroup 预算 | 任意 D 态线程都能及时结束 |
 | VM agent / host runner | 独立心跳、应用与文件系统验收、故障注入 | 生产 Guard 的第二个映射管理者 |
@@ -19,7 +20,7 @@
 
 ## 正常与恢复路径
 
-健康时仍用内核事件等待、合并事件与 1 秒兜底；libdevmapper 查询、sysfs 实例与完成计数读取均不主动读介质，不创建探测线程或子进程。无完成进展只是一条观察，不能授权换盘。恢复串行进行，按 100、200、400、800 ms 退避。
+健康时仍用内核事件等待、合并事件与 1 秒兜底；libdevmapper 查询、sysfs 实例与完成计数读取均不主动读介质，不创建探测线程或子进程。无完成进展只是一条观察，不能授权换盘。失败后的候选查询按 100、200、400、800 ms 退避；单个恢复事务的阶段完成由 eventfd 唤醒，不为每个成功阶段额外等待退避间隔。身份读取、最终核验、修改映射及原生 probe 共用唯一的在途工作单元，主循环负责期限与状态记录。
 
 ```text
 ready → waiting → verifying → load_intent → loaded
@@ -41,7 +42,7 @@ ready → waiting → verifying → load_intent → loaded
 
 ## 死亡接管与证据
 
-`/run/path-owner.lock` 的 flock 在进程间互斥，文件不删除。修改 DM 的 helper 和原生 probe 各持有同一 open-file-description 的独立 fd；owner 结束不会提前释放它们的锁引用。拿不到锁的接管者只记录 blocked，不争抢表。
+`/run/path-owner.lock` 的 flock 在进程间互斥，文件不删除。工作线程和它启动的 DM、blkid、LVM helper 持有同一 open-file-description 的 fd；owner 结束不会提前释放它们的锁引用。未消费结果也保留锁，直到主循环接收或清理完成。拿不到锁的接管者记录 `waiting_for_owner`，每秒尝试一次取得锁，不修改事务或映射，不启动替代核验。
 
 `/run/path-transaction.json` 在副作用前后原子替换，保存 owner/boot/map 身份、阶段、原期限、候选凭证和 active/inactive 摘要。摘要只归一化内核会改变的无路径排队标志及单组选择状态；保留几何、后端和选择器参数，原始表也保存。此记录位于 RAM，跨进程存活、不跨重启；单个记录限 64 KiB。
 
@@ -51,7 +52,9 @@ ready → waiting → verifying → load_intent → loaded
 
 Ubuntu 使用 `RootDirectory=/run/rescue`，启动和 `ExecStopPost` 都直接执行其中的 Python。最小 guest 由已经运行的 BusyBox shell 等待 owner 后 exec 接管；健康时没有额外 Python 监督守护进程。二者均限制 Guard 及后代为 CPU 20% / 20 ms、cgroup memory.max 128 MiB、memory.swap.max 0。RAM 工具目录继续为 256 MiB 上限的 `tmpfs,noswap`。这些是不同记账范围，不相加；它们也不是 OOM 下绝对存活承诺。详见[资源口径](RESOURCE-MEASUREMENT.md)。
 
-超时只停止新的自动准入与无路径排队，不撤销已提交路径或任意在途写入。helper/probe 在内核不可中断等待时可能超过命令期限；不生成替代 worker。原生 probe 的阻塞与阶段死亡要分别测量。
+超时首先在 RAM 写入 `expired`，停止新的自动准入并拒绝迟到结果。关闭无路径排队交给拿到锁后的接管者；记录分别标注 `deferred_to_takeover` 和 `completed_by_takeover`，不能把准入截止时间当成排队已关闭。独立内核无路径计时仍有效，但它不约束所有下层在途请求。helper/probe 在不可中断等待时可以超过期限；不生成替代 worker，也不撤销已提交路径或任意在途写入。
+
+异步重构目前通过 137 项 lab 单元测试，以及当前内核的两次 0.2 秒重接和原有事务故障矩阵。新增元数据长阻塞验证器尚未完成实测验收；这项扩展随当前实机目标收敛而暂缓，不能计为已支持的永久阻塞恢复。
 
 ## 复现
 
