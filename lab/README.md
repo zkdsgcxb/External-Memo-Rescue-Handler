@@ -39,6 +39,8 @@ python3 lab/build.py --kernel "lab/work/kernel-package/extracted/boot/vmlinuz-$(
 
 当前自动 Guard 以本机 `7.0.0-34-generic` 为验收基线，必须具备 `DM_MPATH_PROBE_PATHS`（multipath target ≥ 1.15.0），没有旧内核兼容降级。构建器仍可用于历史研究镜像，但不表示自动 Guard 支持这些内核。
 
+EFI 重接挂载验证使用 `python3 lab/efi_mount_probe.py`，依赖先前通过的完整 Ubuntu 保护启动种子、匹配的登记和构建；用 `--build-dir`、`--enrollment`、`--seed-report` 指向各自私有产物，不能仅从源码检出后直接运行。脚本创建根盘 overlay 和独立 FAT 镜像，复用生产配置，验证快速重接、根盘与 EFI 联合消失、旧卸载/新枚举交叠、原生 fsck 生命周期、失败限流以及关机。最终实测和配置选择见 [EFI 处理报告](../research/2026-10-01/EFI-RECOVERY.md)。额外需要宿主已有的 `dosfstools`，Ubuntu 种子内也必须提供 `fsck.vfat`；脚本不自动安装包、不接受宿主块设备。
+
 测试另一内核时，可将对应 image/modules 包私有解包，以 `--module-root <解包根>` 读取其 `/lib/modules/<release>`，用 `--work-dir lab/work/<独立目录>` 保存新构建，无需安装宿主内核。解包根若只有 `usr/lib`，需要补私有 `lib → usr/lib` 链接，再执行 `depmod -b <解包根> <release>`。`auto_run.py` 和 `research_probe.py` 接受 `--build-dir <独立目录>`；Ubuntu/Git 种子仍沿用原路径。完整命令、来源与已运行的 7.0 对照见 [版本研究](../research/2026-09-25/VERSION-STUDY.md)。
 
 构建脚本只复用生产构建器的文件/动态库复制函数，不执行其中绑定真实磁盘的登记函数。它不包含宿主密码、主机设备登记清单或实际救援镜像。

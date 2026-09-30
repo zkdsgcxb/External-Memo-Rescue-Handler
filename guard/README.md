@@ -2,7 +2,7 @@
 
 目标是当前 Ubuntu 7.0、原 USB SSD、线性 LVM/ext4：在启动时先建立稳定的 DM 映射，再激活原有根卷与 shared 卷；运行中由 Guard 核验原盘并接回。这条启动路径不分区、不创建 PV/VG/LV、不格式化，也不在线改接已经挂载的根卷。
 
-2026-09-30 状态：可选入口已安装，标准 Ubuntu VM 的正常启动、两次快速重接和正常关机通过；实机已进入保护项并通过首次根卷/shared 短断恢复，但 EFI 与内核 WARNING 尚待处理，见 [全面检查](../research/2026-09-30/HOST-POST-RECONNECT-AUDIT.md)。构建验收与镜像哈希见 [接入记录](../research/2026-09-30/HOST-GUARD.md)。
+2026-10-01 状态：可选入口已安装，标准 Ubuntu VM 的正常启动、快速重接和正常关机通过；实机已进入保护项并通过首次根卷/shared 短断恢复。EFI 已备份、离线检查通过并安装独立的原生重挂配置，见 [EFI 使用与维护](EFI.md) 和 [本次处理报告](../research/2026-10-01/EFI-RECOVERY.md)；内核 WARNING 仍待处理。历史现场证据见 [全面检查](../research/2026-09-30/HOST-POST-RECONNECT-AUDIT.md)，启动验收与镜像哈希见 [接入记录](../research/2026-09-30/HOST-GUARD.md)。
 
 ## 启动与退回
 

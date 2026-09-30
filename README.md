@@ -4,9 +4,9 @@
 
 可重复的虚拟 USB/UAS 断联实验见 [`lab/README.md`](lab/README.md)：真实内核、USB 根盘、LVM/ext4、RAM 救援通道与 QMP 故障注入，实验只使用新建的虚拟磁盘。
 
-**交互方式：普通启动保留 F9/F10 手动救援；可选保护启动提供后台自动排队与重接，不依赖弹窗。** 2026-09-30 已安装专用 initrd 和 `Ubuntu USB root protection (7.0.0-34-generic)` GRUB 项，原默认入口保留；**已实际进入保护启动，首次实机拔插中根卷/shared 原进程及数据验收通过**；但 EFI 未恢复挂载且有 dirty 状态，另有块层 WARNING 待定位，整体验收有保留。详见 [拔插后全面检查](research/2026-09-30/HOST-POST-RECONNECT-AUDIT.md)。使用方式见 [`guard/README.md`](guard/README.md)，本轮证据见 [实机接入记录](research/2026-09-30/HOST-GUARD.md)。
+**交互方式：普通启动保留 F9/F10 手动救援；可选保护启动提供后台自动排队与重接，不依赖弹窗。** 2026-09-30 已安装专用 initrd 和 `Ubuntu USB root protection (7.0.0-34-generic)` GRUB 项，原默认入口保留；**已实际进入保护启动，首次实机拔插中根卷/shared 原进程及数据验收通过**。2026-10-01 EFI 已备份、离线检查通过并恢复正常挂载，基于原生 udev/systemd 的重接检查与自动挂载已安装；VM 快速重接及旧卸载/新枚举交叠验收通过，此轮未再物理拔插。详见 [EFI 处理报告](research/2026-10-01/EFI-RECOVERY.md)。块层 WARNING 仍待定位，整体验收仍有保留；历史现场证据见 [拔插后全面检查](research/2026-09-30/HOST-POST-RECONNECT-AUDIT.md)。使用方式见 [`guard/README.md`](guard/README.md)，启动接入见 [实机接入记录](research/2026-09-30/HOST-GUARD.md)。
 
-**当前优先目标（2026-09-30）：解决本机原 USB SSD 短暂断联、重枚举后 LVM 根系统无法继续工作的实际问题。** 以当前 7.0 内核、已有线性 LVM/ext4 和内置 SSD 的 rEFInd 引导链为范围，优先完成已有磁盘的启动接入、原盘快速重接与原进程继续读写，并保留 RAM 救援及原启动方式。实机已通过预置稳定 DM 承载 LVM，当前优先收尾 EFI 与内核警告；永久驱动阻塞、全故障覆盖及通用化扩展暂缓，不作为这一阶段的先决目标。
+**当前优先目标（2026-10-01）：解决本机原 USB SSD 短暂断联、重枚举后 LVM 根系统无法继续工作的实际问题。** 以当前 7.0 内核、已有线性 LVM/ext4 和内置 SSD 的 rEFInd 引导链为范围，优先完成已有磁盘的启动接入、原盘快速重接与原进程继续读写，并保留 RAM 救援及原启动方式。实机已通过预置稳定 DM 承载 LVM，EFI 挂载集成已安装，下一项是定位内核警告；永久驱动阻塞、全故障覆盖及通用化扩展暂缓，不作为这一阶段的先决目标。
 
 各部件的职责、我们新增的工作、复用的开源实现与可替换边界见 [`ARCHITECTURE.md`](ARCHITECTURE.md)。
 
@@ -26,9 +26,9 @@
 - 核验预先登记的 USB 设备、分区、PV/VG 身份；人工确认后，只尝试刷新已激活的 `ubuntu` 或 `shared` 线性 LV 映射。
 - 当前构建器绑定本机设备和 Python 3.12/x86_64 工具布局，不是任意磁盘的通用恢复工具。更换设备需要审查登记逻辑。
 - 与宿主共用内核，不能覆盖启动早期故障、kernel panic、全局死锁；内核 I/O 阻塞可能让命令无法及时退出。
-- 映射恢复不代表文件系统、失败写入或应用恢复；没有自动 fsck、重挂载、USB 重置或网络登录。
+- 映射恢复不代表文件系统、失败写入或应用恢复；手动救援 helper 不负责自动 fsck、重挂载、USB 重置或网络登录。EFI 的独立原生检查/重挂配置见 [`guard/EFI.md`](guard/EFI.md)。
 - 登录后是 root shell，helper 的操作限制不是安全沙箱；人工命令仍能访问宿主设备。
-- RAM 日志重启即失；真实掉盘救援效果尚未完成现场验证。
+- RAM 日志重启即失；保护启动已通过一次实际短断中的根卷/shared 测试，故障窗口内手动救援终端交互尚未现场验证。
 
 2026-09-23 只读检查：prepare、tty9、tty10、log 四个服务均 active，两个终端及日志服务均 enabled；运行挂载具备 `noswap`，slice 限额 768 MiB、禁止 swap。此状态不代替人工登录和故障现场验证。历史制作记录见 [`VALIDATION.md`](ram-rescue-demo/VALIDATION.md)。
 
