@@ -7,7 +7,7 @@ from pathlib import Path
 import subprocess
 import time
 
-from rescue import Recovery
+from data_recovery import recovery_for_identity
 from admission import Admission, readonly
 from dm_monitor import DeviceMapper, Events, probe_paths, Schedule
 from owned_operation import OwnedOperation
@@ -35,9 +35,9 @@ def configure(config):
     """
     global NAME, UUID, DEVICE, RUN, PROFILE
     profile=config.get('profile','lab')
-    if profile not in {'lab','host'}:
+    if profile not in {'lab','host','host-data'}:
         raise ValueError('Unsupported guard profile')
-    if profile=='host':
+    if profile in {'host','host-data'}:
         missing=[name for name in ('map_name','map_uuid','run_dir','kernel_release')
                  if not config.get(name)]
         if missing:
@@ -56,16 +56,20 @@ def configure(config):
         raise ValueError('run_dir must be an absolute dedicated state directory')
     if not identity.is_absolute() or '..' in identity.parts:
         raise ValueError('identity_path must be absolute')
-    if profile=='host' and not isinstance(config['kernel_release'],str):
+    if profile in {'host','host-data'} and not isinstance(config['kernel_release'],str):
         raise ValueError('kernel_release must be a string')
+    if profile=='host-data':
+        from data_guard import validate_config
+        validate_config(config)
     NAME,UUID,DEVICE,RUN,PROFILE=name,map_uuid,'/dev/mapper/'+name,run,profile
     state_store.RUN=run
     state_store.ENABLE_LAB_HOOKS=profile=='lab'
 
 
 def validate_environment(config):
-    if config.get('profile','lab')=='host':
-        if 'ram_rescue_guard=1' not in Path('/proc/cmdline').read_text().split():
+    profile=config.get('profile','lab')
+    if profile in {'host','host-data'}:
+        if profile=='host' and 'ram_rescue_guard=1' not in Path('/proc/cmdline').read_text().split():
             raise RuntimeError('Host guard requires explicit ram_rescue_guard=1 boot flag')
         if os.uname().release!=config['kernel_release']:
             raise RuntimeError('Host guard kernel differs from enrolled kernel_release')
@@ -465,7 +469,12 @@ def main(argv=None):
             # A service restart is not permission to erase a terminal outcome.
             if (owner.run/'path-transaction.json').exists():
                 raise RuntimeError('Existing transaction requires takeover, not owner restart')
-            recovery=Recovery(load_json(config.get('identity_path','/etc/rescue/identity.json')),runner=readonly)
+            recovery=recovery_for_identity(
+                load_json(config.get('identity_path','/etc/rescue/identity.json')),runner=readonly)
+            if PROFILE=='host-data':
+                from data_guard import validate_runtime
+                recovery.run=lambda args,timeout=3: readonly(args,timeout,owner_fd=owner.fd)
+                validate_runtime(config,recovery)
             manager=Guard(config,recovery,owner)
             events=None
             try:

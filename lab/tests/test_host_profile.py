@@ -131,13 +131,13 @@ class HostProfileTests(unittest.TestCase):
 
     def run_main(self, manager):
         return patch.multiple('path_guard', validate_environment=Mock(),
-                              Recovery=Mock(), Guard=Mock(return_value=manager),
+                              recovery_for_identity=Mock(), Guard=Mock(return_value=manager),
                               Events=Mock(), Schedule=Mock())
 
     def test_main_loads_configured_identity_and_announces_verified_ready(self):
         manager = self.manager()
         with self.run_main(manager), patch('path_guard.notify_ready') as notify:
-            recovery = path_guard.Recovery
+            recovery = path_guard.recovery_for_identity
             path_guard.main(['--config', str(self.config_path)])
         recovery.assert_called_once_with({'enrolled': True}, runner=path_guard.readonly)
         manager.current_present.assert_called_once()

@@ -52,6 +52,13 @@ def layout(node, runner=readonly):
     return sorted(normalized, key=lambda row: (row['lv_name'], row['seg_start']))
 
 
+def layout_for_recovery(recovery, node):
+    """Attest the enrolled content using its policy, with one shared fd guard."""
+    if hasattr(recovery, 'admission_layout'):
+        return recovery.admission_layout(node)
+    return layout(node, runner=recovery.run)
+
+
 def digest(value):
     return hashlib.sha256(json.dumps(value, sort_keys=True, separators=(',', ':'),
                                     allow_nan=False).encode()).hexdigest()
@@ -142,6 +149,9 @@ class Admission:
         self.clock = clock
         self.boot_id = boot_id or Path('/proc/sys/kernel/random/boot_id').read_text().strip()
         self.partition_sectors = config['partition_sectors']
+        self.partition_start = config.get('partition_start')
+        if self.partition_start is not None and (type(self.partition_start) is not int or self.partition_start < 0):
+            raise AdmissionError('Enrolled partition start must be a nonnegative integer')
         self.logical_block_size = config['logical_block_size']
         self.layout_digest = digest(config['layout'])
         self.layout_version = config.get('layout_version', self.layout_digest)
@@ -149,10 +159,13 @@ class Admission:
         self._lock = threading.Lock()
 
     def _enrollment_digest(self):
-        return digest({
+        enrollment = {
             'identity': self.recovery.c, 'partition_sectors': self.partition_sectors,
             'logical_block_size': self.logical_block_size,
-            'layout_digest': self.layout_digest, 'layout_version': self.layout_version})
+            'layout_digest': self.layout_digest, 'layout_version': self.layout_version}
+        if self.partition_start is not None:
+            enrollment['partition_start'] = self.partition_start
+        return digest(enrollment)
 
     def _check_enrollment(self):
         if self._enrollment_digest() != self.enrollment_digest:
@@ -183,6 +196,9 @@ class Admission:
         sectors = _integer(sys_path / 'size')
         if sectors != self.partition_sectors or _ioctl_number(fd, BLKGETSIZE64, '=Q') != sectors * 512:
             raise AdmissionError('Partition size differs')
+        start = _integer(sys_path / 'start')
+        if self.partition_start is not None and start != self.partition_start:
+            raise AdmissionError('Partition start differs from enrollment')
         block_size = _integer(disk / 'queue/logical_block_size')
         if (block_size != self.logical_block_size or block_size <= 0
                 or _ioctl_number(fd, BLKSSZGET, '=I') != block_size):
@@ -196,7 +212,7 @@ class Admission:
                 'disk_sys_path': str(disk), 'diskseq': diskseq,
                 'disk_sectors': disk_sectors, 'partition_sectors': sectors,
                 'partition_number': _integer(sys_path / 'partition'),
-                'partition_start': _integer(sys_path / 'start'),
+                'partition_start': start,
                 'logical_block_size': block_size}
 
     def _same_instance(self, node, fd, expected):
@@ -206,9 +222,9 @@ class Admission:
             raise AdmissionError('Candidate changed during verification')
 
     def _layout(self, node):
-        actual = digest(layout(node, runner=self.recovery.run))
+        actual = digest(layout_for_recovery(self.recovery, node))
         if actual != self.layout_digest:
-            raise AdmissionError('LV layout differs from enrolled metadata')
+            raise AdmissionError('Device layout differs from enrolled metadata')
         return actual
 
     def verify(self, deadline, owner_epoch):

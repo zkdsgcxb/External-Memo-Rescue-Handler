@@ -19,7 +19,9 @@ import admission
 from rescue import Recovery, Refuse
 
 
-class AdmissionTests(unittest.TestCase):
+class AdmissionFixture:
+    """Synthetic USB geometry and held block fds for both admission policies."""
+
     def setUp(self):
         (BASE / 'work').mkdir(exist_ok=True)
         temporary = tempfile.TemporaryDirectory(dir=BASE / 'work')
@@ -149,6 +151,8 @@ class AdmissionTests(unittest.TestCase):
     def verify(self):
         return self.policy.verify(106., 'owner-1')
 
+
+class AdmissionTests(AdmissionFixture, unittest.TestCase):
     def test_success_holds_readonly_fd_and_keeps_two_serial_identity_checks(self):
         with self.verify() as candidate:
             self.assertEqual([call[1] for call in self.calls], ['-p', 'pvs', 'lvs', '-p', 'pvs'])

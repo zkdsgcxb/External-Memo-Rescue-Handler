@@ -2,7 +2,7 @@
 
 完整 Ubuntu Server 与 Git 克隆集成见 [lab/UBUNTU.md](lab/UBUNTU.md)。
 
-本文区分已使用的手动 RAM 救援与自动保护：`ram-rescue-demo/` 提供手动工具；`guard/runtime/` 是虚拟机与可选实机启动入口共用的自动恢复核心；`lab/` 负责构建虚拟机、注入故障和独立验收。`guard/` 已实现面向现有 Ubuntu 根卷的 initramfs 接入、构建和安装入口，可选入口已于 2026-09-30 安装，实机尚未重启、完成启动验收，当前会话没有自动保护。源码更新不等于更新已安装包。
+本文区分手动 RAM 救援与自动保护：`ram-rescue-demo/` 提供手动工具；`guard/runtime/` 是虚拟机与可选实机启动入口共用的自动恢复核心；`lab/` 负责构建虚拟机、注入故障和独立验收。根盘保护入口已实际启动，2026-09-30 首次实机短断测试通过，内核 WARNING 仍待定位。2026-10-01 增加独立 USB 数据分区实验入口，复用相同控制器，见 [数据映射接入](guard/DATA.md)。源码更新不等于更新已安装包。
 
 当前只维护 Linux **7.0.0-34-generic / x86_64** 基线，要求 multipath target ≥ `1.15.0`。实机入口额外要求 `ram_rescue_guard=1` 启动标记与登记的内核 release 完全相符；没有旧内核兼容或无探测降级分支。
 
@@ -25,7 +25,7 @@
 
 ## 1. 整体结构
 
-自动保护的数据路径如下。箭头表示 I/O 请求向下流动；PV 是 LVM 识别和组织存储的概念，不是额外转发请求的守护进程。实机入口实现相同拓扑，实际启动仍待验收。
+根盘自动保护的数据路径如下。箭头表示 I/O 请求向下流动；PV 是 LVM 识别和组织存储的概念，不是额外转发请求的守护进程。实机已使用相同拓扑。独立数据分区省去其中的 LVM 层，文件系统直接挂载稳定 DM 映射。
 
 ```mermaid
 flowchart TD
@@ -57,6 +57,7 @@ flowchart TD
 | 路径管理程序 | 发现失效、寻找重连盘、决定是否接回、超时终止 | 调用 sysfs、libdevmapper、blkid、LVM 和 dmsetup | `Guard` 状态机、准入凭证、加载/提交/确认、终态与接管；`guard/runtime/path_guard.py` |
 | 阻塞操作与所有权 | 串行执行故障期操作，保留锁引用，清理迟到结果 | Python 线程、Linux flock、eventfd、进程 fd 继承 | `OwnedOperation`、有界 RAM journal 与状态；`guard/runtime/owned_operation.py`、`guard_state.py` |
 | 设备身份核验 | 避免只因新盘符或序列号相同就接入 | Linux sysfs/块设备 ioctl、util-linux blkid、LVM 元数据解析工具 | 复用 `ram-rescue-demo/src/rescue.py` 身份链；`guard/runtime/admission.py` 增加带期限凭证、实例与布局核验，不另写 PV 元数据解析器 |
+| 数据分区接入 | 登记已有单路径 DM 映射，排除原分区自动挂载冲突，运行独立实例 | 同一 DM、blkid、systemd、udev | `data_recovery.py` 提供文件系统身份策略；`data_guard.py` 检查接入边界；`guard/data.py` 配置临时 RAM 服务和合计配额；没有第二套恢复状态机 |
 | LVM 卷管理 | PV/VG/LV 管理、LV 到物理范围的映射 | LVM2 用户态工具、Linux DM linear | 手动恢复的限制、确认流程、再次核验及结果检查；`Recovery.refresh()`；修正真实 lvs JSON 的 seg 键解析 |
 | 文件系统 | 文件、目录、journal、fsync、错误处理 | Linux ext4/JBD2；e2fsprogs 提供 mkfs/e2fsck | 检查可读、可写和 journal 状态；未修改 ext4，也未实现或自动运行修复算法 |
 | RAM 救援工具环境 | 根盘断联时仍能启动工具和诊断 | Linux tmpfs、chroot、挂载、cgroup；现成二进制与库 | 依赖打包、noswap、挂载安排、RAM 锁目录共用、资源限制与就绪检查；`ram-rescue-demo/build.py`、`src/prepare.sh`、`src/check.py` |
@@ -111,7 +112,7 @@ LVM 是管理和构造卷映射的工具；运行中的每次块 I/O 由内核 D
 
 替换 Guard 时可以继续用现有恢复、事务接管与应用实验作为对照。替换内核数据路径或文件系统时，需要扩充乱序、部分写入、flush、反复失效、资源压力和断电一致性测试，不能只要求“最后读得到文件”。恢复事务见 [TRANSACTIONS.md](lab/TRANSACTIONS.md)，实验判据见 [AUTOMATIC.md](lab/AUTOMATIC.md)。
 
-当前优先验收已有实机入口的正常启动及原 USB 根盘短断重接，不继续扩大故障范围。可选入口保留普通 Ubuntu 启动退路，不改内置 SSD 的 rEFInd；具体边界见 [guard/README.md](guard/README.md)。安装文件本身也不会让当前运行会话立即获得保护。
+当前实盘优先处理原 USB 根盘，独立数据分区扩展先在完整 Ubuntu VM 中验收。可选入口保留普通 Ubuntu 启动退路，不改内置 SSD 的 rEFInd；具体边界见 [guard/README.md](guard/README.md) 和 [guard/DATA.md](guard/DATA.md)。安装文件本身不会让未接入稳定 DM 的运行会话获得保护。
 
 ## 6. 上游来源与未使用方案
 
