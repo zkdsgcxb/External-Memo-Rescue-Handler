@@ -8,6 +8,8 @@
 
 这里的“我们实现”指本仓库新增的程序、策略和集成；“上游实现”指 Linux、LVM2、BusyBox、systemd、QEMU 等现有开源项目。两者并不矛盾：一个部件可以由我们编排，实际机制由上游提供。
 
+用户入口现已统一为 `rescue-guard`，自动识别已有根盘 owner 与普通文件系统登记；根盘和数据分区属于内部接入、核验策略的区别。`registry.py` 保留跨启动的稳定身份，`maintain.py` 核验当次实例后进入同一恢复循环；udev + systemd 在登记的稳定 DM 映射出现时启动服务。准备服务只运行一次，不增加常驻轮询总管，详见 [统一后台维护](guard/MANAGER.md)。
+
 ## 现有功能具体怎么做到
 
 技术栈以 **Python 3.12、POSIX Shell、systemd、Linux Device Mapper/LVM2/ext4、QEMU/KVM** 为主。没有 Web 服务框架或数据库依赖，也没有 eBPF 程序、自编内核模块。JSON 用于登记、控制消息和实验记录；Python unittest 用于恢复逻辑回归。

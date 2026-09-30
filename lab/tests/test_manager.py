@@ -1,0 +1,256 @@
+"""Unified maintenance starts only registered maps and preserves root ownership."""
+from copy import deepcopy
+import importlib.util
+import json
+from pathlib import Path
+import stat
+import sys
+import tempfile
+import unittest
+from unittest.mock import Mock, patch
+
+BASE = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(BASE / 'guard'))
+spec = importlib.util.spec_from_file_location('guard_manager', BASE / 'guard/manage.py')
+manager = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(manager)
+
+
+def profile():
+    identity = {'kind': 'filesystem', 'vid': '1234', 'pid': '5678',
+                'usb_serial': 'test-serial', 'sectors': 32768,
+                'partition_number': 1, 'partuuid': 'test-partition',
+                'fs_type': 'ext4', 'fs_uuid': 'test-filesystem'}
+    return {'schema': 1, 'identity': identity, 'guard': {
+        'schema': 1, 'profile': 'host-data', 'map_name': 'rr-data-test',
+        'map_uuid': 'RAMRESCUE-DATA-test', 'kernel_release': '7.0.0-test',
+        'run_dir': '/run/ram-rescue-data/rr-data-test/state',
+        'identity_path': '/run/ram-rescue-data/rr-data-test/identity.json',
+        'queue_seconds': 8, 'partition_sectors': 16384, 'partition_start': 2048,
+        'logical_block_size': 512,
+        'layout': {key: identity[key] for key in ('kind', 'fs_type', 'fs_uuid', 'partuuid')},
+        'initial_node': '/dev/sdb1', 'initial_sys_path': '/sys/devices/old/sdb/sdb1',
+        'initial_diskseq': 12,
+    }}
+
+
+def root_profile():
+    result = profile()
+    for key in ('kind', 'fs_type', 'fs_uuid'):
+        result['identity'].pop(key)
+    result['identity'].update(pv_uuid='test-pv', vg_uuid='test-vg', vg_name='portable',
+                              lvs={'ubuntu': {'dm_uuid': 'LVM-test-root'}})
+    result['guard'].update(profile='host', map_name='ram-rescue-path',
+                           map_uuid='RAMRESCUE-HOST-test',
+                           run_dir='/run/ram-rescue-guard/state',
+                           identity_path='/etc/rescue/identity.json',
+                           root_lv='ubuntu', root_fs_uuid='root-fs',
+                           layout=[{'segtype': 'linear', 'lv_name': 'ubuntu'}])
+    return result
+
+
+class ManagerTests(unittest.TestCase):
+    def setUp(self):
+        temporary = tempfile.TemporaryDirectory(dir=BASE / 'lab/work')
+        self.addCleanup(temporary.cleanup)
+        self.root = Path(temporary.name)
+        paths = {name: self.root / name.lower() for name in (
+            'REGISTRY', 'RUNTIME', 'INSTALL', 'VERSIONS', 'ENTRY', 'UNIT',
+            'CONTROLLER', 'SLICE', 'RULE', 'ROOT_CONFIG', 'CONTROL_LOCK')}
+        patch.multiple(manager, **paths).start()
+        patch.object(manager.services, 'require_root').start()
+        patch.object(manager.services, 'require_ram').start()
+        self.commands = patch.object(manager.services, 'run', return_value='inactive').start()
+        self.ram = self.root / 'ram'
+        patch.object(manager.services, 'RAM', self.ram).start()
+        self.live_maps = patch.object(manager, 'maps', return_value={}).start()
+        self.root_enrollment = patch.object(manager, 'root_profile', return_value=None).start()
+        self.addCleanup(patch.stopall)
+        self.profile = profile()
+        self.record = manager.record_from_profile(self.profile)
+        self.map = self.root / 'sys/dm-9'
+        (self.map / 'slaves').mkdir(parents=True)
+        self.partition = self.root / 'sys/sdb1'
+        self.partition.mkdir()
+        (self.map / 'slaves/sdb1').symlink_to(self.partition)
+        self.item = {'name': 'rr-data-test', 'uuid': 'RAMRESCUE-DATA-test', 'sys': self.map}
+
+    def test_activation_rules_match_only_registered_dm_identity(self):
+        rules = manager.render_rules([self.record])
+        active = [line for line in rules.splitlines() if 'SYSTEMD_WANTS' in line]
+        self.assertEqual(len(active), 1)
+        self.assertIn('ENV{DM_NAME}=="rr-data-test"', active[0])
+        self.assertIn('ENV{DM_UUID}=="RAMRESCUE-DATA-test"', active[0])
+        self.assertIn('ram-rescue-maintain@rr-data-test.service', active[0])
+        raw = next(line for line in rules.splitlines() if 'ATTR{partition}' in line)
+        self.assertIn('ATTRS{serial}=="test-serial"', raw)
+        self.assertNotIn('SYSTEMD_WANTS', raw)
+        self.assertNotIn('BindsTo=', manager.render_controller())
+        self.assertNotIn('Restart=always', manager.render_controller())
+        self.assertNotIn('RUN+=', rules)
+
+    def test_root_registration_recognizes_existing_owner_without_new_service(self):
+        root = root_profile()
+        item = {'name': 'ram-rescue-path', 'uuid': root['guard']['map_uuid']}
+        with patch.object(manager, 'resolve_map', return_value=(item, root)), \
+                patch.object(manager, 'collect') as collect:
+            result = manager.register('/')
+        self.assertEqual(result['state'], 'already_managed')
+        self.assertEqual(result['owner'], 'ram-rescue-guard.service')
+        self.assertFalse(manager.REGISTRY.exists())
+        collect.assert_not_called()
+        self.commands.assert_not_called()
+
+    def test_persistence_is_private_and_omits_linux_instance_names(self):
+        with patch.object(manager, 'resolve_map', return_value=(self.item, None)), \
+                patch.object(manager, 'collect', return_value=self.profile):
+            result = manager.register('/dev/mapper/rr-data-test')
+        path = Path(result['registration'])
+        self.assertEqual(stat.S_IMODE(path.stat().st_mode), 0o600)
+        self.assertEqual(stat.S_IMODE(path.parent.stat().st_mode), 0o700)
+        saved = json.loads(path.read_text())
+        self.assertEqual(saved, self.record)
+        self.assertFalse(any(key.startswith('initial_') for key in saved['guard']))
+        self.commands.assert_not_called()
+
+    def test_registration_never_relearns_changed_identity(self):
+        manager.REGISTRY.mkdir()
+        target = manager.REGISTRY / 'rr-data-test.json'
+        manager.write_json(target, self.record)
+        changed = deepcopy(self.profile)
+        changed['identity']['usb_serial'] = 'different-device'
+        with patch.object(manager, 'resolve_map', return_value=(self.item, None)), \
+                patch.object(manager, 'collect', return_value=changed):
+            with self.assertRaisesRegex(RuntimeError, 'never automatically relearned'):
+                manager.register('/dev/mapper/rr-data-test')
+        self.assertEqual(manager.read_json(target), self.record)
+        self.commands.assert_not_called()
+
+    def test_install_refuses_every_preexisting_integration_path(self):
+        for name in ('INSTALL', 'ENTRY', 'UNIT', 'CONTROLLER', 'SLICE', 'RULE'):
+            path = getattr(manager, name)
+            path.write_text('existing external integration')
+            with self.subTest(name=name), patch.object(manager, 'install_sources') as install_sources:
+                with self.assertRaisesRegex(RuntimeError, 'already exists'):
+                    manager.install()
+                install_sources.assert_not_called()
+            path.unlink()
+        self.commands.assert_not_called()
+
+    def test_only_matching_existing_map_is_started(self):
+        wrong_uuid = {**self.item, 'uuid': 'RAMRESCUE-DATA-foreign'}
+        self.live_maps.return_value = {'dm-9': wrong_uuid}
+        self.assertEqual(manager.activate_present([self.record]), [])
+        self.commands.assert_not_called()
+        self.live_maps.return_value = {'dm-9': self.item}
+        result = manager.activate_present([self.record])
+        self.assertEqual(result, ['ram-rescue-maintain@rr-data-test.service'])
+        self.commands.assert_called_once_with(['systemctl', 'start', result[0]])
+
+    def test_status_reports_waiting_for_map_when_registered_disk_has_no_map(self):
+        with patch.object(manager, 'records', return_value=[self.record]):
+            result = manager.status()
+        device = result['devices'][0]
+        self.assertEqual(device['state'], 'waiting_for_map')
+        self.assertFalse(device['map_present'])
+        self.assertEqual(device['service_state'], 'inactive')
+        self.assertEqual(self.commands.call_count, 1)
+        self.assertEqual(self.commands.call_args.args[0][:2], ['systemctl', 'show'])
+
+    def test_status_does_not_reuse_old_ready_state_for_an_absent_map(self):
+        record = deepcopy(self.record)
+        evidence = self.root / 'old-state'
+        evidence.mkdir()
+        record['guard']['run_dir'] = str(evidence)
+        manager.write_json(evidence / 'path-state.json', {'state': 'ready', 'recoveries': 3})
+        with patch.object(manager, 'records', return_value=[record]):
+            device = manager.status()['devices'][0]
+        self.assertEqual(device['state'], 'waiting_for_map')
+        self.assertEqual(device['last_state'], 'ready')
+        self.assertEqual(device['recoveries'], 3)
+
+    def test_installation_failure_keeps_incomplete_receipt_and_refuses_retry(self):
+        program = self.root / 'program.py'
+        program.write_text('installed version')
+        def command(arguments):
+            if arguments[:3] == ['systemctl', 'enable', '--now']:
+                raise RuntimeError('manager service failed')
+            return ''
+        self.commands.side_effect = command
+        with patch.object(manager, 'install_sources', return_value=program):
+            with self.assertRaisesRegex(RuntimeError, 'manager service failed'):
+                manager.install()
+        receipt = manager.read_json(manager.INSTALL / 'install.json')
+        self.assertEqual(receipt['state'], 'installing')
+        with self.assertRaisesRegex(RuntimeError, 'already exists'):
+            manager.install()
+        with self.assertRaisesRegex(RuntimeError, 'incomplete'):
+            manager.receipt()
+
+    def test_empty_registry_installation_never_starts_another_root_controller(self):
+        program = self.root / 'program.py'
+        program.write_text('installed version')
+        with patch.object(manager, 'install_sources', return_value=program):
+            result = manager.install()
+        self.assertEqual(result['services'], [])
+        self.assertEqual(result['root_owner'], 'existing_boot_service')
+        self.assertEqual(manager.read_json(manager.INSTALL / 'install.json')['state'], 'installed')
+        self.assertFalse(manager.ROOT_CONFIG.exists())
+        commands = [call.args[0] for call in self.commands.call_args_list]
+        self.assertNotIn(['systemctl', 'start', 'ram-rescue-guard.service'], commands)
+        self.assertFalse(any(command[0] in ('dmsetup', 'mount', 'umount', 'lvm') for command in commands))
+
+    def test_prepare_stages_only_records_and_runtime_without_creating_maps(self):
+        runtime = self.ram / 'opt/data-guard/test-version'
+        runtime.mkdir(parents=True)
+        with patch.object(manager, 'records', return_value=[self.record]), \
+                patch.object(manager.services, 'stage_runtime', return_value=runtime):
+            result = manager.prepare()
+        self.assertEqual(result['prepared'], 1)
+        alias = self.ram / 'opt/manager'
+        self.assertEqual(alias.resolve(), runtime)
+        self.assertEqual(manager.read_json(manager.RUNTIME / 'entries/rr-data-test.json'), self.record)
+        self.commands.assert_not_called()
+        self.live_maps.assert_not_called()
+
+    def test_prepare_never_replaces_live_runtime_or_identity(self):
+        runtime = self.ram / 'opt/data-guard/test-version'
+        runtime.mkdir(parents=True)
+        alias = self.ram / 'opt/manager'
+        alias.symlink_to('data-guard/test-version')
+        folder = manager.RUNTIME / 'entries'
+        folder.mkdir(parents=True)
+        old = deepcopy(self.record)
+        old['identity']['usb_serial'] = 'older-enrollment'
+        manager.write_json(folder / 'rr-data-test.json', old)
+        with patch.object(manager, 'records', return_value=[self.record]), \
+                patch.object(manager.services, 'stage_runtime', return_value=runtime):
+            with self.assertRaisesRegex(RuntimeError, 'never replace a live identity'):
+                manager.prepare()
+        self.assertEqual(manager.read_json(folder / 'rr-data-test.json'), old)
+        self.assertEqual(alias.resolve(), runtime)
+
+    def test_prepare_rejects_different_runtime_version(self):
+        first = self.ram / 'opt/data-guard/first'
+        second = self.ram / 'opt/data-guard/second'
+        first.mkdir(parents=True)
+        second.mkdir()
+        alias = self.ram / 'opt/manager'
+        alias.symlink_to('data-guard/first')
+        with patch.object(manager, 'records', return_value=[]), \
+                patch.object(manager.services, 'stage_runtime', return_value=second):
+            with self.assertRaisesRegex(RuntimeError, 'another manager runtime'):
+                manager.prepare()
+        self.assertEqual(alias.resolve(), first)
+
+    def test_uninstall_refuses_live_registered_map_before_any_service_change(self):
+        self.live_maps.return_value = {'dm-9': self.item}
+        with patch.object(manager, 'records', return_value=[self.record]), \
+                patch.object(manager, 'receipt', return_value={'state': 'installed'}):
+            with self.assertRaisesRegex(RuntimeError, 'still exist'):
+                manager.uninstall()
+        self.commands.assert_not_called()
+
+
+if __name__ == '__main__':
+    unittest.main()

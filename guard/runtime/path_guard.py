@@ -452,6 +452,64 @@ def acquire_owner(taking_over):
             time.sleep(1)
 
 
+def run_owned(config, owner, taking_over=False):
+    """Run one configured controller while the caller keeps its owner fence.
+
+    Entrypoints must configure and validate the environment before calling.
+    Registration preparation can therefore retain its lock into this loop.
+    """
+    if taking_over:
+        takeover(owner,config)
+        return
+    # A service restart is not permission to erase a terminal outcome.
+    if (owner.run/'path-transaction.json').exists():
+        raise RuntimeError('Existing transaction requires takeover, not owner restart')
+    recovery=recovery_for_identity(
+        load_json(config.get('identity_path','/etc/rescue/identity.json')),runner=readonly)
+    if PROFILE=='host-data':
+        from data_guard import validate_runtime
+        recovery.run=lambda args,timeout=3: readonly(args,timeout,owner_fd=owner.fd)
+        validate_runtime(config,recovery)
+    manager=Guard(config,recovery,owner)
+    events=None
+    try:
+        status=manager.check_map()
+        if not manager.current_present() or not manager.current_active(status):
+            raise RuntimeError('Initial enrolled path is absent or not active')
+        (owner.run/'path-guard.pid').write_text(str(os.getpid()))
+        manager.event('ready',node=manager.current,outcome='initial_mapping')
+        try:
+            notify_ready()
+        except Exception as exc:
+            manager.event('failed',reason=str(exc),outcome='startup_notification_failed')
+            raise
+        events=Events()
+        schedule=Schedule(time.monotonic())
+        pending=False
+        completed=False
+        while manager.state not in TERMINAL:
+            now=time.monotonic()
+            if completed or schedule.due(now,pending) or manager.deadline is not None and now>=manager.deadline:
+                manager.step()
+                schedule.completed(time.monotonic(),manager.deadline is not None)
+                pending=False
+                completed=False
+            if manager.state in TERMINAL:
+                break
+            wake=schedule.next_check
+            if pending:
+                wake=min(wake,schedule.event_after)
+            if manager.deadline is not None:
+                wake=min(wake,manager.deadline)
+            pending=events.wait(wake-time.monotonic(),manager.operation.fileno(),
+                defer_events=pending and time.monotonic()<schedule.event_after) or pending
+            completed=events.operation_ready
+    finally:
+        if events is not None:
+            events.close()
+        manager.shutdown()
+
+
 def main(argv=None):
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--config',type=Path,default=Path('/etc/rescue/path-guard.json'))
@@ -463,56 +521,7 @@ def main(argv=None):
     taking_over=args.takeover
     try:
         with acquire_owner(taking_over) as owner:
-            if taking_over:
-                takeover(owner,config)
-                return
-            # A service restart is not permission to erase a terminal outcome.
-            if (owner.run/'path-transaction.json').exists():
-                raise RuntimeError('Existing transaction requires takeover, not owner restart')
-            recovery=recovery_for_identity(
-                load_json(config.get('identity_path','/etc/rescue/identity.json')),runner=readonly)
-            if PROFILE=='host-data':
-                from data_guard import validate_runtime
-                recovery.run=lambda args,timeout=3: readonly(args,timeout,owner_fd=owner.fd)
-                validate_runtime(config,recovery)
-            manager=Guard(config,recovery,owner)
-            events=None
-            try:
-                status=manager.check_map()
-                if not manager.current_present() or not manager.current_active(status):
-                    raise RuntimeError('Initial enrolled path is absent or not active')
-                (owner.run/'path-guard.pid').write_text(str(os.getpid()))
-                manager.event('ready',node=manager.current,outcome='initial_mapping')
-                try:
-                    notify_ready()
-                except Exception as exc:
-                    manager.event('failed',reason=str(exc),outcome='startup_notification_failed')
-                    raise
-                events=Events()
-                schedule=Schedule(time.monotonic())
-                pending=False
-                completed=False
-                while manager.state not in TERMINAL:
-                    now=time.monotonic()
-                    if completed or schedule.due(now,pending) or manager.deadline is not None and now>=manager.deadline:
-                        manager.step()
-                        schedule.completed(time.monotonic(),manager.deadline is not None)
-                        pending=False
-                        completed=False
-                    if manager.state in TERMINAL:
-                        break
-                    wake=schedule.next_check
-                    if pending:
-                        wake=min(wake,schedule.event_after)
-                    if manager.deadline is not None:
-                        wake=min(wake,manager.deadline)
-                    pending=events.wait(wake-time.monotonic(),manager.operation.fileno(),
-                        defer_events=pending and time.monotonic()<schedule.event_after) or pending
-                    completed=events.operation_ready
-            finally:
-                if events is not None:
-                    events.close()
-                manager.shutdown()
+            run_owned(config, owner, taking_over)
     except Exception as exc:
         if taking_over:
             failure={'state':'blocked','reason':str(exc),

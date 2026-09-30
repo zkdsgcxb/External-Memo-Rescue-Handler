@@ -1,5 +1,7 @@
 # External-Memo-Rescue-Handler
 
+**统一后台入口：** 已有根盘保护和登记的数据映射统一查看与维护，无需选择根盘／普通设备模式。数据映射出现时由 systemd 自动启动恢复实例；没有新增定时扫盘总管。安装、登记及“映射必须预先建立”的边界见 [`guard/MANAGER.md`](guard/MANAGER.md)。
+
 针对本机 USB 外置根盘故障的 RAM 救援终端原型，实现在 [`ram-rescue-demo/`](ram-rescue-demo/README.md)。源码与开发数据放在 shared 卷的本项目目录；安装后的系统运行包位于 Ubuntu 的 `/usr/local/lib/ram-rescue-demo`，运行时工具位于 `/run/ram-rescue-demo` 的 RAM 文件系统。
 
 可重复的虚拟 USB/UAS 断联实验见 [`lab/README.md`](lab/README.md)：真实内核、USB 根盘、LVM/ext4、RAM 救援通道与 QMP 故障注入，实验只使用新建的虚拟磁盘。

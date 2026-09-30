@@ -87,7 +87,7 @@ def require_ram():
             raise RuntimeError('A stock multipath controller may be active: ' + unit)
 
 
-def udev_rules(profile):
+def udev_rules(profile, *, wanted_service=None):
     """Exclude only this raw partition and suppress scans of this stable map."""
     identity, config = profile['identity'], profile['guard']
     name = map_name(config['map_name'])
@@ -101,6 +101,11 @@ def udev_rules(profile):
     partition = identity['partition_number']
     if not isinstance(partition, int) or isinstance(partition, bool) or partition <= 0:
         raise ValueError('Invalid enrolled partition number')
+    activation = ''
+    if wanted_service is not None:
+        if not re.fullmatch(r'[A-Za-z0-9@_.-]+\.service', wanted_service):
+            raise ValueError('Unsafe systemd activation unit')
+        activation = f', TAG+="systemd", ENV{{SYSTEMD_WANTS}}+="{wanted_service}"'
     return ('# Temporary data Guard exclusions; retained until reboot even after stop.\n'
             'SUBSYSTEM=="block", ACTION=="add|change", '
             f'ATTR{{partition}}=="{partition}", ATTRS{{idVendor}}=="{identity["vid"]}", '
@@ -109,7 +114,7 @@ def udev_rules(profile):
             'SUBSYSTEM=="block", ACTION=="add|change", '
             f'ENV{{DM_NAME}}=="{name}", ENV{{DM_UUID}}=="{uuid}", '
             'ENV{DM_NOSCAN}="1", ENV{DM_UDEV_DISABLE_OTHER_RULES_FLAG}="1", '
-            'ENV{UDISKS_IGNORE}="1", OPTIONS:="nowatch"\n')
+            'ENV{UDISKS_IGNORE}="1", OPTIONS:="nowatch"' + activation + '\n')
 
 
 def slice_unit():
