@@ -1,60 +1,125 @@
 # External-Memo-Rescue-Handler
 
-**统一后台入口：** 已有根盘保护和登记的数据映射统一查看与维护，无需选择根盘／普通设备模式。数据映射出现时由 systemd 自动启动恢复实例；没有新增定时扫盘总管。安装、登记及“映射必须预先建立”的边界见 [`guard/MANAGER.md`](guard/MANAGER.md)。
+**面向 Linux USB 存储短暂断联的后台恢复工具，为 DM multipath 补充原盘核验与重接管理。**
 
-**C++ 迁移与资源比较：** 新版启动准备、后台监视、身份核验、换表、内核路径探测及死亡接管均由 [完整 C++17 运行时](guard/native/README.md) 执行。Python 保留为管理/实验工具和明确选择的行为对照。根盘与两块数据盘共同恢复、子挂载与已打开 FD、十轮恢复、事务死亡矩阵和资源对照见 [迁移报告](research/2026-10-02/CPP-MIGRATION.md)。本轮只在 QEMU 验证，尚未替换本机运行包。
+项目起源于外置 USB SSD 上的 Ubuntu / LVM 根系统：磁盘快速拔插后重新枚举，原映射仍指向失效的设备实例，导致后续 I/O 失败。现在，根盘与预先登记的数据盘共用一套 C++17 恢复控制器，配有 RAM 手动救援环境和可重复的 QEMU 故障实验。
 
-此前的 [Python 优化与配额实验](research/2026-10-01/OVERNIGHT-OPTIMIZATION.md)、[原生 systemd 挂载计划](guard/MOUNTS.md)、[分层架构验证](guard/ARCHITECTURES.md) 和 [只读 C++ 观察器](guard/native/OBSERVER.md) 保留为历史证据。观察器数据不等于完整恢复运行时的资源占用。
+目标是在可恢复的短暂断联中，保留稳定的块设备、原挂载和原进程，让等待中的 I/O 在原盘重接后继续。恢复期间读写可能阻塞；项目不保证任意故障下零中断。
 
-针对本机 USB 外置根盘故障的 RAM 救援终端原型，实现在 [`ram-rescue-demo/`](ram-rescue-demo/README.md)。源码与开发数据放在 shared 卷的本项目目录；安装后的系统运行包位于 Ubuntu 的 `/usr/local/lib/ram-rescue-demo`，运行时工具位于 `/run/ram-rescue-demo` 的 RAM 文件系统。
+[快速开始](#快速开始) · [性能与验证](#性能与验证) · [支持范围](#支持范围) · [文档导航](#文档导航) · [开源协议](#开源协议)
 
-可重复的虚拟 USB/UAS 断联实验见 [`lab/README.md`](lab/README.md)：真实内核、USB 根盘、LVM/ext4、RAM 救援通道与 QMP 故障注入，实验只使用新建的虚拟磁盘。
+## 工作原理
 
-独立 USB 数据盘的实验扩展见 [`guard/DATA.md`](guard/DATA.md)：定位为 **DM multipath 的热插拔恢复配套工具**，复用现有控制器管理预先登记的单路径数据映射，提供身份核验、路径恢复和有界失败处理。它不负责格式化或自动接管任意 U 盘；本机尚未接入额外实盘。
+受保护的 I/O 路径为：
 
-**交互方式：普通启动保留 F9/F10 手动救援；可选保护启动提供后台自动排队与重接，不依赖弹窗。** 2026-09-30 已安装专用 initrd 和 `Ubuntu USB root protection (7.0.0-34-generic)` GRUB 项，原默认入口保留；**已实际进入保护启动，首次实机拔插中根卷/shared 原进程及数据验收通过**。2026-10-01 EFI 已备份、离线检查通过并恢复正常挂载，基于原生 udev/systemd 的重接检查与自动挂载已安装；VM 快速重接及旧卸载/新枚举交叠验收通过，此轮未再物理拔插。详见 [EFI 处理报告](research/2026-10-01/EFI-RECOVERY.md)。块层 WARNING 仍待定位，整体验收仍有保留；历史现场证据见 [拔插后全面检查](research/2026-09-30/HOST-POST-RECONNECT-AUDIT.md)。使用方式见 [`guard/README.md`](guard/README.md)，启动接入见 [实机接入记录](research/2026-09-30/HOST-GUARD.md)。
-
-**当前优先目标（2026-10-01）：解决本机原 USB SSD 短暂断联、重枚举后 LVM 根系统无法继续工作的实际问题。** 以当前 7.0 内核、已有线性 LVM/ext4 和内置 SSD 的 rEFInd 引导链为范围，优先完成已有磁盘的启动接入、原盘快速重接与原进程继续读写，并保留 RAM 救援及原启动方式。实机已通过预置稳定 DM 承载 LVM，EFI 挂载集成已安装；额外数据分区仅在虚拟机开展隔离扩展。内核警告、永久驱动阻塞和全故障覆盖仍未解决。
-
-各部件的职责、我们新增的工作、复用的开源实现与可替换边界见 [`ARCHITECTURE.md`](ARCHITECTURE.md)。
-
-共享 Guard 已接入新内核的 `DM_MPATH_PROBE_PATHS`，替换换表后直接宣布就绪的分支；当前以本机 7.0 为基线，要求此接口，不提供旧内核兼容降级。健康期不主动读盘。机制和 QEMU 验收见 [路径探测接入](lab/KERNEL-PROBE.md)。
-
-已按技术路线收敛恢复事务：独立准入凭证、唯一 owner、单次内核换表、RAM 有界事务记录与死亡接管；超时停止后续自动准入，保留在途 I/O 的边界。组件职责与复现命令见 [恢复事务](lab/TRANSACTIONS.md)，本轮实测与剩余门槛见 [重构记录](research/2026-09-25/REFACTOR-RESULTS.md)。
-
-完整 Ubuntu Server 用户空间和真实 Git 克隆场景见 [`lab/UBUNTU.md`](lab/UBUNTU.md)，使用 systemd 管理服务并从虚拟 USB/LVM 根卷运行。
-
-2026-09-25 的系统性调研、故障分类、组件选型和新增边界实验见 [技术路线报告](research/2026-09-25/TECHNICAL-ROUTE.md)。报告区分已测能力与待验证情形，不代表实机部署完成。
-
-后续已完成 Linux 6.8/7.0 与 multipath-tools 0.9.4/0.15 的隔离对照，包括新内核下完整 Ubuntu 根盘/Git 拔插测试及仍存在的故障边界，见 [版本对照](research/2026-09-25/VERSION-STUDY.md)。实机官方 HWE 7.0 已启动，**初步启动与存储检查通过**，随后按用户要求清退旧 6.8，后续更新跟随 HWE；引导链和清退结果见 [实机安装记录](research/2026-09-25/HOST-INSTALL.md)，日志提示与未完成的验收见 [首次启动记录](research/2026-09-25/HOST-POSTBOOT.md)。
-
-## 能力边界
-
-- 正常启动并准备服务后，提供 F9/F10 两个独立密码登录入口、RAM 工具环境与内核日志收集。
-- 核验预先登记的 USB 设备、分区、PV/VG 身份；人工确认后，只尝试刷新已激活的 `ubuntu` 或 `shared` 线性 LV 映射。
-- 早期手动救援包构建器绑定本机设备和 Python 3.12/x86_64 工具布局；新的 C++ 核心另有 ARM64/RISC-V 用户态验证，但不等于这些平台的完整安装与故障验收。更换设备仍需核验登记逻辑。
-- 与宿主共用内核，不能覆盖启动早期故障、kernel panic、全局死锁；内核 I/O 阻塞可能让命令无法及时退出。
-- 映射恢复不代表文件系统、失败写入或应用恢复；手动救援 helper 不负责自动 fsck、重挂载、USB 重置或网络登录。EFI 的独立原生检查/重挂配置见 [`guard/EFI.md`](guard/EFI.md)。
-- 登录后是 root shell，helper 的操作限制不是安全沙箱；人工命令仍能访问宿主设备。
-- RAM 日志重启即失；保护启动已通过一次实际短断中的根卷/shared 测试，故障窗口内手动救援终端交互尚未现场验证。
-
-2026-09-23 只读检查：prepare、tty9、tty10、log 四个服务均 active，两个终端及日志服务均 enabled；运行挂载具备 `noswap`，slice 限额 768 MiB、禁止 swap。此状态不代替人工登录和故障现场验证。历史制作记录见 [`VALIDATION.md`](ram-rescue-demo/VALIDATION.md)。
-
-## 版本管理
-
-仓库根目录是 `External-Memo-Rescue-Handler`，主分支为 `main`。跟踪源码、服务配置、测试、说明和故障摘要；忽略镜像、构建目录、生成的设备清单/校验文件、缓存及原始故障日志。忽略只影响 Git，不删除现有文件。
-
-```bash
-git status
-git diff
-python3 -m unittest discover -s ram-rescue-demo/tests -p 'test_*.py' -v
-git add <已检查的文件>
-git diff --cached
-git commit -m "说明本次变更"
+```text
+应用 / 文件系统 → LVM（可选）→ 稳定 DM multipath 映射 → USB 存储
 ```
 
-新检出仓库不含运行镜像，需要先在匹配的健康本机上按子目录 README 构建，再进行隔离烟测与安装。源码提交不会更新已安装的运行包；运行包更新仍需显式构建、测试和重新安装。
+| 部件 | 职责 |
+| --- | --- |
+| Linux DM multipath | 维持稳定块设备，在无可用路径时按配置排队 I/O |
+| C++ Guard | 监视登记映射，核验重连盘身份，更新底层路径并通过内核探测确认就绪 |
+| systemd / udev | 启动对应维护实例、限制资源、执行死亡接管及维护挂载依赖 |
+| Python 管理工具 | 设备登记、构建安装、生成挂载计划、运行实验与生成报告 |
+| RAM 救援环境 | 保存恢复工具和临时日志，提供独立的 F9/F10 手动救援入口 |
 
-公开版本包含源码、测试和说明，不包含运行镜像、密码散列或原始诊断日志。构建器仍绑定原开发设备的序列号；在其他机器上使用前必须审查并调整设备登记逻辑。
+Guard 是用户空间服务。内核负责块 I/O、USB/SCSI 和文件系统处理；Guard 不替代这些实现。健康期等待设备/DM 事件，每秒兜底检查，不主动读盘；恢复期才执行必要的身份和介质核验。
 
-本地 Git 历史位于 shared 卷，不能代替独立介质备份；被忽略的构建产物和诊断数据也不会随 Git 推送备份。
+职责划分、复用的开源实现和可替换边界见 [架构说明](ARCHITECTURE.md)。
+
+## 已有功能
+
+- **统一后台维护**：根盘与登记数据映射使用同一套恢复逻辑；日常恢复静默执行，无需选择设备模式或手动触发。
+- **原盘身份核验**：结合 USB、分区、LVM 或文件系统身份及设备实例信息，拒绝把错误设备接入旧映射。
+- **有界恢复事务**：每张映射只有一个恢复执行者，保留事务记录、最终身份核验、截止时间及进程死亡后的接管。
+- **挂载连续性验证**：覆盖根卷、ext4/FAT 数据卷、嵌套挂载、bind 子挂载与已打开文件；挂载计划交由原生 systemd 管理。
+- **资源控制与救援入口**：使用事件合并、退避和 cgroup 配额控制开销，保留 RAM 工具及人工救援通道。
+
+维护对象必须预先登记并建立稳定 DM 映射。项目不会自动接管任意插入的 U 盘，也不会将正在挂载使用的裸分区在线改接。接入方式见 [统一后台维护](guard/MANAGER.md)。
+
+## 快速开始
+
+建议先构建、测试，再在虚拟机中验证。下面的命令在项目目录内生成产物，不安装系统服务或修改启动配置。
+
+### 获取源码与构建
+
+构建需要 Python 3、支持 C++17 的 GCC、binutils 和 OpenSSL 开发头文件；Ubuntu 中对应 `python3`、`g++`、`binutils`、`libssl-dev`。运行时使用发行版的 libdevmapper。完整要求见 [C++ 运行时说明](guard/native/README.md)。
+
+```bash
+git clone git@github.com:zkdsgcxb/External-Memo-Rescue-Handler.git
+cd External-Memo-Rescue-Handler
+
+python3 guard/native/build_runtime.py --output lab/work/cpp-runtime
+lab/work/cpp-runtime/guard-runtime --version
+```
+
+构建器默认执行原生单元检查，输出 ELF、独立调试符号和散列清单。nlohmann/json 已随源码提供，无需在构建时下载。
+
+### 运行回归检查
+
+```bash
+python3 -m unittest discover -s lab/tests -v
+python3 -m unittest discover -s ram-rescue-demo/tests -v
+```
+
+### 虚拟机实验与实机接入
+
+从 [QEMU 实验室](lab/README.md) 准备内核、工具和虚拟磁盘，再按 [完整 Ubuntu 实验](lab/UBUNTU.md) 建立 systemd / LVM 根系统。当前完整 C++ 的实验命令与前置产物见 [迁移验收报告](research/2026-10-02/CPP-VM-VALIDATION.md)。实验支持 USB/UAS 断联、重新枚举、错误身份、连续恢复及恢复进程死亡等情形。
+
+实机接入分别见 [根盘保护启动](guard/README.md)、[统一后台维护](guard/MANAGER.md) 和 [数据映射说明](guard/DATA.md)。早期登记与救援包构建仍包含原开发设备及工具布局约束，不能在其他机器上直接照搬。源码更新不等于已安装运行包升级。
+
+## 性能与验证
+
+2026-10-02 在相同完整 Ubuntu QEMU 环境中，对 Python 与完整 C++ 运行时各做三次独立实验。以下为**根盘、ext4 与 FAT 三个 Guard 及其子进程合计**，一个逻辑核占满为 100%。
+
+| 指标 | Python | C++ |
+| --- | ---: | ---: |
+| 常态平均 CPU | 0.116% | 0.071% |
+| 常态内存 PSS | 37.82 MiB | 9.89 MiB |
+| 常态 CPU 峰值，约 20 ms 窗口 | 10.93% | 2.34% |
+| 恢复 CPU 峰值，约 20 ms 窗口 | 46.55% | 27.36% |
+| 恢复耗时 | 3.284 s | 3.244 s |
+
+均值、PSS 和耗时取三次实验的中位数；峰值取三次实验中最大的采样窗口。CPU 统计不包含业务负载、采样器、udev 及其他内核工作线程，窗口峰值也不等于任意瞬间的硬上限。
+
+常态 PSS 降低约 **74%**，常态平均 CPU 降低约 **39%**，恢复耗时基本相当。完整救援包因保留人工救援用 Python 并新增 C++ 库，文件负载增加约 **3.33 MiB**。
+
+本轮通过 355 项 Python 回归、110 项原生检查，以及完整 Ubuntu 挂载验收、十轮连续恢复、事务故障矩阵和生产打包集成验证。方法、数值范围、原始数据索引与限制见 [C++ 迁移和性能报告](research/2026-10-02/CPP-MIGRATION.md)。
+
+## 支持范围
+
+| 项目 | 当前范围 |
+| --- | --- |
+| 内核 | 当前验收基线为 Ubuntu `7.0.0-34-generic`；要求 `DM_MPATH_PROBE_PATHS` 接口，不提供旧内核兼容降级 |
+| 根盘 | 预先接入稳定 DM 映射的 USB / 线性 LVM / ext4 根系统 |
+| 数据盘 | 预先登记的受支持单路径 DM 映射；具体身份与文件系统限制见 [DATA.md](guard/DATA.md) |
+| 指令集 | C++ 完整故障实验覆盖 x86_64；ARM64、RISC-V64 已交叉构建并执行用户态检查，尚不代表对应内核的完整恢复验收 |
+| 实机证据 | 既有 Python 包曾通过本机根卷/shared 短断恢复；2026-10-02 的完整 C++ 迁移仅在 QEMU 验证，未替换实机运行包 |
+
+当前仍有明确边界：永久下层 I/O 阻塞不保证能被取消；掉电丢失的磁盘缓存和已返回应用的 I/O 错误无法撤销；映射恢复不代表文件系统及所有应用均无损。内核崩溃、全局死锁和任意硬件供电故障不在保活保证内。实机历史检查中的块层 WARNING 仍待定位。
+
+Guard 不自动执行文件系统修复或强制读写重挂。EFI 有独立的 [udev/systemd 检查与挂载集成](guard/EFI.md)，不属于根卷 DM 排队保护。RAM 救援终端是共享宿主内核的 root shell，临时日志重启即失。
+
+## 文档导航
+
+| 内容 | 入口 |
+| --- | --- |
+| 组件职责与实现方式 | [ARCHITECTURE.md](ARCHITECTURE.md) |
+| 日常登记、状态查看与维护 | [统一后台维护](guard/MANAGER.md) |
+| 根盘构建、安装与回退 | [根盘保护启动](guard/README.md) |
+| 数据盘与挂载计划 | [数据映射](guard/DATA.md) · [挂载与子挂载](guard/MOUNTS.md) |
+| C++ 源码、构建与接口 | [原生运行时](guard/native/README.md) |
+| 手动救援环境 | [RAM 救援终端](ram-rescue-demo/README.md) |
+| 可重复故障实验 | [QEMU 实验室](lab/README.md) · [完整 Ubuntu](lab/UBUNTU.md) · [恢复事务](lab/TRANSACTIONS.md) |
+| 性能、资源与架构验证 | [C++ 迁移报告](research/2026-10-02/CPP-MIGRATION.md) · [架构范围](guard/ARCHITECTURES.md) |
+| 技术路线与历史研究 | [技术路线](research/2026-09-25/TECHNICAL-ROUTE.md) · [版本对照](research/2026-09-25/VERSION-STUDY.md) · [Python 优化](research/2026-10-01/OVERNIGHT-OPTIMIZATION.md) |
+| 实机接入与问题记录 | [保护启动接入](research/2026-09-30/HOST-GUARD.md) · [拔插后检查](research/2026-09-30/HOST-POST-RECONNECT-AUDIT.md) · [EFI 处理](research/2026-10-01/EFI-RECOVERY.md) |
+
+仓库跟踪源码、配置模板、测试、说明及可发布的实验摘要。虚拟磁盘、构建产物、设备登记资料和原始故障日志保留在本地，由 Git 忽略；克隆仓库不包含可直接部署的运行镜像。
+
+## 开源协议
+
+本项目原创内容采用 **[0BSD（零条款 BSD）](LICENSE)** 协议，版权署名为 `2026 zkdsgcxb`。允许自由使用、修改、商用及再分发，不要求衍生作品公开源码或保留署名；软件按原样提供，不作担保。标准协议说明见 [Open Source Initiative](https://opensource.org/license/0bsd)。
+
+第三方组件保留各自的许可证和版权声明。随附的 nlohmann/json 使用 MIT 协议，来源与授权见 [第三方依赖说明](guard/native/vendor/README.md)；构建生成的救援镜像包含的 Linux、系统工具和共享库仍遵循各自的许可证。
