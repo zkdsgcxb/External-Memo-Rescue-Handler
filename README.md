@@ -6,7 +6,7 @@
 
 目标是在可恢复的短暂断联中，保留稳定的块设备、原挂载和原进程，让等待中的 I/O 在原盘重接后继续。恢复期间读写可能阻塞；项目不保证任意故障下零中断。
 
-[快速开始](#快速开始) · [性能与验证](#性能与验证) · [支持范围](#支持范围) · [项目结构](#项目结构) · [文档导航](#文档导航) · [开源协议](#开源协议)
+[快速开始](#快速开始) · [性能与验证](#性能与验证) · [支持范围](#支持范围) · [项目结构](#项目结构) · [下一版本目标](ROADMAP.md) · [文档导航](#文档导航) · [开源协议](#开源协议)
 
 ## 工作原理
 
@@ -103,6 +103,8 @@ python3 -m unittest discover -s ram-rescue-demo/tests -v
 
 Guard 不自动执行文件系统修复或强制读写重挂。EFI 有独立的 [udev/systemd 检查与挂载集成](guard/EFI.md)，不属于根卷 DM 排队保护。RAM 救援终端是共享宿主内核的 root shell，临时日志重启即失。
 
+安全边界：设备身份核验用于防误接和实例确认，不是防克隆设备的认证；RAM/chroot 也不是 root 安全沙箱。启动失败控制台、救援认证、服务权限与安装信任边界见 [攻击面评估](research/2026-10-03/ATTACK-SURFACE.md)。
+
 ## 项目结构
 
 主要目录与入口如下：
@@ -111,6 +113,7 @@ Guard 不自动执行文件系统修复或强制读写重挂。EFI 有独立的 
 External-Memo-Rescue-Handler/
 ├── README.md                  # 项目介绍与使用入口
 ├── ARCHITECTURE.md            # 组件职责、复用关系与可替换边界
+├── ROADMAP.md                 # 已采纳的下一版本目标与验收方向
 ├── LICENSE                    # 项目原创内容的 0BSD 协议
 ├── guard/                     # 自动恢复控制器与系统集成
 │   ├── native/
@@ -144,6 +147,7 @@ External-Memo-Rescue-Handler/
 | 内容 | 入口 |
 | --- | --- |
 | 组件职责与实现方式 | [ARCHITECTURE.md](ARCHITECTURE.md) |
+| 下一版本与安全边界 | [下一版本目标](ROADMAP.md) · [攻击面评估](research/2026-10-03/ATTACK-SURFACE.md) |
 | 日常登记、状态查看与维护 | [统一后台维护](guard/MANAGER.md) |
 | 根盘构建、安装与回退 | [根盘保护启动](guard/README.md) |
 | 数据盘与挂载计划 | [数据映射](guard/DATA.md) · [挂载与子挂载](guard/MOUNTS.md) |
