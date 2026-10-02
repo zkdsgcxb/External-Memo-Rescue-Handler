@@ -258,4 +258,7 @@ def main():
                 vm.kill();vm.wait()
 
 
-if __name__=='__main__':main()
+if __name__ == '__main__':
+    # The Python runtime was retired; replay this historical experiment intact.
+    from historical import run_legacy
+    raise SystemExit(run_legacy(__file__))

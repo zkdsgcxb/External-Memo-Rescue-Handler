@@ -1,5 +1,7 @@
 # 完整 Ubuntu Server 实验
 
+本文保留 2026-09-24 的 Ubuntu/Python 集成方法和实验数字。旧 `build.py`、`auto_run.py` 等入口现在转交 [固定 Git 版本](README.md#历史实验复现)，不能将下面的 Linux 6.8 记录理解为当前原生运行时的支持范围。当前 C++ / Linux 7 完整 Ubuntu 验收见 [迁移报告](../research/2026-10-02/CPP-VM-VALIDATION.md)。
+
 在原最小 guest 之外增加 Ubuntu Server 24.04 LTS 用户空间，PID 1 使用真正的 systemd，运行 journald、D-Bus 和由 systemd 管理的写入服务。根目录仍位于虚拟 USB → DM multipath → LVM → ext4 路径上。不是在健康 Ubuntu 中额外挂载一块故障数据盘。
 
 这轮选择 Server Cloud rootfs，不含 GNOME 桌面。沿用匹配救援模块的 Ubuntu 6.8 内核和实验 initramfs，直接启动 `/sbin/init`，不经过安装器或 GRUB；因此覆盖完整 Server 用户空间，但不覆盖标准安装/引导器、桌面会话或所有应用。

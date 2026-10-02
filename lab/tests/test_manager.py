@@ -5,6 +5,7 @@ import json
 from pathlib import Path
 import stat
 import sys
+import subprocess
 import tempfile
 import unittest
 from unittest.mock import Mock, patch
@@ -190,6 +191,16 @@ class ManagerTests(unittest.TestCase):
             manager.install()
         with self.assertRaisesRegex(RuntimeError, 'incomplete'):
             manager.receipt()
+
+    def test_installed_management_bundle_imports_without_the_retired_runtime(self):
+        with patch.object(manager, 'VERSIONS', self.root / 'versions'):
+            program = manager.install_sources()
+        bundle = program.parent
+        self.assertTrue((bundle / 'admin/__init__.py').is_file())
+        self.assertFalse((bundle / 'runtime').exists())
+        result = subprocess.run([sys.executable, str(program), '--help'],
+                                check=True, text=True, capture_output=True)
+        self.assertIn('register', result.stdout)
 
     def test_empty_registry_installation_never_starts_another_root_controller(self):
         program = self.root / 'program.py'

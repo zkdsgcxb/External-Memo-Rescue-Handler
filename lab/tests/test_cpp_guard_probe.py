@@ -39,7 +39,8 @@ class RuntimeFixtureTests(unittest.TestCase):
                           probe.boot.GUEST, probe.boot.HOOK), original)
 
     def test_transaction_overlay_preserves_executable_init_and_native_supervisor(self):
-        with tempfile.TemporaryDirectory() as temporary:
+        probe.WORK.mkdir(exist_ok=True)
+        with tempfile.TemporaryDirectory(dir=probe.WORK) as temporary:
             root = Path(temporary)
             original, output = root / 'original', root / 'output'
             original.mkdir()
@@ -58,6 +59,12 @@ class RuntimeFixtureTests(unittest.TestCase):
             self.assertIn('guard-runtime run --config', init)
             self.assertIn('guard-runtime takeover --config', init)
             self.assertNotIn('python3 /opt/lab/path_guard.py', init)
+
+    def test_native_transaction_runner_cannot_dispatch_back_to_python(self):
+        source = transactions.adapt_runner('a' * 64)
+        self.assertNotIn('run_legacy', source)
+        self.assertTrue(source.endswith("if __name__ == '__main__':\n    main()\n"))
+        compile(source, '<native-transaction>', 'exec')
 
 
 if __name__ == '__main__':

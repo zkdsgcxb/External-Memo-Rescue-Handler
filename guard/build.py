@@ -9,18 +9,14 @@ import subprocess
 import tarfile
 
 from host_files import sha256
-from native_payload import build_runtime, configure_templates, stage_runtime
+from native_payload import build_runtime, stage_runtime
 
 BASE=Path(__file__).resolve().parent
 PROJECT=BASE.parent
 WORK=PROJECT/'lab/work'
 
 
-def payload(profile,root,*,runtime='cpp',native_binary=None):
-    if runtime not in {'cpp','python'}:
-        raise ValueError('Runtime must be cpp or python')
-    if runtime=='cpp' and native_binary is None:
-        raise ValueError('Native runtime binary is required')
+def payload(profile,root,*,native_binary):
     installed=Path('/usr/local/lib/ram-rescue-demo')
     manifest=json.loads((installed/'manifest.json').read_text())
     archive=installed/'rescue-root.tar.gz'
@@ -31,9 +27,6 @@ def payload(profile,root,*,runtime='cpp',native_binary=None):
         source.extractall(root,filter='data')
     modules=root/'opt/guard'
     modules.mkdir(parents=True)
-    if runtime=='python':
-        for source in (BASE/'runtime').glob('*.py'):
-            shutil.copyfile(source,modules/source.name)
     rescue=PROJECT/'ram-rescue-demo/src/rescue.py'
     shutil.copyfile(rescue,modules/'rescue.py')
     shutil.copyfile(rescue,root/'sbin/rescue')
@@ -45,14 +38,11 @@ def payload(profile,root,*,runtime='cpp',native_binary=None):
     (root/'etc/rescue/identity.json').write_text(json.dumps(profile['identity'],indent=2)+'\n')
     (root/'etc/rescue/enrollment.json').write_text(json.dumps(profile,indent=2)+'\n')
     (root/'etc/rescue/enrollment.json').chmod(0o600)
-    if runtime=='cpp':
-        stage_runtime(root,native_binary)
+    stage_runtime(root,native_binary)
     return manifest['sha256']
 
 
-def build(enrollment,work,kernel,*,runtime='cpp'):
-    if runtime not in {'cpp','python'}:
-        raise ValueError('Runtime must be cpp or python')
+def build(enrollment,work,kernel):
     profile=json.loads(enrollment.read_text())
     config=profile['guard']
     release=config['kernel_release']
@@ -78,15 +68,14 @@ def build(enrollment,work,kernel,*,runtime='cpp'):
     source_templates=BASE/'integration'
     templates=conf/'ram-rescue-guard/integration'
     shutil.copytree(source_templates,templates)
-    configure_templates(templates,runtime)
     for src,dest in [('initramfs-hook','hooks/ram-rescue-guard'),
                      ('local-top','scripts/local-top/ram-rescue-guard'),
                      ('init-bottom','scripts/init-bottom/ram-rescue-guard')]:
         shutil.copyfile(templates/src,conf/dest)
         (conf/dest).chmod(0o755)
     payload_root=work/'payload'
-    native_binary=build_runtime(work/'native-runtime') if runtime=='cpp' else None
-    base_payload=payload(profile,payload_root,runtime=runtime,native_binary=native_binary)
+    native_binary=build_runtime(work/'native-runtime')
+    base_payload=payload(profile,payload_root,native_binary=native_binary)
     archive=conf/'ram-rescue-guard/tools.tar.gz'
     with tarfile.open(archive,'w:gz',compresslevel=3) as output:
         for path in sorted(payload_root.rglob('*')):
@@ -99,10 +88,9 @@ def build(enrollment,work,kernel,*,runtime='cpp'):
             else:
                 output.addfile(item)
     sources=[BASE/'build.py',BASE/'host_files.py',BASE/'native_payload.py',PROJECT/'ram-rescue-demo/src/rescue.py',
-             *sorted((BASE/'runtime').glob('*.py')),*sorted(p for p in source_templates.iterdir() if p.is_file())]
-    if runtime=='cpp':
-        sources.extend(p for p in sorted((BASE/'native').rglob('*'))
-                       if p.is_file() and '__pycache__' not in p.parts)
+             *sorted(p for p in source_templates.iterdir() if p.is_file())]
+    sources.extend(p for p in sorted((BASE/'native').rglob('*'))
+                   if p.is_file() and '__pycache__' not in p.parts)
     source_hashes={str(p.relative_to(PROJECT)):sha256(p) for p in sources}
     temporary=work/'tmp'
     temporary.mkdir()
@@ -116,10 +104,9 @@ def build(enrollment,work,kernel,*,runtime='cpp'):
     details={'schema':1,'kernel_release':release,'kernel_sha256':sha256(work/'vmlinuz'),
         'initramfs_sha256':sha256(image),'enrollment_sha256':sha256(enrollment),
         'source_sha256':source_hashes,'base_rescue_payload_sha256':base_payload,
-        'tools_archive_sha256':sha256(archive),'installed':False,'runtime':runtime,
+        'tools_archive_sha256':sha256(archive),'installed':False,'runtime':'cpp',
         'source_commit':subprocess.check_output(['git','rev-parse','HEAD'],cwd=PROJECT,text=True).strip()}
-    if runtime=='cpp':
-        details['native_runtime']=json.loads((payload_root/'opt/guard-runtime/runtime.json').read_text())
+    details['native_runtime']=json.loads((payload_root/'opt/guard-runtime/runtime.json').read_text())
     (work/'build.json').write_text(json.dumps(details,indent=2)+'\n')
     image.chmod(0o600)
     print(json.dumps({'built':str(image),'sha256':details['initramfs_sha256'],
@@ -132,13 +119,11 @@ def main():
     parser.add_argument('--enrollment',required=True,type=Path)
     parser.add_argument('--kernel',type=Path)
     parser.add_argument('--work-dir',required=True,type=Path)
-    parser.add_argument('--runtime',choices=('cpp','python'),default='cpp',
-                        help='C++ production runtime, or explicit Python comparison image')
     args=parser.parse_args()
     work=args.work_dir.resolve()
     if not work.is_relative_to(WORK.resolve()):
         parser.error('work-dir must be below lab/work')
-    build(args.enrollment.resolve(),work,(args.kernel or args.enrollment.parent/'vmlinuz').resolve(),runtime=args.runtime)
+    build(args.enrollment.resolve(),work,(args.kernel or args.enrollment.parent/'vmlinuz').resolve())
 
 
 if __name__=='__main__':

@@ -82,6 +82,11 @@ def build_fixture(folder, original, binary):
 def adapt_runner(binary_digest):
     source = (BASE / 'transaction_probe.py').read_text()
     source = replace_once(source,
+        "    # The Python runtime was retired; replay this historical experiment intact.\n"
+        "    from historical import run_legacy\n"
+        "    raise SystemExit(run_legacy(__file__))",
+        '    main()')
+    source = replace_once(source,
         'p = subprocess.run(["/usr/bin/python3", "/opt/lab/path_guard.py"], text=True,',
         f'p = subprocess.run(["{NATIVE}", "run", "--config", "{CONFIG}"], text=True,')
     source = source.replace("b'/opt/lab/path_guard.py'", repr(NATIVE.encode()))

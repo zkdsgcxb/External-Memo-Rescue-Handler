@@ -104,16 +104,12 @@ def stage_runtime(root, binary):
 
 
 def verify_runtime(root):
-    """Return the verified binary, or None when this is a complete Python image.
-
-    Partial or changed native images are errors, never a reason to silently
-    fall back to another implementation during maintenance.
-    """
+    """Require a complete, unchanged native runtime before maintenance starts."""
     root = Path(root)
     binary, manifest_path = _destination(root, BINARY), _destination(root, MANIFEST)
     entrypoint = _destination(root, ENTRYPOINT)
     if not any(path.exists() or path.is_symlink() for path in (binary, manifest_path, entrypoint)):
-        return None
+        raise RuntimeError('Native Guard runtime is missing; build and validate a C++ protection image first')
     if any(path.is_symlink() or not path.is_file() for path in (binary, manifest_path, entrypoint)):
         raise RuntimeError('Native runtime is partial or uses unexpected symlinks')
     if manifest_path.stat().st_size > 65536:
@@ -138,29 +134,3 @@ def verify_runtime(root):
     if not binary.stat().st_mode & 0o111:
         raise RuntimeError('Native runtime executable permission is absent')
     return binary
-
-
-def configure_templates(directory, runtime):
-    """Select a whole image implementation before any boot script is copied."""
-    if runtime not in {'cpp', 'python'}:
-        raise ValueError('Runtime must be cpp or python')
-    if runtime == 'cpp':
-        return
-    replacements = {
-        'local-top': {'/opt/guard-runtime/guard-runtime activate': '/usr/bin/python3 /opt/guard/boot.py'},
-        'ram-rescue-guard.service': {
-            '/opt/guard-runtime/guard-runtime run': '/usr/bin/python3 /opt/guard/path_guard.py',
-            '/opt/guard-runtime/guard-runtime takeover': '/usr/bin/python3 /opt/guard/path_guard.py'},
-    }
-    for filename, changes in replacements.items():
-        path = Path(directory) / filename
-        text = path.read_text()
-        for old, new in changes.items():
-            if text.count(old) != 1:
-                raise RuntimeError('Native boot template contract changed: ' + filename)
-            text = text.replace(old, new)
-        if filename.endswith('.service'):
-            text = text.replace('WorkingDirectory=/\n', 'WorkingDirectory=/\nEnvironment=PYTHONDONTWRITEBYTECODE=1\n')
-            text = text.replace('ExecStopPost=/usr/bin/python3 /opt/guard/path_guard.py --config /run/ram-rescue-guard/config.json\n',
-                                'ExecStopPost=/usr/bin/python3 /opt/guard/path_guard.py --config /run/ram-rescue-guard/config.json --takeover\n')
-        path.write_text(text)

@@ -1,8 +1,8 @@
 # 当前内核路径探测与共享 Guard
 
-当前 Guard 已接入 `DM_MPATH_PROBE_PATHS`，只维护 **Linux 7.0.0-34-generic / x86_64** 基线，已删除旧内核兼容与降级分支。核心统一位于 [`guard/runtime/`](../guard/runtime/)，`lab/build.py` 直接复制同一份实现进入 guest 的 `/opt/lab`，构建 manifest 记录共享源码路径与哈希。
+当前 Guard 已接入 `DM_MPATH_PROBE_PATHS`，只维护 **Linux 7.0.0-34-generic / x86_64** 基线，已删除旧内核兼容与降级分支。核心统一位于 [`guard/native/runtime/`](../guard/native/runtime/)，`guard/build.py` 只打包 C++ 运行时，构建 manifest 记录源码、ELF 与共享库哈希。旧 Python 核心已从当前工作树清退，历史实验由 [固定 Git 版本](README.md#历史实验复现) 提取。
 
-可选实机 initramfs 启动接入已实现，采用同一核心；**可选入口已安装，实机尚未重启、完成启动验收，当前会话没有自动保护**。实机入口要求显式 `ram_rescue_guard=1` 与登记内核 release 完全匹配，先核验并激活已有 LV，切根后由 systemd 取得运行期间的 owner。安装与启动边界见 [`guard/README.md`](../guard/README.md)。本文下面的性能和故障样本均来自 QEMU，并分别标明历史版本。
+可选实机 initramfs 启动接入采用同一核心；既有 Python 包已有实机启动与短断恢复记录，**当前 C++ 源码与清退变更仅在 QEMU 验证，未替换实机运行包**。实机入口要求显式 `ram_rescue_guard=1` 与登记内核 release 完全匹配，先核验并激活已有 LV，切根后由 systemd 取得运行期间的 owner。安装与启动边界见 [`guard/README.md`](../guard/README.md)。本文下面的性能和故障样本均来自 QEMU，并分别标明历史版本。
 
 ## 替换的逻辑与保留的职责
 
@@ -18,14 +18,14 @@
 
 内核负责遍历当前活动路径组中的 Active 路径、各读取一个逻辑块，并对路径类错误执行 fail_path。Guard 负责决定何时调用、约束调用生命周期和解释结果；不实现第二份逐路径读取/标坏算法。此前 Guard 本来没有健康读盘探针，所以此次替换的是恢复完成分支，不能声称删除了一套原有读盘算法。
 
-USB/容量/分区/PV/VG/LV 布局核验、最后一次实例复核、唯一映射管理者与恢复期限继续保留。`admission.py` 持有候选只读 fd，将 diskseq、大小、布局、boot ID、owner epoch 和期限写入凭证；fd 不能直接指定 DM 最终绑定的内核设备对象。新实例复用当前 active 后端 dev_t 时，当前实现保守拒绝自动切换。内核探测发生在已准入映射 resume **之后**，不能作为新盘放行前的身份门禁，也不阻止已恢复路径上的业务 I/O。
+USB/容量/分区/PV/VG/LV 布局核验、最后一次实例复核、唯一映射管理者与恢复期限继续保留。`admission.cpp` 持有候选只读 fd，将 diskseq、大小、布局、boot ID、owner epoch 和期限写入凭证；fd 不能直接指定 DM 最终绑定的内核设备对象。新实例复用当前 active 后端 dev_t 时，当前实现保守拒绝自动切换。内核探测发生在已准入映射 resume **之后**，不能作为新盘放行前的身份门禁，也不阻止已恢复路径上的业务 I/O。
 
 ## 实现和资源约束
 
-- [`guard/runtime/dm_monitor.py`](../guard/runtime/dm_monitor.py) 的 `DeviceMapper.target_version()` 在启动时通过已加载的 libdevmapper 查询内核 multipath target 版本，不启动外部命令；要求至少 `1.15.0`，否则直接拒绝启动。它是依赖检查，不是版本适配器。
-- 同一模块的同步函数 `probe_paths()` 直接对 multipath 块设备 FD 发出 ioctl，不经 `/dev/mapper/control`。使用 x86_64 ABI 的 `0xfd12`；没有新增自定义内核代码或 eBPF。原来独立管理线程的 `PathProbe` 已删除。
-- [`OwnedOperation`](../guard/runtime/owned_operation.py) 统一执行可能阻塞的身份读取、最终核验、DM 变更和原生探测。健康期零探测、零 worker；故障期同一 owner 最多一个未完成或未消费结果的任务，没有 worker 队列或备用并行探针。完成通过 eventfd 唤醒主循环，不为每个成功阶段额外等待 100–800 ms 重试退避。
-- [`path_guard.py`](../guard/runtime/path_guard.py) 主循环串行记录 journal、核对结果并推进阶段，worker 不修改 Guard 状态或 journal。`probing` 期间不启动第二次核验或换表。探测可能同步阻塞并持有内核 live-table 引用，线程不能强制取消下层内核 I/O。
+- [`guard/native/runtime/core.cpp`](../guard/native/runtime/core.cpp) 的 `DeviceMapper.target_version()` 在启动时通过已加载的 libdevmapper 查询内核 multipath target 版本，不启动外部命令；要求至少 `1.15.0`，否则直接拒绝启动。它是依赖检查，不是版本适配器。
+- 同一模块的同步函数 `probe_paths()` 直接对 multipath 块设备 FD 发出 ioctl，不经 `/dev/mapper/control`。使用已验证的 Linux 64 位小端 ABI 的 `0xfd12`；没有新增自定义内核代码或 eBPF。原来独立管理线程的 `PathProbe` 已删除。
+- [`OwnedOperation`](../guard/native/runtime/core.hpp) 统一执行可能阻塞的身份读取、最终核验、DM 变更和原生探测。健康期零探测、零 worker；故障期同一 owner 最多一个未完成或未消费结果的任务，没有 worker 队列或备用并行探针。完成通过 eventfd 唤醒主循环，不为每个成功阶段额外等待 100–800 ms 重试退避。
+- [`controller.cpp`](../guard/native/runtime/controller.cpp) 主循环串行记录 journal、核对结果并推进阶段，worker 不修改 Guard 状态或 journal。`probing` 期间不启动第二次核验或换表。探测可能同步阻塞并持有内核 live-table 引用，线程不能强制取消下层内核 I/O。
 - worker 与 DM、blkid、LVM helper 继承同一 flock 的 fd。完成但尚未消费的结果继续持锁；`poll()` 接收结果或废弃清理完成后才释放相应引用。主 owner 退出后，接管者必须等旧操作的锁引用消失，不能并行修改映射。
 - 使用原恢复 deadline，不因任何阶段重置。主循环到期先写 `expired`、停止准入并废弃迟到结果；排队关闭记录为 `deferred_to_takeover`，由拿到锁的接管者协调已登记表后发送 `fail_if_no_path`，完成才记录 `completed_by_takeover`。内核无路径计时独立存在；准入到期不等于排队已关闭，也不等于所有在途 I/O 已完成或已取消。
 - 每个操作结果带 kind/token，探测结果另外带映射 generation；完成后检查同一 sysfs/diskseq 实例、同一 dev_t 在 DM 中为 Active、UUID/target、表摘要和原期限。返回 0 只记录为 `completed`，没有 `read_verified` 或“整个系统健康”的含义。迟到结果只能清理资源，不能使 expired 重新 ready。
@@ -60,7 +60,7 @@ USB/容量/分区/PV/VG/LV 布局核验、最后一次实例复核、唯一映�
 
 ## 当前实现的测试与历史集成样本
 
-当前单元测试覆盖 OwnedOperation 的单任务上限、flock 引用继承、完成通知、迟到结果清理，以及恢复各阶段阻塞时先进入终态、kind/token/实例变化、健康期不读盘和截止后不可复活。[`test_existing_root_boot.py`](tests/test_existing_root_boot.py) 与 [`test_host_profile.py`](tests/test_host_profile.py) 另外验证 host 内核/启动参数门禁、已有 VG 拒绝、LV 依赖、状态目录隔离与 `READY=1` 通知；这些使用临时目录和模拟 DM/LVM，不替代实机启动测试。当前恢复重构与 VM 证据见 [重构记录](../research/2026-09-25/REFACTOR-RESULTS.md)。
+当前原生检查位于 [`core_test.cpp`](../guard/native/runtime/core_test.cpp)、[`admission_test.cpp`](../guard/native/runtime/admission_test.cpp) 和 [`controller_test.cpp`](../guard/native/runtime/controller_test.cpp)，覆盖操作所有权、完成通知、身份凭证、配置与表边界。启动与恢复阶段的行为由独立 QEMU 事务、挂载和打包集成验收补充，见 [C++ 验收](../research/2026-10-02/CPP-VM-VALIDATION.md) 与 [Python 清退记录](../research/2026-10-02/PYTHON-RUNTIME-RETIREMENT.md)。以下保留较早 Python 实现的测试与集成样本，不计作当前原生单测。
 
 接入初版 `88b8e55` 的实验室 27 项与原救援工具 14 项测试通过。该版本的集成观测如下，全部运行均核对构建源码和 runner 哈希；不把旧记录当作当前源码重跑：
 
@@ -84,14 +84,14 @@ USB/容量/分区/PV/VG/LV 布局核验、最后一次实例复核、唯一映�
 
 ## 复现
 
-先按 [实验室说明](README.md) 从当前工作树构建匹配内核的 guest；以下 `GUARD_BUILD` 是新构建目录的示例，需替换为实际目录。不要使用上述历史镜像来代表当前共享核心。完整 Ubuntu/Git 还需要原有种子镜像。
+当前 C++ 运行时使用 [迁移验收报告](../research/2026-10-02/CPP-VM-VALIDATION.md) 中的原生入口。以下命令复现固定版本的 Python 接口实验；`GUARD_BUILD` 必须是该历史版本与匹配内核生成的构建目录，不能将它们计作当前代码的重新验收。完整 Ubuntu/Git 还需要原有种子镜像。
 
 ```bash
 GUARD_BUILD=lab/work/current-guard
-python3 lab/kernel_probe_test.py --build-dir "$GUARD_BUILD"
-python3 lab/auto_run.py --build-dir "$GUARD_BUILD" --guest ubuntu --workload git-clone --cycles 3 --same-port --gap 0
-python3 lab/auto_run.py --build-dir "$GUARD_BUILD" --reconnect wrong --queue-seconds 4
-python3 lab/measure_guard.py --build-dir "$GUARD_BUILD"
+python3 lab/historical.py lab/kernel_probe_test.py --build-dir "$GUARD_BUILD"
+python3 lab/historical.py lab/auto_run.py --build-dir "$GUARD_BUILD" --guest ubuntu --workload git-clone --cycles 3 --same-port --gap 0
+python3 lab/historical.py lab/auto_run.py --build-dir "$GUARD_BUILD" --reconnect wrong --queue-seconds 4
+python3 lab/historical.py lab/measure_guard.py --build-dir "$GUARD_BUILD"
 python3 -m unittest discover -s lab/tests -p 'test_*.py' -v
 ```
 

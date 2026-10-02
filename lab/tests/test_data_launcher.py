@@ -1,6 +1,5 @@
 """Temporary service and automount-exclusion lifecycle, with no host mutation."""
 import importlib.util
-import errno
 import json
 import os
 from pathlib import Path
@@ -27,6 +26,13 @@ class DataLauncherTests(unittest.TestCase):
         self.rules = self.root / 'rules'
         self.ram = self.root / 'ram'
         self.ram.mkdir()
+        import native_payload
+        binary = self.root / 'input-native'
+        library = self.root / 'input-library'
+        binary.write_text('native test executable')
+        library.write_text('native test library')
+        with patch.object(native_payload, 'binary_closure', return_value={'/lib/test.so': library}):
+            native_payload.stage_runtime(self.ram, binary)
         self.name = 'rr-data-test'
         self.profile = {'schema': 1, 'identity': {
             'kind': 'filesystem', 'vid': '1234', 'pid': '5678',
@@ -43,7 +49,7 @@ class DataLauncherTests(unittest.TestCase):
         patch.object(launcher, 'require_ram').start()
         self.collect = Mock(return_value=self.profile)
         self.validate = Mock()
-        patch.dict(sys.modules, {'data_guard': Mock(collect=self.collect, validate_config=self.validate)}).start()
+        patch.dict(sys.modules, {'admin.data': Mock(collect=self.collect, validate_config=self.validate)}).start()
         self.commands = []
         self.properties = 'ID_FS_TYPE=ext4\nUDISKS_IGNORE=1'
         self.command_runner = patch.object(launcher, 'run', side_effect=self.run_command).start()
@@ -105,7 +111,7 @@ class DataLauncherTests(unittest.TestCase):
         self.assertNotIn('[Install]', unit)
         self.assertEqual((self.units / launcher.SLICE).read_text().count('CPUQuota=20%'), 1)
         self.assertFalse((self.ram / 'opt/guard').exists())
-        self.assertTrue(Path(result['runtime'], 'path_guard.py').is_file())
+        self.assertTrue(Path(result['runtime'], 'guard-runtime').is_file())
 
     def test_failed_exclusion_prevents_start_and_retains_precaution(self):
         self.properties = 'ID_FS_TYPE=ext4'
@@ -141,36 +147,7 @@ class DataLauncherTests(unittest.TestCase):
         self.assertTrue((self.state / self.name / 'config.json').is_file())
         self.assertEqual(before_rules, {path: path.read_bytes() for path in self.rules.iterdir()})
 
-    def test_runtime_versions_are_immutable_and_do_not_overwrite_root_guard(self):
-        root_runtime = self.ram / 'opt/guard'
-        root_runtime.mkdir(parents=True)
-        old = root_runtime / 'path_guard.py'
-        old.write_text('already running root controller')
-        runtime = launcher.stage_runtime()
-        self.assertEqual(launcher.stage_runtime(), runtime)
-        (runtime / 'path_guard.py').chmod(0o600)
-        (runtime / 'path_guard.py').write_text('changed')
-        with self.assertRaisesRegex(RuntimeError, 'has changed'):
-            launcher.stage_runtime()
-        self.assertEqual(old.read_text(), 'already running root controller')
-
-    def test_python_reference_stages_executable_manager_entrypoint(self):
-        runtime = launcher.stage_runtime()
-        entry = runtime / 'maintain'
-        self.assertEqual(entry.read_text(), '#!/bin/sh\nexec /usr/bin/python3 /opt/manager/maintain.py "$@"\n')
-        self.assertTrue(entry.stat().st_mode & 0o111)
-        entry.chmod(0o444)
-        with self.assertRaisesRegex(RuntimeError, 'has changed'):
-            launcher.stage_runtime()
-
     def test_native_boot_runtime_is_verified_and_reused_without_python_copy(self):
-        import native_payload
-        binary = self.root / 'input-native'
-        library = self.root / 'input-library'
-        binary.write_text('native test executable')
-        library.write_text('native test library')
-        with patch.object(native_payload, 'binary_closure', return_value={'/lib/test.so': library}):
-            native_payload.stage_runtime(self.ram, binary)
         runtime = launcher.stage_runtime()
         self.assertEqual(runtime, self.ram / 'opt/guard-runtime')
         self.assertFalse((self.ram / 'opt/data-guard').exists())
@@ -179,33 +156,27 @@ class DataLauncherTests(unittest.TestCase):
         self.assertIn('ExecStopPost=/opt/guard-runtime/guard-runtime takeover --config', service)
         self.assertNotIn('/usr/bin/python3', service)
 
-    def test_concurrent_runtime_publication_reuses_only_identical_complete_version(self):
-        def competing_publication(temporary, runtime):
-            runtime.mkdir()
-            for source in temporary.iterdir():
-                target = runtime / source.name
-                target.write_bytes(source.read_bytes())
-                target.chmod(source.stat().st_mode & 0o777)
-            raise OSError(errno.ENOTEMPTY, 'another launcher published this version')
+    def test_modified_native_runtime_is_rejected_before_creating_start_state(self):
+        binary = self.ram / 'opt/guard-runtime/guard-runtime'
+        binary.write_text('changed')
+        with self.assertRaisesRegex(RuntimeError, 'checksum differs'):
+            launcher.start(self.profile)
+        self.assertFalse(self.state.exists())
+        self.assertFalse(self.rules.exists())
+        self.assertEqual(self.commands, [])
 
-        with patch.object(Path, 'rename', competing_publication):
-            runtime = launcher.stage_runtime()
-        self.assertEqual(launcher.stage_runtime(), runtime)
-        self.assertEqual(list(runtime.parent.iterdir()), [runtime])
-
-    def test_concurrent_runtime_publication_rejects_different_content(self):
-        def changed_publication(temporary, runtime):
-            runtime.mkdir()
-            for source in temporary.iterdir():
-                (runtime / source.name).write_bytes(source.read_bytes())
-            (runtime / 'path_guard.py').write_text('unexpected code')
-            raise OSError(errno.EEXIST, 'another creator published altered content')
-
-        with patch.object(Path, 'rename', changed_publication):
-            with self.assertRaisesRegex(RuntimeError, 'has changed'):
-                launcher.stage_runtime()
-        self.assertTrue(all(not path.name.startswith('.')
-                            for path in (self.ram / 'opt/data-guard').iterdir()))
+    def test_old_python_boot_cannot_silently_create_another_runtime(self):
+        import shutil
+        shutil.rmtree(self.ram / 'opt/guard-runtime')
+        legacy = self.ram / 'opt/guard'
+        legacy.mkdir()
+        (legacy / 'path_guard.py').write_text('already running root controller')
+        with self.assertRaisesRegex(RuntimeError, 'Native Guard runtime is missing'):
+            launcher.start(self.profile)
+        self.assertEqual((legacy / 'path_guard.py').read_text(), 'already running root controller')
+        self.assertFalse((self.ram / 'opt/data-guard').exists())
+        self.assertFalse(self.state.exists())
+        self.assertEqual(self.commands, [])
 
     def test_enrollment_refuses_to_replace_existing_record(self):
         output = self.root / 'enrollment.json'

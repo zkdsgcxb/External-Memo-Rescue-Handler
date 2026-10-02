@@ -1,4 +1,4 @@
-"""Linux UAPI and libdevmapper ABI used by the shared recovery controller.
+"""Linux UAPI and libdevmapper ABI used by cold enrollment checks.
 
 The validated targets use the generic ioctl encoding and the LP64 ABI. Reject
 other layouts before touching a device; an architecture name alone does not
@@ -41,7 +41,6 @@ def _ioctl(direction, kind, number, size=0):
 BLKGETSIZE64 = _ioctl(2, 0x12, 114, C.sizeof(C.c_size_t))
 BLKSSZGET = _ioctl(0, 0x12, 104)
 BLKGETDISKSEQ = _ioctl(2, 0x12, 128, C.sizeof(C.c_uint64))
-DM_MPATH_PROBE_PATHS = _ioctl(0, 0xfd, 18)
 
 
 class DMInfo(C.Structure):
@@ -60,18 +59,3 @@ if (C.sizeof(DMInfo) != 48 or C.alignment(DMInfo) != 4
         or any(getattr(DMInfo, name).offset != index * 4
                for index, (name, _) in enumerate(DMInfo._fields_))):
     raise RuntimeError('Unexpected libdevmapper dm_info layout')
-
-
-def abi_report():
-    """Read-only values for comparison with a target-native C header probe."""
-    return {
-        'machine': MACHINE, 'byteorder': sys.byteorder,
-        'pointer_bytes': C.sizeof(C.c_void_p),
-        'size_t_bytes': C.sizeof(C.c_size_t), 'int_bytes': C.sizeof(C.c_int),
-        'BLKGETSIZE64': BLKGETSIZE64, 'BLKSSZGET': BLKSSZGET,
-        'BLKGETDISKSEQ': BLKGETDISKSEQ,
-        'DM_MPATH_PROBE_PATHS': DM_MPATH_PROBE_PATHS,
-        'dm_info_size': C.sizeof(DMInfo), 'dm_info_alignment': C.alignment(DMInfo),
-        'dm_info_offsets': {name: getattr(DMInfo, name).offset
-                            for name, _ in DMInfo._fields_},
-    }

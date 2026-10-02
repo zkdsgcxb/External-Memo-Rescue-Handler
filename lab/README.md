@@ -1,8 +1,10 @@
 # USB 根盘断联实验室
 
+当前自动恢复运行时只有 C++。完整 Ubuntu 的挂载、连续恢复、性能对照、事务与打包验收使用 `cpp_guard_probe.py`、`cpp_transaction_probe.py`、`cpp_integration_probe.py`；它们核对虚拟机实际运行的原生 ELF。较早的最小 guest、Python 控制器和研究 runner 已归入[历史实验复现](#历史实验复现)，不再从生产代码打包 Python 运行时。
+
 用 QEMU/KVM 反复制造 USB 断开、重接和设备重新枚举，验证 **RAM 救援入口保活 → 身份核验 → LVM 映射恢复 → 文件系统与应用结果**。默认使用 UAS，也支持普通 USB Mass Storage（BOT）。
 
-## 已实现的环境
+## 实验环境与已有场景
 
 - 当前 Ubuntu 7.0 内核 + Ubuntu 的 BusyBox、Python、LVM、ext4 工具，组成最小 Linux 虚拟机。
 - 每次运行新建 2 GiB 稀疏磁盘，虚拟机内建立分区、PV、`labrescue` VG、`ubuntu`/`shared` LV 和 ext4。
@@ -14,7 +16,7 @@
 
 默认最小 guest 不覆盖完整 Ubuntu/systemd；现已增加 [Ubuntu Server 模式](UBUNTU.md)，运行真正的 systemd 和常规服务，并支持真实 Git 克隆工作负载。两种模式均不覆盖完整桌面、宿主 F9/F10 安装认证或真实 Hub/供电问题。[后台自动恢复实验](AUTOMATIC.md) 验证非预知断联时的 I/O 排队和同一工作进程继续运行，不等于完整桌面无感运行。
 
-## 安装与构建
+## 工具准备与历史 guest 构建
 
 当前支持 Ubuntu 24.04、x86_64、Python 3.12，内核与 `/lib/modules` 必须匹配。QEMU 等工具安装到 Ubuntu；镜像、源码与记录留在本项目的 `lab/work/`。
 
@@ -30,48 +32,62 @@ mkdir -p lab/work/kernel-package
   dpkg-deb -x linux-image-*.deb extracted
 )
 chmod u+r "lab/work/kernel-package/extracted/boot/vmlinuz-$(uname -r)"
-python3 lab/build.py --kernel "lab/work/kernel-package/extracted/boot/vmlinuz-$(uname -r)"
+python3 lab/historical.py lab/build.py --kernel "lab/work/kernel-package/extracted/boot/vmlinuz-$(uname -r)"
 ```
 
 若精确内核包已从源中移除，可以自行提供可读的匹配内核文件，通过 `--kernel` 指定；`--release` 指定其模块版本。不要把不同版本的内核和模块混用。
 
 恢复事务重构、准入边界、死亡接管与故障矩阵见 [TRANSACTIONS.md](TRANSACTIONS.md)；全内存与 CPU 统计口径见 [RESOURCE-MEASUREMENT.md](RESOURCE-MEASUREMENT.md)。
 
-新增的根盘＋两数据盘联合实验入口如下，均复用已验证的完整 Ubuntu 种子及私有构建产物；各脚本的 `--help` 列出可覆盖路径。性能实验应串行运行，避免 VM 之间争用资源。
+当前根盘＋两数据盘联合实验入口如下，均复用已验证的完整 Ubuntu 种子及私有构建产物；先按 [C++ 构建说明](../guard/native/README.md) 构建 `lab/work/cpp-runtime/guard-runtime`，各脚本的 `--help` 列出可覆盖路径。性能实验应串行运行，避免 VM 之间争用资源。
 
 ```bash
-python3 lab/mount_guard_probe.py
-python3 lab/soak_guard_probe.py --cycles 10
-python3 lab/performance_probe.py --variant baseline --quota-percent 20
-python3 lab/performance_probe.py --variant current --quota-percent 20
+python3 lab/cpp_guard_probe.py --implementation cpp --scenario mounts
+python3 lab/cpp_guard_probe.py --implementation cpp --scenario soak --cycles 10
+python3 lab/cpp_guard_probe.py --implementation cpp --scenario performance --quota-percent 20
+python3 lab/cpp_integration_probe.py
 ```
 
-完整结果见 [本轮优化验收](../research/2026-10-01/OVERNIGHT-OPTIMIZATION.md)，跨指令集工具和 ARM64 独立内核实验见 [架构说明](../guard/ARCHITECTURES.md)，C++ 对照见 [观察器说明](../guard/native/README.md)。
+原生验收与性能对照见 [完整 C++ 报告](../research/2026-10-02/CPP-MIGRATION.md)，清退后的重新检查见 [Python 运行时清退](../research/2026-10-02/PYTHON-RUNTIME-RETIREMENT.md)。较早的 Python 优化数据保留在 [历史优化验收](../research/2026-10-01/OVERNIGHT-OPTIMIZATION.md)；跨指令集验证见 [架构说明](../guard/ARCHITECTURES.md)。
 
 当前自动 Guard 以本机 `7.0.0-34-generic` 为验收基线，必须具备 `DM_MPATH_PROBE_PATHS`（multipath target ≥ 1.15.0），没有旧内核兼容降级。构建器仍可用于历史研究镜像，但不表示自动 Guard 支持这些内核。
 
-EFI 重接挂载验证使用 `python3 lab/efi_mount_probe.py`，依赖先前通过的完整 Ubuntu 保护启动种子、匹配的登记和构建；用 `--build-dir`、`--enrollment`、`--seed-report` 指向各自私有产物，不能仅从源码检出后直接运行。脚本创建根盘 overlay 和独立 FAT 镜像，复用生产配置，验证快速重接、根盘与 EFI 联合消失、旧卸载/新枚举交叠、原生 fsck 生命周期、失败限流以及关机。最终实测和配置选择见 [EFI 处理报告](../research/2026-10-01/EFI-RECOVERY.md)。额外需要宿主已有的 `dosfstools`，Ubuntu 种子内也必须提供 `fsck.vfat`；脚本不自动安装包、不接受宿主块设备。
+历史 EFI 重接挂载验证使用 `python3 lab/historical.py lab/efi_mount_probe.py`，依赖先前通过的完整 Ubuntu 保护启动种子、匹配的登记和构建；用 `--build-dir`、`--enrollment`、`--seed-report` 指向各自私有产物，不能仅从源码检出后直接运行。脚本创建根盘 overlay 和独立 FAT 镜像，复用生产配置，验证快速重接、根盘与 EFI 联合消失、旧卸载/新枚举交叠、原生 fsck 生命周期、失败限流以及关机。最终实测和配置选择见 [EFI 处理报告](../research/2026-10-01/EFI-RECOVERY.md)。额外需要宿主已有的 `dosfstools`，Ubuntu 种子内也必须提供 `fsck.vfat`；脚本不自动安装包、不接受宿主块设备。
 
 测试另一内核时，可将对应 image/modules 包私有解包，以 `--module-root <解包根>` 读取其 `/lib/modules/<release>`，用 `--work-dir lab/work/<独立目录>` 保存新构建，无需安装宿主内核。解包根若只有 `usr/lib`，需要补私有 `lib → usr/lib` 链接，再执行 `depmod -b <解包根> <release>`。`auto_run.py` 和 `research_probe.py` 接受 `--build-dir <独立目录>`；Ubuntu/Git 种子仍沿用原路径。完整命令、来源与已运行的 7.0 对照见 [版本研究](../research/2026-09-25/VERSION-STUDY.md)。
 
 构建脚本只复用生产构建器的文件/动态库复制函数，不执行其中绑定真实磁盘的登记函数。它不包含宿主密码、主机设备登记清单或实际救援镜像。
 
-## 运行
+## 历史实验复现
+
+旧 Python 实现不再保存在 `guard/runtime/`。统一入口 `lab/historical.py` 从本地 Git 的固定提交 `e745e5e4b9cde4ffd21d03f6e45a491ca8400083` 提取实验快照，写入 `lab/work/history/<提交>/`，不切换当前工作树、不拉取网络，也不安装实机服务。需要该提交已存在于本地 Git；浅克隆缺少历史时应先取得对应提交。快照有独立源码校验，运行产物仍留在忽略的 `lab/work/`。
 
 ```bash
-python3 lab/run.py --scenario baseline
-python3 lab/run.py --scenario idle --gap 0.2
-python3 lab/run.py --scenario write --gap 0.2
+python3 lab/historical.py lab/build.py --help
+python3 lab/historical.py lab/auto_run.py --help
+python3 lab/historical.py lab/architecture_probe.py --help
+```
+
+历史打包对照另允许固定提交 `1f887fe3eca3a6089f3fec28cd30ceeb9ce20048`，通过 `--revision` 指定；不接受任意移动分支作为实验基线。产物目录链接到当前项目的 `lab/work/`，避免在多个快照中重复保存大镜像。
+
+旧 runner 的直接命令仍会转交历史入口，便于读取原报告里的复现命令；其结果必须标注为固定版本。当前 `cpp_guard_probe.py --implementation python` 也只用于历史性能对照，不是生产构建选项。清退范围与依赖边界见 [说明](../research/2026-10-02/PYTHON-RUNTIME-RETIREMENT.md)。
+
+## 历史手动恢复场景
+
+```bash
+python3 lab/historical.py lab/run.py --scenario baseline
+python3 lab/historical.py lab/run.py --scenario idle --gap 0.2
+python3 lab/historical.py lab/run.py --scenario write --gap 0.2
 
 # 普通 USB 存储协议对照组
-python3 lab/run.py --scenario write --transport bot --gap 0.2
+python3 lab/historical.py lab/run.py --scenario write --transport bot --gap 0.2
 
 # 其他故障时长；无 KVM 权限时可加 --tcg（较慢）
-python3 lab/run.py --scenario write --gap 0.05
-python3 lab/run.py --scenario write --gap 1
+python3 lab/historical.py lab/run.py --scenario write --gap 0.05
+python3 lab/historical.py lab/run.py --scenario write --gap 1
 
 # 理想时序对照：在拔盘前暂停两个 LV 的 I/O，映射恢复后放行
-python3 lab/run.py --scenario queued-write --gap 0.2
+python3 lab/historical.py lab/run.py --scenario queued-write --gap 0.2
 ```
 
 每台虚拟机配置 1.5 GiB RAM、2 vCPU。`baseline` 连续追加文件并 `fsync`，不拔盘；`idle` 不启动应用写负载，但仍可能发生 ext4 后台 I/O；`write` 在写入期间拔盘。

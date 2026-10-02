@@ -2,13 +2,13 @@
 
 完整 Ubuntu Server 与 Git 克隆集成见 [lab/UBUNTU.md](lab/UBUNTU.md)。
 
-本文区分手动 RAM 救援与自动保护：`ram-rescue-demo/` 提供手动工具；`guard/native/runtime/` 是新的 C++ 自动恢复核心，`guard/runtime/` 保留 Python 行为对照；`lab/` 负责构建虚拟机、注入故障和独立验收。根盘保护入口已实际启动，2026-09-30 首次实机短断测试通过，内核 WARNING 仍待定位。2026-10-01 增加独立 USB 数据分区实验入口，复用相同控制器，见 [数据映射接入](guard/DATA.md)。源码更新不等于更新已安装包。
+本文区分手动 RAM 救援与自动保护：`ram-rescue-demo/` 提供手动工具；`guard/native/runtime/` 是唯一 C++ 自动恢复核心，`guard/admin/` 是 Python 管理工具的冷态登记与只读查询模块；`lab/` 负责构建虚拟机、注入故障和独立验收。根盘保护入口已实际启动，2026-09-30 首次实机短断测试通过，内核 WARNING 仍待定位。2026-10-01 增加独立 USB 数据分区实验入口，复用相同控制器，见 [数据映射接入](guard/DATA.md)。源码更新不等于更新已安装包。
 
 当前只维护 Linux **7.0.0-34-generic / x86_64** 基线，要求 multipath target ≥ `1.15.0`。实机入口额外要求 `ram_rescue_guard=1` 启动标记与登记的内核 release 完全相符；没有旧内核兼容或无探测降级分支。
 
 这里的“我们实现”指本仓库新增的程序、策略和集成；“上游实现”指 Linux、LVM2、BusyBox、systemd、QEMU 等现有开源项目。两者并不矛盾：一个部件可以由我们编排，实际机制由上游提供。
 
-用户入口现已统一为 `rescue-guard`，自动识别已有根盘 owner 与普通文件系统登记；根盘和数据分区属于内部接入、核验策略的区别。`registry.py` 负责冷态登记，C++ `maintain` 入口核验当次实例后进入同一恢复循环；udev + systemd 在登记的稳定 DM 映射出现时启动服务。准备服务只运行一次，不增加常驻轮询总管，详见 [统一后台维护](guard/MANAGER.md)。
+用户入口现已统一为 `rescue-guard`，自动识别已有根盘 owner 与普通文件系统登记；根盘和数据分区属于内部接入、核验策略的区别。`guard/admin/registry.py` 负责冷态登记，C++ `maintain` 入口核验当次实例后进入同一恢复循环；udev + systemd 在登记的稳定 DM 映射出现时启动服务。准备服务只运行一次，不增加常驻轮询总管，详见 [统一后台维护](guard/MANAGER.md)。
 
 ## 现有功能具体怎么做到
 
@@ -54,12 +54,12 @@ flowchart TD
 |---|---|---|---|
 | USB / SCSI 驱动 | 枚举设备、提交请求、报告路径故障 | Linux xHCI、UAS、usb-storage、SCSI 块设备驱动 | 选择 guest 模块、制造协议对照；未修改驱动 |
 | Device Mapper 核心 | 提供稳定虚拟块设备、映射表及切换机制 | Linux DM；LVM2 的 dmsetup / libdevmapper | 编排建表、核验、加载和切换；没有自写块设备框架 |
-| I/O 排队层 | 路径失效时暂存适用的请求，恢复后重试或超时报错 | Linux dm-multipath，BIO 模式、queue_if_no_path、内核无路径超时 | 选定单路径布局、配置等待策略、验证 USB 分区后端；共享 `guard/native/runtime/controller.cpp`，启动由 `boot.cpp` 或 Python 对照实验 `lab/guest/agent.py` 建表 |
+| I/O 排队层 | 路径失效时暂存适用的请求，恢复后重试或超时报错 | Linux dm-multipath，BIO 模式、queue_if_no_path、内核无路径超时 | 选定单路径布局、配置等待策略、验证 USB 分区后端；共享 `guard/native/runtime/controller.cpp`，生产启动由 `boot.cpp` 建表；历史 Python 实验从固定 Git 提交提取 |
 | 恢复后的路径探测 | 读取当前活动组的活动路径并标记路径类错误 | Linux 6.16 起的 `DM_MPATH_PROBE_PATHS` | 版本能力查询、同步 ioctl 包装、期限/实例复核；当前要求 7.0 基线；`guard/native/runtime/core.cpp`、`controller.cpp`，见 [接入记录](lab/KERNEL-PROBE.md) |
 | 路径管理程序 | 发现失效、寻找重连盘、决定是否接回、超时终止 | 调用 sysfs、libdevmapper、blkid、LVM 和 dmsetup | `Guard` 状态机、准入凭证、加载/提交/确认、终态与接管；`guard/native/runtime/controller.cpp` |
 | 阻塞操作与所有权 | 串行执行故障期操作，保留锁引用，清理迟到结果 | C++ 线程、Linux flock、eventfd、进程 fd 继承 | `OwnedOperation`、有界 RAM journal 与状态；`guard/native/runtime/core.cpp` |
 | 设备身份核验 | 避免只因新盘符或序列号相同就接入 | Linux sysfs/块设备 ioctl、util-linux blkid、LVM 元数据解析工具 | `guard/native/runtime/admission.cpp` 保留原 Python 身份链及带期限凭证、实例与布局核验，不另写 PV 元数据解析器 |
-| 数据分区接入 | 登记已有单路径 DM 映射，排除原分区自动挂载冲突，运行独立实例 | 同一 DM、blkid、systemd、udev | `admission.cpp` 提供文件系统身份策略和运行时接入核验；`data_guard.py` 负责冷态登记；`guard/data.py` 配置临时 RAM 服务和合计配额；没有第二套恢复状态机 |
+| 数据分区接入 | 登记已有单路径 DM 映射，排除原分区自动挂载冲突，运行独立实例 | 同一 DM、blkid、systemd、udev | `admission.cpp` 提供文件系统身份策略和运行时接入核验；`guard/admin/data.py` 负责冷态登记；`guard/data.py` 配置临时 RAM 服务和合计配额；没有第二套恢复状态机 |
 | LVM 卷管理 | PV/VG/LV 管理、LV 到物理范围的映射 | LVM2 用户态工具、Linux DM linear | 手动恢复的限制、确认流程、再次核验及结果检查；`Recovery.refresh()`；修正真实 lvs JSON 的 seg 键解析 |
 | 文件系统 | 文件、目录、journal、fsync、错误处理 | Linux ext4/JBD2；e2fsprogs 提供 mkfs/e2fsck | 检查可读、可写和 journal 状态；未修改 ext4，也未实现或自动运行修复算法 |
 | RAM 救援工具环境 | 根盘断联时仍能启动工具和诊断 | Linux tmpfs、chroot、挂载、cgroup；现成二进制与库 | 依赖打包、noswap、挂载安排、RAM 锁目录共用、资源限制与就绪检查；`ram-rescue-demo/build.py`、`src/prepare.sh`、`src/check.py` |
@@ -78,7 +78,7 @@ LVM 是管理和构造卷映射的工具；运行中的每次块 I/O 由内核 D
 2. **把恢复操作约束到登记设备。** 实现身份链检查、重复候选拒绝、人工确认后的再次核验，限定已激活的登记线性 LV；实测发现并修正 LVM 段报告解析错误。
 3. **将现成排队机制用于单 USB 根盘。** 在 PV 下预先建立稳定 DM 设备，编写路径恢复状态机和超时策略，避免依赖故障后的人工刷新。内核如何保存、重试请求仍由 dm-multipath 实现。
 4. **建立可复现的证据链。** 在实际从 USB/LVM/ext4 启动的最小 guest 上做故障注入，对比未保护、预暂停和突发断联自动恢复；检查失败分支而不只检查成功分支。
-5. **复用核心接入已有系统启动。** `guard/build.py` 默认打包 C++，显式 `--runtime python` 保留对照；新 QEMU 测试分别装入同一版完整运行时，避免只迁移监视器。实机入口检查内核、root 参数、旧事务、已有目标 VG 与 LV 依赖关系；systemd 在初始路径核验后发送 `READY=1`。已安装 Python 版本有首次实机短断证据；新 C++ 构建尚未部署到本机。
+5. **复用核心接入已有系统启动。** `guard/build.py` 只打包完整 C++ 运行时；当前工作树不再维护第二套 Python 自动恢复逻辑。历史性能与行为对照由 `lab/historical.py` 提取固定提交。实机入口检查内核、root 参数、旧事务、已有目标 VG 与 LV 依赖关系；systemd 在初始路径核验后发送 `READY=1`。已安装 Python 版本有首次实机短断证据；新 C++ 构建尚未部署到本机。
 
 这是针对特定故障的系统集成、恢复策略和验证工作。目前没有自研 USB 驱动、文件系统、内核排队算法、虚拟机或密码算法；也没有自动复活已经退出的进程。仍存活的进程在 I/O 恢复后继续执行，才是现有成功样本的含义。
 
@@ -88,12 +88,12 @@ LVM 是管理和构造卷映射的工具；运行中的每次块 I/O 由内核 D
 
 | 替换目标 | 可选方向 | 必须保留的约束 | 工作量判断 |
 |---|---|---|---|
-| Python Guard / Recovery | 在现有模块边界内用 Rust/C/Go 替换实现 | RAM 中可运行；唯一身份、布局检查、再次核验、有限等待、失败终态、可审计事件 | 可保持数据路径不变；当前不需要先重写语言 |
+| C++ Guard | 在现有模块边界内替换用户态实现 | RAM 中可运行；唯一身份、布局检查、再次核验、有限等待、失败终态、可审计事件 | 数据路径可保持不变；旧 Python 实现已清退，不作为并行生产选项 |
 | 当前自写路径管理 | 评估 multipathd，或基于它补充登记核验与策略 | 验证单 USB/分区后端、设备身份、根盘启动、RAM 依赖及超时语义；不能让两个管理者同时修改同一张表 | 中等到高；不是安装软件就能等价替换 |
 | 路径切换时 subprocess 调 dmsetup（健康查询已用 libdevmapper） | 将剩余变更操作也迁移到 libdevmapper | 保持 load、最终核验、单次 resume、探测、失败接管及锁生命周期 | 中等；减少文本命令接口，不会自动改变内核排队能力 |
 | 已实现内核事件加每秒复核 | 可进一步收窄事件过滤范围 | 事件只负责唤醒；接盘前仍完整核验；不要让救援依赖故障根盘上的普通服务 | 中等；改变控制响应，不替代内核 I/O 排队 |
 | BusyBox 登录和 shell | 其他登录工具、shell、文本 UI；以后增加状态提示 | 工具及依赖提前在 RAM；认证可用；保留独立终端 | 较低到中等；弹窗不应成为恢复必经步骤 |
-| systemd 与打包方式 | 其他 supervisor、不同 initramfs 集成和镜像制作方案 | 控制程序在故障前就绪；所需依赖不再读故障盘；稳定映射在根 LV 挂载前建立 | 当前已有可选实机 initramfs 实现，可选项已安装，真实启动验收仍未完成 |
+| systemd 与打包方式 | 其他 supervisor、不同 initramfs 集成和镜像制作方案 | 控制程序在故障前就绪；所需依赖不再读故障盘；稳定映射在根 LV 挂载前建立 | 既有 Python 包已有实机启动与短断证据；C++ 新包本轮仅在 QEMU 验证 |
 | 日志和通知 | RAM 环形缓冲、独立盘、远程接收端 | 写日志失败不阻塞恢复；接收路径不依赖同一故障盘 | 较低到中等；当前没有远程日志或通知服务 |
 | 测试工作负载 | 已加入 Ubuntu/systemd 与 Git；可继续扩展数据库和其他真实程序 | 分别测进程存活、I/O 结果、数据一致性和应用超时 | 优先扩展；现有 fsync/Git 两类负载不能代表全部用户态 |
 | QEMU/KVM 实验平台 | 更换虚拟机平台，后续接入可控物理 USB 故障设备 | 能证明真正发生断联/重枚举，并保留独立观测通道和可重现实验 | 可替换，但要重做故障注入与证据采集；QEMU 单独使用 TCG 也可运行，较慢 |
@@ -106,8 +106,8 @@ LVM 是管理和构造卷映射的工具；运行中的每次块 I/O 由内核 D
 
 以下边界已经拆分到共享核心，但不是已发布的稳定插件 API。替换时应保留现有合同：
 
-- **身份模块 `admission.py`：** 候选设备 → 持有 fd 的有限期凭证/拒绝原因；不能只返回一个易变盘符，也不能声称 fd 绑定了 DM 查找。
-- **策略模块 `path_guard.py`：** 路径状态、时间、核验结果 → 等待/切换/终止决策；只有主循环推进事务。
+- **身份模块 `admission.cpp`：** 候选设备 → 持有 fd 的有限期凭证/拒绝原因；不能只返回一个易变盘符，也不能声称 fd 绑定了 DM 查找。
+- **策略模块 `controller.cpp`：** 路径状态、时间、核验结果 → 等待/切换/终止决策；只有主循环推进事务。
 - **操作模块 `core.cpp`：** 同一 owner 至多一个在途操作；保持锁引用、完成通知、迟到结果清理和上层设备身份。
 - **证据模块 `core.cpp`：** 原子记录事务阶段与有界观察；排队关闭完成和准入到期分别记录，不通过空错误记录推出文件系统无错。
 - **实验模块：** 独立制造故障、观测同一进程和数据，避免恢复程序用自己的“成功”日志替代验收。

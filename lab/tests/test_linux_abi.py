@@ -3,8 +3,8 @@ from pathlib import Path
 import sys
 import unittest
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[2] / 'guard/runtime'))
-import linux_abi
+sys.path.insert(0, str(Path(__file__).resolve().parents[2] / 'guard'))
+from admin import linux_abi
 
 
 class LinuxABITest(unittest.TestCase):

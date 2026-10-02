@@ -24,6 +24,8 @@
 | Python 管理工具 | 设备登记、构建安装、生成挂载计划、运行实验与生成报告 |
 | RAM 救援环境 | 保存恢复工具和临时日志，提供独立的 F9/F10 手动救援入口 |
 
+自动恢复仅使用 C++ 运行时；Python 负责管理、实验与人工救援。旧 Python 自动恢复实现已从当前源码移除，历史对照从固定 Git 提交复现，见 [清退记录](research/2026-10-02/PYTHON-RUNTIME-RETIREMENT.md)。
+
 Guard 是用户空间服务。内核负责块 I/O、USB/SCSI 和文件系统处理；Guard 不替代这些实现。健康期等待设备/DM 事件，每秒兜底检查，不主动读盘；恢复期才执行必要的身份和介质核验。
 
 职责划分、复用的开源实现和可替换边界见 [架构说明](ARCHITECTURE.md)。
@@ -85,7 +87,7 @@ python3 -m unittest discover -s ram-rescue-demo/tests -v
 
 常态 PSS 降低约 **74%**，常态平均 CPU 降低约 **39%**，恢复耗时基本相当。完整救援包因保留人工救援用 Python 并新增 C++ 库，文件负载增加约 **3.33 MiB**。
 
-本轮通过 355 项 Python 回归、110 项原生检查，以及完整 Ubuntu 挂载验收、十轮连续恢复、事务故障矩阵和生产打包集成验证。方法、数值范围、原始数据索引与限制见 [C++ 迁移和性能报告](research/2026-10-02/CPP-MIGRATION.md)。
+迁移对照时通过了 355 项 Python 回归、110 项原生检查，以及完整 Ubuntu 挂载验收、十轮连续恢复、事务故障矩阵和生产打包集成验证。方法、数值范围、原始数据索引与限制见 [C++ 迁移和性能报告](research/2026-10-02/CPP-MIGRATION.md)；移除旧实现及其专用测试后的检查见 [清退记录](research/2026-10-02/PYTHON-RUNTIME-RETIREMENT.md)。
 
 ## 支持范围
 
@@ -115,7 +117,7 @@ External-Memo-Rescue-Handler/
 │   │   ├── runtime/           # C++17 恢复核心及原生单元测试
 │   │   ├── vendor/            # 随附第三方源码及原始许可
 │   │   └── build_runtime.py   # 原生运行时构建入口
-│   ├── runtime/              # 完整 Python 参考运行时
+│   ├── admin/                # Python 冷态登记、只读查询与校验
 │   ├── integration/          # initramfs、systemd 与 udev 配置模板
 │   ├── manage.py             # 统一登记、状态查看与维护入口
 │   ├── enroll.py             # 根盘身份登记
@@ -127,6 +129,7 @@ External-Memo-Rescue-Handler/
 │   └── work/                 # 本地构建与登记资料（生成，不提交）
 ├── lab/                      # QEMU 故障注入、验收与性能测量
 │   ├── guest/                # 虚拟机内的初始化、探针与工作负载
+│   ├── historical.py         # 从固定 Git 提交提取历史实验对照
 │   ├── tests/                # Guard、管理工具及实验工具的回归检查
 │   ├── results/              # 纳入版本管理的实验摘要、数据与图表
 │   └── work/                 # 本地镜像、构建产物与原始日志（生成，不提交）
@@ -143,7 +146,7 @@ External-Memo-Rescue-Handler/
 | 日常登记、状态查看与维护 | [统一后台维护](guard/MANAGER.md) |
 | 根盘构建、安装与回退 | [根盘保护启动](guard/README.md) |
 | 数据盘与挂载计划 | [数据映射](guard/DATA.md) · [挂载与子挂载](guard/MOUNTS.md) |
-| C++ 源码、构建与接口 | [原生运行时](guard/native/README.md) |
+| C++ 源码、构建与接口 | [原生运行时](guard/native/README.md) · [Python 运行时清退](research/2026-10-02/PYTHON-RUNTIME-RETIREMENT.md) |
 | 手动救援环境 | [RAM 救援终端](ram-rescue-demo/README.md) |
 | 可重复故障实验 | [QEMU 实验室](lab/README.md) · [完整 Ubuntu](lab/UBUNTU.md) · [恢复事务](lab/TRANSACTIONS.md) |
 | 性能、资源与架构验证 | [C++ 迁移报告](research/2026-10-02/CPP-MIGRATION.md) · [架构范围](guard/ARCHITECTURES.md) |

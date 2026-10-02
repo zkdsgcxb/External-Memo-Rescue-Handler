@@ -1,17 +1,36 @@
-"""Identity policy for an enrolled USB filesystem partition.
-
-Only admission differs from the LVM root policy. The Guard still owns the same
-DM transaction and does not mount, repair, or write filesystem metadata.
-"""
+"""Read-only device identity policies used during cold enrollment."""
 import re
 
+from pathlib import Path
+
 from rescue import Recovery, Refuse
+from .admission import readonly
 
 
 FILESYSTEM_TYPES = frozenset({'ext4', 'exfat', 'vfat'})
 
 
-class FilesystemRecovery(Recovery):
+class LVMIdentity:
+    """Expose only the existing manual tool's read-only discovery operations."""
+
+    def __init__(self, config, sysroot=Path('/sys'), devroot=Path('/dev'), runner=readonly):
+        self._source = Recovery(config, sysroot, devroot, runner)
+        self.c = config
+        self.sys = self._source.sys
+        self.dev = self._source.dev
+        self.run = runner
+
+    def candidate_node(self):
+        return self._source.candidate_node()
+
+    def verify(self):
+        return self._source.verify()
+
+    def mapping(self, target):
+        return self._source.mapping(target)
+
+
+class FilesystemIdentity(LVMIdentity):
     """Reuse USB discovery, then attest one plain filesystem with blkid."""
 
     def __init__(self, config, *args, **kwargs):
@@ -47,13 +66,3 @@ class FilesystemRecovery(Recovery):
         node = self.candidate_node()
         self.admission_layout(node)
         return node
-
-
-def recovery_for_identity(identity, *args, **kwargs):
-    """Old manifests remain LVM; other policies require an explicit kind."""
-    kind = identity.get('kind', 'lvm')
-    if kind == 'filesystem':
-        return FilesystemRecovery(identity, *args, **kwargs)
-    if kind == 'lvm':
-        return Recovery(identity, *args, **kwargs)
-    raise Refuse(f'Unsupported enrolled device kind: {kind!r}')

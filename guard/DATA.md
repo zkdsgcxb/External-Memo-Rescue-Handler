@@ -11,9 +11,9 @@
 | 部件 | 工作 |
 | --- | --- |
 | Linux `dm-multipath` | 稳定块设备、无路径排队、换表、内核路径探测 |
-| 共用 C++ `controller.cpp`（Python 对照为 `path_guard.py`） | 单 owner、串行恢复事务、截止时间、故障接管；根盘和数据盘共用这一份实现 |
-| `data_recovery.py` / `Admission` | USB 身份、唯一候选、分区位置/容量、文件系统类型与 UUID、PARTUUID、持有 FD 与 diskseq 核验 |
-| `data_guard.py` | 只读登记已有数据映射，检查布局、原分区挂载冲突和启动条件 |
+| 共用 C++ `controller.cpp` | 单 owner、串行恢复事务、截止时间、故障接管；根盘和数据盘共用这一份实现 |
+| C++ `admission.cpp` / `Admission` | USB 身份、唯一候选、分区位置/容量、文件系统类型与 UUID、PARTUUID、持有 FD 与 diskseq 核验 |
+| Python `admin/data.py` | 只读登记已有数据映射，检查布局、原分区挂载冲突和启动条件 |
 | `guard/data.py` | 把控制器和登记放进现有 RAM 环境，配置本次启动有效的 systemd/udev 集成 |
 | systemd / udev | 管理服务、合计资源配额、阻止已登记原分区被桌面再次自动挂载 |
 | 调用者 | 预先建立映射，并显式通过 `/dev/mapper/rr-data-*` 挂载文件系统 |
@@ -24,7 +24,7 @@
 
 ## 当前接入约束
 
-- 使用当前已验证的 7.0 内核及已有保护启动 RAM 环境；启动器要求根盘 Guard active、`nompath` 和 stock multipathd 未启动。这一轮没有打包独立发行版通用服务。
+- 使用当前已验证的 7.0 内核及包含经散列校验的 C++ 运行包的保护启动 RAM 环境；启动器要求根盘 Guard active、`nompath` 和 stock multipathd 未启动。旧 Python RAM 包不能由此入口隐式升级。这一轮没有打包独立发行版通用服务。
 - 分区具有非空 USB 设备序列号、PARTUUID 和文件系统 UUID。准入策略支持 ext4、VFAT、exFAT；本轮实际 VM 验证的文件系统见实验报告，未测类型不能据此称为已验收。
 - 映射名为 `rr-data-<名称>`，UUID 为 `RAMRESCUE-DATA-<标识>`。只接受现有一组、一路径、`queue_mode bio`、`round-robin` 和 `queue_if_no_path` 的约定表，且直接承载文件系统。不接管 stock multipath、多路径 SAN、LUKS、额外 LVM 或整盘无分区文件系统。
 - 裸分区不能已经挂载、作为 swap 或同时属于其他映射。已有裸分区挂载必须先按正常文件系统流程退出，再以 DM 路径挂载；工具没有在线插入映射功能。

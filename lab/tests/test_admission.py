@@ -1,4 +1,4 @@
-"""Admission races using real Recovery policy and synthetic sysfs, never disks."""
+"""Cold enrollment races using real identity policy and synthetic sysfs, never disks."""
 import errno
 import json
 import os
@@ -14,9 +14,10 @@ from unittest.mock import patch
 BASE = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(BASE.parent / 'ram-rescue-demo/src'))
 sys.path.insert(0, str(BASE / 'guest'))
-sys.path.insert(0, str(Path(__file__).resolve().parents[2] / 'guard/runtime'))
-import admission
-from rescue import Recovery, Refuse
+sys.path.insert(0, str(Path(__file__).resolve().parents[2] / 'guard'))
+from admin import admission
+from rescue import Refuse
+from admin.identity import LVMIdentity
 
 
 class AdmissionFixture:
@@ -56,9 +57,9 @@ class AdmissionFixture:
         self.open_flags = []
         self.hook = None
         self.props = {'TYPE': 'LVM2_member', 'UUID': 'pv-id', 'PART_ENTRY_UUID': 'partition-id'}
-        self.recovery = Recovery(self.identity, self.sys, self.dev, self.runner)
+        self.recovery = LVMIdentity(self.identity, self.sys, self.dev, self.runner)
         self.policy = admission.Admission(self.config, self.recovery,
-                                           clock=lambda: self.clock, boot_id='this-boot')
+                                           clock=lambda: self.clock)
         original_stat = os.stat
         original_fstat = os.fstat
         original_open = os.open
@@ -149,26 +150,22 @@ class AdmissionFixture:
         self.fail(f'Unexpected command: {args}')
 
     def verify(self):
-        return self.policy.verify(106., 'owner-1')
+        return self.policy.verify(106.)
 
 
 class AdmissionTests(AdmissionFixture, unittest.TestCase):
     def test_success_holds_readonly_fd_and_keeps_two_serial_identity_checks(self):
         with self.verify() as candidate:
             self.assertEqual([call[1] for call in self.calls], ['-p', 'pvs', 'lvs', '-p', 'pvs'])
-            self.assertEqual(candidate.dev, os.makedev(8, 17))
             self.assertEqual(candidate.diskseq, 45)
-            self.assertEqual(candidate.partition_sectors, 2048)
-            self.assertEqual(candidate.logical_block_size, 512)
             self.assertEqual(candidate.sys_path, str(self.block))
-            self.assertEqual(candidate.verified_at, 100.)
             self.assertEqual(candidate.deadline, 106.)
             self.assertEqual(self.open_flags, [os.O_RDONLY | os.O_NONBLOCK | os.O_CLOEXEC])
             self.assertEqual(len(self.fds), 1)
 
     def test_readonly_runner_never_allows_unscoped_lvm_and_preserves_argument_list(self):
         args = ['/sbin/lvm', 'pvs', '--readonly', '--devices', self.node]
-        with patch('admission.command', return_value='done') as command:
+        with patch('admin.admission.command', return_value='done') as command:
             self.assertEqual(admission.readonly(args, timeout=20), 'done')
             self.assertEqual(command.call_args.kwargs['timeout'], 3)
             self.assertEqual(command.call_args.args[0][-2:],
@@ -253,7 +250,7 @@ class AdmissionTests(AdmissionFixture, unittest.TestCase):
             self.recovery.c['partuuid'] = 'uncoordinated-change'
             before = list(self.calls)
             with self.assertRaisesRegex(admission.AdmissionError, 'Enrollment changed'):
-                candidate.revalidate('owner-1')
+                candidate.revalidate()
             self.assertEqual(self.calls, before)
 
     def test_expired_budget_never_reads_media(self):
@@ -274,7 +271,7 @@ class AdmissionTests(AdmissionFixture, unittest.TestCase):
         def nested_verification(args):
             if not nested:
                 with self.assertRaisesRegex(admission.AdmissionError, 'already running'):
-                    self.policy.verify(106., 'owner-2')
+                    self.policy.verify(106.)
                 nested.append(True)
         self.hook = nested_verification
         with self.verify():
@@ -282,7 +279,7 @@ class AdmissionTests(AdmissionFixture, unittest.TestCase):
 
     def test_commit_rechecks_layout_and_holds_same_fd(self):
         with self.verify() as candidate:
-            self.assertIs(candidate.revalidate('owner-1'), candidate)
+            self.assertIs(candidate.revalidate(), candidate)
             self.assertEqual(len(self.open_flags), 1)
             self.assertEqual([call[1] for call in self.calls].count('pvs'), 2)
             self.assertEqual([call[1] for call in self.calls].count('lvs'), 2)
@@ -291,57 +288,39 @@ class AdmissionTests(AdmissionFixture, unittest.TestCase):
         with self.verify() as candidate:
             self.row['seg_size'] = '1025'
             with self.assertRaisesRegex(admission.AdmissionError, 'layout'):
-                candidate.revalidate('owner-1')
+                candidate.revalidate()
 
     def test_commit_rejects_partition_start_change(self):
         with self.verify() as candidate:
             (self.block / 'start').write_text('4096')
             with self.assertRaisesRegex(admission.AdmissionError, 'changed'):
-                candidate.revalidate('owner-1')
+                candidate.revalidate()
 
     def test_commit_rejects_diskseq_change_during_layout_read(self):
         with self.verify() as candidate:
             self.hook = lambda args: (self.disk_path / 'diskseq').write_text('46')
             with self.assertRaisesRegex(admission.AdmissionError, 'disk instance'):
-                candidate.revalidate('owner-1')
+                candidate.revalidate()
 
     def test_commit_rejects_new_duplicate_even_when_held_instance_survives(self):
         with self.verify() as candidate:
             self.disk('sdc')
             with self.assertRaisesRegex(Refuse, 'ONE'):
-                candidate.revalidate('owner-1')
-
-    def test_commit_rejects_wrong_owner_before_any_media_read(self):
-        with self.verify() as candidate:
-            before = list(self.calls)
-            with self.assertRaisesRegex(admission.AdmissionError, 'owner epoch'):
-                candidate.revalidate('owner-2')
-            self.assertEqual(self.calls, before)
+                candidate.revalidate()
 
     def test_commit_budget_is_checked_after_layout_read(self):
         with self.verify() as candidate:
             self.hook = lambda args: setattr(self, 'clock', 106.)
             with self.assertRaisesRegex(admission.AdmissionError, 'deadline'):
-                candidate.revalidate('owner-1')
+                candidate.revalidate()
 
     def test_closed_candidate_cannot_be_reused(self):
         candidate = self.verify()
         candidate.close()
         candidate.close()
         with self.assertRaisesRegex(admission.AdmissionError, 'live fd'):
-            candidate.revalidate('owner-1')
+            candidate.revalidate()
         self.assertEqual(len(self.closed), 1)
-
-    def test_json_credential_does_not_serialize_fd_or_allow_mutation(self):
-        with self.verify() as candidate:
-            record = json.loads(json.dumps(candidate.to_dict()))
-            self.assertNotIn('fd', record)
-            self.assertEqual(record['boot_id'], 'this-boot')
-            self.assertEqual(record['deadline'], 106.)
-            record['instance']['diskseq'] = 999
-            record['owner_epoch'] = 'changed'
-            self.assertEqual(candidate.diskseq, 45)
-            self.assertEqual(candidate.owner_epoch, 'owner-1')
 
 if __name__ == '__main__':
     unittest.main()

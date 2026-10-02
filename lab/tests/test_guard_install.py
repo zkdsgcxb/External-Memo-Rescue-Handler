@@ -62,7 +62,7 @@ class GuardInstallTests(unittest.TestCase):
         (self.build_dir / 'initrd.img').write_bytes(b'candidate protected image')
         self.build = {
             'schema': 1, 'kernel_release': self.release,
-            'source_sha256': {'guard/runtime/path_guard.py': 'source-hash'},
+            'source_sha256': {'guard/native/runtime/controller.cpp': 'source-hash'},
             'kernel_sha256': self.profile['baseline']['kernel_sha256'],
             'base_rescue_payload_sha256': 'base-tools-hash',
             'enrollment_sha256': installer.sha256(self.enrollment),

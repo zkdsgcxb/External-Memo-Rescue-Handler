@@ -54,6 +54,9 @@ def create_initrd(folder, original):
     launcher.mkdir(parents=True)
     for source in (REPO / 'guard').glob('*.py'):
         shutil.copyfile(source, launcher / source.name)
+    if (REPO / 'guard/admin').is_dir():
+        shutil.copytree(REPO / 'guard/admin', launcher / 'admin',
+                        ignore=shutil.ignore_patterns('__pycache__'))
     shutil.copytree(REPO / 'guard/integration', launcher / 'integration')
     paths = [Path('.'), *sorted(path.relative_to(staging) for path in staging.rglob('*'))]
     archive = subprocess.run(
@@ -257,4 +260,6 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    # The Python runtime was retired; replay this historical experiment intact.
+    from historical import run_legacy
+    raise SystemExit(run_legacy(__file__))

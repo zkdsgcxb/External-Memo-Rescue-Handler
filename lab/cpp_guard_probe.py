@@ -9,14 +9,12 @@ No host block device, installation, network or shared directory enters a VM.
 import argparse
 from contextlib import contextmanager
 import gzip
-import io
 import json
 import os
 from pathlib import Path
 import re
 import shutil
 import subprocess
-import tarfile
 import time
 import traceback
 
@@ -30,23 +28,18 @@ import unified_guard_probe as unified
 from efi_mount_probe import validate_inputs, stop_vm
 from measure_guard import MEMORY_HELPERS
 from run import Channel, WORK
+from historical import PYTHON_REVISION, snapshot
 
 BASE = Path(__file__).resolve().parent
 REPO = BASE.parent
-BASELINE = 'e745e5e'
+BASELINE = PYTHON_REVISION
 NATIVE = '/opt/guard-runtime/guard-runtime'
 GUEST = BASE / 'guest/cpp_probe.py'
 
 
 def frozen_python(folder):
     """Use the complete released Python payload, including cold administration."""
-    revision = subprocess.check_output(['git', 'rev-parse', BASELINE], cwd=REPO, text=True).strip()
-    archive = subprocess.check_output(['git', 'archive', revision, 'guard', 'ram-rescue-demo'], cwd=REPO)
-    destination = folder / 'python-release'
-    destination.mkdir()
-    with tarfile.open(fileobj=io.BytesIO(archive)) as source:
-        source.extractall(destination, filter='data')
-    return destination, revision
+    return snapshot(BASELINE, destination=folder / 'python-release'), BASELINE
 
 
 def binary_closure(binary):
@@ -74,10 +67,11 @@ def append_archive(image, staging):
 
 
 @contextmanager
-def compose_sources(release, guest, hook):
+def compose_sources(release, guest, hook, *, manager=None):
     originals = data.REPO, unified.REPO, unified.GUEST, boot.GUEST, boot.HOOK
     try:
-        data.REPO = unified.REPO = release
+        data.REPO = release
+        unified.REPO = release if manager is None else manager
         unified.GUEST = guest
         marker = "'/opt/guard/path_guard.py' in owner['process']['cmdline']"
         if boot.GUEST.count(marker) != 1:
@@ -167,7 +161,7 @@ def source_hashes(binary, implementation):
     paths = [Path(__file__), GUEST, BASE / 'guest/performance_probe.py', BASE / 'guest/mount_probe.py',
              BASE / 'guest/soak_probe.py', Path(performance.__file__), Path(mounts.__file__),
              Path(soak.__file__), Path(unified.__file__), Path(data.__file__), Path(boot.__file__),
-             BASE / 'measure_guard.py']
+             BASE / 'measure_guard.py', BASE / 'historical.py']
     if implementation == 'cpp':
         paths += [path for path in (REPO / 'guard/native').rglob('*') if path.is_file()
                   and path.suffix in ('.cpp', '.hpp', '.h', '.py', '.txt')]

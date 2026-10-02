@@ -13,8 +13,7 @@ import sys
 
 BASE = Path(__file__).resolve().parent
 sys.path.insert(0, str(BASE.parent / 'ram-rescue-demo/src'))
-sys.path.insert(0, str(BASE / 'runtime'))
-from registry import validate_record
+from admin.registry import validate_record
 
 
 OPTIONS = frozenset({'rw', 'ro', 'nosuid', 'nodev', 'noexec', 'noatime',

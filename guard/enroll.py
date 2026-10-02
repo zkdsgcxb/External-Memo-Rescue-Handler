@@ -13,13 +13,13 @@ import time
 from host_files import sha256
 
 BASE=Path(__file__).resolve().parent
-sys.path[:0]=[str(BASE/'runtime'),str(BASE.parent/'ram-rescue-demo/src')]
-from admission import Admission, layout, readonly
-from rescue import Recovery
+sys.path.insert(0, str(BASE.parent / 'ram-rescue-demo/src'))
+from admin.admission import Admission, layout, readonly
+from admin.identity import LVMIdentity
 
 
 def collect(identity):
-    recovery=Recovery(identity,runner=readonly)
+    recovery=LVMIdentity(identity,runner=readonly)
     node=recovery.verify()
     sys_path=(Path('/sys/class/block')/Path(node).name).resolve(strict=True)
     enrolled_layout=layout(node)
@@ -44,8 +44,8 @@ def collect(identity):
         'logical_block_size':int((sys_path.parent/'queue/logical_block_size').read_text()),
         'layout':enrolled_layout,'root_lv':roots[0],
         'root_fs_uuid':subprocess.check_output(['findmnt','-nro','UUID','-T','/'],text=True).strip()}
-    with Admission(config,recovery).verify(time.monotonic()+15,'host-enrollment') as candidate:
-        candidate.revalidate('host-enrollment')
+    with Admission(config,recovery).verify(time.monotonic()+15) as candidate:
+        candidate.revalidate()
     return {'schema':1,'identity':identity,'guard':config}
 
 

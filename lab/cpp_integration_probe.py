@@ -18,6 +18,7 @@ import time
 import traceback
 
 import cpp_guard_probe as cpp
+from historical import PACKAGING_REVISION, snapshot
 
 BASE = Path(__file__).resolve().parent
 REPO = BASE.parent
@@ -111,7 +112,17 @@ def payload_inventory(root):
 def compare_payloads(folder, profile, native):
     """Account tmpfs input separately from process PSS or cgroup memory."""
     python = folder / 'python-comparison-payload'
-    production_build.payload(profile, python, runtime='python')
+    release = snapshot(PACKAGING_REVISION)
+    profile_path = folder / 'python-comparison-profile.json'
+    profile_path.write_text(json.dumps(profile) + '\n')
+    # A separate interpreter keeps old imports and their entire builder at the
+    # pinned release; current production code has no Python runtime branch.
+    subprocess.run([sys.executable, '-B', '-c',
+        'import json,sys; from pathlib import Path; '
+        'sys.path.insert(0,sys.argv[1]); import build; '
+        'build.payload(json.loads(Path(sys.argv[2]).read_text()),Path(sys.argv[3]),runtime="python")',
+        str(release / 'guard'), str(profile_path.resolve()), str(python.resolve())],
+        cwd=release, check=True)
     baseline = folder / 'base-rescue-payload'
     baseline.mkdir()
     source = Path('/usr/local/lib/ram-rescue-demo/rescue-root.tar.gz')
@@ -125,7 +136,8 @@ def compare_payloads(folder, profile, native):
     changed = {path: {'python_bytes': python_files[path], 'cpp_bytes': native_files[path]}
                for path in native_files.keys() & python_files.keys()
                if cpp.boot.sha256(native / path) != cpp.boot.sha256(python / path)}
-    return {'base_rescue': baseline_stats, 'python_image': python_stats, 'cpp_image': native_stats,
+    return {'python_builder_revision': PACKAGING_REVISION,
+            'base_rescue': baseline_stats, 'python_image': python_stats, 'cpp_image': native_stats,
             'cpp_minus_python_regular_bytes': native_stats['regular_file_bytes'] - python_stats['regular_file_bytes'],
             'added_regular_files': dict(sorted(added.items())), 'removed_regular_files': dict(sorted(removed.items())),
             'changed_regular_files': dict(sorted(changed.items())),
@@ -143,7 +155,8 @@ def create_initrd(folder, original, enrollment, binary):
     # hook. Controller commands come entirely from production unit templates.
     hook = ('\ncp /opt/cpp-experiment.json "$TOOLS/opt/vmprobe/cpp-experiment.json"\n'
             'insmod /opt/cpp-autofs.ko\n')
-    with cpp.compose_sources(REPO, combined, hook):
+    observer, observer_revision = cpp.frozen_python(folder)
+    with cpp.compose_sources(observer, combined, hook, manager=REPO):
         image = cpp.unified.create_initrd(folder, original)
 
     overlay = folder / 'production-overlay'
@@ -151,7 +164,7 @@ def create_initrd(folder, original, enrollment, binary):
     archive_directory.mkdir(parents=True)
     profile = json.loads(enrollment.read_text())
     payload = folder / 'production-payload'
-    base_checksum = production_build.payload(profile, payload, runtime='cpp', native_binary=binary)
+    base_checksum = production_build.payload(profile, payload, native_binary=binary)
     archive = archive_directory / 'tools.tar.gz'
     archive_payload(payload, archive)
     checksum = cpp.boot.sha256(archive)
@@ -177,6 +190,7 @@ def create_initrd(folder, original, enrollment, binary):
     import hashlib
     manifest = {
         'implementation': 'cpp', 'integration': 'current-production',
+        'python_observer_revision': observer_revision,
         'binary_sha256': cpp.boot.sha256(binary), 'native_manifest': native_manifest,
         'runtime_payload_sha256': {'guard-runtime': cpp.boot.sha256(binary)},
         'base_rescue_payload_sha256': base_checksum, 'tools_archive_sha256': checksum,
@@ -199,7 +213,7 @@ def source_hashes(binary):
     sources = cpp.source_hashes(binary, 'cpp')
     sources.update({str(path.relative_to(REPO)): cpp.boot.sha256(path) for path in [
         Path(__file__).resolve(), REPO / 'ram-rescue-demo/src/rescue.py',
-        *sorted((REPO / 'guard').glob('*.py')), *sorted((REPO / 'guard/runtime').glob('*.py')),
+        *sorted((REPO / 'guard').glob('*.py')), *sorted((REPO / 'guard/admin').glob('*.py')),
         *sorted(path for path in (REPO / 'guard/integration').rglob('*') if path.is_file()),
     ]})
     return sources

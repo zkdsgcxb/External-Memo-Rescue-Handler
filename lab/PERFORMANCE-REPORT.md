@@ -1,5 +1,7 @@
 # 完整 Guard 性能证据汇总
 
+当前完整 C++ 与固定 Python 基线的对照由 `cpp_guard_probe.py` 运行，`cpp_report.py` 汇总，见 [完整运行时报告](../research/2026-10-02/CPP-MIGRATION.md)。旧 `performance_probe.py` 通过 [固定版本入口](README.md#历史实验复现) 复现；下文的 2026-10-01 数据与方法保留原有历史范围。
+
 `performance_probe.py` 在完整 Ubuntu VM 内测量根盘和两个数据盘的 Guard。
 `performance_report.py` 只读取明确指定的原始报告，输出适合版本库保存的精简 JSON；
 它不运行虚拟机、不访问块设备、不安装服务。

@@ -1,17 +1,15 @@
-"""Stable enrollment policy shared by the silent background entry point.
+"""Stable enrollment record validation for cold administration.
 
-Registrations describe a disk, never a Linux device instance. Root protection
-belongs to the initramfs owner; only filesystem records can become new runtime
-profiles here. This module performs no persistent or block-device writes.
+Registrations describe a disk, never a Linux device instance. Root records
+track the existing boot owner. This module performs no persistent or block
+device writes and cannot launch or reconcile a recovery controller.
 """
 from copy import deepcopy
 import re
-import time
 
-from admission import Admission, digest, readonly
-from data_guard import check_environment, check_isolation, check_map, validate_config
-from data_recovery import FilesystemRecovery
-from dm_monitor import DeviceMapper
+from .admission import digest
+from .data import validate_config
+from .identity import FilesystemIdentity
 
 
 INSTANCE_FIELDS = frozenset({'initial_node', 'initial_sys_path', 'initial_diskseq'})
@@ -83,7 +81,7 @@ def validate_record(record):
     if kind == 'filesystem':
         if config.get('profile') != 'host-data':
             raise ValueError('Filesystem identity requires a filesystem guard backend')
-        FilesystemRecovery(identity)
+        FilesystemIdentity(identity)
         validate_config(config)
         expected = {key: identity[key] for key in ('kind', 'fs_type', 'fs_uuid', 'partuuid')}
         if config.get('layout') != expected:
@@ -108,32 +106,3 @@ def record_from_profile(profile):
     for key in INSTANCE_FIELDS:
         record['guard'].pop(key, None)
     return validate_record(record)
-
-
-def current_profile(record, runner=readonly):
-    """Reattest an existing data map; never create it or start a root owner.
-
-    Admission holds a fresh fd and checks the registered partition geometry and
-    content. Existing map and mount isolation checks remain shared with manual
-    enrollment. The caller owns the process fence and supplies its fenced runner
-    so child probes cannot outlive that ownership unnoticed.
-    """
-    validate_record(record)
-    if record['identity'].get('kind', 'lvm') != 'filesystem':
-        raise ValueError('Root protection is already owned by the protected boot')
-    profile = deepcopy(record)
-    identity, config = profile['identity'], profile['guard']
-    recovery = FilesystemRecovery(identity, runner=runner)
-    check_environment(config)
-    mapper = DeviceMapper()
-    if mapper.target_version('multipath') < (1, 15, 0):
-        raise RuntimeError('DM_MPATH_PROBE_PATHS requires multipath target >= 1.15.0')
-    node = recovery.candidate_node()
-    sys_path, map_sys = check_map(config, node, mapper)
-    check_isolation(node, sys_path, map_sys, identity, runner=runner)
-    with Admission(config, recovery).verify(time.monotonic() + 15, 'registered-start') as candidate:
-        candidate.revalidate('registered-start')
-        check_map(config, candidate.node, mapper)
-        config.update(initial_node=candidate.node, initial_sys_path=candidate.sys_path,
-                      initial_diskseq=candidate.diskseq)
-    return profile

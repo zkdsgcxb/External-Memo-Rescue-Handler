@@ -1,7 +1,6 @@
-"""Native image dependency closure and fail-closed runtime selection."""
+"""Native image dependency closure and mandatory runtime verification."""
 import json
 from pathlib import Path
-import shutil
 import sys
 import tempfile
 import unittest
@@ -37,8 +36,9 @@ class NativePayloadTests(unittest.TestCase):
                          + len(native_payload.ENTRYPOINT_SCRIPT.encode()))
         self.assertEqual({path: path.read_bytes() for path in self.image.rglob('*') if path.is_file()}, before)
 
-    def test_empty_python_runtime_is_explicitly_absent(self):
-        self.assertIsNone(native_payload.verify_runtime(self.image))
+    def test_missing_native_runtime_refuses_startup(self):
+        with self.assertRaisesRegex(RuntimeError, 'Native Guard runtime is missing'):
+            native_payload.verify_runtime(self.image)
 
     def test_partial_native_runtime_never_falls_back(self):
         self.stage()
@@ -74,7 +74,7 @@ class NativePayloadTests(unittest.TestCase):
         with self.assertRaisesRegex(RuntimeError, 'executable checksum'):
             native_payload.verify_runtime(self.image)
 
-    def test_dangling_binary_is_partial_not_python(self):
+    def test_dangling_binary_is_partial(self):
         target = self.image / str(native_payload.BINARY).lstrip('/')
         target.parent.mkdir(parents=True)
         target.symlink_to('missing')
@@ -95,18 +95,6 @@ class NativePayloadTests(unittest.TestCase):
         path.write_text(json.dumps(value))
         with self.assertRaisesRegex(ValueError, 'normalized'):
             native_payload.verify_runtime(self.image)
-
-    def test_templates_select_complete_implementation(self):
-        templates = self.root / 'templates'
-        shutil.copytree(GUARD / 'integration', templates)
-        native_payload.configure_templates(templates, 'cpp')
-        self.assertIn('guard-runtime activate', (templates / 'local-top').read_text())
-        native_payload.configure_templates(templates, 'python')
-        boot = (templates / 'local-top').read_text()
-        service = (templates / 'ram-rescue-guard.service').read_text()
-        self.assertIn('/usr/bin/python3 /opt/guard/boot.py --config', boot)
-        self.assertNotIn('guard-runtime', boot + service)
-        self.assertIn('ExecStopPost=/usr/bin/python3 /opt/guard/path_guard.py --config /run/ram-rescue-guard/config.json --takeover', service)
 
     def test_real_elf_closure_contains_dlopen_library(self):
         closure = native_payload.binary_closure(Path('/usr/bin/true'))

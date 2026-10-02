@@ -1,8 +1,7 @@
-"""Read-only admission of one enrolled USB partition for a DM transaction.
+"""Read-only enrollment checks bound to a held block-device descriptor.
 
-A credential binds observations to a held block-device fd and one owner epoch.
-It reduces userspace TOCTOU exposure; it does not prove which kernel object a
-later DM table load acquired, nor authenticate a byte-for-byte cloned disk.
+Recheck device identity and layout before accepting an enrollment. This cold
+admin policy never loads DM tables or owns a recovery transaction.
 """
 import fcntl
 import hashlib
@@ -16,20 +15,19 @@ import threading
 import time
 
 from rescue import command, rows
-from linux_abi import BLKGETDISKSEQ, BLKGETSIZE64, BLKSSZGET
+from .linux_abi import BLKGETDISKSEQ, BLKGETSIZE64, BLKSSZGET
 
 
 class AdmissionError(RuntimeError):
     pass
 
 
-def readonly(args, timeout=3, *, owner_fd=None):
+def readonly(args, timeout=3):
     if args[0] == '/sbin/lvm':
         if '--readonly' not in args or '--devices' not in args:
             raise ValueError('guard may only read explicitly selected LVM devices')
         args = [*args, '--config', 'devices { multipath_component_detection=0 }']
-    options = {} if owner_fd is None else {'pass_fds': (owner_fd,)}
-    return command(args, timeout=min(timeout, 3), **options)
+    return command(args, timeout=min(timeout, 3))
 
 
 def layout(node, runner=readonly):
@@ -47,8 +45,8 @@ def layout(node, runner=readonly):
     return sorted(normalized, key=lambda row: (row['lv_name'], row['seg_start']))
 
 
-def layout_for_recovery(recovery, node):
-    """Attest the enrolled content using its policy, with one shared fd guard."""
+def identity_layout(recovery, node):
+    """Read the enrolled content using its filesystem or LVM policy."""
     if hasattr(recovery, 'admission_layout'):
         return recovery.admission_layout(node)
     return layout(node, runner=recovery.run)
@@ -70,7 +68,7 @@ def _ioctl_number(fd, request, fmt):
 
 
 class Candidate:
-    """Live fd plus a JSON-safe statement of what this owner verified."""
+    """A held descriptor and observations from one enrollment check."""
     def __init__(self, admission, fd, record):
         self._admission = admission
         self.fd = fd
@@ -81,10 +79,6 @@ class Candidate:
         return self._record['instance']['node']
 
     @property
-    def dev(self):
-        return self._record['instance']['dev']
-
-    @property
     def sys_path(self):
         return self._record['instance']['sys_path']
 
@@ -93,36 +87,11 @@ class Candidate:
         return self._record['instance']['diskseq']
 
     @property
-    def partition_sectors(self):
-        return self._record['instance']['partition_sectors']
-
-    @property
-    def logical_block_size(self):
-        return self._record['instance']['logical_block_size']
-
-    @property
-    def layout_digest(self):
-        return self._record['layout_digest']
-
-    @property
-    def verified_at(self):
-        return self._record['verified_at']
-
-    @property
     def deadline(self):
         return self._record['deadline']
 
-    @property
-    def owner_epoch(self):
-        return self._record['owner_epoch']
-
-    def to_dict(self):
-        # No fd is transferable through the transaction journal. Also prevent
-        # callers from mutating the credential by changing the returned object.
-        return json.loads(json.dumps(self._record))
-
-    def revalidate(self, owner_epoch, check_layout=True):
-        return self._admission.revalidate(self, owner_epoch, check_layout)
+    def revalidate(self):
+        return self._admission.revalidate(self)
 
     def close(self):
         if self.fd is not None:
@@ -139,10 +108,9 @@ class Candidate:
 
 
 class Admission:
-    def __init__(self, config, recovery, *, clock=time.monotonic, boot_id=None):
+    def __init__(self, config, recovery, *, clock=time.monotonic):
         self.recovery = recovery
         self.clock = clock
-        self.boot_id = boot_id or Path('/proc/sys/kernel/random/boot_id').read_text().strip()
         self.partition_sectors = config['partition_sectors']
         self.partition_start = config.get('partition_start')
         if self.partition_start is not None and (type(self.partition_start) is not int or self.partition_start < 0):
@@ -217,12 +185,12 @@ class Admission:
             raise AdmissionError('Candidate changed during verification')
 
     def _layout(self, node):
-        actual = digest(layout_for_recovery(self.recovery, node))
+        actual = digest(identity_layout(self.recovery, node))
         if actual != self.layout_digest:
             raise AdmissionError('Device layout differs from enrolled metadata')
         return actual
 
-    def verify(self, deadline, owner_epoch):
+    def verify(self, deadline):
         if not self._lock.acquire(blocking=False):
             raise AdmissionError('Another candidate verification is already running')
         fd = None
@@ -237,18 +205,14 @@ class Admission:
                 raise AdmissionError('Candidate changed during identity verification')
             self._budget(deadline)
             self._same_instance(node, fd, instance)
-            layout_digest = self._layout(node)
+            self._layout(node)
             self._budget(deadline)
             if self.recovery.verify() != node:
                 raise AdmissionError('Candidate changed during identity verification')
             self._same_instance(node, fd, instance)
             self._budget(deadline)
             self._check_enrollment()
-            record = {'schema': 1, 'boot_id': self.boot_id,
-                      'enrollment_digest': self.enrollment_digest,
-                      'layout_version': self.layout_version, 'layout_digest': layout_digest,
-                      'instance': instance, 'verified_at': self.clock(),
-                      'deadline': deadline, 'owner_epoch': owner_epoch}
+            record = {'instance': instance, 'deadline': deadline}
             candidate = Candidate(self, fd, record)
             fd = None
             return candidate
@@ -257,20 +221,17 @@ class Admission:
                 os.close(fd)
             self._lock.release()
 
-    def revalidate(self, candidate, owner_epoch, check_layout=True):
+    def revalidate(self, candidate):
         if candidate._admission is not self or candidate.fd is None:
             raise AdmissionError('Candidate has no live fd from this admission policy')
-        if candidate.owner_epoch != owner_epoch:
-            raise AdmissionError('Candidate belongs to a different owner epoch')
         if not self._lock.acquire(blocking=False):
             raise AdmissionError('Another candidate verification is already running')
         try:
             self._check_enrollment()
             self._budget(candidate.deadline)
             self._same_instance(candidate.node, candidate.fd, candidate._record['instance'])
-            if check_layout:
-                self._layout(candidate.node)
-                self._same_instance(candidate.node, candidate.fd, candidate._record['instance'])
+            self._layout(candidate.node)
+            self._same_instance(candidate.node, candidate.fd, candidate._record['instance'])
             self._budget(candidate.deadline)
             self._check_enrollment()
             return candidate

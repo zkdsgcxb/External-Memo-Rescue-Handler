@@ -6,18 +6,15 @@ runtime units and automount exclusions last for this boot only. Stopping a
 controller ends admission and leaves both the map and exclusions in place.
 """
 import argparse
-import errno
-import hashlib
 import json
 import os
 from pathlib import Path
 import re
-import shutil
 import subprocess
 import sys
 
 BASE = Path(__file__).resolve().parent
-sys.path[:0] = [str(BASE / 'runtime'), str(BASE.parent / 'ram-rescue-demo/src')]
+sys.path.insert(0, str(BASE.parent / 'ram-rescue-demo/src'))
 
 from host_files import atomic
 from native_payload import verify_runtime
@@ -51,7 +48,7 @@ def read_enrollment(path):
     result = json.loads(path.read_text())
     if result.get('schema') != 1 or not isinstance(result.get('identity'), dict):
         raise ValueError('Unsupported data enrollment')
-    from data_guard import validate_config
+    from admin.data import validate_config
     validate_config(result['guard'])
     map_name(result['guard']['map_name'])
     return result
@@ -127,19 +124,14 @@ def slice_unit():
 def service_unit(name, runtime):
     config = STATE / map_name(name) / 'config.json'
     directory = Path('/') / runtime.relative_to(RAM)
-    if (runtime / 'guard-runtime').is_file():
-        start = f'{directory}/guard-runtime run --config {config}'
-        stop = f'{directory}/guard-runtime takeover --config {config}'
-    else:
-        start = f'/usr/bin/python3 {directory}/path_guard.py --config {config}'
-        stop = start + ' --takeover'
+    start = f'{directory}/guard-runtime run --config {config}'
+    stop = f'{directory}/guard-runtime takeover --config {config}'
     return (f'[Unit]\nDescription=Temporary aftercare for {name}\n'
             'After=ram-rescue-guard.service systemd-udevd.service\n'
             'Before=shutdown.target\nConflicts=shutdown.target\n'
             'ConditionKernelCommandLine=ram_rescue_guard=1\n\n'
             f'[Service]\nType=notify\nNotifyAccess=main\nSlice={SLICE}\n'
             f'RootDirectory={RAM}\nWorkingDirectory=/\n'
-            'Environment=PYTHONDONTWRITEBYTECODE=1\n'
             f'ExecStart={start}\n'
             f'ExecStopPost={stop}\n'
             'Restart=no\nTimeoutStartSec=30\nTimeoutStopSec=15\n'
@@ -148,51 +140,13 @@ def service_unit(name, runtime):
 
 
 def stage_runtime():
-    # Native code and its loader/libraries are already in the protected boot
-    # tmpfs. Reuse that verified immutable version for every enrolled map.
-    native = verify_runtime(RAM)
-    if native is not None:
-        return native.parent
-    sources = {source.name: source.read_bytes() for source in sorted((BASE / 'runtime').glob('*.py'))}
-    sources['rescue.py'] = (BASE.parent / 'ram-rescue-demo/src/rescue.py').read_bytes()
-    sources['maintain'] = b'#!/bin/sh\nexec /usr/bin/python3 /opt/manager/maintain.py "$@"\n'
-    checksum = hashlib.sha256()
-    for name, data in sorted(sources.items()):
-        checksum.update(name.encode() + b'\0' + data + b'\0')
-    runtime = RAM / 'opt/data-guard' / checksum.hexdigest()
-
-    def verify_existing():
-        if (runtime.is_symlink() or {path.name for path in runtime.iterdir()} != set(sources)
-                or any((runtime / name).read_bytes() != data for name, data in sources.items())
-                or not (runtime / 'maintain').stat().st_mode & 0o111):
-            raise RuntimeError('Existing versioned RAM runtime has changed')
-
-    if runtime.exists():
-        verify_existing()
-        return runtime
-    runtime.parent.mkdir(mode=0o700, parents=True, exist_ok=True)
-    temporary = runtime.with_name('.' + runtime.name + '-' + str(os.getpid()))
-    temporary.mkdir(mode=0o700)
-    try:
-        for name, data in sources.items():
-            atomic(temporary / name, data, mode=0o755 if name == 'maintain' else 0o444)
-        try:
-            temporary.rename(runtime)
-        except OSError as exc:
-            if exc.errno not in (errno.EEXIST, errno.ENOTEMPTY):
-                raise
-            # Another map's launcher may publish the same complete version
-            # while we stage it. Reuse it only after the normal content check.
-            verify_existing()
-    finally:
-        if temporary.exists():
-            shutil.rmtree(temporary)
-    return runtime
+    """Reuse the verified native package already supplied by protected boot."""
+    return verify_runtime(RAM).parent
 
 
 def enroll(name, partition, output):
     require_root()
-    from data_guard import collect
+    from admin.data import collect
     profile = collect(map_name(name), partition)
     output = Path(output)
     if output.exists():
@@ -204,7 +158,7 @@ def enroll(name, partition, output):
 def start(profile):
     require_root()
     require_ram()
-    from data_guard import collect, validate_config
+    from admin.data import collect, validate_config
     config = profile['guard']
     validate_config(config)
     name = map_name(config['map_name'])

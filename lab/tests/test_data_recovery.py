@@ -5,9 +5,9 @@ try:
     from .test_admission import AdmissionFixture
 except ImportError:
     from test_admission import AdmissionFixture
-import admission
-from data_recovery import FILESYSTEM_TYPES, recovery_for_identity
-from rescue import Recovery, Refuse
+from admin import admission
+from admin.identity import FILESYSTEM_TYPES, FilesystemIdentity, LVMIdentity
+from rescue import Refuse
 
 
 class FilesystemAdmissionTests(AdmissionFixture, unittest.TestCase):
@@ -18,18 +18,17 @@ class FilesystemAdmissionTests(AdmissionFixture, unittest.TestCase):
         self.identity.update(kind='filesystem', fs_type='ext4', fs_uuid='filesystem-id')
         self.props = {'TYPE': 'ext4', 'UUID': 'filesystem-id',
                       'PART_ENTRY_UUID': 'partition-id', 'LABEL': 'mutable label'}
-        self.recovery = recovery_for_identity(self.identity, self.sys, self.dev, self.runner)
+        self.recovery = FilesystemIdentity(self.identity, self.sys, self.dev, self.runner)
         self.config['layout'] = {'kind': 'filesystem', 'fs_type': 'ext4',
                                  'fs_uuid': 'filesystem-id', 'partuuid': 'partition-id'}
         self.config['partition_start'] = 2048
         self.policy = admission.Admission(self.config, self.recovery,
-                                         clock=lambda: self.clock, boot_id='this-boot')
+                                         clock=lambda: self.clock)
 
     def test_success_and_commit_only_probe_the_enrolled_partition(self):
         with self.verify() as candidate:
             self.assertEqual(candidate.diskseq, 45)
-            self.assertEqual(candidate.layout_digest, admission.digest(self.config['layout']))
-            self.assertIs(candidate.revalidate('owner-1'), candidate)
+            self.assertIs(candidate.revalidate(), candidate)
         self.assertTrue(self.calls)
         self.assertTrue(all(call == ['/sbin/blkid', '-p', '-o', 'export', self.node]
                             for call in self.calls))
@@ -40,8 +39,8 @@ class FilesystemAdmissionTests(AdmissionFixture, unittest.TestCase):
             with self.subTest(filesystem=filesystem):
                 identity = {**self.identity, 'fs_type': filesystem}
                 self.props['TYPE'] = filesystem
-                recovery = recovery_for_identity(identity, self.sys, self.dev, self.runner)
-                observed = admission.layout_for_recovery(recovery, self.node)
+                recovery = FilesystemIdentity(identity, self.sys, self.dev, self.runner)
+                observed = admission.identity_layout(recovery, self.node)
                 self.assertEqual(observed['fs_type'], filesystem)
                 self.assertEqual(recovery.verify(), self.node)
 
@@ -59,19 +58,19 @@ class FilesystemAdmissionTests(AdmissionFixture, unittest.TestCase):
         with self.verify() as candidate:
             self.props['UUID'] = 'replacement-filesystem'
             with self.assertRaisesRegex(Refuse, 'UUID'):
-                candidate.revalidate('owner-1')
+                candidate.revalidate()
 
     def test_label_changes_do_not_invalidate_filesystem_identity(self):
         with self.verify() as candidate:
             self.props['LABEL'] = 'new user label'
-            candidate.revalidate('owner-1')
+            candidate.revalidate()
 
     def test_reused_device_number_cannot_override_held_fd(self):
         with self.verify() as candidate:
             (self.disk_path / 'diskseq').write_text('46')
             before = list(self.calls)
             with self.assertRaisesRegex(admission.AdmissionError, 'disk instance'):
-                candidate.revalidate('owner-1')
+                candidate.revalidate()
             self.assertEqual(self.calls, before)
 
     def test_duplicate_serial_prevents_all_media_probes(self):
@@ -92,19 +91,19 @@ class FilesystemAdmissionTests(AdmissionFixture, unittest.TestCase):
             self.policy.partition_start = 4096
             before = list(self.calls)
             with self.assertRaisesRegex(admission.AdmissionError, 'Enrollment changed'):
-                candidate.revalidate('owner-1')
+                candidate.revalidate()
             self.assertEqual(self.calls, before)
 
     def test_changed_enrolled_layout_is_rejected(self):
         self.config['layout']['partuuid'] = 'stale-enrollment'
         policy = admission.Admission(self.config, self.recovery,
-                                     clock=lambda: self.clock, boot_id='this-boot')
+                                     clock=lambda: self.clock)
         with self.assertRaisesRegex(admission.AdmissionError, 'layout'):
-            policy.verify(106., 'owner-1')
+            policy.verify(106.)
 
-    def test_legacy_manifest_preserves_lvm_policy(self):
-        recovery = recovery_for_identity({'pv_uuid': 'legacy'})
-        self.assertIs(type(recovery), Recovery)
+    def test_readonly_identity_facades_do_not_expose_manual_refresh(self):
+        for identity in (self.recovery, LVMIdentity({'pv_uuid': 'legacy'})):
+            self.assertFalse(hasattr(identity, 'refresh'))
 
     def test_unsupported_or_incomplete_policy_refuses_without_commands(self):
         for changes in ({'kind': 'anything'}, {'fs_type': 'crypto_LUKS'},
@@ -112,7 +111,7 @@ class FilesystemAdmissionTests(AdmissionFixture, unittest.TestCase):
                         {'usb_serial': ' '}, {'partition_number': 0},
                         {'partition_number': True}, {'sectors': -1}, {'vid': '12345'}):
             with self.subTest(changes=changes), self.assertRaises(Refuse):
-                recovery_for_identity({**self.identity, **changes}, self.sys, self.dev, self.runner)
+                FilesystemIdentity({**self.identity, **changes}, self.sys, self.dev, self.runner)
         self.assertEqual(self.calls, [])
 
 

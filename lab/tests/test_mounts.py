@@ -10,12 +10,13 @@ sys.path.insert(0, str(BASE / 'guard'))
 spec = importlib.util.spec_from_file_location('protected_mounts', BASE / 'guard/mounts.py')
 mounts = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(mounts)
+from admin import registry
 from test_manager import profile, root_profile
 
 
 class MountPlanTests(unittest.TestCase):
     def setUp(self):
-        record = mounts.validate_record(__import__('registry').record_from_profile(profile()))
+        record = mounts.validate_record(registry.record_from_profile(profile()))
         self.records = {record['guard']['map_name']: record}
         self.plan = {'schema': 1, 'mounts': [
             {'map': 'rr-data-test', 'where': '/mnt/protected', 'automount': True},
@@ -84,7 +85,7 @@ class MountPlanTests(unittest.TestCase):
                 mounts.render_units(plan, self.records)
 
     def test_root_lv_cannot_be_mounted_again_and_shared_lv_keeps_boot_owner(self):
-        record = __import__('registry').record_from_profile(root_profile())
+        record = registry.record_from_profile(root_profile())
         record['identity']['lvs']['shared'] = {'dm_uuid': 'LVM-shared-uuid'}
         records = {'ram-rescue-path': record}
         plan = {'schema': 1, 'mounts': [{'map': 'ram-rescue-path', 'lv': 'ubuntu',

@@ -15,12 +15,12 @@ import stat
 import sys
 
 BASE = Path(__file__).resolve().parent
-sys.path[:0] = [str(BASE / 'runtime'), str(BASE.parent / 'ram-rescue-demo/src')]
+sys.path.insert(0, str(BASE.parent / 'ram-rescue-demo/src'))
 
 import data as services
-from data_guard import collect
+from admin.data import collect
 from host_files import atomic, sha256
-from registry import record_from_profile, validate_record
+from admin.registry import record_from_profile, validate_record
 
 REGISTRY = Path('/etc/ram-rescue-manager/devices')
 RUNTIME = Path('/run/ram-rescue-manager')
@@ -137,7 +137,6 @@ def render_controller():
             'Before=shutdown.target\nConflicts=shutdown.target\n\n'
             '[Service]\nType=notify\nNotifyAccess=main\nSlice=ramrescuedata.slice\n'
             f'RootDirectory={services.RAM}\nWorkingDirectory=/\n'
-            'Environment=PYTHONDONTWRITEBYTECODE=1\n'
             'ExecStart=/opt/manager/maintain --record /run/ram-rescue-manager/entries/%i.json\n'
             'ExecStopPost=/opt/manager/maintain --record /run/ram-rescue-manager/entries/%i.json --takeover\n'
             'Restart=no\nTimeoutStartSec=30\nTimeoutStopSec=15\n'
@@ -236,7 +235,7 @@ def install_sources():
     relative = [Path('guard/manage.py'), Path('guard/data.py'), Path('guard/host_files.py'),
                 Path('guard/native_payload.py'),
                 Path('ram-rescue-demo/src/rescue.py'),
-                *[p.relative_to(BASE.parent) for p in sorted((BASE / 'runtime').glob('*.py'))]]
+                *[p.relative_to(BASE.parent) for p in sorted((BASE / 'admin').glob('*.py'))]]
     content = {path: (BASE.parent / path).read_bytes() for path in relative}
     hashed = hashlib.sha256()
     for path, data in sorted(content.items()):

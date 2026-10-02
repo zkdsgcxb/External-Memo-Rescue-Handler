@@ -1,5 +1,7 @@
 # Guard 资源测量口径
 
+当前原生运行时的三实例资源结果见 [C++ 迁移报告](../research/2026-10-02/CPP-MIGRATION.md)。本文保留早期 Python 单实例的统计口径和数字；`measure_guard.py` 等旧入口通过 [固定版本实验](README.md#历史实验复现) 执行，文中 Python 的进程与运行包描述仅属于历史样本。
+
 2026-10-01 新增了**根盘加两块数据盘的共同恢复测量**、优化前后三次重复对照、20/10/5% 配额实验，以及十轮恢复后的内存检查。最新结果见 [QEMU 优化验收](../research/2026-10-01/OVERNIGHT-OPTIMIZATION.md)、[可重复性能汇总方法](PERFORMANCE-REPORT.md) 和 [连续恢复报告](../research/2026-10-01/RECOVERY-SOAK.md)。下文保留的是较早的单实例数据与其口径，不与三实例结果直接比较。
 
 `measure_guard.py` 的测量对象是独立完整 Ubuntu VM 中的 Guard，脚本不改变宿主保护配置、不修改真实块设备。将下例的 `lab/work/current` 换成当前 Linux 7.0 的匹配构建目录：

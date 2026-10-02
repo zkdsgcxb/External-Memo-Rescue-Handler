@@ -9,10 +9,9 @@ import re
 import stat
 import time
 
-from admission import Admission, layout_for_recovery, readonly
-from data_recovery import FilesystemRecovery
-from dm_monitor import DeviceMapper
-from guard_state import table_digest
+from .admission import Admission, identity_layout, readonly
+from .identity import FilesystemIdentity
+from .dm import DeviceMapper, expected_table, table_digest
 
 
 DATA_RUN = Path('/run/ram-rescue-data')
@@ -134,14 +133,13 @@ def check_environment(config):
 
 
 def check_map(config, node, mapper):
-    from path_guard import table, table_targets
     snapshot = mapper.snapshot(config['map_name'])
     info = snapshot['info']
     held = os.stat(node)
     if not stat.S_ISBLK(held.st_mode):
         raise RuntimeError('Data candidate must be a block partition')
-    expected = table_targets(table(config['partition_sectors'],
-                                   f'{os.major(held.st_rdev)}:{os.minor(held.st_rdev)}'))
+    expected = expected_table(config['partition_sectors'],
+                              f'{os.major(held.st_rdev)}:{os.minor(held.st_rdev)}')
     if (snapshot['uuid'] != config['map_uuid'] or snapshot['inactive'] or
             any(info[key] for key in ('suspended', 'internal_suspend', 'deferred_remove', 'read_only')) or
             table_digest(snapshot['active']) != table_digest(expected)):
@@ -186,7 +184,7 @@ def collect(map_name, partition):
     if not re.fullmatch(r'rr-data-[A-Za-z0-9_-]{1,64}', map_name):
         raise ValueError('Data map names must start with rr-data-')
     node, sys_path, identity = usb_identity(partition)
-    recovery = FilesystemRecovery(identity, runner=readonly)
+    recovery = FilesystemIdentity(identity, runner=readonly)
     mapper = DeviceMapper()
     if mapper.target_version('multipath') < (1, 15, 0):
         raise RuntimeError('DM_MPATH_PROBE_PATHS requires multipath target >= 1.15.0')
@@ -198,30 +196,14 @@ def collect(map_name, partition):
               'partition_sectors': int((sys_path / 'size').read_text()),
               'partition_start': int((sys_path / 'start').read_text()),
               'logical_block_size': int((sys_path.parent / 'queue/logical_block_size').read_text()),
-              'layout': layout_for_recovery(recovery, node)}
+              'layout': identity_layout(recovery, node)}
     validate_config(config)
     check_environment(config)
     _, map_sys = check_map(config, node, mapper)
     check_isolation(node, sys_path, map_sys, identity)
-    with Admission(config, recovery).verify(time.monotonic() + 15, 'data-enrollment') as candidate:
-        candidate.revalidate('data-enrollment')
+    with Admission(config, recovery).verify(time.monotonic() + 15) as candidate:
+        candidate.revalidate()
         check_map(config, candidate.node, mapper)
         config.update(initial_node=candidate.node, initial_sys_path=candidate.sys_path,
                       initial_diskseq=candidate.diskseq)
     return {'schema': 1, 'identity': identity, 'guard': config}
-
-
-def validate_runtime(config, recovery):
-    """Reattest before the first transaction; the caller already owns the fence."""
-    validate_config(config)
-    if not isinstance(recovery, FilesystemRecovery):
-        raise RuntimeError('Data mode requires an enrolled filesystem identity')
-    check_environment(config)
-    node = recovery.candidate_node()
-    sys_path, map_sys = check_map(config, node, DeviceMapper())
-    if (node != config['initial_node'] or str(sys_path) != config['initial_sys_path'] or
-            int((sys_path.parent / 'diskseq').read_text()) != config['initial_diskseq']):
-        raise RuntimeError('Initial data path changed since enrollment; enroll again before starting')
-    check_isolation(node, sys_path, map_sys, recovery.c, runner=recovery.run)
-    with Admission(config, recovery).verify(time.monotonic() + 15, 'data-startup') as candidate:
-        candidate.revalidate('data-startup')
