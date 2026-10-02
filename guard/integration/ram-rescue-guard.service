@@ -12,9 +12,8 @@ Type=notify
 NotifyAccess=main
 RootDirectory=/run/ram-rescue-demo
 WorkingDirectory=/
-Environment=PYTHONDONTWRITEBYTECODE=1
-ExecStart=/usr/bin/python3 /opt/guard/path_guard.py --config /run/ram-rescue-guard/config.json
-ExecStopPost=/usr/bin/python3 /opt/guard/path_guard.py --config /run/ram-rescue-guard/config.json --takeover
+ExecStart=/opt/guard-runtime/guard-runtime run --config /run/ram-rescue-guard/config.json
+ExecStopPost=/opt/guard-runtime/guard-runtime takeover --config /run/ram-rescue-guard/config.json
 Restart=no
 TimeoutStartSec=30
 TimeoutStopSec=15

@@ -11,7 +11,7 @@
 | 部件 | 工作 |
 | --- | --- |
 | Linux `dm-multipath` | 稳定块设备、无路径排队、换表、内核路径探测 |
-| 共用 `path_guard.py` | 单 owner、串行恢复事务、截止时间、故障接管；根盘和数据盘共用这一份实现 |
+| 共用 C++ `controller.cpp`（Python 对照为 `path_guard.py`） | 单 owner、串行恢复事务、截止时间、故障接管；根盘和数据盘共用这一份实现 |
 | `data_recovery.py` / `Admission` | USB 身份、唯一候选、分区位置/容量、文件系统类型与 UUID、PARTUUID、持有 FD 与 diskseq 核验 |
 | `data_guard.py` | 只读登记已有数据映射，检查布局、原分区挂载冲突和启动条件 |
 | `guard/data.py` | 把控制器和登记放进现有 RAM 环境，配置本次启动有效的 systemd/udev 集成 |

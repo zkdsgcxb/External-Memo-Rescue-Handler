@@ -1,7 +1,8 @@
 # 指令集与 ABI 范围
 
-恢复策略和状态机共用一套 Python 实现；不同指令集不复制控制流程。
-`runtime/linux_abi.py` 集中定义 Linux ioctl 请求和 libdevmapper 的 `dm_info` 布局，启动即核对运行进程的 ABI。
+恢复策略和状态机共用一套实现；不同指令集不复制控制流程。新版运行时迁移到 C++17，`native/runtime/core.cpp` 在编译期检查 ABI，使用 Linux 公开 ioctl 编码和 libdevmapper 公共结构。Python 对照的 `runtime/linux_abi.py` 保留相同边界。
+
+2026-10-02 完整 C++ ELF 已在 AArch64、RISC-V64 交叉构建并通过 QEMU user mode 执行，每种架构通过 37 项准入、13 项配置/表检查及 5 组 JSON 对照；详见 [C++ 架构验证](../research/2026-10-02/CPP-ARCHITECTURES.md)。本轮完整 C++ 内核热插拔测试为 x86_64 Ubuntu；下表 ARM64 内核恢复结果来自此前 Python 实现，不自动延伸为 C++ 已通过。
 
 目前允许 Linux 上的 **x86_64、aarch64、riscv64，64 位、小端、LP64**。
 同时检查指针、`size_t` 和 `int` 长度；仅看到 `uname` 的 64 位机器名还不够。

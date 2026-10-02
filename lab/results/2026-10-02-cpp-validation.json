@@ -1,0 +1,2944 @@
+{
+  "schema": 1,
+  "scope": "QEMU full native controller validation, not physical hardware equivalence",
+  "final_binary_sha256": "72d9d550079b4f73e1954e13f99fa614826758c623eec1d3026aa22bc891b21f",
+  "native_final_check_count": 206,
+  "cases": [
+    {
+      "label": "native production integration",
+      "source_report": {
+        "path": "lab/work/cpp-int-1002-092415-137566/report.json",
+        "sha256": "5e87d10af847e357774f5fea014109e8b6cae318c2a83d64d75cb91454693c65"
+      },
+      "final_implementation": true,
+      "passed": true,
+      "checks": {
+        "unit_syntax_verified_by_guest_systemd": true,
+        "initial_mount_absent_until_automount_access": true,
+        "initial_mount_and_nested_mounts_created": true,
+        "all_original_mount_ids_and_options_preserved": true,
+        "wrong_identity_kept_original_mounts": true,
+        "wrong_identity_was_not_committed": true,
+        "all_three_controllers_maintained": true,
+        "same_boot_and_pid1": true,
+        "same_root_guard_process": true,
+        "root_recovered_and_writable": true,
+        "root_durable_data_matches": true,
+        "readonly_mount_not_changed_by_start": true,
+        "readonly_mount_still_readonly_after_recovery": true,
+        "terminal_guard_prevents_new_mount": true,
+        "orderly_unmounts_completed": true,
+        "rr-data-vm-ext4_original_open_fd_process": true,
+        "rr-data-vm-ext4_no_io_errors": true,
+        "rr-data-vm-ext4_durable_data_matches": true,
+        "rr-data-vm-vfat_original_open_fd_process": true,
+        "rr-data-vm-vfat_no_io_errors": true,
+        "rr-data-vm-vfat_durable_data_matches": true,
+        "child-ext4_original_open_fd_process": true,
+        "child-ext4_no_io_errors": true,
+        "child-ext4_durable_data_matches": true,
+        "child-vfat_original_open_fd_process": true,
+        "child-vfat_no_io_errors": true,
+        "child-vfat_durable_data_matches": true,
+        "shutdown_clean": true,
+        "shipped_payload_verified_before_recovery": true,
+        "shipped_payload_verified_after_terminal_case": true,
+        "three_wrapper_started_native_controllers": true,
+        "no_controller_command_overrides": true
+      },
+      "scenario": "production-integration-mounts",
+      "implementation": "cpp",
+      "source_image_unchanged": true,
+      "sources_unchanged": true,
+      "runtime_payload_sha256": {
+        "guard-runtime": "72d9d550079b4f73e1954e13f99fa614826758c623eec1d3026aa22bc891b21f"
+      },
+      "experiment_manifest": {
+        "implementation": "cpp",
+        "integration": "current-production",
+        "binary_sha256": "72d9d550079b4f73e1954e13f99fa614826758c623eec1d3026aa22bc891b21f",
+        "native_manifest": {
+          "binary_path": "/opt/guard-runtime/guard-runtime",
+          "binary_sha256": "72d9d550079b4f73e1954e13f99fa614826758c623eec1d3026aa22bc891b21f",
+          "entrypoint_path": "/opt/guard-runtime/maintain",
+          "entrypoint_sha256": "e2cd3b560621354d5110908b715095dc470bea369071708740ec3ab47b4d7b3c",
+          "library_sha256": {
+            "/lib/x86_64-linux-gnu/libc.so.6": "3a15d66867d83762c7f2f1e37359cb8f6c5743edb369c65285cb0b1c4f7498bf",
+            "/lib/x86_64-linux-gnu/libcap.so.2": "6ac6abc86ac891c6e13486470e26f1d939f47fda9e6b5d5508a7f5ec881adc84",
+            "/lib/x86_64-linux-gnu/libcrypto.so.3": "6a66c3ba6b3749aacc9497973fff00f6ba61c703ba7015d0d7ab3fd9510974b6",
+            "/lib/x86_64-linux-gnu/libdevmapper.so.1.02.1": "0b33f9e9780b2e22bd40170f4cfe358b0cf525974d01896b3bb2b02d6e4e2582",
+            "/lib/x86_64-linux-gnu/libgcc_s.so.1": "d93224d2b0dab4247598be683adca02f5cf00586f99c187579cd7e92058fb7cb",
+            "/lib/x86_64-linux-gnu/libm.so.6": "fce00b6f25f459cf4ae0b7fae4257909a1a8a86f9149e7c029a5d617baf1ccd0",
+            "/lib/x86_64-linux-gnu/libpcre2-8.so.0": "e00576d71d81d3ba0cfa4903c835a44a8723aac96f72f79ff75200b4cff9071b",
+            "/lib/x86_64-linux-gnu/libselinux.so.1": "0ec0843463f90e227b0e138e1f379774f50b5514bd7f5dbd4c8a87aca0aa6670",
+            "/lib/x86_64-linux-gnu/libstdc++.so.6": "1fd75fe70354a416d75aef22bcae68c47bd25d20e2d0568c30b1a9838cf62f11",
+            "/lib/x86_64-linux-gnu/libudev.so.1": "4298228175fa62a36af88b1afd4406cdd8b1bf166621f957d0dbbde45a698fe5",
+            "/lib64/ld-linux-x86-64.so.2": "c20a2dc8917c755f02b94049356320fe1f62ac7d9f8994731f807d9df39302da"
+          },
+          "payload_file_bytes": 13706974,
+          "runtime": "cpp",
+          "schema": 1
+        },
+        "runtime_payload_sha256": {
+          "guard-runtime": "72d9d550079b4f73e1954e13f99fa614826758c623eec1d3026aa22bc891b21f"
+        },
+        "base_rescue_payload_sha256": "9d7eab0a698f40f1c41088ad0a7308d46f59319d779c4225aefbe5520a1f1067",
+        "tools_archive_sha256": "e2e40938637ee5b99eb935e3faf5868bcb6b37070d8cb4d3dd1597ffca3f5d79",
+        "template_sha256": {
+          "58-ram-rescue-guard.rules": "433c883e46fc92216d81b41dd1fc2fc7e8df4380266092613efdbb2666e1be0c",
+          "init-bottom": "b201c060684471ef22d04800a74c10b12a9457e398e106bd091d7b78f7ab5c55",
+          "initramfs-hook": "20cd37a63cbafde69e0c5e0654e884c54340517b7c8eecc0d7152c5ec30ee93d",
+          "local-top": "e652447b206a2cb7805fac1f26ae1ee7b4b7d31e93378f420612b7e71625cb06",
+          "lvmlocal.conf": "ff4e3848b3c5033b9a8a79b5349701b676a1fd1b9e51941460ef2a2945cb7ded",
+          "manual-rescue-guard.conf": "0455e5a22543f595800df0a9caaf6b684f0363d3f2e05dbb1afb30f2f1bdfde0",
+          "prepare-shared-rescue": "9e18e3d302325eb1bfa26a43506fd431f121e9ad8b7e7939ec159c6eb53a48b6",
+          "ram-rescue-guard.service": "6f45cf7616c45a75de80c4611f32faca18a16aae8cdf1949a57957469e7a0180"
+        },
+        "unit_sha256": {
+          "root": "6f45cf7616c45a75de80c4611f32faca18a16aae8cdf1949a57957469e7a0180",
+          "manager": "2da328a56afa169c975f907affa0ec7db0e74bc428972bfc7351928da80186d1"
+        },
+        "native_boot_activation": true,
+        "command_overrides": false
+      },
+      "filesystem_audits": {
+        "rr-data-vm-ext4": {
+          "returncode": 0
+        },
+        "rr-data-vm-vfat": {
+          "returncode": 0
+        }
+      },
+      "runtime_integrity": {
+        "implementation": "cpp",
+        "controllers": {
+          "root": {
+            "live": true,
+            "process": {
+              "pid": 496,
+              "start_ticks": "342",
+              "state": "S",
+              "cmdline": "/opt/guard-runtime/guard-runtime run --config /run/ram-rescue-guard/config.json "
+            },
+            "executable": "/opt/guard-runtime/guard-runtime",
+            "executable_sha256": "72d9d550079b4f73e1954e13f99fa614826758c623eec1d3026aa22bc891b21f",
+            "argv": [
+              "/opt/guard-runtime/guard-runtime",
+              "run",
+              "--config",
+              "/run/ram-rescue-guard/config.json"
+            ]
+          },
+          "rr-data-vm-ext4": {
+            "live": true,
+            "process": {
+              "pid": 1182,
+              "start_ticks": "596",
+              "state": "S",
+              "cmdline": "/opt/guard-runtime/guard-runtime maintain --record /run/ram-rescue-manager/entries/rr-data-vm-ext4.json "
+            },
+            "executable": "/opt/guard-runtime/guard-runtime",
+            "executable_sha256": "72d9d550079b4f73e1954e13f99fa614826758c623eec1d3026aa22bc891b21f",
+            "argv": [
+              "/opt/guard-runtime/guard-runtime",
+              "maintain",
+              "--record",
+              "/run/ram-rescue-manager/entries/rr-data-vm-ext4.json"
+            ]
+          },
+          "rr-data-vm-vfat": {
+            "live": false,
+            "pid": 1186
+          }
+        },
+        "legacy_python_controller_pids": []
+      },
+      "initial_runtime_integrity": {
+        "implementation": "cpp",
+        "controllers": {
+          "root": {
+            "live": true,
+            "process": {
+              "pid": 496,
+              "start_ticks": "342",
+              "state": "S",
+              "cmdline": "/opt/guard-runtime/guard-runtime run --config /run/ram-rescue-guard/config.json "
+            },
+            "executable": "/opt/guard-runtime/guard-runtime",
+            "executable_sha256": "72d9d550079b4f73e1954e13f99fa614826758c623eec1d3026aa22bc891b21f",
+            "argv": [
+              "/opt/guard-runtime/guard-runtime",
+              "run",
+              "--config",
+              "/run/ram-rescue-guard/config.json"
+            ]
+          },
+          "rr-data-vm-ext4": {
+            "live": true,
+            "process": {
+              "pid": 1182,
+              "start_ticks": "596",
+              "state": "S",
+              "cmdline": "/opt/guard-runtime/guard-runtime maintain --record /run/ram-rescue-manager/entries/rr-data-vm-ext4.json "
+            },
+            "executable": "/opt/guard-runtime/guard-runtime",
+            "executable_sha256": "72d9d550079b4f73e1954e13f99fa614826758c623eec1d3026aa22bc891b21f",
+            "argv": [
+              "/opt/guard-runtime/guard-runtime",
+              "maintain",
+              "--record",
+              "/run/ram-rescue-manager/entries/rr-data-vm-ext4.json"
+            ]
+          },
+          "rr-data-vm-vfat": {
+            "live": true,
+            "process": {
+              "pid": 1186,
+              "start_ticks": "598",
+              "state": "S",
+              "cmdline": "/opt/guard-runtime/guard-runtime maintain --record /run/ram-rescue-manager/entries/rr-data-vm-vfat.json "
+            },
+            "executable": "/opt/guard-runtime/guard-runtime",
+            "executable_sha256": "72d9d550079b4f73e1954e13f99fa614826758c623eec1d3026aa22bc891b21f",
+            "argv": [
+              "/opt/guard-runtime/guard-runtime",
+              "maintain",
+              "--record",
+              "/run/ram-rescue-manager/entries/rr-data-vm-vfat.json"
+            ]
+          }
+        },
+        "legacy_python_controller_pids": []
+      },
+      "payload_comparison": {
+        "base_rescue": {
+          "regular_files": 639,
+          "regular_file_bytes": 57644362,
+          "staging_filesystem_allocated_bytes": 59387904
+        },
+        "python_image": {
+          "regular_files": 652,
+          "regular_file_bytes": 57752927,
+          "staging_filesystem_allocated_bytes": 59523072
+        },
+        "cpp_image": {
+          "regular_files": 646,
+          "regular_file_bytes": 61239625,
+          "staging_filesystem_allocated_bytes": 63008768
+        },
+        "cpp_minus_python_regular_bytes": 3486698,
+        "added_regular_files": {
+          "lib/x86_64-linux-gnu/libgcc_s.so.1": 183024,
+          "lib/x86_64-linux-gnu/libstdc++.so.6": 2592224,
+          "opt/guard-runtime/guard-runtime": 806240,
+          "opt/guard-runtime/maintain": 62,
+          "opt/guard-runtime/runtime.json": 1598
+        },
+        "removed_regular_files": {
+          "opt/guard/admission.py": 11820,
+          "opt/guard/boot.py": 6044,
+          "opt/guard/data_guard.py": 12153,
+          "opt/guard/data_recovery.py": 2772,
+          "opt/guard/dm_monitor.py": 8170,
+          "opt/guard/guard_state.py": 6916,
+          "opt/guard/linux_abi.py": 3119,
+          "opt/guard/maintain.py": 5504,
+          "opt/guard/owned_operation.py": 7951,
+          "opt/guard/path_guard.py": 24659,
+          "opt/guard/registry.py": 7342
+        },
+        "changed_regular_files": {},
+        "scope": "image regular-file bytes; du describes the staging filesystem, not measured guest RAM; do not add to PSS/cgroup memory"
+      },
+      "production_integration": {
+        "mounted": {
+          "verified": true,
+          "native_manifest": {
+            "binary_path": "/opt/guard-runtime/guard-runtime",
+            "binary_sha256": "72d9d550079b4f73e1954e13f99fa614826758c623eec1d3026aa22bc891b21f",
+            "entrypoint_path": "/opt/guard-runtime/maintain",
+            "entrypoint_sha256": "e2cd3b560621354d5110908b715095dc470bea369071708740ec3ab47b4d7b3c",
+            "library_sha256": {
+              "/lib/x86_64-linux-gnu/libc.so.6": "3a15d66867d83762c7f2f1e37359cb8f6c5743edb369c65285cb0b1c4f7498bf",
+              "/lib/x86_64-linux-gnu/libcap.so.2": "6ac6abc86ac891c6e13486470e26f1d939f47fda9e6b5d5508a7f5ec881adc84",
+              "/lib/x86_64-linux-gnu/libcrypto.so.3": "6a66c3ba6b3749aacc9497973fff00f6ba61c703ba7015d0d7ab3fd9510974b6",
+              "/lib/x86_64-linux-gnu/libdevmapper.so.1.02.1": "0b33f9e9780b2e22bd40170f4cfe358b0cf525974d01896b3bb2b02d6e4e2582",
+              "/lib/x86_64-linux-gnu/libgcc_s.so.1": "d93224d2b0dab4247598be683adca02f5cf00586f99c187579cd7e92058fb7cb",
+              "/lib/x86_64-linux-gnu/libm.so.6": "fce00b6f25f459cf4ae0b7fae4257909a1a8a86f9149e7c029a5d617baf1ccd0",
+              "/lib/x86_64-linux-gnu/libpcre2-8.so.0": "e00576d71d81d3ba0cfa4903c835a44a8723aac96f72f79ff75200b4cff9071b",
+              "/lib/x86_64-linux-gnu/libselinux.so.1": "0ec0843463f90e227b0e138e1f379774f50b5514bd7f5dbd4c8a87aca0aa6670",
+              "/lib/x86_64-linux-gnu/libstdc++.so.6": "1fd75fe70354a416d75aef22bcae68c47bd25d20e2d0568c30b1a9838cf62f11",
+              "/lib/x86_64-linux-gnu/libudev.so.1": "4298228175fa62a36af88b1afd4406cdd8b1bf166621f957d0dbbde45a698fe5",
+              "/lib64/ld-linux-x86-64.so.2": "c20a2dc8917c755f02b94049356320fe1f62ac7d9f8994731f807d9df39302da"
+            },
+            "payload_file_bytes": 13706974,
+            "runtime": "cpp",
+            "schema": 1
+          },
+          "units": {
+            "root": {
+              "sha256": "6f45cf7616c45a75de80c4611f32faca18a16aae8cdf1949a57957469e7a0180",
+              "text": "[Unit]\nDescription=Restore the enrolled USB root through its stable device-mapper path\nDefaultDependencies=no\nConditionKernelCommandLine=ram_rescue_guard=1\nAfter=systemd-udevd.service systemd-remount-fs.service\nBefore=local-fs-pre.target sysinit.target ram-rescue-prepare.service shutdown.target\nConflicts=shutdown.target\nOnFailure=emergency.target\n\n[Service]\nType=notify\nNotifyAccess=main\nRootDirectory=/run/ram-rescue-demo\nWorkingDirectory=/\nExecStart=/opt/guard-runtime/guard-runtime run --config /run/ram-rescue-guard/config.json\nExecStopPost=/opt/guard-runtime/guard-runtime takeover --config /run/ram-rescue-guard/config.json\nRestart=no\nTimeoutStartSec=30\nTimeoutStopSec=15\nCPUAccounting=yes\nCPUQuota=20%\nCPUQuotaPeriodSec=20ms\nMemoryAccounting=yes\nMemoryMax=128M\nMemorySwapMax=0\nStandardOutput=journal\nStandardError=journal\n"
+            },
+            "manager": {
+              "sha256": "2da328a56afa169c975f907affa0ec7db0e74bc428972bfc7351928da80186d1",
+              "text": "[Unit]\nDescription=Maintain enrolled USB mapping %i\nRequires=ram-rescue-manager.service\nAfter=ram-rescue-manager.service\nBefore=shutdown.target\nConflicts=shutdown.target\n\n[Service]\nType=notify\nNotifyAccess=main\nSlice=ramrescuedata.slice\nRootDirectory=/run/ram-rescue-demo\nWorkingDirectory=/\nEnvironment=PYTHONDONTWRITEBYTECODE=1\nExecStart=/opt/manager/maintain --record /run/ram-rescue-manager/entries/%i.json\nExecStopPost=/opt/manager/maintain --record /run/ram-rescue-manager/entries/%i.json --takeover\nRestart=no\nTimeoutStartSec=30\nTimeoutStopSec=15\nMemoryAccounting=yes\nMemoryMax=128M\nMemorySwapMax=0\nStandardOutput=journal\nStandardError=journal\n"
+            }
+          },
+          "unit_dropins": {
+            "ram-rescue-guard.service": "",
+            "ram-rescue-maintain@rr-data-vm-ext4.service": "",
+            "ram-rescue-maintain@rr-data-vm-vfat.service": ""
+          },
+          "manager_alias": "/opt/guard-runtime",
+          "entrypoint": "#!/bin/sh\nexec /opt/guard-runtime/guard-runtime maintain \"$@\"\n",
+          "actual_controllers": {
+            "implementation": "cpp",
+            "controllers": {
+              "root": {
+                "live": true,
+                "process": {
+                  "pid": 496,
+                  "start_ticks": "342",
+                  "state": "S",
+                  "cmdline": "/opt/guard-runtime/guard-runtime run --config /run/ram-rescue-guard/config.json "
+                },
+                "executable": "/opt/guard-runtime/guard-runtime",
+                "executable_sha256": "72d9d550079b4f73e1954e13f99fa614826758c623eec1d3026aa22bc891b21f",
+                "argv": [
+                  "/opt/guard-runtime/guard-runtime",
+                  "run",
+                  "--config",
+                  "/run/ram-rescue-guard/config.json"
+                ]
+              },
+              "rr-data-vm-ext4": {
+                "live": true,
+                "process": {
+                  "pid": 1182,
+                  "start_ticks": "596",
+                  "state": "S",
+                  "cmdline": "/opt/guard-runtime/guard-runtime maintain --record /run/ram-rescue-manager/entries/rr-data-vm-ext4.json "
+                },
+                "executable": "/opt/guard-runtime/guard-runtime",
+                "executable_sha256": "72d9d550079b4f73e1954e13f99fa614826758c623eec1d3026aa22bc891b21f",
+                "argv": [
+                  "/opt/guard-runtime/guard-runtime",
+                  "maintain",
+                  "--record",
+                  "/run/ram-rescue-manager/entries/rr-data-vm-ext4.json"
+                ]
+              },
+              "rr-data-vm-vfat": {
+                "live": true,
+                "process": {
+                  "pid": 1186,
+                  "start_ticks": "598",
+                  "state": "S",
+                  "cmdline": "/opt/guard-runtime/guard-runtime maintain --record /run/ram-rescue-manager/entries/rr-data-vm-vfat.json "
+                },
+                "executable": "/opt/guard-runtime/guard-runtime",
+                "executable_sha256": "72d9d550079b4f73e1954e13f99fa614826758c623eec1d3026aa22bc891b21f",
+                "argv": [
+                  "/opt/guard-runtime/guard-runtime",
+                  "maintain",
+                  "--record",
+                  "/run/ram-rescue-manager/entries/rr-data-vm-vfat.json"
+                ]
+              }
+            },
+            "legacy_python_controller_pids": []
+          }
+        },
+        "logs": {
+          "verified": true,
+          "native_manifest": {
+            "binary_path": "/opt/guard-runtime/guard-runtime",
+            "binary_sha256": "72d9d550079b4f73e1954e13f99fa614826758c623eec1d3026aa22bc891b21f",
+            "entrypoint_path": "/opt/guard-runtime/maintain",
+            "entrypoint_sha256": "e2cd3b560621354d5110908b715095dc470bea369071708740ec3ab47b4d7b3c",
+            "library_sha256": {
+              "/lib/x86_64-linux-gnu/libc.so.6": "3a15d66867d83762c7f2f1e37359cb8f6c5743edb369c65285cb0b1c4f7498bf",
+              "/lib/x86_64-linux-gnu/libcap.so.2": "6ac6abc86ac891c6e13486470e26f1d939f47fda9e6b5d5508a7f5ec881adc84",
+              "/lib/x86_64-linux-gnu/libcrypto.so.3": "6a66c3ba6b3749aacc9497973fff00f6ba61c703ba7015d0d7ab3fd9510974b6",
+              "/lib/x86_64-linux-gnu/libdevmapper.so.1.02.1": "0b33f9e9780b2e22bd40170f4cfe358b0cf525974d01896b3bb2b02d6e4e2582",
+              "/lib/x86_64-linux-gnu/libgcc_s.so.1": "d93224d2b0dab4247598be683adca02f5cf00586f99c187579cd7e92058fb7cb",
+              "/lib/x86_64-linux-gnu/libm.so.6": "fce00b6f25f459cf4ae0b7fae4257909a1a8a86f9149e7c029a5d617baf1ccd0",
+              "/lib/x86_64-linux-gnu/libpcre2-8.so.0": "e00576d71d81d3ba0cfa4903c835a44a8723aac96f72f79ff75200b4cff9071b",
+              "/lib/x86_64-linux-gnu/libselinux.so.1": "0ec0843463f90e227b0e138e1f379774f50b5514bd7f5dbd4c8a87aca0aa6670",
+              "/lib/x86_64-linux-gnu/libstdc++.so.6": "1fd75fe70354a416d75aef22bcae68c47bd25d20e2d0568c30b1a9838cf62f11",
+              "/lib/x86_64-linux-gnu/libudev.so.1": "4298228175fa62a36af88b1afd4406cdd8b1bf166621f957d0dbbde45a698fe5",
+              "/lib64/ld-linux-x86-64.so.2": "c20a2dc8917c755f02b94049356320fe1f62ac7d9f8994731f807d9df39302da"
+            },
+            "payload_file_bytes": 13706974,
+            "runtime": "cpp",
+            "schema": 1
+          },
+          "units": {
+            "root": {
+              "sha256": "6f45cf7616c45a75de80c4611f32faca18a16aae8cdf1949a57957469e7a0180",
+              "text": "[Unit]\nDescription=Restore the enrolled USB root through its stable device-mapper path\nDefaultDependencies=no\nConditionKernelCommandLine=ram_rescue_guard=1\nAfter=systemd-udevd.service systemd-remount-fs.service\nBefore=local-fs-pre.target sysinit.target ram-rescue-prepare.service shutdown.target\nConflicts=shutdown.target\nOnFailure=emergency.target\n\n[Service]\nType=notify\nNotifyAccess=main\nRootDirectory=/run/ram-rescue-demo\nWorkingDirectory=/\nExecStart=/opt/guard-runtime/guard-runtime run --config /run/ram-rescue-guard/config.json\nExecStopPost=/opt/guard-runtime/guard-runtime takeover --config /run/ram-rescue-guard/config.json\nRestart=no\nTimeoutStartSec=30\nTimeoutStopSec=15\nCPUAccounting=yes\nCPUQuota=20%\nCPUQuotaPeriodSec=20ms\nMemoryAccounting=yes\nMemoryMax=128M\nMemorySwapMax=0\nStandardOutput=journal\nStandardError=journal\n"
+            },
+            "manager": {
+              "sha256": "2da328a56afa169c975f907affa0ec7db0e74bc428972bfc7351928da80186d1",
+              "text": "[Unit]\nDescription=Maintain enrolled USB mapping %i\nRequires=ram-rescue-manager.service\nAfter=ram-rescue-manager.service\nBefore=shutdown.target\nConflicts=shutdown.target\n\n[Service]\nType=notify\nNotifyAccess=main\nSlice=ramrescuedata.slice\nRootDirectory=/run/ram-rescue-demo\nWorkingDirectory=/\nEnvironment=PYTHONDONTWRITEBYTECODE=1\nExecStart=/opt/manager/maintain --record /run/ram-rescue-manager/entries/%i.json\nExecStopPost=/opt/manager/maintain --record /run/ram-rescue-manager/entries/%i.json --takeover\nRestart=no\nTimeoutStartSec=30\nTimeoutStopSec=15\nMemoryAccounting=yes\nMemoryMax=128M\nMemorySwapMax=0\nStandardOutput=journal\nStandardError=journal\n"
+            }
+          },
+          "unit_dropins": {
+            "ram-rescue-guard.service": "",
+            "ram-rescue-maintain@rr-data-vm-ext4.service": "",
+            "ram-rescue-maintain@rr-data-vm-vfat.service": ""
+          },
+          "manager_alias": "/opt/guard-runtime",
+          "entrypoint": "#!/bin/sh\nexec /opt/guard-runtime/guard-runtime maintain \"$@\"\n",
+          "actual_controllers": {
+            "implementation": "cpp",
+            "controllers": {
+              "root": {
+                "live": true,
+                "process": {
+                  "pid": 496,
+                  "start_ticks": "342",
+                  "state": "S",
+                  "cmdline": "/opt/guard-runtime/guard-runtime run --config /run/ram-rescue-guard/config.json "
+                },
+                "executable": "/opt/guard-runtime/guard-runtime",
+                "executable_sha256": "72d9d550079b4f73e1954e13f99fa614826758c623eec1d3026aa22bc891b21f",
+                "argv": [
+                  "/opt/guard-runtime/guard-runtime",
+                  "run",
+                  "--config",
+                  "/run/ram-rescue-guard/config.json"
+                ]
+              },
+              "rr-data-vm-ext4": {
+                "live": true,
+                "process": {
+                  "pid": 1182,
+                  "start_ticks": "596",
+                  "state": "S",
+                  "cmdline": "/opt/guard-runtime/guard-runtime maintain --record /run/ram-rescue-manager/entries/rr-data-vm-ext4.json "
+                },
+                "executable": "/opt/guard-runtime/guard-runtime",
+                "executable_sha256": "72d9d550079b4f73e1954e13f99fa614826758c623eec1d3026aa22bc891b21f",
+                "argv": [
+                  "/opt/guard-runtime/guard-runtime",
+                  "maintain",
+                  "--record",
+                  "/run/ram-rescue-manager/entries/rr-data-vm-ext4.json"
+                ]
+              },
+              "rr-data-vm-vfat": {
+                "live": false,
+                "pid": 1186
+              }
+            },
+            "legacy_python_controller_pids": []
+          }
+        }
+      },
+      "root_audit": {
+        "acknowledged_records": 75,
+        "acknowledged_bytes": 307416,
+        "prefix_matches": true,
+        "prefix_sha256": "db7c56f068422a40270758c5fef874648f53c940f217e1ae784a87b5a36e4666",
+        "root_write_fsync": true,
+        "max_write_seconds": 1.4087660779999993
+      }
+    },
+    {
+      "label": "python mounts",
+      "source_report": {
+        "path": "lab/work/cpp-pm-1002-045525-35597/report.json",
+        "sha256": "fd21afbcf690a2dba3cd5a4f97af9ea2e1bb9e3bd8b4850052a427df9117b49e"
+      },
+      "final_implementation": true,
+      "passed": true,
+      "checks": {
+        "unit_syntax_verified_by_guest_systemd": true,
+        "initial_mount_absent_until_automount_access": true,
+        "initial_mount_and_nested_mounts_created": true,
+        "all_original_mount_ids_and_options_preserved": true,
+        "wrong_identity_kept_original_mounts": true,
+        "wrong_identity_was_not_committed": true,
+        "all_three_controllers_maintained": true,
+        "same_boot_and_pid1": true,
+        "same_root_guard_process": true,
+        "root_recovered_and_writable": true,
+        "root_durable_data_matches": true,
+        "readonly_mount_not_changed_by_start": true,
+        "readonly_mount_still_readonly_after_recovery": true,
+        "terminal_guard_prevents_new_mount": true,
+        "orderly_unmounts_completed": true,
+        "rr-data-vm-ext4_original_open_fd_process": true,
+        "rr-data-vm-ext4_no_io_errors": true,
+        "rr-data-vm-ext4_durable_data_matches": true,
+        "rr-data-vm-vfat_original_open_fd_process": true,
+        "rr-data-vm-vfat_no_io_errors": true,
+        "rr-data-vm-vfat_durable_data_matches": true,
+        "child-ext4_original_open_fd_process": true,
+        "child-ext4_no_io_errors": true,
+        "child-ext4_durable_data_matches": true,
+        "child-vfat_original_open_fd_process": true,
+        "child-vfat_no_io_errors": true,
+        "child-vfat_durable_data_matches": true,
+        "shutdown_clean": true
+      },
+      "scenario": "mounts",
+      "implementation": "python",
+      "baseline_ref": "e745e5e4b9cde4ffd21d03f6e45a491ca8400083",
+      "source_image_unchanged": true,
+      "sources_unchanged": true,
+      "runtime_payload_sha256": {
+        "admission.py": "e2d3c9d5cb89c0538bc4d69bf154b247b42ab568c06d74688fc7fa3e9f194dbc",
+        "boot.py": "1b6848a8d7a42eabb70bf60d5f4a0326d76aa496725fd02e710b02efa06d7044",
+        "data_guard.py": "82c9dd23b2abfc2cb9dead8eef0c58c18a3208646cc1260ffd6c8c6cd50f45d1",
+        "data_recovery.py": "59e8fb51c9136f56824f520a20c17c74a4d39c65113cc28fa7dcbe5270260c91",
+        "dm_monitor.py": "1cbae0c2ef907a8e870c714e6cc229b003d5550f810e607c6c7b4e081f1eda1a",
+        "guard_state.py": "30290869d36485b7e5face65faa0120a3b06e6bb47c8351f52befc13a20f99ac",
+        "linux_abi.py": "71bcd973c15a517038a30a3750a8219a54d1c347724b6ab3365d6b0ecd989711",
+        "maintain.py": "c5bc45eedc45f9cd6c2f9ac5376f4a5e909c78ae610945694bd23862c03eb029",
+        "owned_operation.py": "1c3febc34cd036d5e921ab7f49bf11eab9b85ee1085c1a7c21764d7270a4daf1",
+        "path_guard.py": "41c4a397818cf31d4aee87ce465c96c5c8638599d267de1cf1254f3e49709403",
+        "registry.py": "8b1b0b50578d4d9a0ced87ceb62c3404b933788926f81e04b5dea121380f3c94",
+        "rescue.py": "e71b91ff4d0fce653bd64fb9c742583648d89ed704bd0a285edd0f6ccc0765f0"
+      },
+      "experiment_manifest": {
+        "implementation": "python",
+        "baseline_ref": "e745e5e",
+        "runtime_payload_sha256": {
+          "admission.py": "e2d3c9d5cb89c0538bc4d69bf154b247b42ab568c06d74688fc7fa3e9f194dbc",
+          "boot.py": "1b6848a8d7a42eabb70bf60d5f4a0326d76aa496725fd02e710b02efa06d7044",
+          "data_guard.py": "82c9dd23b2abfc2cb9dead8eef0c58c18a3208646cc1260ffd6c8c6cd50f45d1",
+          "data_recovery.py": "59e8fb51c9136f56824f520a20c17c74a4d39c65113cc28fa7dcbe5270260c91",
+          "dm_monitor.py": "1cbae0c2ef907a8e870c714e6cc229b003d5550f810e607c6c7b4e081f1eda1a",
+          "guard_state.py": "30290869d36485b7e5face65faa0120a3b06e6bb47c8351f52befc13a20f99ac",
+          "linux_abi.py": "71bcd973c15a517038a30a3750a8219a54d1c347724b6ab3365d6b0ecd989711",
+          "maintain.py": "c5bc45eedc45f9cd6c2f9ac5376f4a5e909c78ae610945694bd23862c03eb029",
+          "owned_operation.py": "1c3febc34cd036d5e921ab7f49bf11eab9b85ee1085c1a7c21764d7270a4daf1",
+          "path_guard.py": "41c4a397818cf31d4aee87ce465c96c5c8638599d267de1cf1254f3e49709403",
+          "registry.py": "8b1b0b50578d4d9a0ced87ceb62c3404b933788926f81e04b5dea121380f3c94",
+          "rescue.py": "e71b91ff4d0fce653bd64fb9c742583648d89ed704bd0a285edd0f6ccc0765f0"
+        }
+      },
+      "filesystem_audits": {
+        "rr-data-vm-ext4": {
+          "returncode": 0
+        },
+        "rr-data-vm-vfat": {
+          "returncode": 0
+        }
+      },
+      "runtime_integrity": {
+        "implementation": "python",
+        "controllers": {
+          "root": {
+            "live": true,
+            "process": {
+              "pid": 490,
+              "start_ticks": "349",
+              "state": "S",
+              "cmdline": "/usr/bin/python3 /opt/guard/path_guard.py --config /run/ram-rescue-guard/config.json "
+            },
+            "executable": "/usr/bin/python3.12",
+            "executable_sha256": "e50d468e8b0adfb05733f5b87b3cff34829c4a8c1aea50c865aa8bdfe4bb150f",
+            "argv": [
+              "/usr/bin/python3",
+              "/opt/guard/path_guard.py",
+              "--config",
+              "/run/ram-rescue-guard/config.json"
+            ]
+          },
+          "rr-data-vm-ext4": {
+            "live": true,
+            "process": {
+              "pid": 1181,
+              "start_ticks": "592",
+              "state": "S",
+              "cmdline": "/usr/bin/python3 /opt/manager/maintain.py --record /run/ram-rescue-manager/entries/rr-data-vm-ext4.json "
+            },
+            "executable": "/usr/bin/python3.12",
+            "executable_sha256": "e50d468e8b0adfb05733f5b87b3cff34829c4a8c1aea50c865aa8bdfe4bb150f",
+            "argv": [
+              "/usr/bin/python3",
+              "/opt/manager/maintain.py",
+              "--record",
+              "/run/ram-rescue-manager/entries/rr-data-vm-ext4.json"
+            ]
+          },
+          "rr-data-vm-vfat": {
+            "live": false,
+            "pid": 1184
+          }
+        }
+      },
+      "initial_runtime_integrity": {
+        "implementation": "python",
+        "controllers": {
+          "root": {
+            "live": true,
+            "process": {
+              "pid": 490,
+              "start_ticks": "349",
+              "state": "S",
+              "cmdline": "/usr/bin/python3 /opt/guard/path_guard.py --config /run/ram-rescue-guard/config.json "
+            },
+            "executable": "/usr/bin/python3.12",
+            "executable_sha256": "e50d468e8b0adfb05733f5b87b3cff34829c4a8c1aea50c865aa8bdfe4bb150f",
+            "argv": [
+              "/usr/bin/python3",
+              "/opt/guard/path_guard.py",
+              "--config",
+              "/run/ram-rescue-guard/config.json"
+            ]
+          },
+          "rr-data-vm-ext4": {
+            "live": true,
+            "process": {
+              "pid": 1181,
+              "start_ticks": "592",
+              "state": "S",
+              "cmdline": "/usr/bin/python3 /opt/manager/maintain.py --record /run/ram-rescue-manager/entries/rr-data-vm-ext4.json "
+            },
+            "executable": "/usr/bin/python3.12",
+            "executable_sha256": "e50d468e8b0adfb05733f5b87b3cff34829c4a8c1aea50c865aa8bdfe4bb150f",
+            "argv": [
+              "/usr/bin/python3",
+              "/opt/manager/maintain.py",
+              "--record",
+              "/run/ram-rescue-manager/entries/rr-data-vm-ext4.json"
+            ]
+          },
+          "rr-data-vm-vfat": {
+            "live": true,
+            "process": {
+              "pid": 1184,
+              "start_ticks": "594",
+              "state": "S",
+              "cmdline": "/usr/bin/python3 /opt/manager/maintain.py --record /run/ram-rescue-manager/entries/rr-data-vm-vfat.json "
+            },
+            "executable": "/usr/bin/python3.12",
+            "executable_sha256": "e50d468e8b0adfb05733f5b87b3cff34829c4a8c1aea50c865aa8bdfe4bb150f",
+            "argv": [
+              "/usr/bin/python3",
+              "/opt/manager/maintain.py",
+              "--record",
+              "/run/ram-rescue-manager/entries/rr-data-vm-vfat.json"
+            ]
+          }
+        }
+      },
+      "root_audit": {
+        "acknowledged_records": 71,
+        "acknowledged_bytes": 291020,
+        "prefix_matches": true,
+        "prefix_sha256": "17039088bf1561b04b02b06477906f025394f273db59c495519f98c22131ea4d",
+        "root_write_fsync": true,
+        "max_write_seconds": 1.828897614999999
+      }
+    },
+    {
+      "label": "python 10-cycle soak",
+      "source_report": {
+        "path": "lab/work/cpp-ps-1002-050125-56046/report.json",
+        "sha256": "02efffde8a510a5a288f38b8c017b1a258d1c2d654e313757bf3b6e305b1660c"
+      },
+      "final_implementation": true,
+      "passed": true,
+      "checks": {
+        "all_requested_cycles_completed": true,
+        "runtime_unchanged": true,
+        "only_three_controllers_after_each_settle": true,
+        "no_swap_at_settled_checkpoints": true,
+        "root_durable_data": true,
+        "root_writable": true,
+        "data_durable_hashes": true,
+        "cycle_1_same_owners_workloads_mounts_and_successful_recovery": true,
+        "cycle_2_same_owners_workloads_mounts_and_successful_recovery": true,
+        "cycle_3_same_owners_workloads_mounts_and_successful_recovery": true,
+        "cycle_4_same_owners_workloads_mounts_and_successful_recovery": true,
+        "cycle_5_same_owners_workloads_mounts_and_successful_recovery": true,
+        "cycle_6_same_owners_workloads_mounts_and_successful_recovery": true,
+        "cycle_7_same_owners_workloads_mounts_and_successful_recovery": true,
+        "cycle_8_same_owners_workloads_mounts_and_successful_recovery": true,
+        "cycle_9_same_owners_workloads_mounts_and_successful_recovery": true,
+        "cycle_10_same_owners_workloads_mounts_and_successful_recovery": true,
+        "settled_fd_and_thread_counts_do_not_grow_after_first_recovery": true,
+        "clean_shutdown": true
+      },
+      "scenario": "soak",
+      "implementation": "python",
+      "baseline_ref": "e745e5e4b9cde4ffd21d03f6e45a491ca8400083",
+      "source_image_unchanged": true,
+      "sources_unchanged": true,
+      "runtime_payload_sha256": {
+        "admission.py": "e2d3c9d5cb89c0538bc4d69bf154b247b42ab568c06d74688fc7fa3e9f194dbc",
+        "boot.py": "1b6848a8d7a42eabb70bf60d5f4a0326d76aa496725fd02e710b02efa06d7044",
+        "data_guard.py": "82c9dd23b2abfc2cb9dead8eef0c58c18a3208646cc1260ffd6c8c6cd50f45d1",
+        "data_recovery.py": "59e8fb51c9136f56824f520a20c17c74a4d39c65113cc28fa7dcbe5270260c91",
+        "dm_monitor.py": "1cbae0c2ef907a8e870c714e6cc229b003d5550f810e607c6c7b4e081f1eda1a",
+        "guard_state.py": "30290869d36485b7e5face65faa0120a3b06e6bb47c8351f52befc13a20f99ac",
+        "linux_abi.py": "71bcd973c15a517038a30a3750a8219a54d1c347724b6ab3365d6b0ecd989711",
+        "maintain.py": "c5bc45eedc45f9cd6c2f9ac5376f4a5e909c78ae610945694bd23862c03eb029",
+        "owned_operation.py": "1c3febc34cd036d5e921ab7f49bf11eab9b85ee1085c1a7c21764d7270a4daf1",
+        "path_guard.py": "41c4a397818cf31d4aee87ce465c96c5c8638599d267de1cf1254f3e49709403",
+        "registry.py": "8b1b0b50578d4d9a0ced87ceb62c3404b933788926f81e04b5dea121380f3c94",
+        "rescue.py": "e71b91ff4d0fce653bd64fb9c742583648d89ed704bd0a285edd0f6ccc0765f0"
+      },
+      "runtime_before": {
+        "root": {
+          "admission.py": "e2d3c9d5cb89c0538bc4d69bf154b247b42ab568c06d74688fc7fa3e9f194dbc",
+          "boot.py": "1b6848a8d7a42eabb70bf60d5f4a0326d76aa496725fd02e710b02efa06d7044",
+          "data_guard.py": "82c9dd23b2abfc2cb9dead8eef0c58c18a3208646cc1260ffd6c8c6cd50f45d1",
+          "data_recovery.py": "59e8fb51c9136f56824f520a20c17c74a4d39c65113cc28fa7dcbe5270260c91",
+          "dm_monitor.py": "1cbae0c2ef907a8e870c714e6cc229b003d5550f810e607c6c7b4e081f1eda1a",
+          "guard_state.py": "30290869d36485b7e5face65faa0120a3b06e6bb47c8351f52befc13a20f99ac",
+          "linux_abi.py": "71bcd973c15a517038a30a3750a8219a54d1c347724b6ab3365d6b0ecd989711",
+          "maintain.py": "c5bc45eedc45f9cd6c2f9ac5376f4a5e909c78ae610945694bd23862c03eb029",
+          "owned_operation.py": "1c3febc34cd036d5e921ab7f49bf11eab9b85ee1085c1a7c21764d7270a4daf1",
+          "path_guard.py": "41c4a397818cf31d4aee87ce465c96c5c8638599d267de1cf1254f3e49709403",
+          "registry.py": "8b1b0b50578d4d9a0ced87ceb62c3404b933788926f81e04b5dea121380f3c94",
+          "rescue.py": "e71b91ff4d0fce653bd64fb9c742583648d89ed704bd0a285edd0f6ccc0765f0"
+        },
+        "data": {
+          "admission.py": "e2d3c9d5cb89c0538bc4d69bf154b247b42ab568c06d74688fc7fa3e9f194dbc",
+          "boot.py": "1b6848a8d7a42eabb70bf60d5f4a0326d76aa496725fd02e710b02efa06d7044",
+          "data_guard.py": "82c9dd23b2abfc2cb9dead8eef0c58c18a3208646cc1260ffd6c8c6cd50f45d1",
+          "data_recovery.py": "59e8fb51c9136f56824f520a20c17c74a4d39c65113cc28fa7dcbe5270260c91",
+          "dm_monitor.py": "1cbae0c2ef907a8e870c714e6cc229b003d5550f810e607c6c7b4e081f1eda1a",
+          "guard_state.py": "30290869d36485b7e5face65faa0120a3b06e6bb47c8351f52befc13a20f99ac",
+          "linux_abi.py": "71bcd973c15a517038a30a3750a8219a54d1c347724b6ab3365d6b0ecd989711",
+          "maintain.py": "c5bc45eedc45f9cd6c2f9ac5376f4a5e909c78ae610945694bd23862c03eb029",
+          "owned_operation.py": "1c3febc34cd036d5e921ab7f49bf11eab9b85ee1085c1a7c21764d7270a4daf1",
+          "path_guard.py": "41c4a397818cf31d4aee87ce465c96c5c8638599d267de1cf1254f3e49709403",
+          "registry.py": "8b1b0b50578d4d9a0ced87ceb62c3404b933788926f81e04b5dea121380f3c94",
+          "rescue.py": "e71b91ff4d0fce653bd64fb9c742583648d89ed704bd0a285edd0f6ccc0765f0"
+        }
+      },
+      "runtime_after": {
+        "root": {
+          "admission.py": "e2d3c9d5cb89c0538bc4d69bf154b247b42ab568c06d74688fc7fa3e9f194dbc",
+          "boot.py": "1b6848a8d7a42eabb70bf60d5f4a0326d76aa496725fd02e710b02efa06d7044",
+          "data_guard.py": "82c9dd23b2abfc2cb9dead8eef0c58c18a3208646cc1260ffd6c8c6cd50f45d1",
+          "data_recovery.py": "59e8fb51c9136f56824f520a20c17c74a4d39c65113cc28fa7dcbe5270260c91",
+          "dm_monitor.py": "1cbae0c2ef907a8e870c714e6cc229b003d5550f810e607c6c7b4e081f1eda1a",
+          "guard_state.py": "30290869d36485b7e5face65faa0120a3b06e6bb47c8351f52befc13a20f99ac",
+          "linux_abi.py": "71bcd973c15a517038a30a3750a8219a54d1c347724b6ab3365d6b0ecd989711",
+          "maintain.py": "c5bc45eedc45f9cd6c2f9ac5376f4a5e909c78ae610945694bd23862c03eb029",
+          "owned_operation.py": "1c3febc34cd036d5e921ab7f49bf11eab9b85ee1085c1a7c21764d7270a4daf1",
+          "path_guard.py": "41c4a397818cf31d4aee87ce465c96c5c8638599d267de1cf1254f3e49709403",
+          "registry.py": "8b1b0b50578d4d9a0ced87ceb62c3404b933788926f81e04b5dea121380f3c94",
+          "rescue.py": "e71b91ff4d0fce653bd64fb9c742583648d89ed704bd0a285edd0f6ccc0765f0"
+        },
+        "data": {
+          "admission.py": "e2d3c9d5cb89c0538bc4d69bf154b247b42ab568c06d74688fc7fa3e9f194dbc",
+          "boot.py": "1b6848a8d7a42eabb70bf60d5f4a0326d76aa496725fd02e710b02efa06d7044",
+          "data_guard.py": "82c9dd23b2abfc2cb9dead8eef0c58c18a3208646cc1260ffd6c8c6cd50f45d1",
+          "data_recovery.py": "59e8fb51c9136f56824f520a20c17c74a4d39c65113cc28fa7dcbe5270260c91",
+          "dm_monitor.py": "1cbae0c2ef907a8e870c714e6cc229b003d5550f810e607c6c7b4e081f1eda1a",
+          "guard_state.py": "30290869d36485b7e5face65faa0120a3b06e6bb47c8351f52befc13a20f99ac",
+          "linux_abi.py": "71bcd973c15a517038a30a3750a8219a54d1c347724b6ab3365d6b0ecd989711",
+          "maintain.py": "c5bc45eedc45f9cd6c2f9ac5376f4a5e909c78ae610945694bd23862c03eb029",
+          "owned_operation.py": "1c3febc34cd036d5e921ab7f49bf11eab9b85ee1085c1a7c21764d7270a4daf1",
+          "path_guard.py": "41c4a397818cf31d4aee87ce465c96c5c8638599d267de1cf1254f3e49709403",
+          "registry.py": "8b1b0b50578d4d9a0ced87ceb62c3404b933788926f81e04b5dea121380f3c94",
+          "rescue.py": "e71b91ff4d0fce653bd64fb9c742583648d89ed704bd0a285edd0f6ccc0765f0"
+        }
+      },
+      "experiment_manifest": {
+        "implementation": "python",
+        "baseline_ref": "e745e5e",
+        "runtime_payload_sha256": {
+          "admission.py": "e2d3c9d5cb89c0538bc4d69bf154b247b42ab568c06d74688fc7fa3e9f194dbc",
+          "boot.py": "1b6848a8d7a42eabb70bf60d5f4a0326d76aa496725fd02e710b02efa06d7044",
+          "data_guard.py": "82c9dd23b2abfc2cb9dead8eef0c58c18a3208646cc1260ffd6c8c6cd50f45d1",
+          "data_recovery.py": "59e8fb51c9136f56824f520a20c17c74a4d39c65113cc28fa7dcbe5270260c91",
+          "dm_monitor.py": "1cbae0c2ef907a8e870c714e6cc229b003d5550f810e607c6c7b4e081f1eda1a",
+          "guard_state.py": "30290869d36485b7e5face65faa0120a3b06e6bb47c8351f52befc13a20f99ac",
+          "linux_abi.py": "71bcd973c15a517038a30a3750a8219a54d1c347724b6ab3365d6b0ecd989711",
+          "maintain.py": "c5bc45eedc45f9cd6c2f9ac5376f4a5e909c78ae610945694bd23862c03eb029",
+          "owned_operation.py": "1c3febc34cd036d5e921ab7f49bf11eab9b85ee1085c1a7c21764d7270a4daf1",
+          "path_guard.py": "41c4a397818cf31d4aee87ce465c96c5c8638599d267de1cf1254f3e49709403",
+          "registry.py": "8b1b0b50578d4d9a0ced87ceb62c3404b933788926f81e04b5dea121380f3c94",
+          "rescue.py": "e71b91ff4d0fce653bd64fb9c742583648d89ed704bd0a285edd0f6ccc0765f0"
+        }
+      },
+      "memory_trend": {
+        "memory_current_bytes": {
+          "initial": 46444544,
+          "after_first_recovery": 47316992,
+          "final": 47652864,
+          "first_recovery_delta": 872448,
+          "after_first_to_final_delta": 335872,
+          "post_recovery_min": 47263744,
+          "post_recovery_max": 48009216,
+          "last_five_range": 618496,
+          "post_recovery_linear_slope_bytes_per_cycle": -6007.466666666666
+        },
+        "Pss_bytes": {
+          "initial": 39702528,
+          "after_first_recovery": 40100864,
+          "final": 40360960,
+          "first_recovery_delta": 398336,
+          "after_first_to_final_delta": 260096,
+          "post_recovery_min": 40100864,
+          "post_recovery_max": 40374272,
+          "last_five_range": 121856,
+          "post_recovery_linear_slope_bytes_per_cycle": 22112.19393939394
+        },
+        "Rss_bytes": {
+          "initial": 65069056,
+          "after_first_recovery": 65499136,
+          "final": 65667072,
+          "first_recovery_delta": 430080,
+          "after_first_to_final_delta": 167936,
+          "post_recovery_min": 65499136,
+          "post_recovery_max": 65667072,
+          "last_five_range": 16384,
+          "post_recovery_linear_slope_bytes_per_cycle": 16483.29696969697
+        },
+        "memory_stat_anon_bytes": {
+          "initial": 30404608,
+          "after_first_recovery": 30838784,
+          "final": 31006720,
+          "first_recovery_delta": 434176,
+          "after_first_to_final_delta": 167936,
+          "post_recovery_min": 30838784,
+          "post_recovery_max": 31006720,
+          "last_five_range": 16384,
+          "post_recovery_linear_slope_bytes_per_cycle": 16483.29696969697
+        },
+        "memory_stat_file_bytes": {
+          "initial": 1159168,
+          "after_first_recovery": 2318336,
+          "final": 2396160,
+          "first_recovery_delta": 1159168,
+          "after_first_to_final_delta": 77824,
+          "post_recovery_min": 2318336,
+          "post_recovery_max": 2396160,
+          "last_five_range": 36864,
+          "post_recovery_linear_slope_bytes_per_cycle": 8167.175757575757
+        },
+        "memory_stat_kernel_bytes": {
+          "initial": 14204928,
+          "after_first_recovery": 13529088,
+          "final": 13328384,
+          "first_recovery_delta": -675840,
+          "after_first_to_final_delta": -200704,
+          "post_recovery_min": 13324288,
+          "post_recovery_max": 13533184,
+          "last_five_range": 106496,
+          "post_recovery_linear_slope_bytes_per_cycle": -28448.581818181818
+        }
+      },
+      "filesystem_audits": {
+        "rr-data-vm-ext4": {
+          "returncode": 0
+        },
+        "rr-data-vm-vfat": {
+          "returncode": 0
+        }
+      },
+      "cycles": [
+        {
+          "index": 1,
+          "recovery_windows": {
+            "root": {
+              "waiting": 11.650152456,
+              "ready": 13.449096182,
+              "seconds": 1.7989437259999992,
+              "recoveries": 1
+            },
+            "rr-data-vm-ext4": {
+              "waiting": 12.026086409,
+              "ready": 14.906741217,
+              "seconds": 2.880654808000001,
+              "recoveries": 1
+            },
+            "rr-data-vm-vfat": {
+              "waiting": 12.150148039,
+              "ready": 14.282228116,
+              "seconds": 2.1320800770000012,
+              "recoveries": 1
+            }
+          },
+          "memory": {
+            "memory_current_bytes": 47316992,
+            "cpu_usage_usec": 496038,
+            "cpu_throttled_usec": 1579251,
+            "process_pids": [
+              489,
+              1130,
+              1153
+            ],
+            "Rss_bytes": 65499136,
+            "Pss_bytes": 40100864,
+            "Swap_bytes": 0,
+            "SwapPss_bytes": 0,
+            "memory_stat_anon_bytes": 30838784,
+            "memory_stat_file_bytes": 2318336,
+            "memory_stat_kernel_bytes": 13529088,
+            "memory_stat_shmem_bytes": 73728,
+            "memory_stat_slab_bytes": 13144528,
+            "memory_stat_pagetables_bytes": 364544,
+            "memory_stat_kernel_stack_bytes": 0
+          },
+          "owners": {
+            "root": {
+              "fd_count": 7,
+              "threads": 1
+            },
+            "rr-data-vm-ext4": {
+              "fd_count": 7,
+              "threads": 1
+            },
+            "rr-data-vm-vfat": {
+              "fd_count": 7,
+              "threads": 1
+            }
+          }
+        },
+        {
+          "index": 2,
+          "recovery_windows": {
+            "root": {
+              "waiting": 16.309406813,
+              "ready": 17.780102058,
+              "seconds": 1.4706952450000017,
+              "recoveries": 2
+            },
+            "rr-data-vm-ext4": {
+              "waiting": 16.596566976,
+              "ready": 18.782318469,
+              "seconds": 2.1857514930000015,
+              "recoveries": 2
+            },
+            "rr-data-vm-vfat": {
+              "waiting": 16.730498628,
+              "ready": 19.642294108,
+              "seconds": 2.911795480000002,
+              "recoveries": 2
+            }
+          },
+          "memory": {
+            "memory_current_bytes": 47673344,
+            "cpu_usage_usec": 684359,
+            "cpu_throttled_usec": 1897260,
+            "process_pids": [
+              489,
+              1130,
+              1153
+            ],
+            "Rss_bytes": 65556480,
+            "Pss_bytes": 40176640,
+            "Swap_bytes": 0,
+            "SwapPss_bytes": 0,
+            "memory_stat_anon_bytes": 30896128,
+            "memory_stat_file_bytes": 2330624,
+            "memory_stat_kernel_bytes": 13533184,
+            "memory_stat_shmem_bytes": 86016,
+            "memory_stat_slab_bytes": 13146928,
+            "memory_stat_pagetables_bytes": 364544,
+            "memory_stat_kernel_stack_bytes": 0
+          },
+          "owners": {
+            "root": {
+              "fd_count": 7,
+              "threads": 1
+            },
+            "rr-data-vm-ext4": {
+              "fd_count": 7,
+              "threads": 1
+            },
+            "rr-data-vm-vfat": {
+              "fd_count": 7,
+              "threads": 1
+            }
+          }
+        },
+        {
+          "index": 3,
+          "recovery_windows": {
+            "root": {
+              "waiting": 21.136136383,
+              "ready": 22.099998159,
+              "seconds": 0.9638617759999981,
+              "recoveries": 3
+            },
+            "rr-data-vm-ext4": {
+              "waiting": 20.936795306,
+              "ready": 24.062051346,
+              "seconds": 3.12525604,
+              "recoveries": 3
+            },
+            "rr-data-vm-vfat": {
+              "waiting": 21.062221586,
+              "ready": 24.137578657,
+              "seconds": 3.075357070999999,
+              "recoveries": 3
+            }
+          },
+          "memory": {
+            "memory_current_bytes": 48009216,
+            "cpu_usage_usec": 869893,
+            "cpu_throttled_usec": 2366213,
+            "process_pids": [
+              489,
+              1130,
+              1153
+            ],
+            "Rss_bytes": 65585152,
+            "Pss_bytes": 40230912,
+            "Swap_bytes": 0,
+            "SwapPss_bytes": 0,
+            "memory_stat_anon_bytes": 30924800,
+            "memory_stat_file_bytes": 2342912,
+            "memory_stat_kernel_bytes": 13529088,
+            "memory_stat_shmem_bytes": 98304,
+            "memory_stat_slab_bytes": 13143632,
+            "memory_stat_pagetables_bytes": 364544,
+            "memory_stat_kernel_stack_bytes": 0
+          },
+          "owners": {
+            "root": {
+              "fd_count": 7,
+              "threads": 1
+            },
+            "rr-data-vm-ext4": {
+              "fd_count": 7,
+              "threads": 1
+            },
+            "rr-data-vm-vfat": {
+              "fd_count": 7,
+              "threads": 1
+            }
+          }
+        },
+        {
+          "index": 4,
+          "recovery_windows": {
+            "root": {
+              "waiting": 25.455122385,
+              "ready": 27.281418034,
+              "seconds": 1.8262956490000022,
+              "recoveries": 4
+            },
+            "rr-data-vm-ext4": {
+              "waiting": 25.837729159,
+              "ready": 28.737137881,
+              "seconds": 2.8994087220000004,
+              "recoveries": 4
+            },
+            "rr-data-vm-vfat": {
+              "waiting": 25.966114368,
+              "ready": 28.076423002,
+              "seconds": 2.110308633999999,
+              "recoveries": 4
+            }
+          },
+          "memory": {
+            "memory_current_bytes": 47996928,
+            "cpu_usage_usec": 1064975,
+            "cpu_throttled_usec": 2744285,
+            "process_pids": [
+              489,
+              1130,
+              1153
+            ],
+            "Rss_bytes": 65634304,
+            "Pss_bytes": 40347648,
+            "Swap_bytes": 0,
+            "SwapPss_bytes": 0,
+            "memory_stat_anon_bytes": 30973952,
+            "memory_stat_file_bytes": 2342912,
+            "memory_stat_kernel_bytes": 13533184,
+            "memory_stat_shmem_bytes": 98304,
+            "memory_stat_slab_bytes": 13157472,
+            "memory_stat_pagetables_bytes": 364544,
+            "memory_stat_kernel_stack_bytes": 0
+          },
+          "owners": {
+            "root": {
+              "fd_count": 7,
+              "threads": 1
+            },
+            "rr-data-vm-ext4": {
+              "fd_count": 7,
+              "threads": 1
+            },
+            "rr-data-vm-vfat": {
+              "fd_count": 7,
+              "threads": 1
+            }
+          }
+        },
+        {
+          "index": 5,
+          "recovery_windows": {
+            "root": {
+              "waiting": 30.259571699,
+              "ready": 31.984394288,
+              "seconds": 1.7248225890000022,
+              "recoveries": 5
+            },
+            "rr-data-vm-ext4": {
+              "waiting": 30.635558314,
+              "ready": 33.542065699,
+              "seconds": 2.9065073849999976,
+              "recoveries": 5
+            },
+            "rr-data-vm-vfat": {
+              "waiting": 30.764118485,
+              "ready": 32.871869648,
+              "seconds": 2.1077511629999997,
+              "recoveries": 5
+            }
+          },
+          "memory": {
+            "memory_current_bytes": 47919104,
+            "cpu_usage_usec": 1256924,
+            "cpu_throttled_usec": 3159318,
+            "process_pids": [
+              489,
+              1130,
+              1153
+            ],
+            "Rss_bytes": 65650688,
+            "Pss_bytes": 40314880,
+            "Swap_bytes": 0,
+            "SwapPss_bytes": 0,
+            "memory_stat_anon_bytes": 30990336,
+            "memory_stat_file_bytes": 2355200,
+            "memory_stat_kernel_bytes": 13533184,
+            "memory_stat_shmem_bytes": 110592,
+            "memory_stat_slab_bytes": 13147528,
+            "memory_stat_pagetables_bytes": 364544,
+            "memory_stat_kernel_stack_bytes": 0
+          },
+          "owners": {
+            "root": {
+              "fd_count": 7,
+              "threads": 1
+            },
+            "rr-data-vm-ext4": {
+              "fd_count": 7,
+              "threads": 1
+            },
+            "rr-data-vm-vfat": {
+              "fd_count": 7,
+              "threads": 1
+            }
+          }
+        },
+        {
+          "index": 6,
+          "recovery_windows": {
+            "root": {
+              "waiting": 35.096707146,
+              "ready": 36.557154948,
+              "seconds": 1.4604478019999974,
+              "recoveries": 6
+            },
+            "rr-data-vm-ext4": {
+              "waiting": 35.385458559,
+              "ready": 37.483710702,
+              "seconds": 2.0982521430000034,
+              "recoveries": 6
+            },
+            "rr-data-vm-vfat": {
+              "waiting": 35.514855074,
+              "ready": 38.388096673,
+              "seconds": 2.8732415989999964,
+              "recoveries": 6
+            }
+          },
+          "memory": {
+            "memory_current_bytes": 47882240,
+            "cpu_usage_usec": 1427545,
+            "cpu_throttled_usec": 3399285,
+            "process_pids": [
+              489,
+              1130,
+              1153
+            ],
+            "Rss_bytes": 65650688,
+            "Pss_bytes": 40252416,
+            "Swap_bytes": 0,
+            "SwapPss_bytes": 0,
+            "memory_stat_anon_bytes": 30990336,
+            "memory_stat_file_bytes": 2359296,
+            "memory_stat_kernel_bytes": 13430784,
+            "memory_stat_shmem_bytes": 114688,
+            "memory_stat_slab_bytes": 13040096,
+            "memory_stat_pagetables_bytes": 364544,
+            "memory_stat_kernel_stack_bytes": 0
+          },
+          "owners": {
+            "root": {
+              "fd_count": 7,
+              "threads": 1
+            },
+            "rr-data-vm-ext4": {
+              "fd_count": 7,
+              "threads": 1
+            },
+            "rr-data-vm-vfat": {
+              "fd_count": 7,
+              "threads": 1
+            }
+          }
+        },
+        {
+          "index": 7,
+          "recovery_windows": {
+            "root": {
+              "waiting": 39.705605589,
+              "ready": 41.492623531,
+              "seconds": 1.7870179419999985,
+              "recoveries": 7
+            },
+            "rr-data-vm-ext4": {
+              "waiting": 40.084640317,
+              "ready": 43.039052025,
+              "seconds": 2.954411707999995,
+              "recoveries": 7
+            },
+            "rr-data-vm-vfat": {
+              "waiting": 40.208208402,
+              "ready": 42.285186662,
+              "seconds": 2.076978260000004,
+              "recoveries": 7
+            }
+          },
+          "memory": {
+            "memory_current_bytes": 47865856,
+            "cpu_usage_usec": 1613458,
+            "cpu_throttled_usec": 3817219,
+            "process_pids": [
+              489,
+              1130,
+              1153
+            ],
+            "Rss_bytes": 65658880,
+            "Pss_bytes": 40352768,
+            "Swap_bytes": 0,
+            "SwapPss_bytes": 0,
+            "memory_stat_anon_bytes": 30998528,
+            "memory_stat_file_bytes": 2371584,
+            "memory_stat_kernel_bytes": 13426688,
+            "memory_stat_shmem_bytes": 126976,
+            "memory_stat_slab_bytes": 13039272,
+            "memory_stat_pagetables_bytes": 364544,
+            "memory_stat_kernel_stack_bytes": 0
+          },
+          "owners": {
+            "root": {
+              "fd_count": 7,
+              "threads": 1
+            },
+            "rr-data-vm-ext4": {
+              "fd_count": 7,
+              "threads": 1
+            },
+            "rr-data-vm-vfat": {
+              "fd_count": 7,
+              "threads": 1
+            }
+          }
+        },
+        {
+          "index": 8,
+          "recovery_windows": {
+            "root": {
+              "waiting": 44.454691895,
+              "ready": 46.266967169,
+              "seconds": 1.8122752739999939,
+              "recoveries": 8
+            },
+            "rr-data-vm-ext4": {
+              "waiting": 44.834950182,
+              "ready": 47.76376315,
+              "seconds": 2.9288129680000026,
+              "recoveries": 8
+            },
+            "rr-data-vm-vfat": {
+              "waiting": 44.965860224,
+              "ready": 47.15353708,
+              "seconds": 2.187676856000003,
+              "recoveries": 8
+            }
+          },
+          "memory": {
+            "memory_current_bytes": 47865856,
+            "cpu_usage_usec": 1825305,
+            "cpu_throttled_usec": 4299993,
+            "process_pids": [
+              489,
+              1130,
+              1153
+            ],
+            "Rss_bytes": 65662976,
+            "Pss_bytes": 40374272,
+            "Swap_bytes": 0,
+            "SwapPss_bytes": 0,
+            "memory_stat_anon_bytes": 31002624,
+            "memory_stat_file_bytes": 2379776,
+            "memory_stat_kernel_bytes": 13328384,
+            "memory_stat_shmem_bytes": 135168,
+            "memory_stat_slab_bytes": 12940280,
+            "memory_stat_pagetables_bytes": 364544,
+            "memory_stat_kernel_stack_bytes": 0
+          },
+          "owners": {
+            "root": {
+              "fd_count": 7,
+              "threads": 1
+            },
+            "rr-data-vm-ext4": {
+              "fd_count": 7,
+              "threads": 1
+            },
+            "rr-data-vm-vfat": {
+              "fd_count": 7,
+              "threads": 1
+            }
+          }
+        },
+        {
+          "index": 9,
+          "recovery_windows": {
+            "root": {
+              "waiting": 49.23092394,
+              "ready": 51.026478483,
+              "seconds": 1.7955545430000015,
+              "recoveries": 9
+            },
+            "rr-data-vm-ext4": {
+              "waiting": 49.612393443,
+              "ready": 52.529947268,
+              "seconds": 2.917553824999999,
+              "recoveries": 9
+            },
+            "rr-data-vm-vfat": {
+              "waiting": 49.739922047,
+              "ready": 51.923367173,
+              "seconds": 2.1834451260000023,
+              "recoveries": 9
+            }
+          },
+          "memory": {
+            "memory_current_bytes": 47263744,
+            "cpu_usage_usec": 2020032,
+            "cpu_throttled_usec": 4664332,
+            "process_pids": [
+              489,
+              1130,
+              1153
+            ],
+            "Rss_bytes": 65662976,
+            "Pss_bytes": 40267776,
+            "Swap_bytes": 0,
+            "SwapPss_bytes": 0,
+            "memory_stat_anon_bytes": 31002624,
+            "memory_stat_file_bytes": 2383872,
+            "memory_stat_kernel_bytes": 13324288,
+            "memory_stat_shmem_bytes": 139264,
+            "memory_stat_slab_bytes": 12939456,
+            "memory_stat_pagetables_bytes": 364544,
+            "memory_stat_kernel_stack_bytes": 0
+          },
+          "owners": {
+            "root": {
+              "fd_count": 7,
+              "threads": 1
+            },
+            "rr-data-vm-ext4": {
+              "fd_count": 7,
+              "threads": 1
+            },
+            "rr-data-vm-vfat": {
+              "fd_count": 7,
+              "threads": 1
+            }
+          }
+        },
+        {
+          "index": 10,
+          "recovery_windows": {
+            "root": {
+              "waiting": 54.015691419,
+              "ready": 55.83836876,
+              "seconds": 1.8226773410000021,
+              "recoveries": 10
+            },
+            "rr-data-vm-ext4": {
+              "waiting": 54.401149053,
+              "ready": 57.483450752,
+              "seconds": 3.0823016990000056,
+              "recoveries": 10
+            },
+            "rr-data-vm-vfat": {
+              "waiting": 54.526023921,
+              "ready": 56.623315711,
+              "seconds": 2.09729179,
+              "recoveries": 10
+            }
+          },
+          "memory": {
+            "memory_current_bytes": 47652864,
+            "cpu_usage_usec": 2244389,
+            "cpu_throttled_usec": 5135560,
+            "process_pids": [
+              489,
+              1130,
+              1153
+            ],
+            "Rss_bytes": 65667072,
+            "Pss_bytes": 40360960,
+            "Swap_bytes": 0,
+            "SwapPss_bytes": 0,
+            "memory_stat_anon_bytes": 31006720,
+            "memory_stat_file_bytes": 2396160,
+            "memory_stat_kernel_bytes": 13328384,
+            "memory_stat_shmem_bytes": 151552,
+            "memory_stat_slab_bytes": 12939456,
+            "memory_stat_pagetables_bytes": 364544,
+            "memory_stat_kernel_stack_bytes": 0
+          },
+          "owners": {
+            "root": {
+              "fd_count": 7,
+              "threads": 1
+            },
+            "rr-data-vm-ext4": {
+              "fd_count": 7,
+              "threads": 1
+            },
+            "rr-data-vm-vfat": {
+              "fd_count": 7,
+              "threads": 1
+            }
+          }
+        }
+      ],
+      "runtime_integrity": {
+        "implementation": "python",
+        "controllers": {
+          "root": {
+            "live": true,
+            "process": {
+              "pid": 489,
+              "start_ticks": "379",
+              "state": "S",
+              "cmdline": "/usr/bin/python3 /opt/guard/path_guard.py --config /run/ram-rescue-guard/config.json "
+            },
+            "executable": "/usr/bin/python3.12",
+            "executable_sha256": "e50d468e8b0adfb05733f5b87b3cff34829c4a8c1aea50c865aa8bdfe4bb150f",
+            "argv": [
+              "/usr/bin/python3",
+              "/opt/guard/path_guard.py",
+              "--config",
+              "/run/ram-rescue-guard/config.json"
+            ]
+          },
+          "rr-data-vm-ext4": {
+            "live": true,
+            "process": {
+              "pid": 1130,
+              "start_ticks": "577",
+              "state": "S",
+              "cmdline": "/usr/bin/python3 /opt/manager/maintain.py --record /run/ram-rescue-manager/entries/rr-data-vm-ext4.json "
+            },
+            "executable": "/usr/bin/python3.12",
+            "executable_sha256": "e50d468e8b0adfb05733f5b87b3cff34829c4a8c1aea50c865aa8bdfe4bb150f",
+            "argv": [
+              "/usr/bin/python3",
+              "/opt/manager/maintain.py",
+              "--record",
+              "/run/ram-rescue-manager/entries/rr-data-vm-ext4.json"
+            ]
+          },
+          "rr-data-vm-vfat": {
+            "live": true,
+            "process": {
+              "pid": 1153,
+              "start_ticks": "652",
+              "state": "S",
+              "cmdline": "/usr/bin/python3 /opt/manager/maintain.py --record /run/ram-rescue-manager/entries/rr-data-vm-vfat.json "
+            },
+            "executable": "/usr/bin/python3.12",
+            "executable_sha256": "e50d468e8b0adfb05733f5b87b3cff34829c4a8c1aea50c865aa8bdfe4bb150f",
+            "argv": [
+              "/usr/bin/python3",
+              "/opt/manager/maintain.py",
+              "--record",
+              "/run/ram-rescue-manager/entries/rr-data-vm-vfat.json"
+            ]
+          }
+        },
+        "legacy_python_controller_pids": []
+      },
+      "root_audit": {
+        "acknowledged_records": 333,
+        "acknowledged_bytes": 1365192,
+        "prefix_matches": true,
+        "prefix_sha256": "e5134821d0702839ebf0ce0827a97f8c1ecfb44d8de7e0199de4c7bdfcb024fa",
+        "root_write_fsync": true,
+        "max_write_seconds": 1.806593620000001
+      }
+    },
+    {
+      "label": "earlier native mounts",
+      "source_report": {
+        "path": "lab/work/cpp-cm-1002-050649-76408/report.json",
+        "sha256": "4c26ea6eeb242448459f8bb661d8bba25f447450c57aaccd7202f5a1931b2b5c"
+      },
+      "final_implementation": false,
+      "passed": true,
+      "checks": {
+        "unit_syntax_verified_by_guest_systemd": true,
+        "initial_mount_absent_until_automount_access": true,
+        "initial_mount_and_nested_mounts_created": true,
+        "all_original_mount_ids_and_options_preserved": true,
+        "wrong_identity_kept_original_mounts": true,
+        "wrong_identity_was_not_committed": true,
+        "all_three_controllers_maintained": true,
+        "same_boot_and_pid1": true,
+        "same_root_guard_process": true,
+        "root_recovered_and_writable": true,
+        "root_durable_data_matches": true,
+        "readonly_mount_not_changed_by_start": true,
+        "readonly_mount_still_readonly_after_recovery": true,
+        "terminal_guard_prevents_new_mount": true,
+        "orderly_unmounts_completed": true,
+        "rr-data-vm-ext4_original_open_fd_process": true,
+        "rr-data-vm-ext4_no_io_errors": true,
+        "rr-data-vm-ext4_durable_data_matches": true,
+        "rr-data-vm-vfat_original_open_fd_process": true,
+        "rr-data-vm-vfat_no_io_errors": true,
+        "rr-data-vm-vfat_durable_data_matches": true,
+        "child-ext4_original_open_fd_process": true,
+        "child-ext4_no_io_errors": true,
+        "child-ext4_durable_data_matches": true,
+        "child-vfat_original_open_fd_process": true,
+        "child-vfat_no_io_errors": true,
+        "child-vfat_durable_data_matches": true,
+        "shutdown_clean": true
+      },
+      "scenario": "mounts",
+      "implementation": "cpp",
+      "baseline_ref": "e745e5e4b9cde4ffd21d03f6e45a491ca8400083",
+      "source_image_unchanged": true,
+      "sources_unchanged": true,
+      "runtime_payload_sha256": {
+        "guard-runtime": "9588633b6eaf0c8b8ea7645e4f65ee40f089e116ad031c800a3c9df2f76ad63b"
+      },
+      "experiment_manifest": {
+        "implementation": "cpp",
+        "baseline_ref": "e745e5e",
+        "runtime_payload_sha256": {
+          "guard-runtime": "9588633b6eaf0c8b8ea7645e4f65ee40f089e116ad031c800a3c9df2f76ad63b"
+        },
+        "binary_sha256": "9588633b6eaf0c8b8ea7645e4f65ee40f089e116ad031c800a3c9df2f76ad63b",
+        "library_sha256": {
+          "/lib/x86_64-linux-gnu/libc.so.6": "3a15d66867d83762c7f2f1e37359cb8f6c5743edb369c65285cb0b1c4f7498bf",
+          "/lib/x86_64-linux-gnu/libcrypto.so.3": "6a66c3ba6b3749aacc9497973fff00f6ba61c703ba7015d0d7ab3fd9510974b6",
+          "/lib/x86_64-linux-gnu/libgcc_s.so.1": "d93224d2b0dab4247598be683adca02f5cf00586f99c187579cd7e92058fb7cb",
+          "/lib/x86_64-linux-gnu/libm.so.6": "fce00b6f25f459cf4ae0b7fae4257909a1a8a86f9149e7c029a5d617baf1ccd0",
+          "/lib/x86_64-linux-gnu/libstdc++.so.6": "1fd75fe70354a416d75aef22bcae68c47bd25d20e2d0568c30b1a9838cf62f11",
+          "/lib64/ld-linux-x86-64.so.2": "c20a2dc8917c755f02b94049356320fe1f62ac7d9f8994731f807d9df39302da"
+        },
+        "native_boot_activation": true
+      },
+      "filesystem_audits": {
+        "rr-data-vm-ext4": {
+          "returncode": 0
+        },
+        "rr-data-vm-vfat": {
+          "returncode": 0
+        }
+      },
+      "runtime_integrity": {
+        "implementation": "cpp",
+        "controllers": {
+          "root": {
+            "live": true,
+            "process": {
+              "pid": 491,
+              "start_ticks": "360",
+              "state": "S",
+              "cmdline": "/opt/guard-runtime/guard-runtime run --config /run/ram-rescue-guard/config.json "
+            },
+            "executable": "/opt/guard-runtime/guard-runtime",
+            "executable_sha256": "9588633b6eaf0c8b8ea7645e4f65ee40f089e116ad031c800a3c9df2f76ad63b",
+            "argv": [
+              "/opt/guard-runtime/guard-runtime",
+              "run",
+              "--config",
+              "/run/ram-rescue-guard/config.json"
+            ]
+          },
+          "rr-data-vm-ext4": {
+            "live": true,
+            "process": {
+              "pid": 1187,
+              "start_ticks": "608",
+              "state": "S",
+              "cmdline": "/opt/guard-runtime/guard-runtime maintain --record /run/ram-rescue-manager/entries/rr-data-vm-ext4.json "
+            },
+            "executable": "/opt/guard-runtime/guard-runtime",
+            "executable_sha256": "9588633b6eaf0c8b8ea7645e4f65ee40f089e116ad031c800a3c9df2f76ad63b",
+            "argv": [
+              "/opt/guard-runtime/guard-runtime",
+              "maintain",
+              "--record",
+              "/run/ram-rescue-manager/entries/rr-data-vm-ext4.json"
+            ]
+          },
+          "rr-data-vm-vfat": {
+            "live": false,
+            "pid": 1190
+          }
+        },
+        "legacy_python_controller_pids": []
+      },
+      "initial_runtime_integrity": {
+        "implementation": "cpp",
+        "controllers": {
+          "root": {
+            "live": true,
+            "process": {
+              "pid": 491,
+              "start_ticks": "360",
+              "state": "S",
+              "cmdline": "/opt/guard-runtime/guard-runtime run --config /run/ram-rescue-guard/config.json "
+            },
+            "executable": "/opt/guard-runtime/guard-runtime",
+            "executable_sha256": "9588633b6eaf0c8b8ea7645e4f65ee40f089e116ad031c800a3c9df2f76ad63b",
+            "argv": [
+              "/opt/guard-runtime/guard-runtime",
+              "run",
+              "--config",
+              "/run/ram-rescue-guard/config.json"
+            ]
+          },
+          "rr-data-vm-ext4": {
+            "live": true,
+            "process": {
+              "pid": 1187,
+              "start_ticks": "608",
+              "state": "S",
+              "cmdline": "/opt/guard-runtime/guard-runtime maintain --record /run/ram-rescue-manager/entries/rr-data-vm-ext4.json "
+            },
+            "executable": "/opt/guard-runtime/guard-runtime",
+            "executable_sha256": "9588633b6eaf0c8b8ea7645e4f65ee40f089e116ad031c800a3c9df2f76ad63b",
+            "argv": [
+              "/opt/guard-runtime/guard-runtime",
+              "maintain",
+              "--record",
+              "/run/ram-rescue-manager/entries/rr-data-vm-ext4.json"
+            ]
+          },
+          "rr-data-vm-vfat": {
+            "live": true,
+            "process": {
+              "pid": 1190,
+              "start_ticks": "610",
+              "state": "S",
+              "cmdline": "/opt/guard-runtime/guard-runtime maintain --record /run/ram-rescue-manager/entries/rr-data-vm-vfat.json "
+            },
+            "executable": "/opt/guard-runtime/guard-runtime",
+            "executable_sha256": "9588633b6eaf0c8b8ea7645e4f65ee40f089e116ad031c800a3c9df2f76ad63b",
+            "argv": [
+              "/opt/guard-runtime/guard-runtime",
+              "maintain",
+              "--record",
+              "/run/ram-rescue-manager/entries/rr-data-vm-vfat.json"
+            ]
+          }
+        },
+        "legacy_python_controller_pids": []
+      },
+      "root_audit": {
+        "acknowledged_records": 73,
+        "acknowledged_bytes": 299218,
+        "prefix_matches": true,
+        "prefix_sha256": "54a34f803ac8b01069f992125c84dc2e3a5cf9df2b78cdd94d6a5ab0d62d016c",
+        "root_write_fsync": true,
+        "max_write_seconds": 1.5126998479999987
+      }
+    },
+    {
+      "label": "final native mounts",
+      "source_report": {
+        "path": "lab/work/cpp-cm-1002-051450-98080/report.json",
+        "sha256": "58747ba96a9ff35898aa3882f5622f823584662fd16e39bbd59aea346cf09886"
+      },
+      "final_implementation": true,
+      "passed": true,
+      "checks": {
+        "unit_syntax_verified_by_guest_systemd": true,
+        "initial_mount_absent_until_automount_access": true,
+        "initial_mount_and_nested_mounts_created": true,
+        "all_original_mount_ids_and_options_preserved": true,
+        "wrong_identity_kept_original_mounts": true,
+        "wrong_identity_was_not_committed": true,
+        "all_three_controllers_maintained": true,
+        "same_boot_and_pid1": true,
+        "same_root_guard_process": true,
+        "root_recovered_and_writable": true,
+        "root_durable_data_matches": true,
+        "readonly_mount_not_changed_by_start": true,
+        "readonly_mount_still_readonly_after_recovery": true,
+        "terminal_guard_prevents_new_mount": true,
+        "orderly_unmounts_completed": true,
+        "rr-data-vm-ext4_original_open_fd_process": true,
+        "rr-data-vm-ext4_no_io_errors": true,
+        "rr-data-vm-ext4_durable_data_matches": true,
+        "rr-data-vm-vfat_original_open_fd_process": true,
+        "rr-data-vm-vfat_no_io_errors": true,
+        "rr-data-vm-vfat_durable_data_matches": true,
+        "child-ext4_original_open_fd_process": true,
+        "child-ext4_no_io_errors": true,
+        "child-ext4_durable_data_matches": true,
+        "child-vfat_original_open_fd_process": true,
+        "child-vfat_no_io_errors": true,
+        "child-vfat_durable_data_matches": true,
+        "shutdown_clean": true
+      },
+      "scenario": "mounts",
+      "implementation": "cpp",
+      "baseline_ref": "e745e5e4b9cde4ffd21d03f6e45a491ca8400083",
+      "source_image_unchanged": true,
+      "sources_unchanged": true,
+      "runtime_payload_sha256": {
+        "guard-runtime": "72d9d550079b4f73e1954e13f99fa614826758c623eec1d3026aa22bc891b21f"
+      },
+      "experiment_manifest": {
+        "implementation": "cpp",
+        "baseline_ref": "e745e5e",
+        "runtime_payload_sha256": {
+          "guard-runtime": "72d9d550079b4f73e1954e13f99fa614826758c623eec1d3026aa22bc891b21f"
+        },
+        "binary_sha256": "72d9d550079b4f73e1954e13f99fa614826758c623eec1d3026aa22bc891b21f",
+        "library_sha256": {
+          "/lib/x86_64-linux-gnu/libc.so.6": "3a15d66867d83762c7f2f1e37359cb8f6c5743edb369c65285cb0b1c4f7498bf",
+          "/lib/x86_64-linux-gnu/libcrypto.so.3": "6a66c3ba6b3749aacc9497973fff00f6ba61c703ba7015d0d7ab3fd9510974b6",
+          "/lib/x86_64-linux-gnu/libgcc_s.so.1": "d93224d2b0dab4247598be683adca02f5cf00586f99c187579cd7e92058fb7cb",
+          "/lib/x86_64-linux-gnu/libm.so.6": "fce00b6f25f459cf4ae0b7fae4257909a1a8a86f9149e7c029a5d617baf1ccd0",
+          "/lib/x86_64-linux-gnu/libstdc++.so.6": "1fd75fe70354a416d75aef22bcae68c47bd25d20e2d0568c30b1a9838cf62f11",
+          "/lib64/ld-linux-x86-64.so.2": "c20a2dc8917c755f02b94049356320fe1f62ac7d9f8994731f807d9df39302da"
+        },
+        "native_boot_activation": true
+      },
+      "filesystem_audits": {
+        "rr-data-vm-ext4": {
+          "returncode": 0
+        },
+        "rr-data-vm-vfat": {
+          "returncode": 0
+        }
+      },
+      "runtime_integrity": {
+        "implementation": "cpp",
+        "controllers": {
+          "root": {
+            "live": true,
+            "process": {
+              "pid": 490,
+              "start_ticks": "320",
+              "state": "S",
+              "cmdline": "/opt/guard-runtime/guard-runtime run --config /run/ram-rescue-guard/config.json "
+            },
+            "executable": "/opt/guard-runtime/guard-runtime",
+            "executable_sha256": "72d9d550079b4f73e1954e13f99fa614826758c623eec1d3026aa22bc891b21f",
+            "argv": [
+              "/opt/guard-runtime/guard-runtime",
+              "run",
+              "--config",
+              "/run/ram-rescue-guard/config.json"
+            ]
+          },
+          "rr-data-vm-ext4": {
+            "live": true,
+            "process": {
+              "pid": 1187,
+              "start_ticks": "525",
+              "state": "S",
+              "cmdline": "/opt/guard-runtime/guard-runtime maintain --record /run/ram-rescue-manager/entries/rr-data-vm-ext4.json "
+            },
+            "executable": "/opt/guard-runtime/guard-runtime",
+            "executable_sha256": "72d9d550079b4f73e1954e13f99fa614826758c623eec1d3026aa22bc891b21f",
+            "argv": [
+              "/opt/guard-runtime/guard-runtime",
+              "maintain",
+              "--record",
+              "/run/ram-rescue-manager/entries/rr-data-vm-ext4.json"
+            ]
+          },
+          "rr-data-vm-vfat": {
+            "live": false,
+            "pid": 1192
+          }
+        },
+        "legacy_python_controller_pids": []
+      },
+      "initial_runtime_integrity": {
+        "implementation": "cpp",
+        "controllers": {
+          "root": {
+            "live": true,
+            "process": {
+              "pid": 490,
+              "start_ticks": "320",
+              "state": "S",
+              "cmdline": "/opt/guard-runtime/guard-runtime run --config /run/ram-rescue-guard/config.json "
+            },
+            "executable": "/opt/guard-runtime/guard-runtime",
+            "executable_sha256": "72d9d550079b4f73e1954e13f99fa614826758c623eec1d3026aa22bc891b21f",
+            "argv": [
+              "/opt/guard-runtime/guard-runtime",
+              "run",
+              "--config",
+              "/run/ram-rescue-guard/config.json"
+            ]
+          },
+          "rr-data-vm-ext4": {
+            "live": true,
+            "process": {
+              "pid": 1187,
+              "start_ticks": "525",
+              "state": "S",
+              "cmdline": "/opt/guard-runtime/guard-runtime maintain --record /run/ram-rescue-manager/entries/rr-data-vm-ext4.json "
+            },
+            "executable": "/opt/guard-runtime/guard-runtime",
+            "executable_sha256": "72d9d550079b4f73e1954e13f99fa614826758c623eec1d3026aa22bc891b21f",
+            "argv": [
+              "/opt/guard-runtime/guard-runtime",
+              "maintain",
+              "--record",
+              "/run/ram-rescue-manager/entries/rr-data-vm-ext4.json"
+            ]
+          },
+          "rr-data-vm-vfat": {
+            "live": true,
+            "process": {
+              "pid": 1192,
+              "start_ticks": "526",
+              "state": "S",
+              "cmdline": "/opt/guard-runtime/guard-runtime maintain --record /run/ram-rescue-manager/entries/rr-data-vm-vfat.json "
+            },
+            "executable": "/opt/guard-runtime/guard-runtime",
+            "executable_sha256": "72d9d550079b4f73e1954e13f99fa614826758c623eec1d3026aa22bc891b21f",
+            "argv": [
+              "/opt/guard-runtime/guard-runtime",
+              "maintain",
+              "--record",
+              "/run/ram-rescue-manager/entries/rr-data-vm-vfat.json"
+            ]
+          }
+        },
+        "legacy_python_controller_pids": []
+      },
+      "root_audit": {
+        "acknowledged_records": 74,
+        "acknowledged_bytes": 303317,
+        "prefix_matches": true,
+        "prefix_sha256": "8c6ead78503ebca0aa9524fcf97f81b64d9db8fb476514efd133896340b1a9e3",
+        "root_write_fsync": true,
+        "max_write_seconds": 1.3522274420000002
+      }
+    },
+    {
+      "label": "final native 10-cycle soak",
+      "source_report": {
+        "path": "lab/work/cpp-cs-1002-051548-116745/report.json",
+        "sha256": "c7c469ebcf892bdc08691c1a01bf26b72358ca05a80986b34c494520310ede66"
+      },
+      "final_implementation": true,
+      "passed": true,
+      "checks": {
+        "all_requested_cycles_completed": true,
+        "runtime_unchanged": true,
+        "only_three_controllers_after_each_settle": true,
+        "no_swap_at_settled_checkpoints": true,
+        "root_durable_data": true,
+        "root_writable": true,
+        "data_durable_hashes": true,
+        "cycle_1_same_owners_workloads_mounts_and_successful_recovery": true,
+        "cycle_2_same_owners_workloads_mounts_and_successful_recovery": true,
+        "cycle_3_same_owners_workloads_mounts_and_successful_recovery": true,
+        "cycle_4_same_owners_workloads_mounts_and_successful_recovery": true,
+        "cycle_5_same_owners_workloads_mounts_and_successful_recovery": true,
+        "cycle_6_same_owners_workloads_mounts_and_successful_recovery": true,
+        "cycle_7_same_owners_workloads_mounts_and_successful_recovery": true,
+        "cycle_8_same_owners_workloads_mounts_and_successful_recovery": true,
+        "cycle_9_same_owners_workloads_mounts_and_successful_recovery": true,
+        "cycle_10_same_owners_workloads_mounts_and_successful_recovery": true,
+        "settled_fd_and_thread_counts_do_not_grow_after_first_recovery": true,
+        "clean_shutdown": true
+      },
+      "scenario": "soak",
+      "implementation": "cpp",
+      "baseline_ref": "e745e5e4b9cde4ffd21d03f6e45a491ca8400083",
+      "source_image_unchanged": true,
+      "sources_unchanged": true,
+      "runtime_payload_sha256": {
+        "guard-runtime": "72d9d550079b4f73e1954e13f99fa614826758c623eec1d3026aa22bc891b21f"
+      },
+      "runtime_before": {
+        "root": {
+          "guard-runtime": "72d9d550079b4f73e1954e13f99fa614826758c623eec1d3026aa22bc891b21f"
+        },
+        "data": {
+          "guard-runtime": "72d9d550079b4f73e1954e13f99fa614826758c623eec1d3026aa22bc891b21f"
+        }
+      },
+      "runtime_after": {
+        "root": {
+          "guard-runtime": "72d9d550079b4f73e1954e13f99fa614826758c623eec1d3026aa22bc891b21f"
+        },
+        "data": {
+          "guard-runtime": "72d9d550079b4f73e1954e13f99fa614826758c623eec1d3026aa22bc891b21f"
+        }
+      },
+      "experiment_manifest": {
+        "implementation": "cpp",
+        "baseline_ref": "e745e5e",
+        "runtime_payload_sha256": {
+          "guard-runtime": "72d9d550079b4f73e1954e13f99fa614826758c623eec1d3026aa22bc891b21f"
+        },
+        "binary_sha256": "72d9d550079b4f73e1954e13f99fa614826758c623eec1d3026aa22bc891b21f",
+        "library_sha256": {
+          "/lib/x86_64-linux-gnu/libc.so.6": "3a15d66867d83762c7f2f1e37359cb8f6c5743edb369c65285cb0b1c4f7498bf",
+          "/lib/x86_64-linux-gnu/libcrypto.so.3": "6a66c3ba6b3749aacc9497973fff00f6ba61c703ba7015d0d7ab3fd9510974b6",
+          "/lib/x86_64-linux-gnu/libgcc_s.so.1": "d93224d2b0dab4247598be683adca02f5cf00586f99c187579cd7e92058fb7cb",
+          "/lib/x86_64-linux-gnu/libm.so.6": "fce00b6f25f459cf4ae0b7fae4257909a1a8a86f9149e7c029a5d617baf1ccd0",
+          "/lib/x86_64-linux-gnu/libstdc++.so.6": "1fd75fe70354a416d75aef22bcae68c47bd25d20e2d0568c30b1a9838cf62f11",
+          "/lib64/ld-linux-x86-64.so.2": "c20a2dc8917c755f02b94049356320fe1f62ac7d9f8994731f807d9df39302da"
+        },
+        "native_boot_activation": true
+      },
+      "memory_trend": {
+        "memory_current_bytes": {
+          "initial": 5406720,
+          "after_first_recovery": 7053312,
+          "final": 7438336,
+          "first_recovery_delta": 1646592,
+          "after_first_to_final_delta": 385024,
+          "post_recovery_min": 7053312,
+          "post_recovery_max": 7983104,
+          "last_five_range": 466944,
+          "post_recovery_linear_slope_bytes_per_cycle": 16185.406060606061
+        },
+        "Pss_bytes": {
+          "initial": 10037248,
+          "after_first_recovery": 10987520,
+          "final": 11173888,
+          "first_recovery_delta": 950272,
+          "after_first_to_final_delta": 186368,
+          "post_recovery_min": 10987520,
+          "post_recovery_max": 11185152,
+          "last_five_range": 111616,
+          "post_recovery_linear_slope_bytes_per_cycle": 18252.024242424242
+        },
+        "Rss_bytes": {
+          "initial": 27627520,
+          "after_first_recovery": 29777920,
+          "final": 29884416,
+          "first_recovery_delta": 2150400,
+          "after_first_to_final_delta": 106496,
+          "post_recovery_min": 29777920,
+          "post_recovery_max": 29884416,
+          "last_five_range": 20480,
+          "post_recovery_linear_slope_bytes_per_cycle": 10053.818181818182
+        },
+        "memory_stat_anon_bytes": {
+          "initial": 2777088,
+          "after_first_recovery": 3252224,
+          "final": 3362816,
+          "first_recovery_delta": 475136,
+          "after_first_to_final_delta": 110592,
+          "post_recovery_min": 3252224,
+          "post_recovery_max": 3362816,
+          "last_five_range": 20480,
+          "post_recovery_linear_slope_bytes_per_cycle": 10277.236363636364
+        },
+        "memory_stat_file_bytes": {
+          "initial": 1159168,
+          "after_first_recovery": 2019328,
+          "final": 2392064,
+          "first_recovery_delta": 860160,
+          "after_first_to_final_delta": 372736,
+          "post_recovery_min": 2019328,
+          "post_recovery_max": 2392064,
+          "last_five_range": 32768,
+          "post_recovery_linear_slope_bytes_per_cycle": 24476.70303030303
+        },
+        "memory_stat_kernel_bytes": {
+          "initial": 950272,
+          "after_first_recovery": 1064960,
+          "final": 1060864,
+          "first_recovery_delta": 114688,
+          "after_first_to_final_delta": -4096,
+          "post_recovery_min": 1060864,
+          "post_recovery_max": 1101824,
+          "last_five_range": 12288,
+          "post_recovery_linear_slope_bytes_per_cycle": -1390.1575757575758
+        }
+      },
+      "filesystem_audits": {
+        "rr-data-vm-ext4": {
+          "returncode": 0
+        },
+        "rr-data-vm-vfat": {
+          "returncode": 0
+        }
+      },
+      "cycles": [
+        {
+          "index": 1,
+          "recovery_windows": {
+            "root": {
+              "waiting": 9.902865168,
+              "ready": 11.448682863,
+              "seconds": 1.5458176950000002,
+              "recoveries": 1
+            },
+            "rr-data-vm-ext4": {
+              "waiting": 10.190775636,
+              "ready": 12.275927301,
+              "seconds": 2.0851516649999997,
+              "recoveries": 1
+            },
+            "rr-data-vm-vfat": {
+              "waiting": 10.310462911,
+              "ready": 12.372484238,
+              "seconds": 2.062021327,
+              "recoveries": 1
+            }
+          },
+          "memory": {
+            "memory_current_bytes": 7053312,
+            "cpu_usage_usec": 129436,
+            "cpu_throttled_usec": 125944,
+            "process_pids": [
+              491,
+              1147,
+              1170
+            ],
+            "Rss_bytes": 29777920,
+            "Pss_bytes": 10987520,
+            "Swap_bytes": 0,
+            "SwapPss_bytes": 0,
+            "memory_stat_anon_bytes": 3252224,
+            "memory_stat_file_bytes": 2019328,
+            "memory_stat_kernel_bytes": 1064960,
+            "memory_stat_shmem_bytes": 73728,
+            "memory_stat_slab_bytes": 756832,
+            "memory_stat_pagetables_bytes": 286720,
+            "memory_stat_kernel_stack_bytes": 0
+          },
+          "owners": {
+            "root": {
+              "fd_count": 7,
+              "threads": 1
+            },
+            "rr-data-vm-ext4": {
+              "fd_count": 7,
+              "threads": 1
+            },
+            "rr-data-vm-vfat": {
+              "fd_count": 7,
+              "threads": 1
+            }
+          }
+        },
+        {
+          "index": 2,
+          "recovery_windows": {
+            "root": {
+              "waiting": 13.759135084,
+              "ready": 15.568561601,
+              "seconds": 1.8094265170000003,
+              "recoveries": 2
+            },
+            "rr-data-vm-ext4": {
+              "waiting": 14.134542728,
+              "ready": 16.194065021,
+              "seconds": 2.0595222930000006,
+              "recoveries": 2
+            },
+            "rr-data-vm-vfat": {
+              "waiting": 14.260516552,
+              "ready": 17.124360287000002,
+              "seconds": 2.8638437350000014,
+              "recoveries": 2
+            }
+          },
+          "memory": {
+            "memory_current_bytes": 7819264,
+            "cpu_usage_usec": 198961,
+            "cpu_throttled_usec": 125944,
+            "process_pids": [
+              491,
+              1147,
+              1170
+            ],
+            "Rss_bytes": 29818880,
+            "Pss_bytes": 11023360,
+            "Swap_bytes": 0,
+            "SwapPss_bytes": 0,
+            "memory_stat_anon_bytes": 3297280,
+            "memory_stat_file_bytes": 2330624,
+            "memory_stat_kernel_bytes": 1073152,
+            "memory_stat_shmem_bytes": 86016,
+            "memory_stat_slab_bytes": 763704,
+            "memory_stat_pagetables_bytes": 286720,
+            "memory_stat_kernel_stack_bytes": 0
+          },
+          "owners": {
+            "root": {
+              "fd_count": 7,
+              "threads": 1
+            },
+            "rr-data-vm-ext4": {
+              "fd_count": 7,
+              "threads": 1
+            },
+            "rr-data-vm-vfat": {
+              "fd_count": 7,
+              "threads": 1
+            }
+          }
+        },
+        {
+          "index": 3,
+          "recovery_windows": {
+            "root": {
+              "waiting": 18.343314046,
+              "ready": 20.104087298,
+              "seconds": 1.760773252,
+              "recoveries": 3
+            },
+            "rr-data-vm-ext4": {
+              "waiting": 18.722418652,
+              "ready": 21.576729677,
+              "seconds": 2.8543110249999977,
+              "recoveries": 3
+            },
+            "rr-data-vm-vfat": {
+              "waiting": 18.846607225,
+              "ready": 20.945655785,
+              "seconds": 2.09904856,
+              "recoveries": 3
+            }
+          },
+          "memory": {
+            "memory_current_bytes": 7634944,
+            "cpu_usage_usec": 271634,
+            "cpu_throttled_usec": 127995,
+            "process_pids": [
+              491,
+              1147,
+              1170
+            ],
+            "Rss_bytes": 29843456,
+            "Pss_bytes": 11037696,
+            "Swap_bytes": 0,
+            "SwapPss_bytes": 0,
+            "memory_stat_anon_bytes": 3321856,
+            "memory_stat_file_bytes": 2334720,
+            "memory_stat_kernel_bytes": 1069056,
+            "memory_stat_shmem_bytes": 90112,
+            "memory_stat_slab_bytes": 761032,
+            "memory_stat_pagetables_bytes": 286720,
+            "memory_stat_kernel_stack_bytes": 0
+          },
+          "owners": {
+            "root": {
+              "fd_count": 7,
+              "threads": 1
+            },
+            "rr-data-vm-ext4": {
+              "fd_count": 7,
+              "threads": 1
+            },
+            "rr-data-vm-vfat": {
+              "fd_count": 7,
+              "threads": 1
+            }
+          }
+        },
+        {
+          "index": 4,
+          "recovery_windows": {
+            "root": {
+              "waiting": 22.901435615,
+              "ready": 24.702432778,
+              "seconds": 1.8009971629999981,
+              "recoveries": 4
+            },
+            "rr-data-vm-ext4": {
+              "waiting": 23.277413588,
+              "ready": 25.388391971,
+              "seconds": 2.110978382999999,
+              "recoveries": 4
+            },
+            "rr-data-vm-vfat": {
+              "waiting": 23.398551434,
+              "ready": 25.459306718,
+              "seconds": 2.060755283999999,
+              "recoveries": 4
+            }
+          },
+          "memory": {
+            "memory_current_bytes": 7626752,
+            "cpu_usage_usec": 337330,
+            "cpu_throttled_usec": 127995,
+            "process_pids": [
+              491,
+              1147,
+              1170
+            ],
+            "Rss_bytes": 29863936,
+            "Pss_bytes": 11130880,
+            "Swap_bytes": 0,
+            "SwapPss_bytes": 0,
+            "memory_stat_anon_bytes": 3342336,
+            "memory_stat_file_bytes": 2322432,
+            "memory_stat_kernel_bytes": 1101824,
+            "memory_stat_shmem_bytes": 98304,
+            "memory_stat_slab_bytes": 794736,
+            "memory_stat_pagetables_bytes": 286720,
+            "memory_stat_kernel_stack_bytes": 0
+          },
+          "owners": {
+            "root": {
+              "fd_count": 7,
+              "threads": 1
+            },
+            "rr-data-vm-ext4": {
+              "fd_count": 7,
+              "threads": 1
+            },
+            "rr-data-vm-vfat": {
+              "fd_count": 7,
+              "threads": 1
+            }
+          }
+        },
+        {
+          "index": 5,
+          "recovery_windows": {
+            "root": {
+              "waiting": 26.86624902,
+              "ready": 28.701804951,
+              "seconds": 1.8355559309999983,
+              "recoveries": 5
+            },
+            "rr-data-vm-ext4": {
+              "waiting": 27.246593236,
+              "ready": 30.108026383,
+              "seconds": 2.8614331469999996,
+              "recoveries": 5
+            },
+            "rr-data-vm-vfat": {
+              "waiting": 27.374398985,
+              "ready": 29.448223595,
+              "seconds": 2.0738246100000026,
+              "recoveries": 5
+            }
+          },
+          "memory": {
+            "memory_current_bytes": 7983104,
+            "cpu_usage_usec": 413411,
+            "cpu_throttled_usec": 127995,
+            "process_pids": [
+              491,
+              1147,
+              1170
+            ],
+            "Rss_bytes": 29863936,
+            "Pss_bytes": 11101184,
+            "Swap_bytes": 0,
+            "SwapPss_bytes": 0,
+            "memory_stat_anon_bytes": 3342336,
+            "memory_stat_file_bytes": 2355200,
+            "memory_stat_kernel_bytes": 1077248,
+            "memory_stat_shmem_bytes": 110592,
+            "memory_stat_slab_bytes": 765976,
+            "memory_stat_pagetables_bytes": 286720,
+            "memory_stat_kernel_stack_bytes": 0
+          },
+          "owners": {
+            "root": {
+              "fd_count": 7,
+              "threads": 1
+            },
+            "rr-data-vm-ext4": {
+              "fd_count": 7,
+              "threads": 1
+            },
+            "rr-data-vm-vfat": {
+              "fd_count": 7,
+              "threads": 1
+            }
+          }
+        },
+        {
+          "index": 6,
+          "recovery_windows": {
+            "root": {
+              "waiting": 31.450189777,
+              "ready": 33.181034707,
+              "seconds": 1.7308449300000035,
+              "recoveries": 6
+            },
+            "rr-data-vm-ext4": {
+              "waiting": 31.787230474,
+              "ready": 33.86415188,
+              "seconds": 2.0769214060000003,
+              "recoveries": 6
+            },
+            "rr-data-vm-vfat": {
+              "waiting": 31.922270853,
+              "ready": 34.817051466,
+              "seconds": 2.894780613000002,
+              "recoveries": 6
+            }
+          },
+          "memory": {
+            "memory_current_bytes": 7524352,
+            "cpu_usage_usec": 483931,
+            "cpu_throttled_usec": 138631,
+            "process_pids": [
+              491,
+              1147,
+              1170
+            ],
+            "Rss_bytes": 29863936,
+            "Pss_bytes": 11073536,
+            "Swap_bytes": 0,
+            "SwapPss_bytes": 0,
+            "memory_stat_anon_bytes": 3342336,
+            "memory_stat_file_bytes": 2359296,
+            "memory_stat_kernel_bytes": 1069056,
+            "memory_stat_shmem_bytes": 114688,
+            "memory_stat_slab_bytes": 758272,
+            "memory_stat_pagetables_bytes": 286720,
+            "memory_stat_kernel_stack_bytes": 0
+          },
+          "owners": {
+            "root": {
+              "fd_count": 7,
+              "threads": 1
+            },
+            "rr-data-vm-ext4": {
+              "fd_count": 7,
+              "threads": 1
+            },
+            "rr-data-vm-vfat": {
+              "fd_count": 7,
+              "threads": 1
+            }
+          }
+        },
+        {
+          "index": 7,
+          "recovery_windows": {
+            "root": {
+              "waiting": 36.285512384,
+              "ready": 37.659044678,
+              "seconds": 1.3735322940000003,
+              "recoveries": 7
+            },
+            "rr-data-vm-ext4": {
+              "waiting": 36.571696313,
+              "ready": 39.404393953,
+              "seconds": 2.8326976400000063,
+              "recoveries": 7
+            },
+            "rr-data-vm-vfat": {
+              "waiting": 36.693619405,
+              "ready": 38.77274355,
+              "seconds": 2.0791241450000015,
+              "recoveries": 7
+            }
+          },
+          "memory": {
+            "memory_current_bytes": 7847936,
+            "cpu_usage_usec": 551111,
+            "cpu_throttled_usec": 138631,
+            "process_pids": [
+              491,
+              1147,
+              1170
+            ],
+            "Rss_bytes": 29876224,
+            "Pss_bytes": 11085824,
+            "Swap_bytes": 0,
+            "SwapPss_bytes": 0,
+            "memory_stat_anon_bytes": 3354624,
+            "memory_stat_file_bytes": 2363392,
+            "memory_stat_kernel_bytes": 1073152,
+            "memory_stat_shmem_bytes": 122880,
+            "memory_stat_slab_bytes": 767536,
+            "memory_stat_pagetables_bytes": 286720,
+            "memory_stat_kernel_stack_bytes": 0
+          },
+          "owners": {
+            "root": {
+              "fd_count": 7,
+              "threads": 1
+            },
+            "rr-data-vm-ext4": {
+              "fd_count": 7,
+              "threads": 1
+            },
+            "rr-data-vm-vfat": {
+              "fd_count": 7,
+              "threads": 1
+            }
+          }
+        },
+        {
+          "index": 8,
+          "recovery_windows": {
+            "root": {
+              "waiting": 40.789371355,
+              "ready": 42.587477644,
+              "seconds": 1.7981062890000032,
+              "recoveries": 8
+            },
+            "rr-data-vm-ext4": {
+              "waiting": 41.166609873,
+              "ready": 44.021833763,
+              "seconds": 2.8552238899999978,
+              "recoveries": 8
+            },
+            "rr-data-vm-vfat": {
+              "waiting": 41.290673943,
+              "ready": 43.389837193,
+              "seconds": 2.0991632499999966,
+              "recoveries": 8
+            }
+          },
+          "memory": {
+            "memory_current_bytes": 7905280,
+            "cpu_usage_usec": 617071,
+            "cpu_throttled_usec": 138631,
+            "process_pids": [
+              491,
+              1147,
+              1170
+            ],
+            "Rss_bytes": 29884416,
+            "Pss_bytes": 11185152,
+            "Swap_bytes": 0,
+            "SwapPss_bytes": 0,
+            "memory_stat_anon_bytes": 3362816,
+            "memory_stat_file_bytes": 2371584,
+            "memory_stat_kernel_bytes": 1060864,
+            "memory_stat_shmem_bytes": 126976,
+            "memory_stat_slab_bytes": 753864,
+            "memory_stat_pagetables_bytes": 286720,
+            "memory_stat_kernel_stack_bytes": 0
+          },
+          "owners": {
+            "root": {
+              "fd_count": 7,
+              "threads": 1
+            },
+            "rr-data-vm-ext4": {
+              "fd_count": 7,
+              "threads": 1
+            },
+            "rr-data-vm-vfat": {
+              "fd_count": 7,
+              "threads": 1
+            }
+          }
+        },
+        {
+          "index": 9,
+          "recovery_windows": {
+            "root": {
+              "waiting": 45.405177074,
+              "ready": 47.219505037,
+              "seconds": 1.8143279629999967,
+              "recoveries": 9
+            },
+            "rr-data-vm-ext4": {
+              "waiting": 45.778631344,
+              "ready": 48.633129342,
+              "seconds": 2.8544979979999994,
+              "recoveries": 9
+            },
+            "rr-data-vm-vfat": {
+              "waiting": 45.903575312,
+              "ready": 47.99510843,
+              "seconds": 2.091533118000001,
+              "recoveries": 9
+            }
+          },
+          "memory": {
+            "memory_current_bytes": 7483392,
+            "cpu_usage_usec": 683282,
+            "cpu_throttled_usec": 139592,
+            "process_pids": [
+              491,
+              1147,
+              1170
+            ],
+            "Rss_bytes": 29884416,
+            "Pss_bytes": 11131904,
+            "Swap_bytes": 0,
+            "SwapPss_bytes": 0,
+            "memory_stat_anon_bytes": 3362816,
+            "memory_stat_file_bytes": 2383872,
+            "memory_stat_kernel_bytes": 1064960,
+            "memory_stat_shmem_bytes": 139264,
+            "memory_stat_slab_bytes": 753864,
+            "memory_stat_pagetables_bytes": 286720,
+            "memory_stat_kernel_stack_bytes": 0
+          },
+          "owners": {
+            "root": {
+              "fd_count": 7,
+              "threads": 1
+            },
+            "rr-data-vm-ext4": {
+              "fd_count": 7,
+              "threads": 1
+            },
+            "rr-data-vm-vfat": {
+              "fd_count": 7,
+              "threads": 1
+            }
+          }
+        },
+        {
+          "index": 10,
+          "recovery_windows": {
+            "root": {
+              "waiting": 50.325179639,
+              "ready": 51.749794421,
+              "seconds": 1.424614781999999,
+              "recoveries": 10
+            },
+            "rr-data-vm-ext4": {
+              "waiting": 50.053411314,
+              "ready": 52.999564163,
+              "seconds": 2.9461528490000006,
+              "recoveries": 10
+            },
+            "rr-data-vm-vfat": {
+              "waiting": 50.155203228,
+              "ready": 53.093448694,
+              "seconds": 2.938245466000005,
+              "recoveries": 10
+            }
+          },
+          "memory": {
+            "memory_current_bytes": 7438336,
+            "cpu_usage_usec": 748279,
+            "cpu_throttled_usec": 147279,
+            "process_pids": [
+              491,
+              1147,
+              1170
+            ],
+            "Rss_bytes": 29884416,
+            "Pss_bytes": 11173888,
+            "Swap_bytes": 0,
+            "SwapPss_bytes": 0,
+            "memory_stat_anon_bytes": 3362816,
+            "memory_stat_file_bytes": 2392064,
+            "memory_stat_kernel_bytes": 1060864,
+            "memory_stat_shmem_bytes": 147456,
+            "memory_stat_slab_bytes": 753040,
+            "memory_stat_pagetables_bytes": 286720,
+            "memory_stat_kernel_stack_bytes": 0
+          },
+          "owners": {
+            "root": {
+              "fd_count": 7,
+              "threads": 1
+            },
+            "rr-data-vm-ext4": {
+              "fd_count": 7,
+              "threads": 1
+            },
+            "rr-data-vm-vfat": {
+              "fd_count": 7,
+              "threads": 1
+            }
+          }
+        }
+      ],
+      "runtime_integrity": {
+        "implementation": "cpp",
+        "controllers": {
+          "root": {
+            "live": true,
+            "process": {
+              "pid": 491,
+              "start_ticks": "327",
+              "state": "S",
+              "cmdline": "/opt/guard-runtime/guard-runtime run --config /run/ram-rescue-guard/config.json "
+            },
+            "executable": "/opt/guard-runtime/guard-runtime",
+            "executable_sha256": "72d9d550079b4f73e1954e13f99fa614826758c623eec1d3026aa22bc891b21f",
+            "argv": [
+              "/opt/guard-runtime/guard-runtime",
+              "run",
+              "--config",
+              "/run/ram-rescue-guard/config.json"
+            ]
+          },
+          "rr-data-vm-ext4": {
+            "live": true,
+            "process": {
+              "pid": 1147,
+              "start_ticks": "521",
+              "state": "S",
+              "cmdline": "/opt/guard-runtime/guard-runtime maintain --record /run/ram-rescue-manager/entries/rr-data-vm-ext4.json "
+            },
+            "executable": "/opt/guard-runtime/guard-runtime",
+            "executable_sha256": "72d9d550079b4f73e1954e13f99fa614826758c623eec1d3026aa22bc891b21f",
+            "argv": [
+              "/opt/guard-runtime/guard-runtime",
+              "maintain",
+              "--record",
+              "/run/ram-rescue-manager/entries/rr-data-vm-ext4.json"
+            ]
+          },
+          "rr-data-vm-vfat": {
+            "live": true,
+            "process": {
+              "pid": 1170,
+              "start_ticks": "541",
+              "state": "S",
+              "cmdline": "/opt/guard-runtime/guard-runtime maintain --record /run/ram-rescue-manager/entries/rr-data-vm-vfat.json "
+            },
+            "executable": "/opt/guard-runtime/guard-runtime",
+            "executable_sha256": "72d9d550079b4f73e1954e13f99fa614826758c623eec1d3026aa22bc891b21f",
+            "argv": [
+              "/opt/guard-runtime/guard-runtime",
+              "maintain",
+              "--record",
+              "/run/ram-rescue-manager/entries/rr-data-vm-vfat.json"
+            ]
+          }
+        },
+        "legacy_python_controller_pids": []
+      },
+      "root_audit": {
+        "acknowledged_records": 306,
+        "acknowledged_bytes": 1254492,
+        "prefix_matches": true,
+        "prefix_sha256": "2d45f2ce831dfc922d6992ce47b88cfa5901be79bf969092786bd2ae1a8e8128",
+        "root_write_fsync": true,
+        "max_write_seconds": 1.7882152190000014
+      }
+    },
+    {
+      "label": "native Ubuntu systemd after_commit death",
+      "source_report": {
+        "path": "lab/work/20261002-051727-tx-kill-3-135727/report.json",
+        "sha256": "dfb71aa36e7b126474f42b6a63fbc848d153b8c8c4122ce3984f509aad18258e"
+      },
+      "final_implementation": true,
+      "passed": true,
+      "checks": {
+        "ram_shell": true,
+        "ram_heartbeat": true,
+        "upper_mappings_unchanged": true,
+        "no_permanent_dm_suspend": true,
+        "no_inactive_table_left": true,
+        "duplicate_owner_refused": true,
+        "terminal_is_not_recovery": true,
+        "no_late_ready": true,
+        "dead_owner_not_running": true,
+        "supervisor_recorded_outcome": true,
+        "systemd_ram_supervisor_ran": true
+      },
+      "scenario": "kill",
+      "native_binary_sha256": "72d9d550079b4f73e1954e13f99fa614826758c623eec1d3026aa22bc891b21f"
+    },
+    {
+      "label": "native transaction 20261002-051215-tx-kill-0-96988",
+      "source_report": {
+        "path": "lab/work/20261002-051215-tx-kill-0-96988/report.json",
+        "sha256": "07ace0c632b89b1d79f92a2972d252be447cc2ce257d52b4ffabeb638719738c"
+      },
+      "final_implementation": true,
+      "passed": true,
+      "checks": {
+        "ram_shell": true,
+        "ram_heartbeat": true,
+        "upper_mappings_unchanged": true,
+        "no_permanent_dm_suspend": true,
+        "no_inactive_table_left": true,
+        "duplicate_owner_refused": true,
+        "terminal_is_not_recovery": true,
+        "no_late_ready": true,
+        "dead_owner_not_running": true,
+        "supervisor_recorded_outcome": true
+      },
+      "scenario": "kill",
+      "native_binary_sha256": "72d9d550079b4f73e1954e13f99fa614826758c623eec1d3026aa22bc891b21f"
+    },
+    {
+      "label": "native transaction 20261002-051221-tx-kill-1-96988",
+      "source_report": {
+        "path": "lab/work/20261002-051221-tx-kill-1-96988/report.json",
+        "sha256": "a155452036969ced0dcb3b0324bb14cfdff56b65831056ce57649a194e5244ba"
+      },
+      "final_implementation": true,
+      "passed": true,
+      "checks": {
+        "ram_shell": true,
+        "ram_heartbeat": true,
+        "upper_mappings_unchanged": true,
+        "no_permanent_dm_suspend": true,
+        "no_inactive_table_left": true,
+        "duplicate_owner_refused": true,
+        "terminal_is_not_recovery": true,
+        "no_late_ready": true,
+        "dead_owner_not_running": true,
+        "supervisor_recorded_outcome": true
+      },
+      "scenario": "kill",
+      "native_binary_sha256": "72d9d550079b4f73e1954e13f99fa614826758c623eec1d3026aa22bc891b21f"
+    },
+    {
+      "label": "native transaction 20261002-051228-tx-kill-2-96988",
+      "source_report": {
+        "path": "lab/work/20261002-051228-tx-kill-2-96988/report.json",
+        "sha256": "51c9fd06999603c892fcb8ef00986a2b548b48612fc3457b98a1b1617023b4be"
+      },
+      "final_implementation": true,
+      "passed": true,
+      "checks": {
+        "ram_shell": true,
+        "ram_heartbeat": true,
+        "upper_mappings_unchanged": true,
+        "no_permanent_dm_suspend": true,
+        "no_inactive_table_left": true,
+        "duplicate_owner_refused": true,
+        "terminal_is_not_recovery": true,
+        "no_late_ready": true,
+        "dead_owner_not_running": true,
+        "supervisor_recorded_outcome": true
+      },
+      "scenario": "kill",
+      "native_binary_sha256": "72d9d550079b4f73e1954e13f99fa614826758c623eec1d3026aa22bc891b21f"
+    },
+    {
+      "label": "native transaction 20261002-051235-tx-kill-3-96988",
+      "source_report": {
+        "path": "lab/work/20261002-051235-tx-kill-3-96988/report.json",
+        "sha256": "eed1d6289343722b6046c5668b04d5fc5cede707d7b272f8e3ac3f81adce643f"
+      },
+      "final_implementation": true,
+      "passed": true,
+      "checks": {
+        "ram_shell": true,
+        "ram_heartbeat": true,
+        "upper_mappings_unchanged": true,
+        "no_permanent_dm_suspend": true,
+        "no_inactive_table_left": true,
+        "duplicate_owner_refused": true,
+        "terminal_is_not_recovery": true,
+        "no_late_ready": true,
+        "dead_owner_not_running": true,
+        "supervisor_recorded_outcome": true
+      },
+      "scenario": "kill",
+      "native_binary_sha256": "72d9d550079b4f73e1954e13f99fa614826758c623eec1d3026aa22bc891b21f"
+    },
+    {
+      "label": "native transaction 20261002-051241-tx-kill-4-96988",
+      "source_report": {
+        "path": "lab/work/20261002-051241-tx-kill-4-96988/report.json",
+        "sha256": "52d02ac76e077433887d2637d5dfaa23846c6600f3e09765837b1a92fa7b9b2e"
+      },
+      "final_implementation": true,
+      "passed": true,
+      "checks": {
+        "ram_shell": true,
+        "ram_heartbeat": true,
+        "upper_mappings_unchanged": true,
+        "no_permanent_dm_suspend": true,
+        "no_inactive_table_left": true,
+        "duplicate_owner_refused": true,
+        "terminal_is_not_recovery": true,
+        "no_late_ready": true,
+        "dead_owner_not_running": true,
+        "supervisor_recorded_outcome": true
+      },
+      "scenario": "kill",
+      "native_binary_sha256": "72d9d550079b4f73e1954e13f99fa614826758c623eec1d3026aa22bc891b21f"
+    },
+    {
+      "label": "native transaction 20261002-051247-tx-kill-5-96988",
+      "source_report": {
+        "path": "lab/work/20261002-051247-tx-kill-5-96988/report.json",
+        "sha256": "af6cd40769e5cb37c7b385032e6f4783e39fd86563d33f6f289678d8d6cba883"
+      },
+      "final_implementation": true,
+      "passed": true,
+      "checks": {
+        "ram_shell": true,
+        "ram_heartbeat": true,
+        "upper_mappings_unchanged": true,
+        "no_permanent_dm_suspend": true,
+        "no_inactive_table_left": true,
+        "duplicate_owner_refused": true,
+        "terminal_is_not_recovery": true,
+        "no_late_ready": true,
+        "dead_owner_not_running": true,
+        "supervisor_recorded_outcome": true
+      },
+      "scenario": "kill",
+      "native_binary_sha256": "72d9d550079b4f73e1954e13f99fa614826758c623eec1d3026aa22bc891b21f"
+    },
+    {
+      "label": "native transaction 20261002-051254-tx-kill-6-96988",
+      "source_report": {
+        "path": "lab/work/20261002-051254-tx-kill-6-96988/report.json",
+        "sha256": "8fcedc9248c84496d1781027c1d53cebdbd03e6c65f8c352e2c87cdfb67dedfb"
+      },
+      "final_implementation": true,
+      "passed": true,
+      "checks": {
+        "ram_shell": true,
+        "ram_heartbeat": true,
+        "upper_mappings_unchanged": true,
+        "no_permanent_dm_suspend": true,
+        "no_inactive_table_left": true,
+        "duplicate_owner_refused": true,
+        "terminal_is_not_recovery": true,
+        "no_late_ready": true,
+        "dead_owner_not_running": true,
+        "supervisor_recorded_outcome": true
+      },
+      "scenario": "kill",
+      "native_binary_sha256": "72d9d550079b4f73e1954e13f99fa614826758c623eec1d3026aa22bc891b21f"
+    },
+    {
+      "label": "native transaction 20261002-051301-tx-abs-0-96988",
+      "source_report": {
+        "path": "lab/work/20261002-051301-tx-abs-0-96988/report.json",
+        "sha256": "2173f8801136bb4f9592535cc7b05d53bdfbf3af1195ef080cdcd3027065ba72"
+      },
+      "final_implementation": true,
+      "passed": true,
+      "checks": {
+        "ram_shell": true,
+        "ram_heartbeat": true,
+        "upper_mappings_unchanged": true,
+        "no_permanent_dm_suspend": true,
+        "no_inactive_table_left": true,
+        "duplicate_owner_refused": true,
+        "terminal_is_not_recovery": true,
+        "no_late_ready": true,
+        "dead_owner_not_running": true,
+        "supervisor_recorded_outcome": true
+      },
+      "scenario": "manager-absent",
+      "native_binary_sha256": "72d9d550079b4f73e1954e13f99fa614826758c623eec1d3026aa22bc891b21f"
+    },
+    {
+      "label": "native transaction 20261002-051306-tx-time-2-96988",
+      "source_report": {
+        "path": "lab/work/20261002-051306-tx-time-2-96988/report.json",
+        "sha256": "6c3a23b6b897db7cf35670c8869115ccb7fa53f84049183e795f36d0bf950ae1"
+      },
+      "final_implementation": true,
+      "passed": true,
+      "checks": {
+        "ram_shell": true,
+        "ram_heartbeat": true,
+        "upper_mappings_unchanged": true,
+        "no_permanent_dm_suspend": true,
+        "no_inactive_table_left": true,
+        "duplicate_owner_refused": true,
+        "terminal_is_not_recovery": true,
+        "no_late_ready": true,
+        "deadline_did_not_commit_candidate": true
+      },
+      "scenario": "deadline",
+      "native_binary_sha256": "72d9d550079b4f73e1954e13f99fa614826758c623eec1d3026aa22bc891b21f"
+    },
+    {
+      "label": "native transaction 20261002-051325-tx-inst-2-96988",
+      "source_report": {
+        "path": "lab/work/20261002-051325-tx-inst-2-96988/report.json",
+        "sha256": "231d74ba7038f6f9f18d48f4d2ac4d5f52bf9025fdbdfbcf1e7f91407445fdc0"
+      },
+      "final_implementation": true,
+      "passed": true,
+      "checks": {
+        "ram_shell": true,
+        "ram_heartbeat": true,
+        "upper_mappings_unchanged": true,
+        "no_permanent_dm_suspend": true,
+        "no_inactive_table_left": true,
+        "duplicate_owner_refused": true,
+        "terminal_is_not_recovery": true,
+        "no_late_ready": true,
+        "injected_new_kernel_instance": true
+      },
+      "scenario": "candidate-replaced",
+      "native_binary_sha256": "72d9d550079b4f73e1954e13f99fa614826758c623eec1d3026aa22bc891b21f"
+    },
+    {
+      "label": "native transaction 20261002-051332-tx-stall-4-96988",
+      "source_report": {
+        "path": "lab/work/20261002-051332-tx-stall-4-96988/report.json",
+        "sha256": "65eb521bc6eb1bda38c89f510f14879edece0838e67690881d4ffa2391f37339"
+      },
+      "final_implementation": true,
+      "passed": true,
+      "checks": {
+        "ram_shell": true,
+        "ram_heartbeat": true,
+        "upper_mappings_unchanged": true,
+        "no_permanent_dm_suspend": true,
+        "no_inactive_table_left": true,
+        "duplicate_owner_refused": true,
+        "terminal_is_not_recovery": true,
+        "no_late_ready": true,
+        "gate_held_indefinitely_until_explicit_release": true,
+        "no_io_completion_while_held": true,
+        "same_active_table_while_held": true,
+        "bounded_guard_tasks": true,
+        "no_additional_owner_while_held": true,
+        "one_probe_generation": true,
+        "probe_pending_at_deadline": true,
+        "owner_lock_retained_while_probe_pending": true,
+        "terminal_while_lower_request_pending": true,
+        "ram_shell_while_pending": true
+      },
+      "scenario": "blocked-probe",
+      "native_binary_sha256": "72d9d550079b4f73e1954e13f99fa614826758c623eec1d3026aa22bc891b21f"
+    }
+  ],
+  "matrix_summary": {
+    "path": "lab/work/20261002-051355-transaction-summary-96988.json",
+    "sha256": "f258f1d22552d7a426bfca6a14ed371d7edfe759931603f55c91bb9c7861ba37"
+  },
+  "excluded_failure": {
+    "summary": {
+      "path": "lab/work/20261002-050917-transaction-summary-95631.json",
+      "sha256": "37f81a67e5d6d21fac3c3b2d11765155319d3c493acdc9baf35aefe83d585254"
+    },
+    "planned_cases": 11,
+    "reason": "Adapter copied root-init.sh without execute permission; switch_root failed before owner testing. Fixed chmod0755, rerun final matrix passed.",
+    "counted_as_pass": false
+  },
+  "measurement_caveat": "Correctness/soak runs may overlap host compilation; precise CPU comparisons come from the separate serial performance trials."
+}

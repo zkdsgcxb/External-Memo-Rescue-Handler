@@ -18,8 +18,8 @@
 
 ## 实现边界
 
-- 发行版 `initramfs-tools` 负责常规驱动、根卷挂载与切根。独立构建目录里的 hook 在 udev 首次扫描前限制裸 PV 自动激活，`local-top` 调用 `runtime/boot.py` 核验并激活已有卷。
-- `runtime/` 是虚拟机与实机共用的 Guard；实验构建直接复制这一份源码。`boot.py` 只做启动准备，systemd 在切根后取得运行期间的唯一 owner，核验初始路径并发送 `READY=1`。
+- 发行版 `initramfs-tools` 负责常规驱动、根卷挂载与切根。独立构建目录里的 hook 在 udev 首次扫描前限制裸 PV 自动激活，`local-top` 调用 `guard-runtime activate` 核验并激活已有卷。
+- `native/runtime/` 是新的 C++ Guard；`runtime/` 保留完整 Python 对照。`boot.cpp` 只做启动准备，systemd 在切根后取得运行期间的唯一 owner，核验初始路径并发送 `READY=1`。
 - `nompath` 使用 Ubuntu 自带的启动条件排除 stock multipathd。保护映射采用独立 UUID 前缀；定向 udev 规则阻止在无路径时启动不必要的介质扫描。LVM 只接受稳定映射，Guard 的只读核验使用独立 RAM 配置读取登记原盘。
 - Guard 复用 `/run/ram-rescue-demo`，F9/F10 沿用现有用户名和救援密码。密码数据库在实际启动后从原系统本地读取，不嵌入 initrd。Guard 与后代共用 20% CPU/20 ms 周期、128 MiB 内存、零 swap 的 cgroup；RAM 工具为 256 MiB 上限的 `tmpfs,noswap`。
 - 自动保护对象是已登记的根 LV 与 shared LV。EFI、exFAT 等其他分区仍走原路径。当前仅锁定已验内核版本；保护项禁用休眠恢复，后续内核升级需重新构建和验证。
@@ -27,7 +27,7 @@
 
 ## 构建与安装
 
-源码、私有登记、镜像和实验记录都留在项目工作区。下面路径是示例，已有目录不会被构建器覆盖。
+默认构建 C++ 运行时及完整共享库闭包；需要 Python 对照镜像时显式加 `--runtime python`。构建不升级当前会话；本机仍使用此前安装的 Python 包。源码、私有登记、镜像和实验记录都留在项目工作区。下面路径是示例，已有目录不会被构建器覆盖。
 
 ```bash
 # 读取已安装救援包的登记，再以实际盘内元数据核验；只写私有构建资料。

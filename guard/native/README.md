@@ -1,66 +1,52 @@
-# 可选 C++ 健康观察器实验
+# C++ Guard 运行时
 
-这是 **只读观察器原型**，尚未替代 Python Guard，也不随生产服务安装。
-它用于回答：同一张实际 DM multipath 映射、相同健康检查和检查频率下，
-移除 Python 解释器能减少多少 CPU 与常驻内存。
+`runtime/` 将完整的自动恢复控制面迁移到 C++17：启动阶段的根卷保护、常驻健康监视、原盘重新准入、换表与内核路径探测、超时后的接管，以及普通数据盘的登记记录接入。根盘与数据盘共用同一份控制器；它仍是用户空间服务，不是内核模块。
 
-## 职责与限制
+原有只读原型见 [OBSERVER.md](OBSERVER.md)。其资源数据不能代替完整恢复运行时的比较。
 
-- 持久加载 `libdevmapper.so.1.02.1`，每秒查询一次状态；内核 block uevent
-  可以提前唤醒，100 ms 内合并重复通知，每次最多读取 64 个事件。
-- 检查精确 map UUID、单一 multipath target、原节点 `dev_t`、sysfs 真实路径、
-  `diskseq`、当前路径 `A` 状态及任意 `F` 路径。
-- 只接受来自内核的 netlink 通知；通知只是提前检查的提示。
-- 启动要求 multipath target 至少 1.15.0，以保持项目的环境前提。
-  **观察器没有执行 `DM_MPATH_PROBE_PATHS` ioctl。**
-- 不获取 Guard owner，不登记新设备，不读身份扇区，不加载/提交 DM 表，
-  不挂载，不执行恢复，不修改 journal，不重设故障截止时间。
-- 固定观察启动时的已准入设备实例。真正的 Guard 准入重连新实例后，
-  观察器仍会报告旧实例失效；它不能自行批准新 `diskseq`。
+## 职责
 
-输出 JSONL：`ready` 或 `path-unavailable`；控制查询失败输出
-`control-uncertain`。退出码分别为：全程健康 `0`、发现路径失效 `2`、
-参数或控制异常 `1`。它没有 systemd READY 通知协议，不能直接放进现有 Guard 单元。
-这里的 `ready` 仅代表上述观测条件通过，不证明请求队列已清空、下层没有阻塞，
-也不证明文件系统或应用未受到先前错误影响。
+| 文件 | 职责 |
+| --- | --- |
+| `runtime/core.*` | FD 所有权、单写入者锁、异步工作线程、事件合并、libdevmapper 状态查询、内核 probe ioctl、有界日志和命令 |
+| `runtime/admission.*` | 登记策略、USB/分区/LVM 或文件系统身份、活 FD 与 diskseq 核验、布局核验、数据盘隔离检查 |
+| `runtime/controller.*` | 唯一恢复状态机、截止时间、事务记录、原子换表、systemd READY、登记设备接入和死亡接管 |
+| `runtime/boot.cpp` | 保护启动中先建立稳定 DM，再激活已有 LVM；禁止接管已提前激活的根卷 |
+| `runtime/main.cpp` | 严格命令行入口和结构化错误输出 |
 
-Python 对照 `reference.py` 检查相同条件，包括当前路径必须为 `A`。
-这比生产 Guard 健康循环的“当前实例存在且未出现 F”条件更严格。
-因此比较的是 **观察器对观察器**，不代表两个完整恢复实现等价。
+块 I/O 排队仍由内核 DM multipath 承担；USB/SCSI、LVM、文件系统、systemd/udev 分别承担已有职责。C++ 不实现替代驱动、文件系统或自动 fsck。Python 保留为冻结的行为对照、登记/安装工具、人工救援以及实验控制和报告工具。
 
-## 构建和可重复实验
+## 构建
 
 ```bash
-python3 guard/native/build.py --output lab/work/native-build
-python3 guard/native/vm_probe.py
-python3 guard/native/vm_probe.py --fault-only
+python3 guard/native/build_runtime.py --output lab/work/cpp-runtime
+lab/work/cpp-runtime/guard-runtime --version
 ```
 
-构建需要 C++17 编译器，默认 `g++`，没有额外框架或第三方 JSON 库。
-运行依赖标准 C++ 动态库、libgcc、libc 和系统 libdevmapper。通过 `dlsym`
-使用 libdevmapper 公共 ABI；声明有结构大小断言，不依赖私有符号或内核结构布局。
-当前完整存储实验为 x86-64 Ubuntu VM；其他指令集构建/解析器运行证据见架构报告，
-不能把用户态解析器通过当作完整热插拔恢复验证。
+需要 GCC 的 C++17 支持、OpenSSL 开发头文件、binutils、pthread、dl。JSON 解析器固定为仓库内附带 MIT 许可的 nlohmann/json 3.12.0；SHA-256 见 [vendor/README.md](vendor/README.md)。libdevmapper 使用发行版的公共 ABI。只支持经过 ABI 审查的 Linux 64 位小端平台；完整 C++ 内核故障测试为 x86_64；ARM64 和 RISC-V64 的交叉编译与实际用户态执行见 [架构报告](../../research/2026-10-02/CPP-ARCHITECTURES.md)。
 
-`vm_probe.py` 复用完整 Ubuntu 的只读基础镜像，创建新的 qcow2 overlay 和
-两块一次性数据盘，既不向 QEMU 传入宿主块设备，也不安装到宿主。
-VM 的 `/run` 为 noexec，因此实验 ELF 放在 **虚拟机 overlay** 内
-`/usr/local/lib/ram-rescue-native-benchmark`。生产 RAM Guard 的部署未变化。
+构建生成精简 ELF、独立调试符号及源码/二进制散列清单，并执行不接触真实块设备的单元测试。构建动作不会安装或替换本机 Guard。
 
-## 计量口径
+运行入口：
 
-同一个 ext4 数据映射、同样 1 秒兜底和 100 ms 事件合并，两个观察器顺序运行，
-交替次序，各重复 3 次。每次预热 5 秒、健康采样约 20 秒，名义采样窗口 100 ms。
-主 Guard 继续承担真实恢复；其资源以及采样进程均在观察器 cgroup 之外。
+```text
+guard-runtime activate --config ENROLLMENT.json
+guard-runtime run --config CONFIG.json
+guard-runtime takeover --config CONFIG.json
+guard-runtime maintain --record RECORD.json [--takeover]
+```
 
-- CPU 从 cgroup `usage_usec` 差值计算，一个逻辑核占满为 100%。
-- 窗口峰值使用实际采样时间差，**不是硬件瞬时峰值**。
-- 启动到首样本的 CPU 用量单列，预热和稳态不混为一个平均值。
-- 同时保存 `memory.current`、systemd `MemoryPeak`、进程 RSS/PSS、私有页。
-  cgroup 内存包含被记账的页缓存，与 PSS 不可相加，也受页缓存归属影响。
-- 每次完整原始样本、健康输出、所用二进制及 Python 模块 SHA256 写入报告。
-  不以宿主 CPU 百分比或 QEMU 整进程资源作为 Guard 自身占用。
+这些入口由保护启动或 systemd 调用，不应对正在由另一个运行时维护的映射手动启动。`maintain` 校验 systemd invocation 收据；任何退出后的接管都要等旧 helper 的 flock 引用释放。截止时间终止新准入，不声称能取消内核里已发出的 I/O。
 
-本原型未测恢复执行、超时接管和身份验证成本。因此观察器的节省不能直接标为
-整个 Guard 的节省。若未来用 C++ 接管常驻循环，应继续复用唯一恢复 owner、
-事务 fence 和 terminal 状态约束，另做完整故障矩阵验证后才考虑部署。
+## 验证与比较
+
+新测试工具 [lab/cpp_guard_probe.py](../../lab/cpp_guard_probe.py) 在同一套完整 Ubuntu、同一 Linux 内核、相同磁盘和配额下，分别运行固定提交 `e745e5e` 的 Python 运行时及新 C++ ELF。核验实际 `/proc/PID/exe` 散列，防止误测仍由 Python 恢复的观察器。
+
+```bash
+python3 lab/cpp_guard_probe.py --help
+python3 lab/cpp_transaction_probe.py --help
+```
+
+比较覆盖正常监视、无关/相关事件风暴、三块磁盘同时断联恢复、十轮连续恢复、原挂载与子挂载/已打开 FD、错误身份和超时，以及控制器在各事务阶段死亡后的接管。CPU 百分比以单个逻辑核为 100%；采样窗口峰值不是任意瞬间的硬上限。PSS、RSS 和 cgroup 内存分开报告，共享库/RAM 包体积也单列。
+
+结论与资源口径见 [迁移报告](../../research/2026-10-02/CPP-MIGRATION.md)，方法和逐项验收见 [CPP-VM-VALIDATION.md](../../research/2026-10-02/CPP-VM-VALIDATION.md)。本轮只在 QEMU 运行新代码，实机继续使用已安装的旧运行包。

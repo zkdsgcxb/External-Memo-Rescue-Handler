@@ -9,6 +9,7 @@ import tempfile
 import unittest
 from unittest.mock import Mock, patch
 
+
 BASE = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(BASE / 'guard'))
 spec = importlib.util.spec_from_file_location('data_launcher', BASE / 'guard/data.py')
@@ -153,11 +154,38 @@ class DataLauncherTests(unittest.TestCase):
             launcher.stage_runtime()
         self.assertEqual(old.read_text(), 'already running root controller')
 
+    def test_python_reference_stages_executable_manager_entrypoint(self):
+        runtime = launcher.stage_runtime()
+        entry = runtime / 'maintain'
+        self.assertEqual(entry.read_text(), '#!/bin/sh\nexec /usr/bin/python3 /opt/manager/maintain.py "$@"\n')
+        self.assertTrue(entry.stat().st_mode & 0o111)
+        entry.chmod(0o444)
+        with self.assertRaisesRegex(RuntimeError, 'has changed'):
+            launcher.stage_runtime()
+
+    def test_native_boot_runtime_is_verified_and_reused_without_python_copy(self):
+        import native_payload
+        binary = self.root / 'input-native'
+        library = self.root / 'input-library'
+        binary.write_text('native test executable')
+        library.write_text('native test library')
+        with patch.object(native_payload, 'binary_closure', return_value={'/lib/test.so': library}):
+            native_payload.stage_runtime(self.ram, binary)
+        runtime = launcher.stage_runtime()
+        self.assertEqual(runtime, self.ram / 'opt/guard-runtime')
+        self.assertFalse((self.ram / 'opt/data-guard').exists())
+        service = launcher.service_unit(self.name, runtime)
+        self.assertIn('ExecStart=/opt/guard-runtime/guard-runtime run --config', service)
+        self.assertIn('ExecStopPost=/opt/guard-runtime/guard-runtime takeover --config', service)
+        self.assertNotIn('/usr/bin/python3', service)
+
     def test_concurrent_runtime_publication_reuses_only_identical_complete_version(self):
         def competing_publication(temporary, runtime):
             runtime.mkdir()
             for source in temporary.iterdir():
-                (runtime / source.name).write_bytes(source.read_bytes())
+                target = runtime / source.name
+                target.write_bytes(source.read_bytes())
+                target.chmod(source.stat().st_mode & 0o777)
             raise OSError(errno.ENOTEMPTY, 'another launcher published this version')
 
         with patch.object(Path, 'rename', competing_publication):

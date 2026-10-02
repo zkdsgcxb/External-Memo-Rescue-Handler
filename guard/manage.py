@@ -138,8 +138,8 @@ def render_controller():
             '[Service]\nType=notify\nNotifyAccess=main\nSlice=ramrescuedata.slice\n'
             f'RootDirectory={services.RAM}\nWorkingDirectory=/\n'
             'Environment=PYTHONDONTWRITEBYTECODE=1\n'
-            'ExecStart=/usr/bin/python3 /opt/manager/maintain.py --record /run/ram-rescue-manager/entries/%i.json\n'
-            'ExecStopPost=/usr/bin/python3 /opt/manager/maintain.py --record /run/ram-rescue-manager/entries/%i.json --takeover\n'
+            'ExecStart=/opt/manager/maintain --record /run/ram-rescue-manager/entries/%i.json\n'
+            'ExecStopPost=/opt/manager/maintain --record /run/ram-rescue-manager/entries/%i.json --takeover\n'
             'Restart=no\nTimeoutStartSec=30\nTimeoutStopSec=15\n'
             'MemoryAccounting=yes\nMemoryMax=128M\nMemorySwapMax=0\n'
             'StandardOutput=journal\nStandardError=journal\n')
@@ -234,6 +234,7 @@ def register(device):
 
 def install_sources():
     relative = [Path('guard/manage.py'), Path('guard/data.py'), Path('guard/host_files.py'),
+                Path('guard/native_payload.py'),
                 Path('ram-rescue-demo/src/rescue.py'),
                 *[p.relative_to(BASE.parent) for p in sorted((BASE / 'runtime').glob('*.py'))]]
     content = {path: (BASE.parent / path).read_bytes() for path in relative}

@@ -1,0 +1,147 @@
+{
+  "schema": 1,
+  "passed": true,
+  "scope": "Full runtime cross-build, synthetic admission/controller tests, canonical JSON; QEMU user mode only",
+  "foreign_kernel_tested": false,
+  "host_packages_installed": false,
+  "source_sha256": {
+    "guard/native/runtime/admission.cpp": "be2cb14c55558389c571c0c83cdc474afef447de712b986a3e3906ffe8d73cad",
+    "guard/native/runtime/admission_test.cpp": "ff0693e240c6b600e40bd1acd240925a72a069372fbab3ad16b89fd69b86953c",
+    "guard/native/runtime/boot.cpp": "11612741b3e059b215ccb863f9131c2b1f6733172519352f5089ec753a5539a9",
+    "guard/native/runtime/controller.cpp": "5f0090ea5ab60bc447acc1ec588b2dec6f82a03a3df41c5b87bafde92b73dfe4",
+    "guard/native/runtime/controller_test.cpp": "f6e65b6dd076bf69ee2667845c583d3f9d23b1c9ebf9a845c8add02200829d0c",
+    "guard/native/runtime/core.cpp": "6d2f6eb7b6abf6c6d1df5dd30dad513787252c67ee9f62a0e8e961e27687f0ad",
+    "guard/native/runtime/core_test.cpp": "9fa86673fe234a48e51125224a3559f5ef03bd7280b7b8aec20e6b19cb07b46d",
+    "guard/native/runtime/main.cpp": "b57229b76796a70506c383803e39421482249c7740b7d21148a17f8e75d3027e",
+    "guard/native/runtime/admission.hpp": "4ae8867e2a923c37e40d49d66fb091a7f354d2c1b4ebabc9f087603cda8cc3dd",
+    "guard/native/runtime/controller.hpp": "85a14171211e212d0f4edc1d838a273de4794638aa587b53bef9479467047122",
+    "guard/native/runtime/core.hpp": "fbf2ae112c4ecec448d7b12234a639eee77a36ceec5a1d37821d5ed5b82db32d",
+    "guard/native/vendor/nlohmann/json.hpp": "aaf127c04cb31c406e5b04a63f1ae89369fccde6d8fa7cdda1ed4f32dfc5de63"
+  },
+  "architectures": {
+    "aarch64": {
+      "passed": true,
+      "compiler": "aarch64-linux-gnu-g++-13 (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0",
+      "flags": [
+        "--sysroot=${TOOLS}/root",
+        "-std=c++17",
+        "-O2",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-pedantic",
+        "-pthread",
+        "-I${REPO}/guard/native/vendor",
+        "-I${TOOLS}/arm64/usr/include",
+        "-I${TOOLS}/arm64/usr/include/aarch64-linux-gnu"
+      ],
+      "libraries": [
+        "-static-libstdc++",
+        "-static-libgcc",
+        "-L${TOOLS}/arm64/usr/lib/aarch64-linux-gnu",
+        "-lcrypto",
+        "-ldl",
+        "-pthread"
+      ],
+      "binaries": {
+        "guard-runtime": {
+          "sha256": "14435bac31c4291f46ad88856b532ac20bfce4a2f8d4bc756ee816fe1ee9d539",
+          "bytes": 3564952,
+          "elf": "ELF 64-bit LSB pie executable, ARM aarch64, version 1 (GNU/Linux), dynamically linked, interpreter /lib/ld-linux-aarch64.so.1, BuildID[sha1]=3cccc2e075388591d4e8019f7b796372d7c9aefc, for GNU/Linux 3.7.0, not stripped"
+        },
+        "admission_test": {
+          "sha256": "e98bcba06753b7d9a084e80f26de5c838995c784682938ecd0881b091bcecee9",
+          "bytes": 3711920,
+          "elf": "ELF 64-bit LSB pie executable, ARM aarch64, version 1 (GNU/Linux), dynamically linked, interpreter /lib/ld-linux-aarch64.so.1, BuildID[sha1]=d86fccecf00d74132fdbe86ff63e25f09c510658, for GNU/Linux 3.7.0, not stripped"
+        },
+        "controller_test": {
+          "sha256": "0a3bd6937f19d5de2385fa53df8156b6b598a63e8ae9022f15c189fdf76f645b",
+          "bytes": 3567360,
+          "elf": "ELF 64-bit LSB pie executable, ARM aarch64, version 1 (GNU/Linux), dynamically linked, interpreter /lib/ld-linux-aarch64.so.1, BuildID[sha1]=6696144f3b0ee5c43e86819f32d737b43f3f5581, for GNU/Linux 3.7.0, not stripped"
+        },
+        "core_test": {
+          "sha256": "125366ef7164dd85d7c9109ee86f0e3f4f40107690781e3172630bf7771da85d",
+          "bytes": 3660904,
+          "elf": "ELF 64-bit LSB pie executable, ARM aarch64, version 1 (GNU/Linux), dynamically linked, interpreter /lib/ld-linux-aarch64.so.1, BuildID[sha1]=0489dfc2b38e5384b160e4cfe76a3d864bbab4bb, for GNU/Linux 3.7.0, not stripped"
+        }
+      },
+      "checks": {
+        "runtime_version": "guard-runtime 1 (native C++17, DM multipath >=1.15, LP64 Linux)",
+        "admission_test": "37 admission checks passed",
+        "controller_test": "13 controller checks passed",
+        "canonical_json_cases": 5
+      }
+    },
+    "riscv64": {
+      "passed": true,
+      "compiler": "riscv64-linux-gnu-g++-13 (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0",
+      "flags": [
+        "--sysroot=${TOOLS}/root",
+        "-std=c++17",
+        "-O2",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-pedantic",
+        "-pthread",
+        "-I${REPO}/guard/native/vendor",
+        "-I${TOOLS}/riscv64/usr/include",
+        "-I${TOOLS}/riscv64/usr/include/riscv64-linux-gnu"
+      ],
+      "libraries": [
+        "-static-libstdc++",
+        "-static-libgcc",
+        "-L${TOOLS}/riscv64/usr/lib/riscv64-linux-gnu",
+        "-lcrypto",
+        "-ldl",
+        "-pthread"
+      ],
+      "binaries": {
+        "guard-runtime": {
+          "sha256": "4b2a6a087b063c632244147ac0e04a842d5499950bfd9cbfb10106c4b46da7ea",
+          "bytes": 3627344,
+          "elf": "ELF 64-bit LSB pie executable, UCB RISC-V, RVC, double-float ABI, version 1 (GNU/Linux), dynamically linked, interpreter /lib/ld-linux-riscv64-lp64d.so.1, BuildID[sha1]=77570aab478b176ac01eb956d982a243e17c9d0c, for GNU/Linux 4.15.0, not stripped"
+        },
+        "admission_test": {
+          "sha256": "d5302b70549f2e3c26ec6acbc76fe9dc60e7bd1f588f34a8e9c3b567ec3ee202",
+          "bytes": 3744944,
+          "elf": "ELF 64-bit LSB pie executable, UCB RISC-V, RVC, double-float ABI, version 1 (GNU/Linux), dynamically linked, interpreter /lib/ld-linux-riscv64-lp64d.so.1, BuildID[sha1]=31f4ccad8b412f1a21997e3fb935b49070c29822, for GNU/Linux 4.15.0, not stripped"
+        },
+        "controller_test": {
+          "sha256": "025b2ffb2715b4a5aec99b7115ad0c1ee236caf6b6665510f6d7f88f804f11ef",
+          "bytes": 3650424,
+          "elf": "ELF 64-bit LSB pie executable, UCB RISC-V, RVC, double-float ABI, version 1 (GNU/Linux), dynamically linked, interpreter /lib/ld-linux-riscv64-lp64d.so.1, BuildID[sha1]=efe0814793d6e2b1baa9b2ec2f85b8d9c3299f71, for GNU/Linux 4.15.0, not stripped"
+        },
+        "core_test": {
+          "sha256": "e1fc2e5c2f7811790104792f6fcf113145192f00aea49c8d39668dec30db243d",
+          "bytes": 3709304,
+          "elf": "ELF 64-bit LSB pie executable, UCB RISC-V, RVC, double-float ABI, version 1 (GNU/Linux), dynamically linked, interpreter /lib/ld-linux-riscv64-lp64d.so.1, BuildID[sha1]=db5c3cf3864fc994bff2c0ed473dad0d87670294, for GNU/Linux 4.15.0, not stripped"
+        }
+      },
+      "checks": {
+        "runtime_version": "guard-runtime 1 (native C++17, DM multipath >=1.15, LP64 Linux)",
+        "admission_test": "37 admission checks passed",
+        "controller_test": "13 controller checks passed",
+        "canonical_json_cases": 5
+      }
+    }
+  },
+  "source_unchanged": true,
+  "raw_report_sha256": "f5cc985cde666b7e5b793e91bd7ab4614f7e38d0e3c5ea0ad1154a6b7ab68593",
+  "tool_packages": [
+    {
+      "Package": "libssl-dev",
+      "Version": "3.0.13-0ubuntu3.16",
+      "Architecture": "arm64",
+      "Filename": "pool/main/o/openssl/libssl-dev_3.0.13-0ubuntu3.16_arm64.deb",
+      "SHA256": "a5026a035b9461fa9783e26a027f8c91bad7606ef0eeb7250382a532308bf61d"
+    },
+    {
+      "Package": "libssl-dev",
+      "Version": "3.0.13-0ubuntu3.16",
+      "Architecture": "riscv64",
+      "Filename": "pool/main/o/openssl/libssl-dev_3.0.13-0ubuntu3.16_riscv64.deb",
+      "SHA256": "93baeebb2e8a4d8393d98e8c0138baff7bbbe89c9fe5f8a60d4e433a2bb143d0"
+    }
+  ]
+}

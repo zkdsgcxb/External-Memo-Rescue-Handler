@@ -1,0 +1,2 @@
+# Preserve the pinned upstream license byte for byte, including its first line.
+guard/native/vendor/LICENSE.nlohmann-json -whitespace

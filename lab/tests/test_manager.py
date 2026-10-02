@@ -87,6 +87,10 @@ class ManagerTests(unittest.TestCase):
         self.assertNotIn('SYSTEMD_WANTS', raw)
         self.assertNotIn('BindsTo=', manager.render_controller())
         self.assertNotIn('Restart=always', manager.render_controller())
+        self.assertIn('ExecStart=/opt/manager/maintain --record ', manager.render_controller())
+        self.assertIn('ExecStopPost=/opt/manager/maintain --record ', manager.render_controller())
+        self.assertNotIn('/opt/manager/guard-runtime', manager.render_controller())
+        self.assertNotIn('/usr/bin/python3 /opt/manager', manager.render_controller())
         self.assertNotIn('RUN+=', rules)
 
     def test_root_registration_recognizes_existing_owner_without_new_service(self):

@@ -49,7 +49,7 @@ mount --bind /sys "$TOOLS/sys"
 mount --bind /run "$TOOLS/run"
 modprobe dm_multipath
 modprobe dm_round_robin
-chroot "$TOOLS" /usr/bin/python3 /opt/guard/boot.py --config /etc/rescue/enrollment.json
+chroot "$TOOLS" /opt/guard-runtime/guard-runtime activate --config /etc/rescue/enrollment.json
 [ -s "$RUN/config.json" ]
 cat /proc/sys/kernel/random/boot_id > "$RUN/boot-ready"
 chmod 600 "$RUN/boot-ready"

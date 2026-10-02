@@ -2,7 +2,9 @@
 
 **统一后台入口：** 已有根盘保护和登记的数据映射统一查看与维护，无需选择根盘／普通设备模式。数据映射出现时由 systemd 自动启动恢复实例；没有新增定时扫盘总管。安装、登记及“映射必须预先建立”的边界见 [`guard/MANAGER.md`](guard/MANAGER.md)。
 
-**最新 QEMU 验收：** 根盘与两块普通数据盘同时断联、原挂载与 bind 子挂载继续读写、十轮连续恢复、CPU/内存对照和配额实验见 [本轮优化报告](research/2026-10-01/OVERNIGHT-OPTIMIZATION.md)。本轮增加 [原生 systemd 挂载计划](guard/MOUNTS.md)、[x86-64 / ARM64 / RISC-V64 分层兼容验证](guard/ARCHITECTURES.md) 和 [可选 C++ 只读观察器](guard/native/README.md)。这些源码更新已在隔离环境验证，尚未替换本机运行包；C++ 原型尚不承担完整恢复。
+**C++ 迁移与资源比较：** 新版启动准备、后台监视、身份核验、换表、内核路径探测及死亡接管均由 [完整 C++17 运行时](guard/native/README.md) 执行。Python 保留为管理/实验工具和明确选择的行为对照。根盘与两块数据盘共同恢复、子挂载与已打开 FD、十轮恢复、事务死亡矩阵和资源对照见 [迁移报告](research/2026-10-02/CPP-MIGRATION.md)。本轮只在 QEMU 验证，尚未替换本机运行包。
+
+此前的 [Python 优化与配额实验](research/2026-10-01/OVERNIGHT-OPTIMIZATION.md)、[原生 systemd 挂载计划](guard/MOUNTS.md)、[分层架构验证](guard/ARCHITECTURES.md) 和 [只读 C++ 观察器](guard/native/OBSERVER.md) 保留为历史证据。观察器数据不等于完整恢复运行时的资源占用。
 
 针对本机 USB 外置根盘故障的 RAM 救援终端原型，实现在 [`ram-rescue-demo/`](ram-rescue-demo/README.md)。源码与开发数据放在 shared 卷的本项目目录；安装后的系统运行包位于 Ubuntu 的 `/usr/local/lib/ram-rescue-demo`，运行时工具位于 `/run/ram-rescue-demo` 的 RAM 文件系统。
 
@@ -30,7 +32,7 @@
 
 - 正常启动并准备服务后，提供 F9/F10 两个独立密码登录入口、RAM 工具环境与内核日志收集。
 - 核验预先登记的 USB 设备、分区、PV/VG 身份；人工确认后，只尝试刷新已激活的 `ubuntu` 或 `shared` 线性 LV 映射。
-- 当前构建器绑定本机设备和 Python 3.12/x86_64 工具布局，不是任意磁盘的通用恢复工具。更换设备需要审查登记逻辑。
+- 早期手动救援包构建器绑定本机设备和 Python 3.12/x86_64 工具布局；新的 C++ 核心另有 ARM64/RISC-V 用户态验证，但不等于这些平台的完整安装与故障验收。更换设备仍需核验登记逻辑。
 - 与宿主共用内核，不能覆盖启动早期故障、kernel panic、全局死锁；内核 I/O 阻塞可能让命令无法及时退出。
 - 映射恢复不代表文件系统、失败写入或应用恢复；手动救援 helper 不负责自动 fsck、重挂载、USB 重置或网络登录。EFI 的独立原生检查/重挂配置见 [`guard/EFI.md`](guard/EFI.md)。
 - 登录后是 root shell，helper 的操作限制不是安全沙箱；人工命令仍能访问宿主设备。

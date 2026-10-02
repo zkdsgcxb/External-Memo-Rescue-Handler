@@ -144,7 +144,8 @@ def compact_report(path, report, content):
                                         'max_write_and_direct_read_seconds'))
     return {
         'source_report': {'path': display_path(path), 'sha256': digest(content)},
-        **select(report, ('variant', 'baseline_ref', 'quota_percent', 'passed', 'scope',
+        **select(report, ('variant', 'implementation', 'scenario', 'experiment_manifest',
+                          'baseline_ref', 'quota_percent', 'passed', 'scope',
                           'initrd_sha256', 'source_sha256', 'source_image_sha256_before',
                           'source_image_unchanged', 'sources_unchanged', 'runtime_payload_sha256',
                           'runtime_before', 'runtime_after', 'healthy_warmup_seconds',
@@ -234,7 +235,8 @@ def plot_recovery(loaded, output):
         cpu = [(total[i] - total[i - 5]) / (clock[i] - clock[i - 5]) / 10000 for i in range(5, len(clock))]
         memory = [sum(sample['groups'][name]['memory_bytes'] for name in ('root', 'data_slice')) / 1024**2
                   for sample in samples]
-        label = f"{report['variant']} | {report['quota_percent']}% per root / data-slice budget"
+        implementation = report.get('implementation', report['variant'])
+        label = f"{implementation} | {report['quota_percent']}% per root / data-slice budget"
         axes[row, 0].plot(clock[5:], cpu, color='#2166ac', linewidth=1.3)
         axes[row, 1].plot(clock, memory, color='#27814d', linewidth=1.3)
         for column in range(2):

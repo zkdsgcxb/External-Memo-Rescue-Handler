@@ -20,6 +20,7 @@ BASE = Path(__file__).resolve().parent
 sys.path[:0] = [str(BASE / 'runtime'), str(BASE.parent / 'ram-rescue-demo/src')]
 
 from host_files import atomic
+from native_payload import verify_runtime
 
 RAM = Path('/run/ram-rescue-demo')
 STATE = Path('/run/ram-rescue-data')
@@ -125,7 +126,13 @@ def slice_unit():
 
 def service_unit(name, runtime):
     config = STATE / map_name(name) / 'config.json'
-    program = Path('/') / runtime.relative_to(RAM) / 'path_guard.py'
+    directory = Path('/') / runtime.relative_to(RAM)
+    if (runtime / 'guard-runtime').is_file():
+        start = f'{directory}/guard-runtime run --config {config}'
+        stop = f'{directory}/guard-runtime takeover --config {config}'
+    else:
+        start = f'/usr/bin/python3 {directory}/path_guard.py --config {config}'
+        stop = start + ' --takeover'
     return (f'[Unit]\nDescription=Temporary aftercare for {name}\n'
             'After=ram-rescue-guard.service systemd-udevd.service\n'
             'Before=shutdown.target\nConflicts=shutdown.target\n'
@@ -133,16 +140,22 @@ def service_unit(name, runtime):
             f'[Service]\nType=notify\nNotifyAccess=main\nSlice={SLICE}\n'
             f'RootDirectory={RAM}\nWorkingDirectory=/\n'
             'Environment=PYTHONDONTWRITEBYTECODE=1\n'
-            f'ExecStart=/usr/bin/python3 {program} --config {config}\n'
-            f'ExecStopPost=/usr/bin/python3 {program} --config {config} --takeover\n'
+            f'ExecStart={start}\n'
+            f'ExecStopPost={stop}\n'
             'Restart=no\nTimeoutStartSec=30\nTimeoutStopSec=15\n'
             'MemoryAccounting=yes\nMemoryMax=128M\nMemorySwapMax=0\n'
             'StandardOutput=journal\nStandardError=journal\n')
 
 
 def stage_runtime():
+    # Native code and its loader/libraries are already in the protected boot
+    # tmpfs. Reuse that verified immutable version for every enrolled map.
+    native = verify_runtime(RAM)
+    if native is not None:
+        return native.parent
     sources = {source.name: source.read_bytes() for source in sorted((BASE / 'runtime').glob('*.py'))}
     sources['rescue.py'] = (BASE.parent / 'ram-rescue-demo/src/rescue.py').read_bytes()
+    sources['maintain'] = b'#!/bin/sh\nexec /usr/bin/python3 /opt/manager/maintain.py "$@"\n'
     checksum = hashlib.sha256()
     for name, data in sorted(sources.items()):
         checksum.update(name.encode() + b'\0' + data + b'\0')
@@ -150,7 +163,8 @@ def stage_runtime():
 
     def verify_existing():
         if (runtime.is_symlink() or {path.name for path in runtime.iterdir()} != set(sources)
-                or any((runtime / name).read_bytes() != data for name, data in sources.items())):
+                or any((runtime / name).read_bytes() != data for name, data in sources.items())
+                or not (runtime / 'maintain').stat().st_mode & 0o111):
             raise RuntimeError('Existing versioned RAM runtime has changed')
 
     if runtime.exists():
@@ -161,7 +175,7 @@ def stage_runtime():
     temporary.mkdir(mode=0o700)
     try:
         for name, data in sources.items():
-            atomic(temporary / name, data, mode=0o444)
+            atomic(temporary / name, data, mode=0o755 if name == 'maintain' else 0o444)
         try:
             temporary.rename(runtime)
         except OSError as exc:
