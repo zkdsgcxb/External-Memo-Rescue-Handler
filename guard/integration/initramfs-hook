@@ -12,7 +12,11 @@ SOURCE="${CONFDIR}/ram-rescue-guard"
 TEMPLATES="$SOURCE/integration"
 PAYLOAD="$DESTDIR/opt/ram-rescue-guard"
 mkdir -p "$PAYLOAD" "$DESTDIR/etc/ram-rescue-guard" \
-    "$DESTDIR/etc/lvm" "$DESTDIR/etc/udev/rules.d"
+    "$DESTDIR/etc/lvm" "$DESTDIR/etc/udev/rules.d" "$DESTDIR/conf/conf.d"
+# Cover Ubuntu's own mountroot/fsck failures as well as our fail_closed path.
+# This default belongs only to the dedicated image; trusted command-line
+# overrides still follow initramfs-tools policy. No password enters the image.
+cp "$TEMPLATES/boot-policy.conf" "$DESTDIR/conf/conf.d/ram-rescue-guard"
 cp "$SOURCE/tools.tar.gz" "$PAYLOAD/tools.tar.gz"
 (cd "$PAYLOAD" && sha256sum tools.tar.gz > tools.tar.gz.sha256)
 for item in ram-rescue-guard.service manual-rescue-guard.conf \
@@ -31,11 +35,19 @@ copy_exec /usr/sbin/chroot /sbin/chroot
 copy_exec /usr/bin/sha256sum /bin/sha256sum
 copy_exec /usr/bin/tar /bin/tar
 copy_exec /usr/bin/gzip /bin/gzip
+# Ubuntu's reduced initramfs BusyBox omits halt. The full static BusyBox
+# selects that applet through argv[0], avoiding a systemctl dependency.
+if ! /usr/bin/busybox --list | grep -qx halt; then
+    echo 'The full BusyBox must provide halt for protected boot failures.' >&2
+    exit 1
+fi
+copy_exec /usr/bin/busybox /sbin/halt
 # Ubuntu's initramfs BusyBox is smaller than /usr/bin/busybox. Check the
 # remaining tools against this actual staged image, not the host's applets.
 for executable in /bin/sh /bin/cat /bin/chmod /bin/cp /bin/ln /bin/mkdir \
                   /bin/sleep /sbin/modprobe /bin/mount /bin/mountpoint \
-                  /sbin/chroot /bin/sha256sum /bin/tar /bin/gzip /sbin/dmsetup; do
+                  /sbin/chroot /bin/sha256sum /bin/tar /bin/gzip /sbin/dmsetup \
+                  /sbin/halt; do
     if [ ! -x "$DESTDIR$executable" ]; then
         echo "Missing protected-boot executable: $executable" >&2
         exit 1

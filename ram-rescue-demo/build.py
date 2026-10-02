@@ -10,6 +10,8 @@ import subprocess
 import sys
 import tarfile
 
+from session_payload import stage_session
+
 BASE = Path(__file__).resolve().parent
 ROOT = BASE / "work/rootfs"
 
@@ -101,8 +103,7 @@ def main():
         (ROOT / path).mkdir(parents=True, exist_ok=True)
     (ROOT / "tmp").chmod(0o1777)
     copy_file(BASE / "src/rescue.py", "/sbin/rescue")
-    copy_file(BASE / "src/supervisor.sh", "/sbin/rescue-supervisor")
-    copy_file(BASE / "src/session.sh", "/bin/rescue-session")
+    session = stage_session(ROOT)
     copy_file(BASE / "src/kernel_log.py", "/sbin/rescue-kernel-log")
     for p in ["sbin/rescue", "sbin/rescue-supervisor", "bin/rescue-session"]:
         (ROOT / p).chmod(0o755)
@@ -136,7 +137,8 @@ def main():
     size = sum(p.stat().st_size for p in ROOT.rglob("*") if p.is_file() and not p.is_symlink())
     manifest = {"uncompressed_file_bytes": size, "archive_bytes": archive.stat().st_size,
                 "sha256": digest, "kernel_built_on": os.uname().release,
-                "identity": enroll(), "runtime_tmpfs_limit_mib": 256, "slice_memory_limit_mib": 768}
+                "identity": enroll(), "runtime_tmpfs_limit_mib": 256, "slice_memory_limit_mib": 768,
+                "rescue_session": session}
     (BASE / "manifest.json").write_text(json.dumps(manifest, indent=2) + "\n")
     print(json.dumps({k: v for k, v in manifest.items() if k != "identity"}, indent=2))
 

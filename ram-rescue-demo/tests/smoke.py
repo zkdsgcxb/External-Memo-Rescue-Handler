@@ -15,6 +15,7 @@ import tarfile
 import tempfile
 import termios
 import time
+import traceback
 
 BASE = Path(__file__).resolve().parents[1]
 
@@ -26,13 +27,17 @@ def run(args, **kw):
     return result
 
 
-def login_test(root, password, correct):
+def login_test(root, password, correct, *, invalid_hash=False):
     pid, fd = pty.fork()
     if pid == 0:
-        os.chroot(root)
-        os.chdir('/')
-        os.execve('/bin/busybox', ['busybox', 'login', 'rescue'],
-                  {'PATH': '/bin:/sbin:/usr/bin', 'TERM': 'linux', 'LOGIN_TIMEOUT': '12'})
+        try:
+            os.chroot(root)
+            os.chdir('/')
+            os.execve('/bin/busybox', ['busybox', 'login', 'rescue'],
+                      {'PATH': '/bin:/sbin:/usr/bin', 'TERM': 'linux', 'LOGIN_TIMEOUT': '12'})
+        except BaseException:
+            traceback.print_exc()
+        os._exit(127)
     output = b''
     sent = marker = False
     deadline = time.monotonic() + 15
@@ -52,12 +57,70 @@ def login_test(root, password, correct):
                 sent = True
             if not correct and b'Login incorrect' in output:
                 return 'wrong password rejected'
+            if not correct and invalid_hash and b'login: bad salt' in output:
+                # This BusyBox build exits for a locked/missing shadow hash.
+                # Only fixtures deliberately using such a hash accept this
+                # diagnostic; wrong-password tests still require normal denial.
+                return 'locked or unavailable password hash refused'
             if correct and (b'# ' in output or b'~ #' in output) and not marker:
                 os.write(fd, b'echo RAM_AUTH_OK; exit\n')
                 marker = True
             if correct and b'\r\nRAM_AUTH_OK\r\n' in output:
                 return 'correct password authenticated'
         raise RuntimeError('Login smoke test failed: ' + output.decode(errors='replace')[-1000:])
+    finally:
+        try: os.killpg(pid, signal.SIGKILL)
+        except ProcessLookupError: pass
+        os.close(fd)
+        try: os.waitpid(pid, 0)
+        except ChildProcessError: pass
+
+
+def supervisor_test(root, password, *, idle=False):
+    """A real login must return to authentication after exit or idle timeout."""
+    pid, fd = pty.fork()
+    if pid == 0:
+        try:
+            os.chroot(root)
+            os.chdir('/')
+            os.execve('/bin/busybox', ['busybox', 'sh', '/sbin/rescue-supervisor'],
+                      {'PATH': '/bin:/sbin:/usr/bin', 'TERM': 'linux'})
+        except BaseException:
+            traceback.print_exc()
+        os._exit(127)
+    output = pending = b''
+    stage = 0
+    deadline = time.monotonic() + 18
+    try:
+        while time.monotonic() < deadline:
+            if not select.select([fd], [], [], 0.1)[0]:
+                continue
+            try:
+                chunk = os.read(fd, 65536)
+            except OSError:
+                break
+            if not chunk:
+                break
+            output += chunk
+            pending += chunk
+            if stage == 0 and b'login:' in pending:
+                os.write(fd, b'rescue\n')
+                stage, pending = 1, b''
+            elif stage == 1 and b'Password:' in pending:
+                os.write(fd, (password + '\n').encode())
+                stage, pending = 2, b''
+            elif stage == 2 and b'RAM-RESCUE# ' in pending:
+                if not idle:
+                    os.write(fd, b'exit\n')
+                stage, pending = 3, b''
+            elif stage == 3 and b'login:' in pending:
+                if idle and b'auto-logout' not in pending:
+                    raise RuntimeError('Session returned without evidence of its idle timeout')
+                os.write(fd, b'rescue\n')
+                stage, pending = 4, b''
+            elif stage == 4 and b'Password:' in pending:
+                return ('idle exit' if idle else 'explicit exit') + ' requires authentication again'
+        raise RuntimeError('Supervisor smoke test failed: ' + output.decode(errors='replace')[-1000:])
     finally:
         try: os.killpg(pid, signal.SIGKILL)
         except ProcessLookupError: pass
@@ -124,12 +187,15 @@ def main():
         secret = 'Test-only-ram-rescue-12345'
         hashed = run(['busybox', 'mkpasswd', '-m', 'sha512', '-P', '0'], input=secret + '\n').stdout.strip()
         (root / 'etc/shadow').write_text('root:!:20000:0:99999:7:::\nrescue:' + hashed + ':20000:0:99999:7:::\n')
-        (root / 'etc/passwd').write_text('root:x:0:0:root:/root:/bin/sh\nrescue:x:0:0:rescue:/root:/bin/sh\n')
+        (root / 'etc/passwd').write_text('root:x:0:0:root:/root:/bin/sh\nrescue:x:0:0:rescue:/root:/bin/rescue-session\n')
         # No securetty restrictions in the DISPOSABLE PTY test image.
         (root / 'etc/securetty').unlink()
         results.append('PASS: ' + login_test(str(root), 'wrong-test-password', False))
         if args.privileged:
             results.append('PASS: ' + login_test(str(root), secret, True))
+            (root / 'etc/rescue/session.conf').write_text('IDLE_TIMEOUT=2\n')
+            results.append('PASS: ' + supervisor_test(str(root), secret))
+            results.append('PASS: ' + supervisor_test(str(root), secret, idle=True))
         else:
             results.append('PENDING: successful login requires real root for setgroups; installer tests it.')
         print('\n'.join(results))

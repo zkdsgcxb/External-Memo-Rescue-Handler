@@ -1,0 +1,82 @@
+{
+  "schema": 1,
+  "captured_at": "2026-10-03T03:38:41+0800",
+  "scenario": "host-cpp-first-protected-boot",
+  "kernel_release": "7.0.0-34-generic",
+  "binary_sha256": "72d9d550079b4f73e1954e13f99fa614826758c623eec1d3026aa22bc891b21f",
+  "protected_initrd_sha256": "8d1fe2eefcc911cbe77370024492c33166358d5661a707460e4ea8fe3790b232",
+  "checks": {
+    "native_elf_matches_deployment": true,
+    "guard_active": true,
+    "boot_ready_matches_boot_id": true,
+    "transaction_owner_matches_service": true,
+    "transaction_epoch_matches_state": true,
+    "state_ready": true,
+    "protected_volumes_follow_stable_dm": true,
+    "rescue_services_active": true
+  },
+  "boot_checks_passed": true,
+  "units": {
+    "ram-rescue-guard.service": {
+      "ActiveState": "active",
+      "SubState": "running",
+      "Result": "success",
+      "MainPID": "682",
+      "same_ram_root": true
+    },
+    "ram-rescue-prepare.service": {
+      "ActiveState": "active",
+      "SubState": "exited",
+      "Result": "success",
+      "MainPID": "0",
+      "same_ram_root": null
+    },
+    "ram-rescue@tty9.service": {
+      "ActiveState": "active",
+      "SubState": "running",
+      "Result": "success",
+      "MainPID": "1498",
+      "same_ram_root": true
+    },
+    "ram-rescue@tty10.service": {
+      "ActiveState": "active",
+      "SubState": "running",
+      "Result": "success",
+      "MainPID": "1496",
+      "same_ram_root": true
+    },
+    "ram-rescue-log.service": {
+      "ActiveState": "active",
+      "SubState": "running",
+      "Result": "success",
+      "MainPID": "1494",
+      "same_ram_root": true
+    },
+    "ram-rescue-manager.service": {
+      "ActiveState": "active",
+      "SubState": "exited",
+      "Result": "success",
+      "MainPID": "0",
+      "same_ram_root": null
+    },
+    "ram-rescue-efi.path": {
+      "ActiveState": "active",
+      "SubState": "running",
+      "Result": "success",
+      "MainPID": null,
+      "same_ram_root": null
+    }
+  },
+  "initial_recoveries": 0,
+  "guard_pss_kib_snapshot": 8026,
+  "dm_status": "ram-rescue-path: 0 1954336768 multipath 2 0 0 0 1 1 A 0 1 0 8:3 A 0 \nvgportable-shared: 0 629145600 linear \nvgportable-ubuntu: 0 335544320 linear \n",
+  "ram_log_bytes": {
+    "kernel-live.log": 103409
+  },
+  "user_observation": "Desktop, sound and common applications reported normal.",
+  "limitations": [
+    "No physical disconnect, sleep/wake, shutdown or console password test was performed in this audit.",
+    "blk_rq_set_mixed_merge WARNING remains unresolved; basic boot checks are not a clean-kernel acceptance.",
+    "PSS is one live root Guard snapshot; not a peak and not comparable to the prior three-instance VM total."
+  ]
+}

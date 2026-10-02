@@ -20,6 +20,14 @@ def run(*args, **kw):
     return subprocess.run(args, check=True, **kw)
 
 
+def valid_new_password(password):
+    """Project policy for first enrollment only; authentication stays in login."""
+    # NUL terminates mkpasswd input, and login has a finite input buffer.
+    # Keep accepted credentials printable and well below the login byte limit.
+    return (len(password) >= 15 and password.isprintable()
+            and len(password.encode('utf-8')) <= 1024)
+
+
 def main():
     if os.geteuid() != 0:
         sys.exit('Run with sudo: sudo python3 ' + str(BASE / 'install.py'))
@@ -47,11 +55,11 @@ def main():
     print('安装两个独立救援终端：Ctrl+Alt+F9 / Ctrl+Alt+F10。')
     print('用户名 rescue。请设置独立救援密码；不使用或修改 Ubuntu 登录密码。')
     while True:
-        password = getpass.getpass('救援密码（不能为空）：')
+        password = getpass.getpass('救援密码（至少 15 个字符，可用含空格的长口令）：')
         again = getpass.getpass('再次输入：')
-        if password == again and password and '\n' not in password:
+        if password == again and valid_new_password(password):
             break
-        print('密码不一致、为空或包含换行，请重试。')
+        print('密码须一致、至少 15 个可打印字符且 UTF-8 不超过 1024 字节；不能含控制字符，请重试。')
     hashed = subprocess.check_output(['/usr/bin/busybox', 'mkpasswd', '-m', 'sha512', '-P', '0'],
                                      input=password + '\n', text=True).strip()
     del password, again

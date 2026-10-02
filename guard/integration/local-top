@@ -11,16 +11,19 @@ RUN=/run/ram-rescue-guard
 TOOLS=/run/ram-rescue-demo
 
 fail_closed() {
-    trap - EXIT HUP INT TERM
+    trap - EXIT
+    trap '' HUP INT QUIT TERM
     set +eu
-    # Returning nonzero from an initramfs script does not stop /init. Exiting
-    # the rescue shell must not silently continue to an unprotected root.
-    while :; do
+    # Ubuntu's panic=0 policy halts without opening a shell. Keep its exit in
+    # a child: returning from this script would let /init continue unprotected
+    # if halt fails. No password database is available at this early stage.
+    (
+        panic=0
         panic "RAM Guard protected boot stopped: $*; use the normal GRUB entry to return."
-        sleep 1
-    done
+    )
+    while :; do sleep 60; done
 }
-trap 'fail_closed "early setup failed"' EXIT HUP INT TERM
+trap 'fail_closed "early setup failed"' EXIT HUP INT QUIT TERM
 
 case " $(cat /proc/cmdline) " in
     *" ram_rescue_guard=1 "*) ;;
@@ -53,4 +56,4 @@ chroot "$TOOLS" /opt/guard-runtime/guard-runtime activate --config /etc/rescue/e
 [ -s "$RUN/config.json" ]
 cat /proc/sys/kernel/random/boot_id > "$RUN/boot-ready"
 chmod 600 "$RUN/boot-ready"
-trap - EXIT HUP INT TERM
+trap - EXIT HUP INT QUIT TERM

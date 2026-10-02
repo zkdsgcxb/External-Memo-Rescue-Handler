@@ -76,11 +76,15 @@ class ProductionIntegrationProbe(CppExperimentProbe):
     def mount_registered(self):
         result = super().mount_registered()
         result['production_integration'] = self.integration_integrity()
+        import rescue_session_probe
+        result['rescue_sessions'] = rescue_session_probe.run()
         return result
 
     def logs(self):
         result = super().logs()
         result['production_integration'] = self.integration_integrity()
+        import rescue_session_probe
+        result['rescue_sessions'] = rescue_session_probe.run()
         return result
 
 UnifiedProbe = ProductionIntegrationProbe
@@ -151,9 +155,10 @@ def create_initrd(folder, original, enrollment, binary):
         (BASE / 'guest/mount_probe.py').read_text(), 'SelectedProbe = MountProbe',
         cpp.GUEST.read_text(), GUEST,
     ]) + '\n')
-    # Only the observer shell and matching autofs module are added by this
-    # hook. Controller commands come entirely from production unit templates.
+    # Observer-only authentication tests and the matching autofs module are
+    # added here. Controller commands still use production unit templates.
     hook = ('\ncp /opt/cpp-experiment.json "$TOOLS/opt/vmprobe/cpp-experiment.json"\n'
+            'cp /opt/rescue-session-test/*.py "$TOOLS/opt/vmprobe/"\n'
             'insmod /opt/cpp-autofs.ko\n')
     observer, observer_revision = cpp.frozen_python(folder)
     with cpp.compose_sources(observer, combined, hook, manager=REPO):
@@ -162,6 +167,10 @@ def create_initrd(folder, original, enrollment, binary):
     overlay = folder / 'production-overlay'
     archive_directory = overlay / 'opt/ram-rescue-guard'
     archive_directory.mkdir(parents=True)
+    authentication = overlay / 'opt/rescue-session-test'
+    authentication.mkdir()
+    shutil.copyfile(BASE / 'guest/rescue_session_probe.py', authentication / 'rescue_session_probe.py')
+    shutil.copyfile(REPO / 'ram-rescue-demo/tests/smoke.py', authentication / 'rescue_session_smoke.py')
     profile = json.loads(enrollment.read_text())
     payload = folder / 'production-payload'
     base_checksum = production_build.payload(profile, payload, native_binary=binary)
@@ -192,6 +201,7 @@ def create_initrd(folder, original, enrollment, binary):
         'implementation': 'cpp', 'integration': 'current-production',
         'python_observer_revision': observer_revision,
         'binary_sha256': cpp.boot.sha256(binary), 'native_manifest': native_manifest,
+        'rescue_session': json.loads((payload / 'etc/rescue/session-build.json').read_text()),
         'runtime_payload_sha256': {'guard-runtime': cpp.boot.sha256(binary)},
         'base_rescue_payload_sha256': base_checksum, 'tools_archive_sha256': checksum,
         'template_sha256': {path.name: cpp.boot.sha256(path) for path in sorted(templates.iterdir()) if path.is_file()},
@@ -213,6 +223,8 @@ def source_hashes(binary):
     sources = cpp.source_hashes(binary, 'cpp')
     sources.update({str(path.relative_to(REPO)): cpp.boot.sha256(path) for path in [
         Path(__file__).resolve(), REPO / 'ram-rescue-demo/src/rescue.py',
+        BASE / 'guest/rescue_session_probe.py', REPO / 'ram-rescue-demo/tests/smoke.py',
+        REPO / 'ram-rescue-demo/build.py', *production_build.session_builder().SOURCES,
         *sorted((REPO / 'guard').glob('*.py')), *sorted((REPO / 'guard/admin').glob('*.py')),
         *sorted(path for path in (REPO / 'guard/integration').rglob('*') if path.is_file()),
     ]})
@@ -260,6 +272,11 @@ def main():
                 report['mounted']['production_integration']['actual_controllers']['controllers']) == 3
             report['checks']['no_controller_command_overrides'] = not any(
                 report['mounted']['production_integration']['unit_dropins'].values())
+            for stage, value in [('before_recovery', report['mounted']),
+                                 ('after_recovery', report['logs'])]:
+                auth = value['rescue_sessions']
+                report['checks']['rescue_sessions_' + stage] = auth['passed']
+                report['checks']['rescue_session_fixture_removed_' + stage] = auth['temporary_root_removed']
             report['passed'] = all(report['checks'].values())
         except BaseException:
             report['error'] = traceback.format_exc()

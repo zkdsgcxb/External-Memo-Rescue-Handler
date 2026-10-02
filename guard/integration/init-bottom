@@ -11,14 +11,18 @@ RUN=/run/ram-rescue-guard
 TEMPLATES=/etc/ram-rescue-guard
 
 fail_closed() {
-    trap - EXIT HUP INT TERM
+    trap - EXIT
+    trap '' HUP INT QUIT TERM
     set +eu
-    while :; do
+    # Halt without an unauthenticated shell. panic may exit even if halt
+    # fails; the parent must stay blocked instead of returning to /init.
+    (
+        panic=0
         panic "RAM Guard protected boot stopped: $*; use the normal GRUB entry to return."
-        sleep 1
-    done
+    )
+    while :; do sleep 60; done
 }
-trap 'fail_closed "root handoff failed"' EXIT HUP INT TERM
+trap 'fail_closed "root handoff failed"' EXIT HUP INT QUIT TERM
 
 [ -s "$RUN/config.json" ]
 [ "$(cat "$RUN/boot-ready")" = "$(cat /proc/sys/kernel/random/boot_id)" ]
@@ -39,4 +43,4 @@ cp "$TEMPLATES/manual-rescue-guard.conf" \
     /run/systemd/system/ram-rescue-prepare.service.d/ram-rescue-guard.conf
 ln -s ../ram-rescue-guard.service \
     /run/systemd/system/sysinit.target.requires/ram-rescue-guard.service
-trap - EXIT HUP INT TERM
+trap - EXIT HUP INT QUIT TERM

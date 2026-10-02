@@ -1,6 +1,6 @@
 # USB 根盘断联实验室
 
-当前自动恢复运行时只有 C++。完整 Ubuntu 的挂载、连续恢复、性能对照、事务与打包验收使用 `cpp_guard_probe.py`、`cpp_transaction_probe.py`、`cpp_integration_probe.py`；它们核对虚拟机实际运行的原生 ELF。较早的最小 guest、Python 控制器和研究 runner 已归入[历史实验复现](#历史实验复现)，不再从生产代码打包 Python 运行时。
+当前自动恢复运行时只有 C++。完整 Ubuntu 的挂载、连续恢复、性能对照、事务与打包验收使用 `cpp_guard_probe.py`、`cpp_transaction_probe.py`、`cpp_integration_probe.py`；它们核对虚拟机实际运行的原生 ELF。`boot_failure_probe.py` 验证候选保护镜像失败即停止，完整集成同时验证真实救援认证与会话退出。较早的最小 guest、Python 控制器和研究 runner 已归入[历史实验复现](#历史实验复现)，不再从生产代码打包 Python 运行时。
 
 用 QEMU/KVM 反复制造 USB 断开、重接和设备重新枚举，验证 **RAM 救援入口保活 → 身份核验 → LVM 映射恢复 → 文件系统与应用结果**。默认使用 UAS，也支持普通 USB Mass Storage（BOT）。
 
@@ -49,6 +49,28 @@ python3 lab/cpp_integration_probe.py
 ```
 
 原生验收与性能对照见 [完整 C++ 报告](../research/2026-10-02/CPP-MIGRATION.md)，清退后的重新检查见 [Python 运行时清退](../research/2026-10-02/PYTHON-RUNTIME-RETIREMENT.md)。较早的 Python 优化数据保留在 [历史优化验收](../research/2026-10-01/OVERNIGHT-OPTIMIZATION.md)；跨指令集验证见 [架构说明](../guard/ARCHITECTURES.md)。
+
+## P0 启动失败与救援认证验收
+
+2026-10-03 候选通过启动失败矩阵 **7/7**、完整 Ubuntu 集成 **36/36**；故障前后分别完成 6 项真实认证检查，离线 ext4/FAT 检查返回 0。见 [P0 报告](../research/2026-10-03/P0-BOOT-AND-RESCUE.md)、[公开验收摘要](results/2026-10-03-p0-security.json) 和 [失败矩阵摘要](results/2026-10-03-boot-failure-policy.json)。本机首次 C++ 保护启动另已[完成基础核验](../research/2026-10-03/HOST-CPP-BOOT.md)，但这不表示新 P0 策略已在实机激活；其实际运行验收仍待下一次保护启动。
+
+下面使用已经验证的实验登记和 Ubuntu 种子，从当前生产 `guard/build.py` 构建新的专用 initrd，再运行两个独立入口。所有产物均在 `lab/work/`，不使用宿主设备或凭据；尚未解除已有救援工具包和私有种子的构建依赖，从干净仓库完整复现仍是 [P2 目标](../ROADMAP.md)。
+
+```bash
+python3 guard/build.py --enrollment lab/work/<vm-enrollment>/enrollment.json \
+  --work-dir lab/work/<candidate-build>
+python3 lab/boot_failure_probe.py --build-dir lab/work/<candidate-build> \
+  --enrollment lab/work/<vm-enrollment>/enrollment.json \
+  --seed-report lab/work/<seed-run>/report.json
+python3 lab/cpp_integration_probe.py --build-dir lab/work/<candidate-build> \
+  --binary lab/work/<candidate-build>/native-runtime/guard-runtime \
+  --enrollment lab/work/<vm-enrollment>/enrollment.json \
+  --seed-report lab/work/<seed-run>/report.json
+```
+
+失败矩阵保留生产脚本原样，仅在实验 `ORDER` 文件加入故障触发和继续启动标记。`local-top` 缺少 `nompath`、`init-bottom` 丢失交接令牌两种失败各检查默认、负值和正值 `panic` 参数；第七项在 `/init` 上下文调用发行版 `panic`，检查专用镜像的默认策略。后者是合成调用，不代表实际 fsck 或根挂载故障均已覆盖。验收要求观察到内核停机、没有交互提示、没有继续交接或启动 systemd；串口只被动读取，不发送命令，也不运行旧版未认证入口的利用复现。
+
+完整集成继续检查根盘、登记数据盘、挂载与子挂载、错误身份拒绝、原进程和打开文件的连续性，以及正常关机。认证检查在 guest 内单独的临时 RAM 根目录和挂载命名空间中运行，使用新生成的一次性密码；覆盖锁定账户、错误密码、正确登录、主动退出后重认证、空闲退出后重认证和缺失密码库拒绝。测试前后核对真实打包文件，清理临时凭据和挂载，不读取生产密码库；这些 PTY 检查不能代替实机 F9/F10 键盘登录。
 
 当前自动 Guard 以本机 `7.0.0-34-generic` 为验收基线，必须具备 `DM_MPATH_PROBE_PATHS`（multipath target ≥ 1.15.0），没有旧内核兼容降级。构建器仍可用于历史研究镜像，但不表示自动 Guard 支持这些内核。
 
@@ -111,7 +133,7 @@ python3 lab/historical.py lab/run.py --scenario queued-write --gap 0.2
 
 暂停对照组不主动读取暂停中的 LV（读取会等待），不执行 `fault_reproduced` 读取失败检查；通过 QMP 删除事件、设备重新枚举和 DM 状态记录故障与暂停。`filesystem_state` 在恢复后同时检查只读标志及实际文件写入/`fsync`；单看 mount 的 `rw` 或成功读取超级块不代表文件系统健康。
 
-实验进程只连接项目内 UNIX socket；运行目录权限 0700，无虚拟网卡、无共享目录、无宿主块设备透传。虚拟机的 RAM shell 无密码，仅用于这个隔离实验；不要把它用于生产部署。guest 初始化另外核对启动参数、QEMU DMI 标记和实验盘序列号后才格式化虚拟盘。
+实验进程只连接项目内 UNIX socket；运行目录权限 0700，无虚拟网卡、无共享目录、无宿主块设备透传。历史 guest 及实验控制串口使用的 RAM shell 无密码，仅用于隔离实验；不要用于生产部署。新增的救援认证检查另用真实登录程序和一次性密码。guest 初始化另外核对启动参数、QEMU DMI 标记和实验盘序列号后才格式化虚拟盘。
 
 `work/` 全部由 Git 忽略。实验记录在宿主侧持续保存，guest 崩溃后仍可分析；宿主本身的 USB 盘若掉线，这些记录仍可能受影响。需要更可靠的实机取证时，接收端应在独立存储/机器上。
 

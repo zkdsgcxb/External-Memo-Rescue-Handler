@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 """Build an isolated Ubuntu protection initrd; never installs or changes disks."""
 import argparse
+import importlib.util
 import json
 import os
 from pathlib import Path
@@ -14,6 +15,14 @@ from native_payload import build_runtime, stage_runtime
 BASE=Path(__file__).resolve().parent
 PROJECT=BASE.parent
 WORK=PROJECT/'lab/work'
+
+
+def session_builder():
+    source=PROJECT/'ram-rescue-demo/session_payload.py'
+    spec=importlib.util.spec_from_file_location('rescue_session_payload',source)
+    module=importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
 
 
 def payload(profile,root,*,native_binary):
@@ -38,6 +47,8 @@ def payload(profile,root,*,native_binary):
     (root/'etc/rescue/identity.json').write_text(json.dumps(profile['identity'],indent=2)+'\n')
     (root/'etc/rescue/enrollment.json').write_text(json.dumps(profile,indent=2)+'\n')
     (root/'etc/rescue/enrollment.json').chmod(0o600)
+    session=session_builder().stage_session(root)
+    (root/'etc/rescue/session-build.json').write_text(json.dumps(session,indent=2)+'\n')
     stage_runtime(root,native_binary)
     return manifest['sha256']
 
@@ -88,7 +99,7 @@ def build(enrollment,work,kernel):
             else:
                 output.addfile(item)
     sources=[BASE/'build.py',BASE/'host_files.py',BASE/'native_payload.py',PROJECT/'ram-rescue-demo/src/rescue.py',
-             *sorted(p for p in source_templates.iterdir() if p.is_file())]
+             *session_builder().SOURCES,*sorted(p for p in source_templates.iterdir() if p.is_file())]
     sources.extend(p for p in sorted((BASE/'native').rglob('*'))
                    if p.is_file() and '__pycache__' not in p.parts)
     source_hashes={str(p.relative_to(PROJECT)):sha256(p) for p in sources}
@@ -107,6 +118,7 @@ def build(enrollment,work,kernel):
         'tools_archive_sha256':sha256(archive),'installed':False,'runtime':'cpp',
         'source_commit':subprocess.check_output(['git','rev-parse','HEAD'],cwd=PROJECT,text=True).strip()}
     details['native_runtime']=json.loads((payload_root/'opt/guard-runtime/runtime.json').read_text())
+    details['rescue_session']=json.loads((payload_root/'etc/rescue/session-build.json').read_text())
     (work/'build.json').write_text(json.dumps(details,indent=2)+'\n')
     image.chmod(0o600)
     print(json.dumps({'built':str(image),'sha256':details['initramfs_sha256'],
