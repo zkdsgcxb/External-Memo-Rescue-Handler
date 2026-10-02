@@ -1,6 +1,7 @@
 """Unified maintenance starts only registered maps and preserves root ownership."""
 from copy import deepcopy
 import importlib.util
+import hashlib
 import json
 from pathlib import Path
 import stat
@@ -75,6 +76,40 @@ class ManagerTests(unittest.TestCase):
         self.partition.mkdir()
         (self.map / 'slaves/sdb1').symlink_to(self.partition)
         self.item = {'name': 'rr-data-test', 'uuid': 'RAMRESCUE-DATA-test', 'sys': self.map}
+
+    def installed_integration(self):
+        """Model a prior Python install without starting any system service."""
+        self.commands.return_value = ''
+        program = manager.VERSIONS / ('a' * 64) / 'guard/manage.py'
+        program.parent.mkdir(parents=True)
+        program.write_text('# Previous Python manager\n')
+        manager.INSTALL.mkdir()
+        manager.REGISTRY.mkdir()
+        files = {manager.UNIT: manager.render_manager(program).encode(),
+                 manager.CONTROLLER: b'# Previous Python controller\n',
+                 manager.SLICE: manager.services.slice_unit().encode(), manager.RULE: b''}
+        for path, content in files.items():
+            manager.atomic(path, content, mode=0o640)
+        record = {'state': 'installed', 'program': str(program),
+                  'files': {str(path): hashlib.sha256(value).hexdigest() for path, value in files.items()},
+                  'rule_sha256': hashlib.sha256(b'').hexdigest()}
+        manager.write_json(manager.INSTALL / 'install.json', record)
+        manager.ENTRY.symlink_to(program)
+        self.original_files = {path: (path.read_bytes(), stat.S_IMODE(path.stat().st_mode))
+                               for path in (*files, manager.INSTALL / 'install.json')}
+        self.original_program = program
+        runtime = self.ram / 'opt/old-python'
+        runtime.mkdir(parents=True)
+        (runtime / 'owner').write_text('running root remains untouched')
+        (self.ram / 'opt/manager').symlink_to('old-python')
+        return record
+
+    def assert_original_integration(self):
+        for path, (content, mode) in self.original_files.items():
+            self.assertEqual(path.read_bytes(), content, str(path))
+            self.assertEqual(stat.S_IMODE(path.stat().st_mode), mode, str(path))
+        self.assertEqual(manager.ENTRY.readlink(), self.original_program)
+        self.assertEqual((self.ram / 'opt/manager').readlink(), Path('old-python'))
 
     def test_activation_rules_match_only_registered_dm_identity(self):
         rules = manager.render_rules([self.record])
@@ -201,6 +236,171 @@ class ManagerTests(unittest.TestCase):
         result = subprocess.run([sys.executable, str(program), '--help'],
                                 check=True, text=True, capture_output=True)
         self.assertIn('register', result.stdout)
+        self.assertIn('upgrade', result.stdout)
+
+    def test_upgrade_stages_next_boot_only_and_status_reads_existing_python_owner(self):
+        old = self.installed_integration()
+        with patch.object(manager, 'prepare') as prepare, \
+                patch.object(manager.services, 'stage_runtime') as stage_runtime, \
+                patch.object(manager, 'activate_present') as activate:
+            result = manager.upgrade()
+        prepare.assert_not_called()
+        stage_runtime.assert_not_called()
+        activate.assert_not_called()
+        record = manager.receipt()
+        self.assertEqual(record['activation'], 'protected_reboot')
+        self.assertNotEqual(record['program'], old['program'])
+        self.assertEqual(str(manager.ENTRY.readlink()), record['program'])
+        self.assertIn(record['program'], manager.UNIT.read_text())
+        self.assertEqual(manager.CONTROLLER.read_text(), manager.render_controller())
+        self.assertTrue(result['requires_protected_reboot'])
+        self.assertFalse(result['running_root_changed'])
+        self.assertFalse(result['runtime_prepared'])
+        self.assertEqual(result['services_started'], [])
+        self.assertEqual((self.ram / 'opt/manager').readlink(), Path('old-python'))
+        self.assertEqual((self.ram / 'opt/old-python/owner').read_text(), 'running root remains untouched')
+        commands = [call.args[0] for call in self.commands.call_args_list]
+        self.assertEqual([c for c in commands if c[:2] != ['systemctl', 'list-units']],
+                         [['systemctl', 'daemon-reload']])
+        backup = Path(result['backup'])
+        journal = manager.read_json(backup / 'upgrade.json')
+        self.assertEqual(journal['state'], 'complete')
+        self.assertEqual(journal['entry_target'], old['program'])
+        for path, (content, mode) in self.original_files.items():
+            saved = journal['files'][str(path)]
+            self.assertEqual((backup / saved['backup']).read_bytes(), content)
+            self.assertEqual(saved['mode'], mode)
+        root = root_profile()
+        state = self.root / 'root-state'
+        state.mkdir()
+        manager.write_json(state / 'path-state.json', {'state': 'ready', 'recoveries': 2})
+        root['guard']['run_dir'] = str(state)
+        self.root_enrollment.return_value = root
+        self.live_maps.return_value = {'dm-0': {'name': root['guard']['map_name'],
+                                               'uuid': root['guard']['map_uuid']}}
+        self.commands.return_value = 'active'
+        status = manager.status()['devices'][0]
+        self.assertEqual(status['state'], 'ready')
+        self.assertEqual(status['recoveries'], 2)
+
+    def test_upgrade_refuses_modified_integration_or_entry_before_staging(self):
+        self.installed_integration()
+        for path in (manager.UNIT, manager.CONTROLLER, manager.SLICE, manager.RULE):
+            content = path.read_bytes()
+            path.write_bytes(b'external edit')
+            with self.subTest(path=path), patch.object(manager, 'install_sources') as stage:
+                with self.assertRaisesRegex(RuntimeError, 'changed independently'):
+                    manager.upgrade()
+                stage.assert_not_called()
+            path.write_bytes(content)
+        manager.ENTRY.unlink()
+        manager.ENTRY.symlink_to(self.root / 'other.py')
+        with patch.object(manager, 'install_sources') as stage:
+            with self.assertRaisesRegex(RuntimeError, 'command changed independently'):
+                manager.upgrade()
+            stage.assert_not_called()
+        self.commands.assert_not_called()
+
+    def test_upgrade_refuses_incomplete_receipt_and_foreign_file_set(self):
+        record = self.installed_integration()
+        for changed, message in [({**record, 'state': 'installing'}, 'incomplete'),
+                                 ({**record, 'files': {**record['files'], '/foreign': '0' * 64}}, 'file set')]:
+            manager.write_json(manager.INSTALL / 'install.json', changed)
+            with self.subTest(message=message), patch.object(manager, 'install_sources') as stage:
+                with self.assertRaisesRegex(RuntimeError, message):
+                    manager.upgrade()
+                stage.assert_not_called()
+        self.commands.assert_not_called()
+
+    def test_upgrade_refuses_any_registration_even_without_a_live_map(self):
+        self.installed_integration()
+        (manager.REGISTRY / 'unreadable-entry.json').write_text('not a valid registration')
+        with patch.object(manager, 'install_sources') as stage:
+            with self.assertRaisesRegex(RuntimeError, 'empty data registry'):
+                manager.upgrade()
+            stage.assert_not_called()
+        self.assert_original_integration()
+        self.commands.assert_not_called()
+
+    def test_upgrade_refuses_running_or_transitioning_data_controllers(self):
+        self.installed_integration()
+        for state in ('active', 'activating', 'deactivating', 'reloading', 'failed'):
+            self.commands.return_value = f'ram-rescue-data-rr-data-test.service loaded {state} running test'
+            with self.subTest(state=state), patch.object(manager, 'install_sources') as stage:
+                with self.assertRaisesRegex(RuntimeError, 'may still be active'):
+                    manager.upgrade()
+                stage.assert_not_called()
+        self.assert_original_integration()
+
+    def test_upgrade_restores_files_modes_entry_and_receipt_after_reload_failure(self):
+        self.installed_integration()
+        reloads = 0
+        def command(arguments):
+            nonlocal reloads
+            if arguments == ['systemctl', 'daemon-reload']:
+                reloads += 1
+                if reloads == 1:
+                    raise RuntimeError('injected daemon-reload failure')
+            return ''
+        self.commands.side_effect = command
+        with self.assertRaisesRegex(RuntimeError, 'rolled_back'):
+            manager.upgrade()
+        self.assertEqual(reloads, 2)
+        self.assert_original_integration()
+        backup = next(manager.INSTALL.glob('upgrade-*'))
+        journal = manager.read_json(backup / 'upgrade.json')
+        self.assertEqual(journal['state'], 'rolled_back')
+        self.assertEqual(journal['rollback_errors'], [])
+        self.assertTrue(Path(journal['program']).is_file())
+
+    def test_upgrade_rolls_back_an_atomic_write_that_failed_after_replacement(self):
+        self.installed_integration()
+        write = manager.atomic
+        injected = False
+        def fail_after_replacement(path, content, mode=0o600):
+            nonlocal injected
+            write(path, content, mode=mode)
+            if path == manager.CONTROLLER and not injected:
+                injected = True
+                raise OSError('injected directory sync failure')
+        with patch.object(manager, 'atomic', side_effect=fail_after_replacement):
+            with self.assertRaisesRegex(RuntimeError, 'rolled_back'):
+                manager.upgrade()
+        self.assertTrue(injected)
+        self.assert_original_integration()
+
+    def test_upgrade_does_not_overwrite_a_foreign_edit_during_failed_rollback(self):
+        self.installed_integration()
+        reloads = 0
+        def command(arguments):
+            nonlocal reloads
+            if arguments == ['systemctl', 'daemon-reload']:
+                reloads += 1
+                if reloads == 1:
+                    manager.CONTROLLER.write_bytes(b'external concurrent edit')
+                    raise RuntimeError('injected reload failure')
+            return ''
+        self.commands.side_effect = command
+        with self.assertRaisesRegex(RuntimeError, 'rollback_failed'):
+            manager.upgrade()
+        self.assertEqual(manager.CONTROLLER.read_bytes(), b'external concurrent edit')
+        with self.assertRaisesRegex(RuntimeError, 'incomplete'):
+            manager.receipt()
+        backup = next(manager.INSTALL.glob('upgrade-*'))
+        journal = manager.read_json(backup / 'upgrade.json')
+        self.assertEqual(journal['state'], 'rollback_failed')
+        self.assertTrue(journal['rollback_errors'])
+
+    def test_upgrade_staging_failure_preserves_installed_state_and_records_failure(self):
+        self.installed_integration()
+        with patch.object(manager, 'install_sources', side_effect=OSError('injected staging failure')):
+            with self.assertRaisesRegex(RuntimeError, 'rolled_back'):
+                manager.upgrade()
+        self.assert_original_integration()
+        backup = next(manager.INSTALL.glob('upgrade-*'))
+        self.assertEqual(manager.read_json(backup / 'upgrade.json')['state'], 'rolled_back')
+        commands = [call.args[0] for call in self.commands.call_args_list]
+        self.assertTrue(all(command[:2] == ['systemctl', 'list-units'] for command in commands))
 
     def test_empty_registry_installation_never_starts_another_root_controller(self):
         program = self.root / 'program.py'

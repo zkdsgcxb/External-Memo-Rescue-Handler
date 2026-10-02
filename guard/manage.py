@@ -13,6 +13,7 @@ import os
 from pathlib import Path
 import stat
 import sys
+import tempfile
 
 BASE = Path(__file__).resolve().parent
 sys.path.insert(0, str(BASE.parent / 'ram-rescue-demo/src'))
@@ -288,6 +289,142 @@ def install():
             'root_owner': 'existing_boot_service', 'new_polling_daemon': False}
 
 
+def require_empty_data_scope():
+    """This upgrade only changes next-boot administration of an existing root."""
+    if os.path.lexists(REGISTRY) and (REGISTRY.is_symlink() or not REGISTRY.is_dir()):
+        raise RuntimeError('Expected the original data registry directory')
+    if REGISTRY.exists() and any(REGISTRY.iterdir()):
+        raise RuntimeError('Manager upgrade requires an empty data registry')
+    output = services.run(['systemctl', 'list-units', '--all', '--type=service',
+                           '--no-legend', '--plain', '--no-pager',
+                           'ram-rescue-maintain@*.service', 'ram-rescue-data-*.service'])
+    for line in output.splitlines():
+        fields = line.split()
+        if len(fields) < 4 or not fields[0].startswith(('ram-rescue-maintain@', 'ram-rescue-data-')):
+            raise RuntimeError('Cannot establish data controller state: ' + line)
+        # A failed unit can still retain an uninterruptible helper in its cgroup.
+        if fields[2] != 'inactive':
+            raise RuntimeError('Data controller may still be active: ' + fields[0])
+
+
+def replace_entry(target):
+    """Atomically replace the command symlink and sync its directory."""
+    with tempfile.TemporaryDirectory(prefix='.' + ENTRY.name + '-', dir=ENTRY.parent) as folder:
+        link = Path(folder) / 'entry'
+        link.symlink_to(target)
+        os.replace(link, ENTRY)
+        directory = os.open(ENTRY.parent, os.O_RDONLY | os.O_DIRECTORY)
+        try:
+            os.fsync(directory)
+        finally:
+            os.close(directory)
+
+
+@exclusive_control
+def upgrade():
+    """Stage new persistent integration; only a protected reboot activates it."""
+    services.require_ram()
+    receipt_path = INSTALL / 'install.json'
+    if INSTALL.is_symlink() or receipt_path.is_symlink() or not receipt_path.is_file():
+        raise RuntimeError('Expected the original manager installation receipt')
+    record = receipt()
+    paths = {UNIT, CONTROLLER, SLICE, RULE}
+    if not isinstance(record.get('files'), dict) or set(record['files']) != {str(path) for path in paths}:
+        raise RuntimeError('Unexpected manager receipt file set')
+    expected = {**record['files'], str(RULE): record.get('rule_sha256')}
+    previous = {}
+    for path in sorted(paths | {receipt_path}):
+        if path.is_symlink() or not path.is_file():
+            raise RuntimeError('Integration is not an original regular file: ' + str(path))
+        content = path.read_bytes()
+        if path != receipt_path and hashlib.sha256(content).hexdigest() != expected[str(path)]:
+            raise RuntimeError('Integration changed independently: ' + str(path))
+        previous[path] = (content, stat.S_IMODE(path.stat().st_mode))
+    old_program = Path(record['program'])
+    if (old_program.parent.name != 'guard' or old_program.name != 'manage.py'
+            or old_program.parent.parent.parent != VERSIONS
+            or old_program.parent.is_symlink() or old_program.parent.parent.is_symlink()
+            or old_program.is_symlink() or not old_program.is_file()):
+        raise RuntimeError('Installed manager program is outside its version directory')
+    if not ENTRY.is_symlink() or str(ENTRY.readlink()) != record['program']:
+        raise RuntimeError('Manager command changed independently')
+    require_empty_data_scope()
+    if previous[RULE][0] != render_rules([]).encode():
+        raise RuntimeError('Empty-registry upgrade requires empty manager rules')
+
+    backup = Path(tempfile.mkdtemp(prefix='upgrade-', dir=INSTALL))
+    journal = {'state': 'staging', 'previous_program': record['program'], 'program': None,
+               'entry_target': str(ENTRY.readlink()), 'files': {}}
+    for index, (path, (content, mode)) in enumerate(sorted(previous.items())):
+        name = f'{index}.bin'
+        atomic(backup / name, content)
+        journal['files'][str(path)] = {'backup': name, 'mode': mode,
+                                     'sha256': hashlib.sha256(content).hexdigest()}
+    write_json(backup / 'upgrade.json', journal)
+    changed = False
+    files = {}
+    next_record = pending = None
+    try:
+        program = install_sources()
+        files = {UNIT: render_manager(program).encode(), CONTROLLER: render_controller().encode(),
+                 SLICE: services.slice_unit().encode(), RULE: render_rules([]).encode()}
+        journal.update(state='applying', program=str(program))
+        write_json(backup / 'upgrade.json', journal)
+        require_empty_data_scope()
+        pending = {**record, 'state': 'upgrading', 'upgrade_backup': str(backup)}
+        changed = True  # atomic() may replace its target before reporting a sync error.
+        write_json(receipt_path, pending)
+        for path, content in files.items():
+            if content != previous[path][0]:
+                atomic(path, content, mode=0o644)
+        replace_entry(program)
+        services.run(['systemctl', 'daemon-reload'])
+        next_record = {**record, 'state': 'installed', 'program': str(program),
+                       'files': {str(path): hashlib.sha256(content).hexdigest()
+                                 for path, content in files.items()},
+                       'rule_sha256': hashlib.sha256(files[RULE]).hexdigest(),
+                       'upgrade_backup': str(backup), 'activation': 'protected_reboot'}
+        write_json(receipt_path, next_record)
+        journal['state'] = 'complete'
+        write_json(backup / 'upgrade.json', journal)
+    except BaseException as error:
+        failures = []
+        if changed:
+            for path in sorted(paths):
+                try:
+                    if path.is_symlink() or path.read_bytes() not in (previous[path][0], files[path]):
+                        raise RuntimeError('Integration changed during upgrade: ' + str(path))
+                    atomic(path, previous[path][0], mode=previous[path][1])
+                except Exception as rollback_error:
+                    failures.append(str(rollback_error))
+            try:
+                if not ENTRY.is_symlink() or str(ENTRY.readlink()) not in (record['program'], journal['program']):
+                    raise RuntimeError('Manager command changed during upgrade')
+                replace_entry(journal['entry_target'])
+            except Exception as rollback_error:
+                failures.append(str(rollback_error))
+            try:
+                services.run(['systemctl', 'daemon-reload'])
+            except Exception as rollback_error:
+                failures.append(str(rollback_error))
+            try:
+                if receipt_path.is_symlink() or read_json(receipt_path) not in (record, pending, next_record):
+                    raise RuntimeError('Manager receipt changed during upgrade')
+                if failures:
+                    write_json(receipt_path, {**pending, 'state': 'upgrade_failed'})
+                else:
+                    atomic(receipt_path, previous[receipt_path][0], mode=previous[receipt_path][1])
+            except Exception as rollback_error:
+                failures.append(str(rollback_error))
+        journal.update(state='rollback_failed' if failures else 'rolled_back',
+                       error=str(error), rollback_errors=failures)
+        write_json(backup / 'upgrade.json', journal)
+        raise RuntimeError('Manager upgrade failed; ' + journal['state'] + '; inspect ' + str(backup)) from error
+    return {'state': 'upgraded', 'command': str(ENTRY), 'backup': str(backup),
+            'requires_protected_reboot': True, 'running_root_changed': False,
+            'runtime_prepared': False, 'services_started': []}
+
+
 def status():
     services.require_root()
     result = []
@@ -348,11 +485,12 @@ def main():
     commands = parser.add_subparsers(dest='command', required=True)
     registration = commands.add_parser('register', help='Enroll a protected device or recognize its existing owner')
     registration.add_argument('--device', required=True)
-    for command in ('install', 'status', 'uninstall'):
+    for command in ('install', 'upgrade', 'status', 'uninstall'):
         commands.add_parser(command)
     commands.add_parser('prepare', help=argparse.SUPPRESS)
     args = parser.parse_args()
-    actions = {'install': install, 'status': status, 'uninstall': uninstall, 'prepare': prepare}
+    actions = {'install': install, 'upgrade': upgrade, 'status': status,
+               'uninstall': uninstall, 'prepare': prepare}
     result = register(args.device) if args.command == 'register' else actions[args.command]()
     print(json.dumps(result, ensure_ascii=False, indent=2))
 

@@ -6,6 +6,7 @@ import json
 import os
 from pathlib import Path
 import shutil
+import stat
 import subprocess
 import sys
 import time
@@ -16,6 +17,53 @@ BASE=Path(__file__).resolve().parent
 sys.path.insert(0, str(BASE.parent / 'ram-rescue-demo/src'))
 from admin.admission import Admission, layout, readonly
 from admin.identity import LVMIdentity
+from admin.dm import DeviceMapper, expected_table, table_digest
+
+
+def root_backing(identity, recovery, node, sys_path, config):
+    """Accept one raw PV or its already protected, exclusive stable mapping."""
+    dependencies = [
+        [path.resolve() for path in (recovery.mapping(name) / 'slaves').iterdir()]
+        for name in identity['lvs']
+    ]
+    if all(paths == [sys_path] for paths in dependencies):
+        return sys_path
+
+    flags = Path('/proc/cmdline').read_text().split()
+    if not {'ram_rescue_guard=1', 'nompath'}.issubset(flags):
+        raise RuntimeError('Indirect root backing requires an explicit protected boot')
+    matches = []
+    for mapping in Path('/sys/class/block').glob('dm-*'):
+        if ((mapping / 'dm/name').read_text().strip() == config['map_name'] or
+                (mapping / 'dm/uuid').read_text().strip() == config['map_uuid']):
+            matches.append(mapping.resolve())
+    if len(matches) != 1:
+        raise RuntimeError('Protected root map must have one unique reserved name and UUID')
+    stable = matches[0]
+    if ((stable / 'dm/name').read_text().strip() != config['map_name'] or
+            (stable / 'dm/uuid').read_text().strip() != config['map_uuid'] or
+            any(paths != [stable] for paths in dependencies)):
+        raise RuntimeError('Enrolled LVs do not share the expected protected root map')
+
+    snapshot = DeviceMapper().snapshot(config['map_name'])
+    info = snapshot['info']
+    device = os.stat(node)
+    if not stat.S_ISBLK(device.st_mode):
+        raise RuntimeError('Enrolled PV must remain a block partition')
+    expected = expected_table(config['partition_sectors'],
+                              f'{os.major(device.st_rdev)}:{os.minor(device.st_rdev)}')
+    if (snapshot['uuid'] != config['map_uuid'] or snapshot['inactive'] or
+            any(info[key] for key in ('suspended', 'internal_suspend', 'deferred_remove', 'read_only')) or
+            table_digest(snapshot['active']) != table_digest(expected)):
+        raise RuntimeError('Protected root map is not the ready enrolled single-path table')
+    words = snapshot['active'][0][3].split()
+    if 'queue_if_no_path' not in words[1:1 + int(words[0])]:
+        raise RuntimeError('Protected root map must retain queue_if_no_path')
+    observed = (Path('/sys/dev/block') / f"{info['major']}:{info['minor']}").resolve(strict=True)
+    if (observed != stable or
+            {path.resolve() for path in (stable / 'slaves').iterdir()} != {sys_path}):
+        raise RuntimeError('Protected root map backing partition differs')
+    return stable
 
 
 def collect(identity):
@@ -32,10 +80,6 @@ def collect(identity):
     roots=[name for name,item in identity['lvs'].items() if item['dm_uuid']==root_uuid]
     if len(roots)!=1:
         raise RuntimeError('Current root is not the previously enrolled LV')
-    for name in identity['lvs']:
-        mapping=recovery.mapping(name)
-        if [p.resolve() for p in (mapping/'slaves').iterdir()] != [sys_path]:
-            raise RuntimeError('Enrolled LV has an unexpected live backing device')
     config={'schema':1,'profile':'host','kernel_release':os.uname().release,
         'map_name':'ram-rescue-path',
         'map_uuid':'RAMRESCUE-HOST-'+hashlib.sha256(identity['partuuid'].encode()).hexdigest()[:24],
@@ -44,8 +88,12 @@ def collect(identity):
         'logical_block_size':int((sys_path.parent/'queue/logical_block_size').read_text()),
         'layout':enrolled_layout,'root_lv':roots[0],
         'root_fs_uuid':subprocess.check_output(['findmnt','-nro','UUID','-T','/'],text=True).strip()}
+    backing = root_backing(identity, recovery, node, sys_path, config)
     with Admission(config,recovery).verify(time.monotonic()+15) as candidate:
         candidate.revalidate()
+        if (candidate.node != node or Path(candidate.sys_path) != sys_path or
+                root_backing(identity, recovery, node, sys_path, config) != backing):
+            raise RuntimeError('Root backing changed during enrollment')
     return {'schema':1,'identity':identity,'guard':config}
 
 

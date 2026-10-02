@@ -27,7 +27,7 @@
 
 ## 构建与安装
 
-构建器只打包 C++ 运行时及完整共享库闭包，不提供 Python 自动恢复选项。历史对照通过 [固定版本实验入口](../lab/README.md#历史实验复现) 提取。构建不升级当前会话；本机仍使用此前安装的 Python 包。源码、私有登记、镜像和实验记录都留在项目工作区。下面路径是示例，已有目录不会被构建器覆盖。
+构建器只打包 C++ 运行时及完整共享库闭包，不提供 Python 自动恢复选项。历史对照通过 [固定版本实验入口](../lab/README.md#历史实验复现) 提取。构建不升级当前会话。源码、私有登记、镜像和实验记录都留在项目工作区。下面路径是示例，已有目录不会被构建器覆盖。
 
 ```bash
 # 读取已安装救援包的登记，再以实际盘内元数据核验；只写私有构建资料。
@@ -43,5 +43,25 @@ pkexec python3 guard/install.py --install --build-dir "$PWD/lab/work/host-build"
 安装器重新核对当前磁盘布局、原内核/initrd/LVM 配置、候选镜像与测试源码。安装记录和原 GRUB 配置备份位于 `/var/lib/ram-rescue-guard`；生成新配置并检查语法后才替换 GRUB 配置。安装不会重启，也不使当前会话立即获得保护。
 
 如果安装后这些文件未被其他升级改动，可运行 `pkexec python3 guard/install.py --rollback` 撤除新增入口并恢复原菜单。若文件已有变化，回滚器拒绝覆盖，需按当前状态重新生成菜单。无论是否撤除文件，原普通启动项都作为现场退路保留。
+
+## 升级已有保护入口
+
+已有安装使用 `upgrade.py`，不重复运行首次安装器。先重新登记当前原盘、构建新镜像，并取得匹配本次源码、内核与基础工具包的通过报告。登记支持当前根卷已位于保留稳定映射之上的情况，只读检查映射与原盘身份，不在线改接根卷。
+
+```bash
+# 只读预检；已有安装资料和设备查询需要本机管理员认证。
+pkexec python3 "$PWD/guard/upgrade.py" --build-dir "$PWD/lab/work/host-build" \
+  --enrollment "$PWD/lab/work/host-enrollment/enrollment.json" \
+  --vm-report "$PWD/lab/work/<vm-run>/report.json"
+
+# 写入前再次核验，备份旧镜像与收据，原子替换同名保护 initrd。
+pkexec python3 "$PWD/guard/upgrade.py" --install --build-dir "$PWD/lab/work/host-build" \
+  --enrollment "$PWD/lab/work/host-enrollment/enrollment.json" \
+  --vm-report "$PWD/lab/work/<vm-run>/report.json"
+```
+
+升级证据和回退副本位于 `/var/lib/ram-rescue-guard/upgrades/`。升级器只更新保护镜像与安装收据，失败尝试恢复旧文件；未完成事务会阻止下一次升级。GRUB 菜单、普通 initrd、rEFInd 和当前 RAM owner 均保留。不要同时调用旧卸载入口。已经安装统一管理工具时，同时按 [管理包升级](MANAGER.md#升级管理包) 更新下一次启动使用的管理程序。
+
+**重启进入原保护项后，新 C++ 镜像才生效。** 当前协议不提供热升级交接：停止旧 owner 会关闭无路径排队并终结事务，新进程会拒绝沿用这个事务。不能通过删除日志、换锁路径或重启服务绕过它。
 
 当前范围优先验收原盘正常启动及短断重接。永久驱动阻塞、整机死锁、硬件掉电缓存丢失和全部应用行为，不作为本轮已解决的能力。

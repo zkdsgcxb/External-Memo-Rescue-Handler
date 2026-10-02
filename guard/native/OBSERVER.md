@@ -1,6 +1,6 @@
-# 可选 C++ 健康观察器实验
+# 早期 C++ 健康观察器实验记录
 
-本页描述早期只读观察器，不是当前自动恢复入口。完整控制器见 [C++ 运行时](README.md)；若实验依赖旧 Python Guard，使用 [固定版本实验入口](../../lab/README.md#历史实验复现)。
+本页保留早期只读观察器的实验说明。观察器源码及专属测试已从当前工作树清退，完整控制器见 [C++ 运行时](README.md)。复现时使用 [固定版本实验入口](../../lab/README.md#历史实验复现)，从同一历史提交提取观察器、Python 对照和全部依赖。
 
 这是 **只读观察器原型**，当时未替代 Python Guard，也不随生产服务安装；完整恢复迁移现已由独立 C++ 运行时完成。
 它用于回答：同一张实际 DM multipath 映射、相同健康检查和检查频率下，
@@ -33,10 +33,12 @@ Python 对照 `reference.py` 检查相同条件，包括当前路径必须为 `A
 ## 构建和可重复实验
 
 ```bash
-python3 guard/native/build.py --output lab/work/native-build
-python3 guard/native/vm_probe.py
-python3 guard/native/vm_probe.py --fault-only
+python3 lab/historical.py guard/native/build.py --output lab/work/native-build
+python3 lab/historical.py guard/native/vm_probe.py
+python3 lab/historical.py guard/native/vm_probe.py --fault-only
 ```
+
+以上命令固定使用 `e745e5e4b9cde4ffd21d03f6e45a491ca8400083`，仅在 `lab/work` 提取历史源码和生成实验产物；不构建或替换当前生产运行时。
 
 构建需要 C++17 编译器，默认 `g++`，没有额外框架或第三方 JSON 库。
 运行依赖标准 C++ 动态库、libgcc、libc 和系统 libdevmapper。通过 `dlsym`

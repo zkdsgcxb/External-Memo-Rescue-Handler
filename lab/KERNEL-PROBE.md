@@ -2,7 +2,7 @@
 
 当前 Guard 已接入 `DM_MPATH_PROBE_PATHS`，只维护 **Linux 7.0.0-34-generic / x86_64** 基线，已删除旧内核兼容与降级分支。核心统一位于 [`guard/native/runtime/`](../guard/native/runtime/)，`guard/build.py` 只打包 C++ 运行时，构建 manifest 记录源码、ELF 与共享库哈希。旧 Python 核心已从当前工作树清退，历史实验由 [固定 Git 版本](README.md#历史实验复现) 提取。
 
-可选实机 initramfs 启动接入采用同一核心；既有 Python 包已有实机启动与短断恢复记录，**当前 C++ 源码与清退变更仅在 QEMU 验证，未替换实机运行包**。实机入口要求显式 `ram_rescue_guard=1` 与登记内核 release 完全匹配，先核验并激活已有 LV，切根后由 systemd 取得运行期间的 owner。安装与启动边界见 [`guard/README.md`](../guard/README.md)。本文下面的性能和故障样本均来自 QEMU，并分别标明历史版本。
+可选实机 initramfs 启动接入采用同一核心；既有 Python 包已有实机启动与短断恢复记录。**C++ 镜像与管理包已部署，尚待重启后的实机验收**，详见 [部署记录](../research/2026-10-03/HOST-CPP-DEPLOYMENT.md)。实机入口要求显式 `ram_rescue_guard=1` 与登记内核 release 完全匹配，先核验并激活已有 LV，切根后由 systemd 取得运行期间的 owner。安装与启动边界见 [`guard/README.md`](../guard/README.md)。本文下面的性能和故障样本均来自 QEMU，并分别标明历史版本。
 
 ## 替换的逻辑与保留的职责
 

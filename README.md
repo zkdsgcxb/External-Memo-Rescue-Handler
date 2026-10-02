@@ -97,7 +97,7 @@ python3 -m unittest discover -s ram-rescue-demo/tests -v
 | 根盘 | 预先接入稳定 DM 映射的 USB / 线性 LVM / ext4 根系统 |
 | 数据盘 | 预先登记的受支持单路径 DM 映射；具体身份与文件系统限制见 [DATA.md](guard/DATA.md) |
 | 指令集 | C++ 完整故障实验覆盖 x86_64；ARM64、RISC-V64 已交叉构建并执行用户态检查，尚不代表对应内核的完整恢复验收 |
-| 实机证据 | 既有 Python 包曾通过本机根卷/shared 短断恢复；2026-10-02 的完整 C++ 迁移仅在 QEMU 验证，未替换实机运行包 |
+| 实机证据 | 既有 Python 包曾通过本机根卷/shared 短断恢复；C++ 镜像和管理包已于 2026-10-03 部署，待重启进入保护项并验收，见 [部署记录](research/2026-10-03/HOST-CPP-DEPLOYMENT.md) |
 
 当前仍有明确边界：永久下层 I/O 阻塞不保证能被取消；掉电丢失的磁盘缓存和已返回应用的 I/O 错误无法撤销；映射恢复不代表文件系统及所有应用均无损。内核崩溃、全局死锁和任意硬件供电故障不在保活保证内。实机历史检查中的块层 WARNING 仍待定位。
 
@@ -122,7 +122,8 @@ External-Memo-Rescue-Handler/
 │   ├── manage.py             # 统一登记、状态查看与维护入口
 │   ├── enroll.py             # 根盘身份登记
 │   ├── build.py              # 保护启动镜像与运行包构建
-│   └── install.py            # 保护启动入口安装与回退
+│   ├── install.py            # 保护启动入口首次安装与回退
+│   └── upgrade.py            # 已有保护镜像的校验、备份与原子升级
 ├── ram-rescue-demo/           # RAM 手动救援环境
 │   ├── src/                  # 救援命令、会话与服务配置
 │   ├── tests/                # 手动救援回归检查
