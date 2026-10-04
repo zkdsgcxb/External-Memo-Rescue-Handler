@@ -23,6 +23,8 @@ MEMBERS = {'build.json': 1024**2, 'enrollment.json': 65536,
 
 
 def bundle(build, enrollment, report, output):
+    if os.geteuid() == 0:
+        raise RuntimeError('Build image bundles as an ordinary user; the privileged entry only stages reviewed bundles')
     from install import validate
     validate(build, enrollment, report)
     with output.open('xb') as stream:

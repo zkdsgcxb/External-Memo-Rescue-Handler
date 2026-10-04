@@ -61,6 +61,15 @@ class ImageInputTests(unittest.TestCase):
         self.assertTrue(all(p.stat().st_mode & 0o777 == 0o600 for p in output.iterdir()))
         self.assertEqual((output/'initrd.img').read_bytes(), b'candidate image bytes')
 
+    def test_privileged_bundle_refuses_before_reading_inputs_or_creating_output(self):
+        output = self.directory / 'privileged.tar'
+        with patch.object(stage_inputs.os, 'geteuid', return_value=0), \
+                patch.object(install, 'validate') as validate:
+            with self.assertRaisesRegex(RuntimeError, 'ordinary user'):
+                stage_inputs.bundle(self.build, self.enrollment, self.report, output)
+        validate.assert_not_called()
+        self.assertFalse(output.exists())
+
     def test_changed_source_release_is_rejected_after_copy(self):
         bundle = self.bundle()
         self.source.write_text('# installed different release\n')
