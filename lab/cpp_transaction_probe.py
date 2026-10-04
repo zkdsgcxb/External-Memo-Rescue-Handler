@@ -178,6 +178,30 @@ def adapt_runner(binary_digest, service_digest=None):
         "    assert b'/opt/guard-runtime/guard-runtime' in Path(f'/proc/{pid}/cmdline').read_bytes()",
         "    assert b'/opt/guard-runtime/guard-runtime' in Path(f'/proc/{pid}/cmdline').read_bytes()\n"
         f"    assert hashlib.sha256(Path(f'/proc/{{pid}}/exe').read_bytes()).hexdigest() == {binary_digest!r}")
+    # Keep evidence of the observer's own progress: after root failure a read
+    # of an unrelated process's userspace-backed proc entry can itself wait.
+    source = replace_once(source, 'def observe():\n',
+        "def observation_progress(stage):\n"
+        "    value = {'stage': stage, 'guest_time': time.monotonic()}\n"
+        "    Path('/run/transaction-observation-progress.json').write_text(json.dumps(value))\n"
+        "    print('TRANSACTION_PROGRESS=' + json.dumps(value), flush=True)\n"
+        "def observe():\n"
+        "    observation_progress('begin')\n")
+    source = replace_once(source, "            arguments = (path/'cmdline').read_bytes()",
+        "            # comm is kernel metadata. Avoid faulting userspace pages\n"
+        "            # or waiting on the mm lock of an unrelated broken-root app.\n"
+        "            comm = (path/'comm').read_text().strip()\n"
+        "            if int(path.name) != tracked_owner and comm not in ('guard-runtime', 'dmsetup'):\n"
+        "                continue\n"
+        "            observation_progress('proc_cmdline:' + path.name)\n"
+        "            arguments = (path/'cmdline').read_bytes()")
+    source = replace_once(source, "    inode = str(Path('/run/path-owner.lock').stat().st_ino)",
+        "    observation_progress('owner_locks')\n"
+        "    inode = str(Path('/run/path-owner.lock').stat().st_ino)")
+    source = replace_once(source, "        answer[field] = query(*args)",
+        "        observation_progress('dm_query:' + field)\n"
+        "        answer[field] = query(*args)")
+    source = replace_once(source, "    return answer\n'''", "    observation_progress('complete')\n    return answer\n'''")
     source = replace_once(source,
         "            report['owner_contention'] = ram_action(folder, '00-owner-contention',",
         "            if args.guest == 'ubuntu':\n"

@@ -1,4 +1,9 @@
 """Production policy and optional detailed sampler for the roadmap A/B trial."""
+import sys
+
+# Each serial action runs in a fresh Python interpreter. Policy-only requests
+# must find the selected package without relying on a previous create-map RPC.
+sys.path.insert(0, '/run/data-launcher-src/guard')
 
 
 class RoadmapPerformanceProbe(ProductionIntegrationProbe):
