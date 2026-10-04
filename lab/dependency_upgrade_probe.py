@@ -207,7 +207,8 @@ def guest_source():
 def create_initrd(folder, original, fixture, inputs):
     # Reuse ordinary-boot validation/module staging, then append only our
     # bounded observer and two genuine package inputs to the same test overlay.
-    image = standalone.create_initrd(folder, original, inputs['a'], fixture['packages']['a'])
+    image = standalone.create_initrd(folder, original, inputs['a'], fixture['packages']['a'],
+                                     kernel=inputs['kernel'])
     overlay = folder / 'dependency-overlay/opt/standalone'
     overlay.mkdir(parents=True)
     (overlay / 'probe.py').write_text(guest_source())
