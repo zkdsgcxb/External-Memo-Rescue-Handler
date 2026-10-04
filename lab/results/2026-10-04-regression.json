@@ -1,0 +1,42 @@
+{
+  "schema": 1,
+  "scope": "ordinary-user regression from an independent clean checkout with full Git history; historical fixture tests retained",
+  "passed": true,
+  "source_commit": "1f4ff8c21fc771853db963256e08048ccc717441",
+  "tracked_tree_clean": true,
+  "counts": {
+    "lab": 400,
+    "ram": 27
+  },
+  "logs": {
+    "lab": {
+      "path": "../rr-check-1004/lab/work/clean-full-lab-tests.log",
+      "sha256": "7a8b2a943742c44854d2785df9c63a5c0cccf4804f42c06bf212f0a9786a8328"
+    },
+    "ram": {
+      "path": "../rr-check-1004/lab/work/clean-full-ram-tests.log",
+      "sha256": "f843ebbc83d18609696fbc20473797573280e46bbc99f1232a655ee269b6a182"
+    }
+  },
+  "prior_main_checkout": {
+    "schema": 1,
+    "scope": "ordinary-user regression tests; historical fixture cases require full Git history",
+    "passed": true,
+    "counts": {
+      "lab": 388,
+      "ram": 27
+    },
+    "logs": {
+      "lab": {
+        "path": "lab/work/roadmap-final-all-lab-tests.log",
+        "sha256": "1a6ea56e7018e4988dd0d0ca04dbd362fcbb96d3c2fe7efb011aa3198b9288fb"
+      },
+      "ram": {
+        "path": "lab/work/roadmap-final-ram-tests.log",
+        "sha256": "b00494dbd1a7cbc0caa3b34e91e23b430a1ff3635f497f8a486b085b383ef64c"
+      }
+    },
+    "native": "lab/results/2026-10-04-native-security.json"
+  },
+  "native": "lab/results/2026-10-04-native-security.json"
+}

@@ -1,0 +1,511 @@
+{
+  "schema": 1,
+  "verified_local_date": "2026-10-05",
+  "campaign": "2026-10-04",
+  "scenario": "clean-checkout-current-ubuntu-reproduction",
+  "passed": true,
+  "clone": {
+    "path": "/workspace/Project/rr-check-1004",
+    "origin": "file:///workspace/Project/External-Memo-Rescue-Handler",
+    "transport_note": "Independent shallow checkout via local file Git transport; this run did not download project sources from GitHub. Only committed files were checked out; prior author lab artifacts were not used as experiment inputs.",
+    "recorded_at": "2026-10-04T16:02:56.829438+00:00",
+    "source_commit": "6b8289c4d03a63cfa677b079108561adfbcdc73f",
+    "tracked_status": "",
+    "shallow": true,
+    "command": "python3 lab/reproduce.py --run --work-dir lab/work/r1 --ubuntu-dir lab/work/public-ubuntu",
+    "completed_at": "2026-10-04T16:07:50.259552+00:00",
+    "shallow_after_current_reproduction": true,
+    "tracked_status_after_current_reproduction": "",
+    "current_reproduction_passed": true
+  },
+  "inputs": {
+    "ubuntu_archive": {
+      "distribution": "Ubuntu Server 24.04 LTS",
+      "image_build": "20260911",
+      "url": "https://cloud-images.ubuntu.com/noble/20260911/noble-server-cloudimg-amd64-root.tar.xz",
+      "archive_sha256": "2ea580b9dd2d0e97ba9047798becc63a94427679876dec193221e345a6e0cdc9",
+      "seed_sha256": "8ae5beb36209e924b04612f7347babac8a7930947411aba353ae03aa8f956bbb",
+      "signed_checksums_sha256": "86919782a8b9e4dbd9478f00f8fda31da67af11facfc4408138a487d20bbff33",
+      "signature_verified": true
+    },
+    "ubuntu_reverification": {
+      "archive_sha256": "2ea580b9dd2d0e97ba9047798becc63a94427679876dec193221e345a6e0cdc9",
+      "seed_sha256": "8ae5beb36209e924b04612f7347babac8a7930947411aba353ae03aa8f956bbb",
+      "signed_checksums_sha256": "86919782a8b9e4dbd9478f00f8fda31da67af11facfc4408138a487d20bbff33",
+      "signature_verified": true,
+      "keyring_sha256": "c2d40d925557dbe9a0745c12ca0dc98bed593ce9a6652f1b2faa1ff0858dbf2f"
+    },
+    "kernel_package": {
+      "name": "linux-image-7.0.0-34-generic_7.0.0-34.34~24.04.1_amd64.deb",
+      "sha256": "2bd0e1fa6fd72b00041f4523b97b730c94a9c14198a8f07231d24d49d334bd37",
+      "debian_fields": [
+        "Package: linux-image-7.0.0-34-generic",
+        "Version: 7.0.0-34.34~24.04.1",
+        "Architecture: amd64"
+      ],
+      "source": "Default acquire_kernel used apt-get download from configured Ubuntu noble-updates metadata; no explicit kernel input."
+    },
+    "kernel_sha256": "73d9c6e40b210deb638070d6af591a68bb6d7ff0280d0ec34c9ccf705a4f47ac",
+    "prior_private_inputs_used": false
+  },
+  "fresh_artifacts": {
+    "seed_image_sha256": "d8aac244c972f68f424316c50ba66bfb48aa175784c701726759a4a7c8a258d4",
+    "base_rescue_payload_sha256": "4812501455104681b2b3dc631dabecf7307cfd23f8d654ff71155e437b155cd9",
+    "enrollment_sha256": "ee998339d272f7001c51ea2090dbb51ae1209b8abc75fd6c17189029a506e627",
+    "ordinary_initrd_sha256": "38e6bdb3171a58489ba9be7ea00130e316a02ddb23d918d5be528dea64427c22",
+    "protected_initrd_sha256": "b42c915c5a44054fc74320f233985c42a446b0c3ef3d056abcc0d71e03a7d05f",
+    "native_binary_sha256": "3d100689412815884af4330fda7995ebe81fb4cf3eeae45261fce3afa6e64b42"
+  },
+  "reproduction": {
+    "prepared": true,
+    "passed": true,
+    "source_commit": "6b8289c4d03a63cfa677b079108561adfbcdc73f",
+    "source_sha256": {
+      "lab/reproduce.py": "895def227640ad51839ad7ab10e5fa29837a5a0546a7605452b1e047ad3a8a8a",
+      "lab/fetch_ubuntu.py": "b282daa0dab36f1b7accd9a8dd71b952e2b856621b5e5f366731729e65b17daf",
+      "lab/run.py": "f92923b99c0d5436ef7778ea7b70909125ebd5c109f24c534f6325257b31d788",
+      "lab/guest/seed_prepare.py": "04adcadfdce371fbc6e7b182aa70d4bcc07cd24a6fb0acf58af74209381b689a",
+      "ram-rescue-demo/build.py": "b84ba2b2142b7bf73bddd8b496d9fad09c16b695130e0bf676ac125fcfc78d8f",
+      "ram-rescue-demo/src/rescue.py": "e71b91ff4d0fce653bd64fb9c742583648d89ed704bd0a285edd0f6ccc0765f0",
+      "guard/admin/__init__.py": "bf2ab088e7c59535cc5e0f7ffd567b9afba2e94dbe7a88bd54fec7647b86b64b",
+      "guard/admin/admission.py": "9943b00ef6a5a755ff4152bf40776ca6b3281fe840459c27721c1c2dfcbe8202",
+      "guard/admin/data.py": "1f5ce0e56df06464b749fb1165b07e9e0d49db35e743a2c960043c14e96cdc20",
+      "guard/admin/dm.py": "fc5e39e7c20f0332a6b12b4d162a8a654a2789a2f10e4ec691b1b4bee3a46399",
+      "guard/admin/identity.py": "2f36daebf703cda7a514d53c4236f3912050fc6fbed6ded51ca17e758260806f",
+      "guard/admin/linux_abi.py": "9d5f147bf54de04245ae1f5d5a8862fd91f72364f58d67f776ea79e1eda00868",
+      "guard/admin/registry.py": "6525285b9512c40ab62c3e952d0d5280e254cdf5614349a08df90b4e9280c965"
+    },
+    "commands": [
+      [
+        "/usr/bin/python3",
+        "/workspace/Project/rr-check-1004/lab/cpp_integration_probe.py",
+        "--build-dir",
+        "/workspace/Project/rr-check-1004/lab/work/r1/protected",
+        "--enrollment",
+        "/workspace/Project/rr-check-1004/lab/work/r1/enrollment.json",
+        "--seed-report",
+        "/workspace/Project/rr-check-1004/lab/work/r1/seed/report.json",
+        "--binary",
+        "/workspace/Project/rr-check-1004/lab/work/r1/protected/native-runtime/guard-runtime",
+        "--base-rescue-dir",
+        "/workspace/Project/rr-check-1004/lab/work/r1/base-rescue"
+      ],
+      [
+        "/usr/bin/python3",
+        "/workspace/Project/rr-check-1004/lab/boot_failure_probe.py",
+        "--build-dir",
+        "/workspace/Project/rr-check-1004/lab/work/r1/protected",
+        "--enrollment",
+        "/workspace/Project/rr-check-1004/lab/work/r1/enrollment.json",
+        "--seed-report",
+        "/workspace/Project/rr-check-1004/lab/work/r1/seed/report.json"
+      ]
+    ],
+    "observed_wall_seconds_including_build_and_vms": 293.43
+  },
+  "integration": {
+    "passed": true,
+    "checks": {
+      "unit_syntax_verified_by_guest_systemd": true,
+      "initial_mount_absent_until_automount_access": true,
+      "initial_mount_and_nested_mounts_created": true,
+      "all_original_mount_ids_and_options_preserved": true,
+      "wrong_identity_kept_original_mounts": true,
+      "wrong_identity_was_not_committed": true,
+      "all_three_controllers_maintained": true,
+      "same_boot_and_pid1": true,
+      "same_root_guard_process": true,
+      "root_recovered_and_writable": true,
+      "root_durable_data_matches": true,
+      "readonly_mount_not_changed_by_start": true,
+      "readonly_mount_still_readonly_after_recovery": true,
+      "terminal_guard_prevents_new_mount": true,
+      "orderly_unmounts_completed": true,
+      "rr-data-vm-ext4_original_open_fd_process": true,
+      "rr-data-vm-ext4_no_io_errors": true,
+      "rr-data-vm-ext4_durable_data_matches": true,
+      "rr-data-vm-vfat_original_open_fd_process": true,
+      "rr-data-vm-vfat_no_io_errors": true,
+      "rr-data-vm-vfat_durable_data_matches": true,
+      "child-ext4_original_open_fd_process": true,
+      "child-ext4_no_io_errors": true,
+      "child-ext4_durable_data_matches": true,
+      "child-vfat_original_open_fd_process": true,
+      "child-vfat_no_io_errors": true,
+      "child-vfat_durable_data_matches": true,
+      "shutdown_clean": true,
+      "shipped_payload_verified_before_recovery": true,
+      "shipped_payload_verified_after_terminal_case": true,
+      "three_wrapper_started_native_controllers": true,
+      "no_controller_command_overrides": true,
+      "three_actual_controller_namespaces_restricted": true,
+      "rescue_sessions_before_recovery": true,
+      "rescue_session_fixture_removed_before_recovery": true,
+      "restricted_rescue_logging_before_recovery": true,
+      "rescue_sessions_after_recovery": true,
+      "rescue_session_fixture_removed_after_recovery": true,
+      "restricted_rescue_logging_after_recovery": true
+    },
+    "check_count": 39,
+    "source_image_unchanged": true,
+    "sources_unchanged": true,
+    "source_sha256": {
+      "lab/cpp_guard_probe.py": "dde70830f42d8221e389b00559e3107a1ec38a341476fe4e4206e0cc2befde13",
+      "lab/guest/cpp_probe.py": "ee8a7a2128121e784f77f00bf403861b29968fa255ea42b517c7957114696c1d",
+      "lab/guest/performance_probe.py": "f5608100301ec58ac0400d4f7336f6ec4b295c995400daa6f07823fd4efcf24b",
+      "lab/guest/mount_probe.py": "accdb0200c9462140d808d49d3ffda1ac484774aaa160b73c89494e6815f2f84",
+      "lab/guest/soak_probe.py": "a21d241b00cd98fb4d650125d8dd392988497502b2ecd397364e8d5ce5fc3e7f",
+      "lab/performance_probe.py": "db5154db14ee6ebe6560009d4863adbf4fda6933ed3297569d9a25e4a0b9561c",
+      "lab/mount_guard_probe.py": "d06033f499b4afa0ce668f53a3b5ecd2289c50fdcee7b9a0ff59cf2ac93349af",
+      "lab/soak_guard_probe.py": "ed50d252cb76fb09667d7ac1630adc090637bc880852bd3dd02d6807ab41acaf",
+      "lab/unified_guard_probe.py": "b2e41adacb661c11c364003d9f955fe6c944b3a16d208300d3b2117180b8ba54",
+      "lab/data_guard_probe.py": "53dfd99f1710286f29de786da4867815067a7d5cddbc581af629a45d96f5f9f3",
+      "lab/host_boot_probe.py": "caf4016af97d0cb66ae4a7fa97de0fa4139cb7421c845bf668db2d0c8a271f29",
+      "lab/measure_guard.py": "ddb789a20985ec4d67f33418a2d0790f39c55927c5921357b163b77dcd3b8bf8",
+      "lab/historical.py": "917ecd9edace424919fee1bf954d46c42ee8558a4cdc6efb2469723d5f0fed48",
+      "guard/native/build_runtime.py": "8359f990cb159f044f39722d2df74a7bc78a82b2ea5471cb3618a4f4868d2e20",
+      "guard/native/runtime/controller.hpp": "85a14171211e212d0f4edc1d838a273de4794638aa587b53bef9479467047122",
+      "guard/native/runtime/admission_test.cpp": "ff0693e240c6b600e40bd1acd240925a72a069372fbab3ad16b89fd69b86953c",
+      "guard/native/runtime/boot.cpp": "50d46e70273622e202bfa00c420a93e12b56dcd1af60a76cd318809b568cc1ca",
+      "guard/native/runtime/admission.hpp": "d8f31f68a49c40dc4add300e47a39adc9a8ab129e4f6723473b9ce2c72fa8388",
+      "guard/native/runtime/core.cpp": "d8bf96b8ae4c56118367a8aeae467002ed038536f91ba8d678dc26c3d7db2c26",
+      "guard/native/runtime/core_test.cpp": "9fa86673fe234a48e51125224a3559f5ef03bd7280b7b8aec20e6b19cb07b46d",
+      "guard/native/runtime/controller_test.cpp": "f6e65b6dd076bf69ee2667845c583d3f9d23b1c9ebf9a845c8add02200829d0c",
+      "guard/native/runtime/input_fuzz.cpp": "d2620d8fdea502d7780293fc493e3908035b57ee5e29eb15a8bb95c1afd96716",
+      "guard/native/runtime/controller.cpp": "91ca083677da9d080dd697774f70158e9a2f43fe33390c223875296b0e2dfc0e",
+      "guard/native/runtime/security_test.cpp": "2efde6baa4ca1c88a1a12319d8dd7ca5ea0d32409b075aa480735762f3ff9abd",
+      "guard/native/runtime/main.cpp": "48234dcc77b8dd9a84197fc673ca81d2469309fa410e3fded012d5967792e919",
+      "guard/native/runtime/admission.cpp": "7018b3e51cba1cea28ce4678f753c5422e7ac43a320ea8c677c708386412e8d1",
+      "guard/native/runtime/core.hpp": "e5a12beecf4a8df07aeb2166e1c5cd9ae34e46195059034a652d77fdf0b35099",
+      "guard/native/vendor/nlohmann/json.hpp": "aaf127c04cb31c406e5b04a63f1ae89369fccde6d8fa7cdda1ed4f32dfc5de63",
+      "lab/work/r1/protected/native-runtime/guard-runtime": "3d100689412815884af4330fda7995ebe81fb4cf3eeae45261fce3afa6e64b42",
+      "lab/cpp_integration_probe.py": "6101674aa7e50fad3d53d0699621fd0c64ac3cbf80ca51d8ec855689089903b4",
+      "ram-rescue-demo/src/rescue.py": "e71b91ff4d0fce653bd64fb9c742583648d89ed704bd0a285edd0f6ccc0765f0",
+      "lab/guest/rescue_session_probe.py": "458780dddefd3ec450206c83e4a2e8258c417d564974c522c89fda20cf509fba",
+      "lab/guest/dm_observer.py": "700cfeec56d2841cb2f73435641d8cc2b0c25c9dde0ee6284c0b296896f0fd80",
+      "ram-rescue-demo/tests/smoke.py": "ce897742347dc029659b79da9ec9792e4e729f03cc382ce9dbb49da91e2f7396",
+      "ram-rescue-demo/src/ramrescue.slice": "d2022cec349913a723cf381a6c9078d393d9fb798a64659a309d6a64cab92f67",
+      "ram-rescue-demo/src/ram-rescue-prepare.service": "757bc95927bfd96982d8f3ab16aa1e3f4a69fc73015e3da89f88828d39e72f95",
+      "ram-rescue-demo/src/ram-rescue-log.service": "f4034d93b7e6fb23988fe4fd70bb710ac20d867e53798c474d35982bdca5ba87",
+      "ram-rescue-demo/build.py": "b84ba2b2142b7bf73bddd8b496d9fad09c16b695130e0bf676ac125fcfc78d8f",
+      "ram-rescue-demo/session_payload.py": "b3eda5025cc00f746e860c00dc54497e6fc6f15be9ec96e2b98d79e0a7bd0d81",
+      "ram-rescue-demo/src/session.sh": "3b47898db8884b215e6456e9c0adf715b3ac079bce265849fc4dda3dd9940c32",
+      "ram-rescue-demo/src/supervisor.sh": "45de93ade73455631c25c1c21d1b80cc27416447fab0e257b2f2abb815a988f1",
+      "ram-rescue-demo/src/session.conf": "0cc3074ddc6c456c4c8e0248ca1988ec92dabe6d8eed0d2392775c8eb1164232",
+      "guard/admin_entry.py": "08111853bf811600270926f52e179a295e80bebf998141db85b0f4c4f9ae4998",
+      "guard/build.py": "51f6c4b29d99367a465c5c23344c034a90a918975754f5898e1f7b23d4fa043d",
+      "guard/data.py": "7e4b1dbbd88ae84551a910e8aa1e52a46b032aab5224d4e96c018d7cb72b40ad",
+      "guard/diagnostics.py": "c362d8f2f1a007776e0d8b2a39ab8d4f3447aa18d20738b871267a4e4668ca36",
+      "guard/efi_mount.py": "8f89422897a3b1bb6379e5e035210f13a9923732adb3906659e94997d4a9cd26",
+      "guard/enroll.py": "528f6eb4b3091a109e3d171b8a44d6b061b653c85f771fddf22353ccce280df3",
+      "guard/host_files.py": "16466bb5327e3f1a0ffdda7d0c97246f05e5d665606c640ea7d9880ab4693497",
+      "guard/install.py": "24cd3b0c38aae553557aba9b5e0958f13709d2d350d897a9870bf0257601b807",
+      "guard/manage.py": "cc9aeaab7490bd7a7aeadde1164a038ac18c6e01e5ec24017d2479551bf3e642",
+      "guard/mounts.py": "fde1c55070af5194f312e77a942b9064bbc3b401b0c3b68333d0c85eaee93e74",
+      "guard/native_payload.py": "ad714ec5808f45aa684e6799a8538a47b1d45a9ef861cba5a7f519c6a465d445",
+      "guard/package.py": "39b136c6d42334d1dc073c63abc6b8a17f7c13a3789d643fc86a6fdd0a67379a",
+      "guard/ram_environment.py": "4f54ee52266a2cb18774528fe7eb98813be8abeda24159c7c9b9bac335fc0808",
+      "guard/security_policy.py": "0d72a1e90e2f959ed7da5d2cc3cd6d59d5c7c802881386875be5c1e2c5034518",
+      "guard/stage_inputs.py": "f3e6189189bf1a3030865e6cfdad17c8d11aa1c1935ff3d45a1ca7c59837cf32",
+      "guard/trusted_paths.py": "59884cd6a77dd5c97b4cf0d5c63c45572533adf90d8697500d3a24126c772a23",
+      "guard/upgrade.py": "9187eac5298276d1a586c27fed4880a4956c78ae22549896bb36177f30d902a7",
+      "guard/admin/__init__.py": "bf2ab088e7c59535cc5e0f7ffd567b9afba2e94dbe7a88bd54fec7647b86b64b",
+      "guard/admin/admission.py": "9943b00ef6a5a755ff4152bf40776ca6b3281fe840459c27721c1c2dfcbe8202",
+      "guard/admin/data.py": "1f5ce0e56df06464b749fb1165b07e9e0d49db35e743a2c960043c14e96cdc20",
+      "guard/admin/dm.py": "fc5e39e7c20f0332a6b12b4d162a8a654a2789a2f10e4ec691b1b4bee3a46399",
+      "guard/admin/identity.py": "2f36daebf703cda7a514d53c4236f3912050fc6fbed6ded51ca17e758260806f",
+      "guard/admin/linux_abi.py": "9d5f147bf54de04245ae1f5d5a8862fd91f72364f58d67f776ea79e1eda00868",
+      "guard/admin/registry.py": "6525285b9512c40ab62c3e952d0d5280e254cdf5614349a08df90b4e9280c965",
+      "guard/integration/58-ram-rescue-guard.rules": "433c883e46fc92216d81b41dd1fc2fc7e8df4380266092613efdbb2666e1be0c",
+      "guard/integration/boot-policy.conf": "05f5eb37d562addb998f847ef7da86cd06ef3c147da02375c9beceb8d9d1bbf4",
+      "guard/integration/init-bottom": "fe4b9d75f70f9c78bc54ecc5d6c7ae7e8085633bbc040dfc21523353e2346d4b",
+      "guard/integration/initramfs-hook": "fd46613aee31ea8532d3f74c34b0a24e0941ad98f749c83d835d315b815d1a73",
+      "guard/integration/local-top": "798c59d27252a50fe58739ddae85e0d3b1cb2ea43dde8bd9f41cad29a89dbbba",
+      "guard/integration/lvmlocal.conf": "ff4e3848b3c5033b9a8a79b5349701b676a1fd1b9e51941460ef2a2945cb7ded",
+      "guard/integration/manual-rescue-guard.conf": "0455e5a22543f595800df0a9caaf6b684f0363d3f2e05dbb1afb30f2f1bdfde0",
+      "guard/integration/prepare-shared-rescue": "9e18e3d302325eb1bfa26a43506fd431f121e9ad8b7e7939ec159c6eb53a48b6",
+      "guard/integration/ram-rescue-guard.service": "f7b0953ba5f57ccfbfd166a4d950b02ac21c532bbfa95b69488a69791a974f40"
+    },
+    "initrd_sha256": "af1a5942772dc9e686d3bc0bdff72799bc9e31f32102a5e3344a57c87b36200d",
+    "runtime_payload_sha256": {
+      "guard-runtime": "3d100689412815884af4330fda7995ebe81fb4cf3eeae45261fce3afa6e64b42"
+    },
+    "payload_inventory": {
+      "cpp_image": {
+        "regular_files": 664,
+        "regular_file_bytes": 90985216,
+        "staging_filesystem_allocated_bytes": 92794880
+      },
+      "historical_comparison": false,
+      "scope": "current image file inventory; not process PSS or cgroup memory"
+    },
+    "filesystem_audits": {
+      "rr-data-vm-ext4": {
+        "returncode": 0
+      },
+      "rr-data-vm-vfat": {
+        "returncode": 0
+      }
+    }
+  },
+  "boot_failure": {
+    "schema": 1,
+    "scenario": "protected-boot-failure-console",
+    "baseline_runtime_reproduction": false,
+    "kernel_release": "7.0.0-34-generic",
+    "passed": true,
+    "checks": {
+      "all_seven_cases_passed": true,
+      "candidate_templates_unchanged": true,
+      "runner_unchanged": true,
+      "seed_backing_unchanged": true,
+      "production_sources_unchanged": true
+    },
+    "cases": {
+      "candidate-local-top-unset": {
+        "phase": "local-top",
+        "variant": "candidate",
+        "panic_argument": null,
+        "template_sha256": {
+          "local-top": "798c59d27252a50fe58739ddae85e0d3b1cb2ea43dde8bd9f41cad29a89dbbba",
+          "init-bottom": "fe4b9d75f70f9c78bc54ecc5d6c7ae7e8085633bbc040dfc21523353e2346d4b"
+        },
+        "passed": true,
+        "checks": {
+          "expected_phase_reached": true,
+          "expected_failure_reported": true,
+          "no_return_to_init": true,
+          "no_systemd_start": true,
+          "system_halted": true,
+          "no_interactive_shell": true,
+          "no_reboot": true
+        }
+      },
+      "candidate-local-top-negative": {
+        "phase": "local-top",
+        "variant": "candidate",
+        "panic_argument": "-1",
+        "template_sha256": {
+          "local-top": "798c59d27252a50fe58739ddae85e0d3b1cb2ea43dde8bd9f41cad29a89dbbba",
+          "init-bottom": "fe4b9d75f70f9c78bc54ecc5d6c7ae7e8085633bbc040dfc21523353e2346d4b"
+        },
+        "passed": true,
+        "checks": {
+          "expected_phase_reached": true,
+          "expected_failure_reported": true,
+          "no_return_to_init": true,
+          "no_systemd_start": true,
+          "system_halted": true,
+          "no_interactive_shell": true,
+          "no_reboot": true
+        }
+      },
+      "candidate-local-top-positive": {
+        "phase": "local-top",
+        "variant": "candidate",
+        "panic_argument": "1",
+        "template_sha256": {
+          "local-top": "798c59d27252a50fe58739ddae85e0d3b1cb2ea43dde8bd9f41cad29a89dbbba",
+          "init-bottom": "fe4b9d75f70f9c78bc54ecc5d6c7ae7e8085633bbc040dfc21523353e2346d4b"
+        },
+        "passed": true,
+        "checks": {
+          "expected_phase_reached": true,
+          "expected_failure_reported": true,
+          "no_return_to_init": true,
+          "no_systemd_start": true,
+          "system_halted": true,
+          "no_interactive_shell": true,
+          "no_reboot": true
+        }
+      },
+      "candidate-init-bottom-unset": {
+        "phase": "init-bottom",
+        "variant": "candidate",
+        "panic_argument": null,
+        "template_sha256": {
+          "local-top": "798c59d27252a50fe58739ddae85e0d3b1cb2ea43dde8bd9f41cad29a89dbbba",
+          "init-bottom": "fe4b9d75f70f9c78bc54ecc5d6c7ae7e8085633bbc040dfc21523353e2346d4b"
+        },
+        "passed": true,
+        "checks": {
+          "expected_phase_reached": true,
+          "expected_failure_reported": true,
+          "no_return_to_init": true,
+          "no_systemd_start": true,
+          "system_halted": true,
+          "no_interactive_shell": true,
+          "no_reboot": true
+        }
+      },
+      "candidate-init-bottom-negative": {
+        "phase": "init-bottom",
+        "variant": "candidate",
+        "panic_argument": "-1",
+        "template_sha256": {
+          "local-top": "798c59d27252a50fe58739ddae85e0d3b1cb2ea43dde8bd9f41cad29a89dbbba",
+          "init-bottom": "fe4b9d75f70f9c78bc54ecc5d6c7ae7e8085633bbc040dfc21523353e2346d4b"
+        },
+        "passed": true,
+        "checks": {
+          "expected_phase_reached": true,
+          "expected_failure_reported": true,
+          "no_return_to_init": true,
+          "no_systemd_start": true,
+          "system_halted": true,
+          "no_interactive_shell": true,
+          "no_reboot": true
+        }
+      },
+      "candidate-init-bottom-positive": {
+        "phase": "init-bottom",
+        "variant": "candidate",
+        "panic_argument": "1",
+        "template_sha256": {
+          "local-top": "798c59d27252a50fe58739ddae85e0d3b1cb2ea43dde8bd9f41cad29a89dbbba",
+          "init-bottom": "fe4b9d75f70f9c78bc54ecc5d6c7ae7e8085633bbc040dfc21523353e2346d4b"
+        },
+        "passed": true,
+        "checks": {
+          "expected_phase_reached": true,
+          "expected_failure_reported": true,
+          "no_return_to_init": true,
+          "no_systemd_start": true,
+          "system_halted": true,
+          "no_interactive_shell": true,
+          "no_reboot": true
+        }
+      },
+      "candidate-native-panic-default": {
+        "phase": "native-panic",
+        "variant": "candidate",
+        "panic_argument": null,
+        "template_sha256": {
+          "local-top": "798c59d27252a50fe58739ddae85e0d3b1cb2ea43dde8bd9f41cad29a89dbbba",
+          "init-bottom": "fe4b9d75f70f9c78bc54ecc5d6c7ae7e8085633bbc040dfc21523353e2346d4b"
+        },
+        "passed": true,
+        "checks": {
+          "expected_phase_reached": true,
+          "expected_failure_reported": true,
+          "no_return_to_init": true,
+          "no_systemd_start": true,
+          "system_halted": true,
+          "no_interactive_shell": true,
+          "no_reboot": true
+        }
+      }
+    },
+    "scope": "Disposable Ubuntu/QEMU only; no host boot failure, no physical-console authentication test; passive serial observation with no input; normal boot/recovery covered separately. Original failure behavior remains static evidence, not an executed exploit."
+  },
+  "raw_report_sha256": {
+    "lab/work/r1/reproduction.json": "58ee0a6f3a2d9bb7e14370c952bcb72216df10c5647296a2f76fd8dd770db0e9",
+    "lab/work/r1/seed/report.json": "9005bb79468fb5fb291c7e1508bf1e57e74177d0d9de1a47301e66511624de7e",
+    "lab/work/cpp-int-1005-000431-760334/report.json": "3cb9a764e300158a51b0c56e415dfccb8068bba9135aed157cb77212922cf43b",
+    "lab/work/bf-1005-000624-779347/native/report.json": "52925d06a9c386fa94393fc4dcd6006a261986221a32f61bffbda0c2f20d55b8",
+    "lab/work/bf-1005-000624-779347/p0v0/report.json": "cc34be567796472730520e2e33cd03f3e1cca765947a99eeca17c9db6ed0e353",
+    "lab/work/bf-1005-000624-779347/p0v1/report.json": "712eb66496db6928d2fa06bc98a2609fcb00adcc3d3af44cfb27e32dfbb76d9e",
+    "lab/work/bf-1005-000624-779347/p0v2/report.json": "9eb3f332bf00895d9d0829189ac94dea0d8d3a2a8fe03a5eeb90ce328fbfb131",
+    "lab/work/bf-1005-000624-779347/p1v0/report.json": "40d339654962276809223593a3a8c966315be1f1aa8ffb47f63fedf69e60db34",
+    "lab/work/bf-1005-000624-779347/p1v1/report.json": "20edc7c2e4d2de0ca12d82b25ecb0e0c79ef5076165ab5c3ba774d6a9fc8e3e0",
+    "lab/work/bf-1005-000624-779347/p1v2/report.json": "737ba5318dbe3bb8a5ab691802d5ce6c8bc45c0fca5f83ad4def254b81b505f7",
+    "lab/work/bf-1005-000624-779347/report.json": "02998d2a63d2eb2d0f35f34a0378256ac44a8d0b6c047f34ffc62992c670244a"
+  },
+  "full_history_unit_tests": {
+    "source_commit": "1f4ff8c21fc771853db963256e08048ccc717441",
+    "shallow": false,
+    "tracked_clean": true,
+    "changed_since_vm_commit": [
+      "lab/standalone_data_probe.py",
+      "lab/tests/test_standalone_data_probe.py"
+    ],
+    "results": {
+      "lab": {
+        "tests": 400,
+        "seconds": 8.001,
+        "passed": true,
+        "log": "/workspace/Project/rr-check-1004/lab/work/clean-full-lab-tests.log",
+        "sha256": "7a8b2a943742c44854d2785df9c63a5c0cccf4804f42c06bf212f0a9786a8328"
+      },
+      "ram": {
+        "tests": 27,
+        "seconds": 7.294,
+        "passed": true,
+        "log": "/workspace/Project/rr-check-1004/lab/work/clean-full-ram-tests.log",
+        "sha256": "f843ebbc83d18609696fbc20473797573280e46bbc99f1232a655ee269b6a182"
+      }
+    }
+  },
+  "prior_shallow_unit_attempt": {
+    "log": "lab/work/roadmap-clean-final-tests.log",
+    "sha256": "a2acd4d4e77e685b584ed35a93a84d0589c95e9712243b88bce54fc830d98306",
+    "tests": 388,
+    "errors": 5,
+    "error_cases": [
+      "test_transaction_overlay_preserves_executable_init_and_native_supervisor (test_cpp_guard_probe.RuntimeFixtureTests.test_transaction_overlay_preserves_executable_init_and_native_supervisor)",
+      "test_changed_tracked_source_is_refused (test_historical.HistoricalSnapshotTests.test_changed_tracked_source_is_refused)",
+      "test_full_checkout_preserves_commit_and_legacy_imports (test_historical.HistoricalSnapshotTests.test_full_checkout_preserves_commit_and_legacy_imports)",
+      "test_snapshot_cannot_escape_lab_work_or_choose_an_unpinned_revision (test_historical.HistoricalSnapshotTests.test_snapshot_cannot_escape_lab_work_or_choose_an_unpinned_revision)",
+      "test_untracked_module_cannot_shadow_a_historical_dependency (test_historical.HistoricalSnapshotTests.test_untracked_module_cannot_shadow_a_historical_dependency)"
+    ],
+    "reason": "Historical-only fixtures require old public Git objects; the current reproduction completed before unshallow. No tests were skipped."
+  },
+  "prior_failed_reproduction": {
+    "source_commit": "25b76b7be8fea3d5a5279cd00f541e36f972bfa7",
+    "report": "lab/work/r0/reproduction.json",
+    "report_sha256": "1739965c02701bb56c8ba00e1acd7acb404679dc13d435c173e2dae61ede3cbb",
+    "console_sha256": "261785c42169ea85ac5c47650b3f1b91b00c0017e38025c279ecf0ee82d4e937",
+    "reason": "Kernel printk interrupted structured JSON on ttyS0 at seed shutdown. The seed observer now uses bounded standalone ttyS1 output; a fresh r1 repeated the complete flow."
+  },
+  "native_build_comparison_not_an_input": {
+    "previous_binary_sha256": "479c8ba7e2445ae3fbb99d58e1b79d836170c6fe463953ca636cde9857ee8718",
+    "fresh_binary_sha256": "3d100689412815884af4330fda7995ebe81fb4cf3eeae45261fce3afa6e64b42",
+    "native_sources_identical": true,
+    "compiler_identical": true,
+    "compiler": "g++ (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0",
+    "fresh_flags": [
+      "-std=c++17",
+      "-O2",
+      "-g",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-pedantic",
+      "-pthread",
+      "-fPIE",
+      "-fstack-protector-strong",
+      "-D_FORTIFY_SOURCE=3",
+      "-I",
+      "/workspace/Project/rr-check-1004/guard/native/vendor"
+    ],
+    "previous_flags": [
+      "-std=c++17",
+      "-O2",
+      "-g",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-pedantic",
+      "-pthread",
+      "-fPIE",
+      "-fstack-protector-strong",
+      "-D_FORTIFY_SOURCE=3",
+      "-I",
+      "/workspace/Project/External-Memo-Rescue-Handler/guard/native/vendor"
+    ],
+    "fresh_hardening": {
+      "pie": true,
+      "relro": true,
+      "bind_now": true,
+      "non_executable_stack": true,
+      "stack_protector": true,
+      "fortified_calls": true
+    },
+    "note": "The two independently built ELF files have different hashes. The source and compiler match, while build paths differ. This is a successful recipe reproduction, not a bit-for-bit reproducible-build claim."
+  },
+  "limitations": [
+    "x86_64 KVM and the current Ubuntu Linux 7.0 modules/tools were used; no physical disk unplug or host deployment was performed.",
+    "Existing optional binfmt_misc module limitation of the minimal seed remains documented.",
+    "The clean-checkout VM chain uses a freshly built native ELF; prior original-build performance and dependency experiments retain their own binary identities."
+  ]
+}

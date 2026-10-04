@@ -1,0 +1,775 @@
+{
+  "schema": 1,
+  "date": "2026-10-04",
+  "scenario": "real-libcrypto-cold-upgrade-and-rollback",
+  "passed": true,
+  "checks": {
+    "same_binary_real_dependency_versions_differ": true,
+    "three_distinct_boots": true,
+    "ordinary_boots_without_root_guard": true,
+    "registrations_survive_both_transitions": true,
+    "clean_shutdowns": true,
+    "boot_1_actual_elf_and_loaded_library": true,
+    "transition_1_resident_ram_unchanged": true,
+    "transition_1_cold_activation_only": true,
+    "transition_1_registry_retained": true,
+    "boot_2_actual_elf_and_loaded_library": true,
+    "transition_2_resident_ram_unchanged": true,
+    "transition_2_cold_activation_only": true,
+    "transition_2_registry_retained": true,
+    "boot_3_actual_elf_and_loaded_library": true
+  },
+  "raw_report": "lab/work/dep-vm6-1004/report.json",
+  "raw_report_sha256": "b098e2dc58464eb776f2328810a139971cef40ba54af02856b5bb591b658cc27",
+  "scope": {
+    "machine": "QEMU x86_64/KVM, ordinary Ubuntu, Linux 7.0.0-34-generic",
+    "production_policy": true,
+    "root_guard": false,
+    "registered_data_maps": 2,
+    "disconnects_per_boot": {
+      "rr-data-vm-ext4": 1,
+      "rr-data-vm-vfat": 0
+    },
+    "requested_disconnect_interval_seconds": 0.2,
+    "filesystem_workload": false,
+    "activation": "Controllers and unused maps are stopped and normally removed before each cold upgrade; no live RAM replacement.",
+    "library_evidence": "Each active controller /proc/PID/exe and /proc/PID/map_files mapped inode is hashed."
+  },
+  "binary_sha256": "479c8ba7e2445ae3fbb99d58e1b79d836170c6fe463953ca636cde9857ee8718",
+  "library": "/lib/x86_64-linux-gnu/libcrypto.so.3",
+  "library_versions": {
+    "a": {
+      "package": "libssl3t64:amd64",
+      "version": "3.0.13-0ubuntu3.15",
+      "architecture": "amd64",
+      "archive_member": "usr/lib/x86_64-linux-gnu/libcrypto.so.3",
+      "dpkg_status_sha256": "4b37d665c618d687b4d96749c35ad65ecf7f85b508c6fa42bd272f55ad89388e",
+      "sha256": "6a66c3ba6b3749aacc9497973fff00f6ba61c703ba7015d0d7ab3fd9510974b6"
+    },
+    "b": {
+      "package": "libssl3t64:amd64",
+      "version": "3.0.13-0ubuntu3.16",
+      "architecture": "amd64",
+      "sha256": "6866ed711dab8927e1bf82bf1cd30e828bdfc34f3cc1e83b1c9eb01ce6c37d9a",
+      "source": "/usr/lib/x86_64-linux-gnu/libcrypto.so.3"
+    }
+  },
+  "signed_ubuntu": {
+    "archive_sha256": "2ea580b9dd2d0e97ba9047798becc63a94427679876dec193221e345a6e0cdc9",
+    "seed_sha256": "8ae5beb36209e924b04612f7347babac8a7930947411aba353ae03aa8f956bbb",
+    "signed_checksums_sha256": "86919782a8b9e4dbd9478f00f8fda31da67af11facfc4408138a487d20bbff33",
+    "signature_verified": true,
+    "keyring_sha256": "c2d40d925557dbe9a0745c12ca0dc98bed593ce9a6652f1b2faa1ff0858dbf2f"
+  },
+  "input_sha256": {
+    "seed": "7565aae2d5866f905e2e9c523d28a4bcb7eda0b2bfce1576424303574de579b7",
+    "kernel": "73d9c6e40b210deb638070d6af591a68bb6d7ff0280d0ec34c9ccf705a4f47ac",
+    "initrd": "4de63cacb1dfa01cc1bce5361ff6929d03fc66703fd7d2a89c50d60fff49799a",
+    "package": "033b732af3231054047b2d1659af3bfe9dd8d4b108961c953b997d5ffb0db49e",
+    "a": "033b732af3231054047b2d1659af3bfe9dd8d4b108961c953b997d5ffb0db49e",
+    "b": "b6de4e1f987dfb0db8a14aa0aab12afe1cd9aa372b0584fb4d30cb951a8467df"
+  },
+  "inputs_unchanged": true,
+  "observer_sha256": {
+    "lab/dependency_upgrade_probe.py": "59784d3eed932ab14461315533a59f57f5817613884ff26df3fc8914743ade3f",
+    "lab/guest/dependency_upgrade_probe.py": "a9d761c23583e6743274b73c0616706a51b08903a4537dfc354b7aa3017df2a8",
+    "lab/standalone_data_probe.py": "ac8ca24629de12ff155cb3606b7e6d63f63a86f2bcee1dd2aeb9cd84ac3516f6",
+    "lab/guest/standalone_data_probe.py": "f6c1b19436cf543a314194e930a37e7ef4377fb02701b90bc6f19ecb1e2fdb1c"
+  },
+  "administration_source_sha256": {
+    "guard/ARCHITECTURES.md": "20fe438fcbf1d8d80f0eee7e9e8a1c99aa0b6dbb2d89672715100f4b468fd1d1",
+    "guard/DATA.md": "2a5c19131daa67c40bb7ee79027907a488503eea7465d9b4d5c79c18998046b4",
+    "guard/EFI.md": "6a272995b301323856a7ff8dc7bfb70ba69f51df0393923382250faee6e94523",
+    "guard/MANAGER.md": "e8261060914dd8e5663b45e0c94c77f21939e3f29888e2a2c88c1c1859d93b03",
+    "guard/MOUNTS.md": "4c1bd9149defa96dc2e0144a1b594c4b7d42dc4f62c4ffafbb14fca28690e182",
+    "guard/README.md": "0e4c6d5eba77c9a348f47e78e46729207974f04729995d5e10e052fcf9e9a5f4",
+    "guard/admin/__init__.py": "bf2ab088e7c59535cc5e0f7ffd567b9afba2e94dbe7a88bd54fec7647b86b64b",
+    "guard/admin/admission.py": "9943b00ef6a5a755ff4152bf40776ca6b3281fe840459c27721c1c2dfcbe8202",
+    "guard/admin/data.py": "1f5ce0e56df06464b749fb1165b07e9e0d49db35e743a2c960043c14e96cdc20",
+    "guard/admin/dm.py": "fc5e39e7c20f0332a6b12b4d162a8a654a2789a2f10e4ec691b1b4bee3a46399",
+    "guard/admin/identity.py": "2f36daebf703cda7a514d53c4236f3912050fc6fbed6ded51ca17e758260806f",
+    "guard/admin/linux_abi.py": "9d5f147bf54de04245ae1f5d5a8862fd91f72364f58d67f776ea79e1eda00868",
+    "guard/admin/registry.py": "6525285b9512c40ab62c3e952d0d5280e254cdf5614349a08df90b4e9280c965",
+    "guard/admin_entry.py": "08111853bf811600270926f52e179a295e80bebf998141db85b0f4c4f9ae4998",
+    "guard/build.py": "51f6c4b29d99367a465c5c23344c034a90a918975754f5898e1f7b23d4fa043d",
+    "guard/data.py": "7e4b1dbbd88ae84551a910e8aa1e52a46b032aab5224d4e96c018d7cb72b40ad",
+    "guard/diagnostics.py": "28dec723fb42f50c10759e4ab05d9d02690475a4cc4395c0c87582b43873729e",
+    "guard/efi_mount.py": "8f89422897a3b1bb6379e5e035210f13a9923732adb3906659e94997d4a9cd26",
+    "guard/enroll.py": "528f6eb4b3091a109e3d171b8a44d6b061b653c85f771fddf22353ccce280df3",
+    "guard/host_files.py": "16466bb5327e3f1a0ffdda7d0c97246f05e5d665606c640ea7d9880ab4693497",
+    "guard/install.py": "24cd3b0c38aae553557aba9b5e0958f13709d2d350d897a9870bf0257601b807",
+    "guard/integration/58-ram-rescue-guard.rules": "433c883e46fc92216d81b41dd1fc2fc7e8df4380266092613efdbb2666e1be0c",
+    "guard/integration/boot-policy.conf": "05f5eb37d562addb998f847ef7da86cd06ef3c147da02375c9beceb8d9d1bbf4",
+    "guard/integration/init-bottom": "fe4b9d75f70f9c78bc54ecc5d6c7ae7e8085633bbc040dfc21523353e2346d4b",
+    "guard/integration/initramfs-hook": "fd46613aee31ea8532d3f74c34b0a24e0941ad98f749c83d835d315b815d1a73",
+    "guard/integration/local-top": "798c59d27252a50fe58739ddae85e0d3b1cb2ea43dde8bd9f41cad29a89dbbba",
+    "guard/integration/lvmlocal.conf": "ff4e3848b3c5033b9a8a79b5349701b676a1fd1b9e51941460ef2a2945cb7ded",
+    "guard/integration/manual-rescue-guard.conf": "0455e5a22543f595800df0a9caaf6b684f0363d3f2e05dbb1afb30f2f1bdfde0",
+    "guard/integration/prepare-shared-rescue": "9e18e3d302325eb1bfa26a43506fd431f121e9ad8b7e7939ec159c6eb53a48b6",
+    "guard/integration/ram-rescue-guard.service": "f7b0953ba5f57ccfbfd166a4d950b02ac21c532bbfa95b69488a69791a974f40",
+    "guard/manage.py": "cc9aeaab7490bd7a7aeadde1164a038ac18c6e01e5ec24017d2479551bf3e642",
+    "guard/mounts.py": "fde1c55070af5194f312e77a942b9064bbc3b401b0c3b68333d0c85eaee93e74",
+    "guard/native/OBSERVER.md": "555100d97ae581fb1b8b0a92ae14c17065051f17a1e096de3d953c5e305c52f3",
+    "guard/native/README.md": "a4bf1100e329740a731ad9ec48712de4999afa97e568f7321e289c5d7af8b56a",
+    "guard/native/build_runtime.py": "8359f990cb159f044f39722d2df74a7bc78a82b2ea5471cb3618a4f4868d2e20",
+    "guard/native/runtime/admission.cpp": "7018b3e51cba1cea28ce4678f753c5422e7ac43a320ea8c677c708386412e8d1",
+    "guard/native/runtime/admission.hpp": "d8f31f68a49c40dc4add300e47a39adc9a8ab129e4f6723473b9ce2c72fa8388",
+    "guard/native/runtime/admission_test.cpp": "ff0693e240c6b600e40bd1acd240925a72a069372fbab3ad16b89fd69b86953c",
+    "guard/native/runtime/boot.cpp": "50d46e70273622e202bfa00c420a93e12b56dcd1af60a76cd318809b568cc1ca",
+    "guard/native/runtime/controller.cpp": "91ca083677da9d080dd697774f70158e9a2f43fe33390c223875296b0e2dfc0e",
+    "guard/native/runtime/controller.hpp": "85a14171211e212d0f4edc1d838a273de4794638aa587b53bef9479467047122",
+    "guard/native/runtime/controller_test.cpp": "f6e65b6dd076bf69ee2667845c583d3f9d23b1c9ebf9a845c8add02200829d0c",
+    "guard/native/runtime/core.cpp": "d8bf96b8ae4c56118367a8aeae467002ed038536f91ba8d678dc26c3d7db2c26",
+    "guard/native/runtime/core.hpp": "e5a12beecf4a8df07aeb2166e1c5cd9ae34e46195059034a652d77fdf0b35099",
+    "guard/native/runtime/core_test.cpp": "9fa86673fe234a48e51125224a3559f5ef03bd7280b7b8aec20e6b19cb07b46d",
+    "guard/native/runtime/input_fuzz.cpp": "d2620d8fdea502d7780293fc493e3908035b57ee5e29eb15a8bb95c1afd96716",
+    "guard/native/runtime/main.cpp": "48234dcc77b8dd9a84197fc673ca81d2469309fa410e3fded012d5967792e919",
+    "guard/native/runtime/security_test.cpp": "2efde6baa4ca1c88a1a12319d8dd7ca5ea0d32409b075aa480735762f3ff9abd",
+    "guard/native/vendor/LICENSE.nlohmann-json": "46a65cffd1ea955132d95a8dd921640714a8d6b537d2e4e482d31145ae95b603",
+    "guard/native/vendor/README.md": "57df1ddf02af023ce35bce4968c4f8187cec450a5a0737086e0f7fb1a932ace4",
+    "guard/native/vendor/nlohmann/json.hpp": "aaf127c04cb31c406e5b04a63f1ae89369fccde6d8fa7cdda1ed4f32dfc5de63",
+    "guard/native_payload.py": "ad714ec5808f45aa684e6799a8538a47b1d45a9ef861cba5a7f519c6a465d445",
+    "guard/package.py": "39b136c6d42334d1dc073c63abc6b8a17f7c13a3789d643fc86a6fdd0a67379a",
+    "guard/ram_environment.py": "4f54ee52266a2cb18774528fe7eb98813be8abeda24159c7c9b9bac335fc0808",
+    "guard/security_policy.py": "0d72a1e90e2f959ed7da5d2cc3cd6d59d5c7c802881386875be5c1e2c5034518",
+    "guard/stage_inputs.py": "f3e6189189bf1a3030865e6cfdad17c8d11aa1c1935ff3d45a1ca7c59837cf32",
+    "guard/trusted_paths.py": "59884cd6a77dd5c97b4cf0d5c63c45572533adf90d8697500d3a24126c772a23",
+    "guard/upgrade.py": "9187eac5298276d1a586c27fed4880a4956c78ae22549896bb36177f30d902a7",
+    "ram-rescue-demo/build.py": "b84ba2b2142b7bf73bddd8b496d9fad09c16b695130e0bf676ac125fcfc78d8f",
+    "ram-rescue-demo/install.py": "e2c5be5083c966b34a9e3bd5761f5a5e00628d13a188e6ad194510ad920713ef",
+    "ram-rescue-demo/session_payload.py": "b3eda5025cc00f746e860c00dc54497e6fc6f15be9ec96e2b98d79e0a7bd0d81",
+    "ram-rescue-demo/src/check.py": "17059537c0c5da71e7d5b134aec10b5707aaac8067ff3a755530af29533708ce",
+    "ram-rescue-demo/src/kernel_log.py": "8b7e87481153c8ada0e3214890de31fb9c6cf0c54a0639e6791f8eb9277b1805",
+    "ram-rescue-demo/src/lvm.conf": "10708bf37ce4b01ec3e7e3e0d3d6394301f0bf3d4046fbd1da8521dad80d0cd3",
+    "ram-rescue-demo/src/prepare.sh": "024920f5c6ba7bdebc6599271719347f595c0bcc32d58affe43e96e1c995c87d",
+    "ram-rescue-demo/src/ram-rescue-log.service": "f4034d93b7e6fb23988fe4fd70bb710ac20d867e53798c474d35982bdca5ba87",
+    "ram-rescue-demo/src/ram-rescue-prepare.service": "757bc95927bfd96982d8f3ab16aa1e3f4a69fc73015e3da89f88828d39e72f95",
+    "ram-rescue-demo/src/ram-rescue@.service": "cbc7ce813f8a857fc9d75701f5a7750284a270f6df5764cb0ec0148938bfdd15",
+    "ram-rescue-demo/src/ramrescue.slice": "d2022cec349913a723cf381a6c9078d393d9fb798a64659a309d6a64cab92f67",
+    "ram-rescue-demo/src/rescue.py": "e71b91ff4d0fce653bd64fb9c742583648d89ed704bd0a285edd0f6ccc0765f0",
+    "ram-rescue-demo/src/session.conf": "0cc3074ddc6c456c4c8e0248ca1988ec92dabe6d8eed0d2392775c8eb1164232",
+    "ram-rescue-demo/src/session.sh": "3b47898db8884b215e6456e9c0adf715b3ac079bce265849fc4dda3dd9940c32",
+    "ram-rescue-demo/src/supervisor.sh": "45de93ade73455631c25c1c21d1b80cc27416447fab0e257b2f2abb815a988f1",
+    "ram-rescue-demo/src/uninstall.py": "e28bf22b111d9104b2c2e32e1813e3ba1f7e239a1ccf4b08607b9dad2e3e3f8b"
+  },
+  "packages": {
+    "a": {
+      "package": "ram-rescue-handler_010fa96351442907b8dd71c1_amd64.deb",
+      "sha256": "033b732af3231054047b2d1659af3bfe9dd8d4b108961c953b997d5ffb0db49e",
+      "administration_version": "010fa96351442907b8dd71c1",
+      "maintainer_scripts": false,
+      "runtime": {
+        "kernel_release": "7.0.0-34-generic",
+        "archive_sha256": "ef917eae9e481111990ba09c9ff62f77877d052d1f3fa1cf225f8c7285681e99",
+        "binary_sha256": "479c8ba7e2445ae3fbb99d58e1b79d836170c6fe463953ca636cde9857ee8718",
+        "base_sha256": "f7ee38504885ab3cfe94eb9e791677afa29cca41186cd210a416f319ca833502"
+      },
+      "native_library_sha256": {
+        "/lib/x86_64-linux-gnu/libc.so.6": "3a15d66867d83762c7f2f1e37359cb8f6c5743edb369c65285cb0b1c4f7498bf",
+        "/lib/x86_64-linux-gnu/libcap.so.2": "6ac6abc86ac891c6e13486470e26f1d939f47fda9e6b5d5508a7f5ec881adc84",
+        "/lib/x86_64-linux-gnu/libcrypto.so.3": "6a66c3ba6b3749aacc9497973fff00f6ba61c703ba7015d0d7ab3fd9510974b6",
+        "/lib/x86_64-linux-gnu/libdevmapper.so.1.02.1": "0b33f9e9780b2e22bd40170f4cfe358b0cf525974d01896b3bb2b02d6e4e2582",
+        "/lib/x86_64-linux-gnu/libgcc_s.so.1": "d93224d2b0dab4247598be683adca02f5cf00586f99c187579cd7e92058fb7cb",
+        "/lib/x86_64-linux-gnu/libm.so.6": "fce00b6f25f459cf4ae0b7fae4257909a1a8a86f9149e7c029a5d617baf1ccd0",
+        "/lib/x86_64-linux-gnu/libpcre2-8.so.0": "e00576d71d81d3ba0cfa4903c835a44a8723aac96f72f79ff75200b4cff9071b",
+        "/lib/x86_64-linux-gnu/libselinux.so.1": "0ec0843463f90e227b0e138e1f379774f50b5514bd7f5dbd4c8a87aca0aa6670",
+        "/lib/x86_64-linux-gnu/libstdc++.so.6": "1fd75fe70354a416d75aef22bcae68c47bd25d20e2d0568c30b1a9838cf62f11",
+        "/lib/x86_64-linux-gnu/libudev.so.1": "4298228175fa62a36af88b1afd4406cdd8b1bf166621f957d0dbbde45a698fe5",
+        "/lib64/ld-linux-x86-64.so.2": "c20a2dc8917c755f02b94049356320fe1f62ac7d9f8994731f807d9df39302da"
+      }
+    },
+    "b": {
+      "package": "ram-rescue-handler_ca84b65b5441bca23af24aa9_amd64.deb",
+      "sha256": "b6de4e1f987dfb0db8a14aa0aab12afe1cd9aa372b0584fb4d30cb951a8467df",
+      "administration_version": "ca84b65b5441bca23af24aa9",
+      "maintainer_scripts": false,
+      "runtime": {
+        "kernel_release": "7.0.0-34-generic",
+        "archive_sha256": "152c6d2720ff01b232941e917b651fdca638627f2dcb547893ae17dc3237c3b0",
+        "binary_sha256": "479c8ba7e2445ae3fbb99d58e1b79d836170c6fe463953ca636cde9857ee8718",
+        "base_sha256": "cdc8ffb3060ffd198265bbdeaefc6122866459c2e57adba1372db6a430d87cee"
+      },
+      "native_library_sha256": {
+        "/lib/x86_64-linux-gnu/libc.so.6": "3a15d66867d83762c7f2f1e37359cb8f6c5743edb369c65285cb0b1c4f7498bf",
+        "/lib/x86_64-linux-gnu/libcap.so.2": "6ac6abc86ac891c6e13486470e26f1d939f47fda9e6b5d5508a7f5ec881adc84",
+        "/lib/x86_64-linux-gnu/libcrypto.so.3": "6866ed711dab8927e1bf82bf1cd30e828bdfc34f3cc1e83b1c9eb01ce6c37d9a",
+        "/lib/x86_64-linux-gnu/libdevmapper.so.1.02.1": "0b33f9e9780b2e22bd40170f4cfe358b0cf525974d01896b3bb2b02d6e4e2582",
+        "/lib/x86_64-linux-gnu/libgcc_s.so.1": "d93224d2b0dab4247598be683adca02f5cf00586f99c187579cd7e92058fb7cb",
+        "/lib/x86_64-linux-gnu/libm.so.6": "fce00b6f25f459cf4ae0b7fae4257909a1a8a86f9149e7c029a5d617baf1ccd0",
+        "/lib/x86_64-linux-gnu/libpcre2-8.so.0": "e00576d71d81d3ba0cfa4903c835a44a8723aac96f72f79ff75200b4cff9071b",
+        "/lib/x86_64-linux-gnu/libselinux.so.1": "0ec0843463f90e227b0e138e1f379774f50b5514bd7f5dbd4c8a87aca0aa6670",
+        "/lib/x86_64-linux-gnu/libstdc++.so.6": "1fd75fe70354a416d75aef22bcae68c47bd25d20e2d0568c30b1a9838cf62f11",
+        "/lib/x86_64-linux-gnu/libudev.so.1": "4298228175fa62a36af88b1afd4406cdd8b1bf166621f957d0dbbde45a698fe5",
+        "/lib64/ld-linux-x86-64.so.2": "c20a2dc8917c755f02b94049356320fe1f62ac7d9f8994731f807d9df39302da"
+      }
+    }
+  },
+  "boots": [
+    {
+      "boot": 1,
+      "expected_library": "a",
+      "boot_id": "47231c57-3a88-4fc5-a848-3b3a0e399db8",
+      "package": "0.3.0+010fa96351442907b8dd71c1",
+      "root_guard_absent": true,
+      "resident": {
+        "root": "/run/ram-rescue-manager/rootfs",
+        "library_sha256": "6a66c3ba6b3749aacc9497973fff00f6ba61c703ba7015d0d7ab3fd9510974b6",
+        "library_inode": 304,
+        "binary_sha256": "479c8ba7e2445ae3fbb99d58e1b79d836170c6fe463953ca636cde9857ee8718",
+        "manifest_sha256": "110af461972b56bd95da9c08e1480e4f95ee3961e8afd76005dcf5612941c210"
+      },
+      "controllers": [
+        {
+          "name": "rr-data-vm-ext4",
+          "process": {
+            "pid": 1054,
+            "start_ticks": "916",
+            "state": "S",
+            "cmdline": "/opt/guard-runtime/guard-runtime maintain --record /run/ram-rescue-manager/entries/rr-data-vm-ext4.json "
+          },
+          "binary_sha256": "479c8ba7e2445ae3fbb99d58e1b79d836170c6fe463953ca636cde9857ee8718",
+          "loaded_library_sha256": "6a66c3ba6b3749aacc9497973fff00f6ba61c703ba7015d0d7ab3fd9510974b6",
+          "actual_mappings": [
+            "7a5e98913000-7a5e989c6000 r--p 00000000 00:2e 304                        /lib/x86_64-linux-gnu/libcrypto.so.3",
+            "7a5e989c6000-7a5e98cfa000 r-xp 000b3000 00:2e 304                        /lib/x86_64-linux-gnu/libcrypto.so.3",
+            "7a5e98cfa000-7a5e98dc5000 r--p 003e7000 00:2e 304                        /lib/x86_64-linux-gnu/libcrypto.so.3",
+            "7a5e98dc5000-7a5e98e21000 r--p 004b1000 00:2e 304                        /lib/x86_64-linux-gnu/libcrypto.so.3",
+            "7a5e98e21000-7a5e98e24000 rw-p 0050d000 00:2e 304                        /lib/x86_64-linux-gnu/libcrypto.so.3"
+          ]
+        },
+        {
+          "name": "rr-data-vm-vfat",
+          "process": {
+            "pid": 1102,
+            "start_ticks": "971",
+            "state": "S",
+            "cmdline": "/opt/guard-runtime/guard-runtime maintain --record /run/ram-rescue-manager/entries/rr-data-vm-vfat.json "
+          },
+          "binary_sha256": "479c8ba7e2445ae3fbb99d58e1b79d836170c6fe463953ca636cde9857ee8718",
+          "loaded_library_sha256": "6a66c3ba6b3749aacc9497973fff00f6ba61c703ba7015d0d7ab3fd9510974b6",
+          "actual_mappings": [
+            "7027f8756000-7027f8809000 r--p 00000000 00:2e 304                        /lib/x86_64-linux-gnu/libcrypto.so.3",
+            "7027f8809000-7027f8b3d000 r-xp 000b3000 00:2e 304                        /lib/x86_64-linux-gnu/libcrypto.so.3",
+            "7027f8b3d000-7027f8c08000 r--p 003e7000 00:2e 304                        /lib/x86_64-linux-gnu/libcrypto.so.3",
+            "7027f8c08000-7027f8c64000 r--p 004b1000 00:2e 304                        /lib/x86_64-linux-gnu/libcrypto.so.3",
+            "7027f8c64000-7027f8c67000 rw-p 0050d000 00:2e 304                        /lib/x86_64-linux-gnu/libcrypto.so.3"
+          ]
+        }
+      ],
+      "registry_sha256": {
+        "rr-data-vm-vfat.json": "628ff3b7d4440ecf1d95fd6585e44b9d4758c241d467bf2d004863fee9405d98",
+        "rr-data-vm-ext4.json": "63e3e08a9ee74ea4c45dbfb80db8a986a7bf2d17e7cf361df8ba9e5be867f98b"
+      },
+      "clean_shutdown": true,
+      "devices": {
+        "rr-data-vm-ext4": {
+          "state": {
+            "confirmation": "kernel-probe-and-state",
+            "kernel_probe": {
+              "elapsed": 9.26500000097974e-06,
+              "errno": 0,
+              "source": "ioctl",
+              "status": "completed",
+              "token": 1
+            },
+            "multipath_target_version": [
+              1,
+              15,
+              0
+            ],
+            "node": "/dev/sdd1",
+            "observations": {
+              "control": "ready",
+              "identity": "verified",
+              "transport": {
+                "completed": 96,
+                "in_flight": 0,
+                "state": "no_io",
+                "without_completion_seconds": 0.0
+              },
+              "upper_errors": {
+                "reason": "application and filesystem history not fully observed",
+                "state": "incomplete"
+              }
+            },
+            "outcome": "path_restored",
+            "owner_epoch": "cdee09b673f845138913c413272fbfa2",
+            "recoveries": 1,
+            "state": "ready",
+            "time": 12.31396594
+          },
+          "slaves": [
+            "sdd1"
+          ],
+          "dm_uuid": "RAMRESCUE-DATA-VM-EXT4",
+          "active_table": [
+            [
+              0,
+              131072,
+              "multipath",
+              "3 queue_if_no_path queue_mode bio 0 1 1 round-robin 0 1 1 8:49 1 "
+            ]
+          ],
+          "transaction_phase": "ready",
+          "previous_active_table": [
+            [
+              0,
+              131072,
+              "multipath",
+              "3 queue_if_no_path queue_mode bio 0 1 1 round-robin 0 1 1 8:17 1 "
+            ]
+          ]
+        },
+        "rr-data-vm-vfat": {
+          "state": {
+            "multipath_target_version": [
+              1,
+              15,
+              0
+            ],
+            "node": "/dev/sdc1",
+            "observations": {
+              "control": "idle",
+              "identity": "enrolled",
+              "transport": {
+                "completed": 96,
+                "in_flight": 0,
+                "state": "no_io",
+                "without_completion_seconds": 0.0
+              },
+              "upper_errors": {
+                "reason": "application and filesystem history not fully observed",
+                "state": "incomplete"
+              }
+            },
+            "outcome": "initial_mapping",
+            "owner_epoch": "beb6566f99b946a1bf7c3345b23033cc",
+            "recoveries": 0,
+            "state": "ready",
+            "time": 9.877879535
+          },
+          "slaves": [
+            "sdc1"
+          ],
+          "dm_uuid": "RAMRESCUE-DATA-VM-VFAT",
+          "active_table": [
+            [
+              0,
+              131072,
+              "multipath",
+              "3 queue_if_no_path queue_mode bio 0 1 1 round-robin 0 1 1 8:33 1 "
+            ]
+          ],
+          "transaction_phase": "idle",
+          "previous_active_table": null
+        }
+      },
+      "transition": {
+        "target_library": "b",
+        "before_resident": {
+          "root": "/run/ram-rescue-manager/rootfs",
+          "library_sha256": "6a66c3ba6b3749aacc9497973fff00f6ba61c703ba7015d0d7ab3fd9510974b6",
+          "library_inode": 304,
+          "binary_sha256": "479c8ba7e2445ae3fbb99d58e1b79d836170c6fe463953ca636cde9857ee8718",
+          "manifest_sha256": "110af461972b56bd95da9c08e1480e4f95ee3961e8afd76005dcf5612941c210"
+        },
+        "after_resident": {
+          "root": "/run/ram-rescue-manager/rootfs",
+          "library_sha256": "6a66c3ba6b3749aacc9497973fff00f6ba61c703ba7015d0d7ab3fd9510974b6",
+          "library_inode": 304,
+          "binary_sha256": "479c8ba7e2445ae3fbb99d58e1b79d836170c6fe463953ca636cde9857ee8718",
+          "manifest_sha256": "110af461972b56bd95da9c08e1480e4f95ee3961e8afd76005dcf5612941c210"
+        },
+        "retired_controllers": [
+          "ram-rescue-maintain@rr-data-vm-ext4.service",
+          "ram-rescue-maintain@rr-data-vm-vfat.service"
+        ],
+        "controllers_after": [],
+        "result": {
+          "state": "upgraded",
+          "command": "/usr/local/sbin/rescue-guard",
+          "backup": "/var/lib/ram-rescue-manager/upgrade-vq2v1q0v",
+          "requires_reboot": true,
+          "running_root_changed": false,
+          "runtime_prepared": false,
+          "services_started": []
+        },
+        "registry_before": {
+          "rr-data-vm-vfat.json": "628ff3b7d4440ecf1d95fd6585e44b9d4758c241d467bf2d004863fee9405d98",
+          "rr-data-vm-ext4.json": "63e3e08a9ee74ea4c45dbfb80db8a986a7bf2d17e7cf361df8ba9e5be867f98b"
+        },
+        "registry_after": {
+          "rr-data-vm-vfat.json": "628ff3b7d4440ecf1d95fd6585e44b9d4758c241d467bf2d004863fee9405d98",
+          "rr-data-vm-ext4.json": "63e3e08a9ee74ea4c45dbfb80db8a986a7bf2d17e7cf361df8ba9e5be867f98b"
+        },
+        "selected_package_after": "0.3.0+ca84b65b5441bca23af24aa9"
+      }
+    },
+    {
+      "boot": 2,
+      "expected_library": "b",
+      "boot_id": "f7fd8c74-ff81-4477-9400-bd215300dd2c",
+      "package": "0.3.0+ca84b65b5441bca23af24aa9",
+      "root_guard_absent": true,
+      "resident": {
+        "root": "/run/ram-rescue-manager/rootfs",
+        "library_sha256": "6866ed711dab8927e1bf82bf1cd30e828bdfc34f3cc1e83b1c9eb01ce6c37d9a",
+        "library_inode": 304,
+        "binary_sha256": "479c8ba7e2445ae3fbb99d58e1b79d836170c6fe463953ca636cde9857ee8718",
+        "manifest_sha256": "40528833f099f0f1ee743cb77c535e46ab7616a48e1003ac6d227f8f1de6b581"
+      },
+      "controllers": [
+        {
+          "name": "rr-data-vm-ext4",
+          "process": {
+            "pid": 947,
+            "start_ticks": "572",
+            "state": "S",
+            "cmdline": "/opt/guard-runtime/guard-runtime maintain --record /run/ram-rescue-manager/entries/rr-data-vm-ext4.json "
+          },
+          "binary_sha256": "479c8ba7e2445ae3fbb99d58e1b79d836170c6fe463953ca636cde9857ee8718",
+          "loaded_library_sha256": "6866ed711dab8927e1bf82bf1cd30e828bdfc34f3cc1e83b1c9eb01ce6c37d9a",
+          "actual_mappings": [
+            "74c416665000-74c416718000 r--p 00000000 00:2e 304                        /lib/x86_64-linux-gnu/libcrypto.so.3",
+            "74c416718000-74c416a4c000 r-xp 000b3000 00:2e 304                        /lib/x86_64-linux-gnu/libcrypto.so.3",
+            "74c416a4c000-74c416b17000 r--p 003e7000 00:2e 304                        /lib/x86_64-linux-gnu/libcrypto.so.3",
+            "74c416b17000-74c416b73000 r--p 004b1000 00:2e 304                        /lib/x86_64-linux-gnu/libcrypto.so.3",
+            "74c416b73000-74c416b76000 rw-p 0050d000 00:2e 304                        /lib/x86_64-linux-gnu/libcrypto.so.3"
+          ]
+        },
+        {
+          "name": "rr-data-vm-vfat",
+          "process": {
+            "pid": 948,
+            "start_ticks": "573",
+            "state": "S",
+            "cmdline": "/opt/guard-runtime/guard-runtime maintain --record /run/ram-rescue-manager/entries/rr-data-vm-vfat.json "
+          },
+          "binary_sha256": "479c8ba7e2445ae3fbb99d58e1b79d836170c6fe463953ca636cde9857ee8718",
+          "loaded_library_sha256": "6866ed711dab8927e1bf82bf1cd30e828bdfc34f3cc1e83b1c9eb01ce6c37d9a",
+          "actual_mappings": [
+            "7d3380be8000-7d3380c9b000 r--p 00000000 00:2e 304                        /lib/x86_64-linux-gnu/libcrypto.so.3",
+            "7d3380c9b000-7d3380fcf000 r-xp 000b3000 00:2e 304                        /lib/x86_64-linux-gnu/libcrypto.so.3",
+            "7d3380fcf000-7d338109a000 r--p 003e7000 00:2e 304                        /lib/x86_64-linux-gnu/libcrypto.so.3",
+            "7d338109a000-7d33810f6000 r--p 004b1000 00:2e 304                        /lib/x86_64-linux-gnu/libcrypto.so.3",
+            "7d33810f6000-7d33810f9000 rw-p 0050d000 00:2e 304                        /lib/x86_64-linux-gnu/libcrypto.so.3"
+          ]
+        }
+      ],
+      "registry_sha256": {
+        "rr-data-vm-vfat.json": "628ff3b7d4440ecf1d95fd6585e44b9d4758c241d467bf2d004863fee9405d98",
+        "rr-data-vm-ext4.json": "63e3e08a9ee74ea4c45dbfb80db8a986a7bf2d17e7cf361df8ba9e5be867f98b"
+      },
+      "clean_shutdown": true,
+      "devices": {
+        "rr-data-vm-ext4": {
+          "state": {
+            "confirmation": "kernel-probe-and-state",
+            "kernel_probe": {
+              "elapsed": 1.661199999958285e-05,
+              "errno": 0,
+              "source": "ioctl",
+              "status": "completed",
+              "token": 1
+            },
+            "multipath_target_version": [
+              1,
+              15,
+              0
+            ],
+            "node": "/dev/sdd1",
+            "observations": {
+              "control": "ready",
+              "identity": "verified",
+              "transport": {
+                "completed": 0,
+                "in_flight": 0,
+                "state": "no_io",
+                "without_completion_seconds": 0.0
+              },
+              "upper_errors": {
+                "reason": "application and filesystem history not fully observed",
+                "state": "incomplete"
+              }
+            },
+            "outcome": "path_restored",
+            "owner_epoch": "f48183d8d6eb4564b85c2725ac6b0d29",
+            "recoveries": 1,
+            "state": "ready",
+            "time": 8.19026341
+          },
+          "slaves": [
+            "sdd1"
+          ],
+          "dm_uuid": "RAMRESCUE-DATA-VM-EXT4",
+          "active_table": [
+            [
+              0,
+              131072,
+              "multipath",
+              "3 queue_if_no_path queue_mode bio 0 1 1 round-robin 0 1 1 8:49 1 "
+            ]
+          ],
+          "transaction_phase": "ready",
+          "previous_active_table": [
+            [
+              0,
+              131072,
+              "multipath",
+              "3 queue_if_no_path queue_mode bio 0 1 1 round-robin 0 1 1 8:33 1 "
+            ]
+          ]
+        },
+        "rr-data-vm-vfat": {
+          "state": {
+            "multipath_target_version": [
+              1,
+              15,
+              0
+            ],
+            "node": "/dev/sdb1",
+            "observations": {
+              "control": "idle",
+              "identity": "enrolled",
+              "transport": {
+                "completed": 0,
+                "in_flight": 0,
+                "state": "no_io",
+                "without_completion_seconds": 0.0
+              },
+              "upper_errors": {
+                "reason": "application and filesystem history not fully observed",
+                "state": "incomplete"
+              }
+            },
+            "outcome": "initial_mapping",
+            "owner_epoch": "0b64d66146024794a50e414b38645ad1",
+            "recoveries": 0,
+            "state": "ready",
+            "time": 6.085952156
+          },
+          "slaves": [
+            "sdb1"
+          ],
+          "dm_uuid": "RAMRESCUE-DATA-VM-VFAT",
+          "active_table": [
+            [
+              0,
+              131072,
+              "multipath",
+              "3 queue_if_no_path queue_mode bio 0 1 1 round-robin 0 1 1 8:17 1 "
+            ]
+          ],
+          "transaction_phase": "idle",
+          "previous_active_table": null
+        }
+      },
+      "transition": {
+        "target_library": "a",
+        "before_resident": {
+          "root": "/run/ram-rescue-manager/rootfs",
+          "library_sha256": "6866ed711dab8927e1bf82bf1cd30e828bdfc34f3cc1e83b1c9eb01ce6c37d9a",
+          "library_inode": 304,
+          "binary_sha256": "479c8ba7e2445ae3fbb99d58e1b79d836170c6fe463953ca636cde9857ee8718",
+          "manifest_sha256": "40528833f099f0f1ee743cb77c535e46ab7616a48e1003ac6d227f8f1de6b581"
+        },
+        "after_resident": {
+          "root": "/run/ram-rescue-manager/rootfs",
+          "library_sha256": "6866ed711dab8927e1bf82bf1cd30e828bdfc34f3cc1e83b1c9eb01ce6c37d9a",
+          "library_inode": 304,
+          "binary_sha256": "479c8ba7e2445ae3fbb99d58e1b79d836170c6fe463953ca636cde9857ee8718",
+          "manifest_sha256": "40528833f099f0f1ee743cb77c535e46ab7616a48e1003ac6d227f8f1de6b581"
+        },
+        "retired_controllers": [
+          "ram-rescue-maintain@rr-data-vm-ext4.service",
+          "ram-rescue-maintain@rr-data-vm-vfat.service"
+        ],
+        "controllers_after": [],
+        "result": {
+          "state": "upgraded",
+          "command": "/usr/local/sbin/rescue-guard",
+          "backup": "/var/lib/ram-rescue-manager/upgrade-w_fo_vky",
+          "requires_reboot": true,
+          "running_root_changed": false,
+          "runtime_prepared": false,
+          "services_started": []
+        },
+        "registry_before": {
+          "rr-data-vm-vfat.json": "628ff3b7d4440ecf1d95fd6585e44b9d4758c241d467bf2d004863fee9405d98",
+          "rr-data-vm-ext4.json": "63e3e08a9ee74ea4c45dbfb80db8a986a7bf2d17e7cf361df8ba9e5be867f98b"
+        },
+        "registry_after": {
+          "rr-data-vm-vfat.json": "628ff3b7d4440ecf1d95fd6585e44b9d4758c241d467bf2d004863fee9405d98",
+          "rr-data-vm-ext4.json": "63e3e08a9ee74ea4c45dbfb80db8a986a7bf2d17e7cf361df8ba9e5be867f98b"
+        },
+        "selected_package_after": "0.3.0+010fa96351442907b8dd71c1"
+      }
+    },
+    {
+      "boot": 3,
+      "expected_library": "a",
+      "boot_id": "2326074e-95ba-41fd-9032-9d27b020c012",
+      "package": "0.3.0+010fa96351442907b8dd71c1",
+      "root_guard_absent": true,
+      "resident": {
+        "root": "/run/ram-rescue-manager/rootfs",
+        "library_sha256": "6a66c3ba6b3749aacc9497973fff00f6ba61c703ba7015d0d7ab3fd9510974b6",
+        "library_inode": 304,
+        "binary_sha256": "479c8ba7e2445ae3fbb99d58e1b79d836170c6fe463953ca636cde9857ee8718",
+        "manifest_sha256": "110af461972b56bd95da9c08e1480e4f95ee3961e8afd76005dcf5612941c210"
+      },
+      "controllers": [
+        {
+          "name": "rr-data-vm-ext4",
+          "process": {
+            "pid": 942,
+            "start_ticks": "517",
+            "state": "S",
+            "cmdline": "/opt/guard-runtime/guard-runtime maintain --record /run/ram-rescue-manager/entries/rr-data-vm-ext4.json "
+          },
+          "binary_sha256": "479c8ba7e2445ae3fbb99d58e1b79d836170c6fe463953ca636cde9857ee8718",
+          "loaded_library_sha256": "6a66c3ba6b3749aacc9497973fff00f6ba61c703ba7015d0d7ab3fd9510974b6",
+          "actual_mappings": [
+            "76cd1f50e000-76cd1f5c1000 r--p 00000000 00:2e 304                        /lib/x86_64-linux-gnu/libcrypto.so.3",
+            "76cd1f5c1000-76cd1f8f5000 r-xp 000b3000 00:2e 304                        /lib/x86_64-linux-gnu/libcrypto.so.3",
+            "76cd1f8f5000-76cd1f9c0000 r--p 003e7000 00:2e 304                        /lib/x86_64-linux-gnu/libcrypto.so.3",
+            "76cd1f9c0000-76cd1fa1c000 r--p 004b1000 00:2e 304                        /lib/x86_64-linux-gnu/libcrypto.so.3",
+            "76cd1fa1c000-76cd1fa1f000 rw-p 0050d000 00:2e 304                        /lib/x86_64-linux-gnu/libcrypto.so.3"
+          ]
+        },
+        {
+          "name": "rr-data-vm-vfat",
+          "process": {
+            "pid": 943,
+            "start_ticks": "518",
+            "state": "S",
+            "cmdline": "/opt/guard-runtime/guard-runtime maintain --record /run/ram-rescue-manager/entries/rr-data-vm-vfat.json "
+          },
+          "binary_sha256": "479c8ba7e2445ae3fbb99d58e1b79d836170c6fe463953ca636cde9857ee8718",
+          "loaded_library_sha256": "6a66c3ba6b3749aacc9497973fff00f6ba61c703ba7015d0d7ab3fd9510974b6",
+          "actual_mappings": [
+            "7a16df193000-7a16df246000 r--p 00000000 00:2e 304                        /lib/x86_64-linux-gnu/libcrypto.so.3",
+            "7a16df246000-7a16df57a000 r-xp 000b3000 00:2e 304                        /lib/x86_64-linux-gnu/libcrypto.so.3",
+            "7a16df57a000-7a16df645000 r--p 003e7000 00:2e 304                        /lib/x86_64-linux-gnu/libcrypto.so.3",
+            "7a16df645000-7a16df6a1000 r--p 004b1000 00:2e 304                        /lib/x86_64-linux-gnu/libcrypto.so.3",
+            "7a16df6a1000-7a16df6a4000 rw-p 0050d000 00:2e 304                        /lib/x86_64-linux-gnu/libcrypto.so.3"
+          ]
+        }
+      ],
+      "registry_sha256": {
+        "rr-data-vm-vfat.json": "628ff3b7d4440ecf1d95fd6585e44b9d4758c241d467bf2d004863fee9405d98",
+        "rr-data-vm-ext4.json": "63e3e08a9ee74ea4c45dbfb80db8a986a7bf2d17e7cf361df8ba9e5be867f98b"
+      },
+      "clean_shutdown": true,
+      "devices": {
+        "rr-data-vm-ext4": {
+          "state": {
+            "confirmation": "kernel-probe-and-state",
+            "kernel_probe": {
+              "elapsed": 8.137799999996531e-05,
+              "errno": 0,
+              "source": "ioctl",
+              "status": "completed",
+              "token": 1
+            },
+            "multipath_target_version": [
+              1,
+              15,
+              0
+            ],
+            "node": "/dev/sdd1",
+            "observations": {
+              "control": "ready",
+              "identity": "verified",
+              "transport": {
+                "completed": 0,
+                "in_flight": 0,
+                "state": "no_io",
+                "without_completion_seconds": 0.0
+              },
+              "upper_errors": {
+                "reason": "application and filesystem history not fully observed",
+                "state": "incomplete"
+              }
+            },
+            "outcome": "path_restored",
+            "owner_epoch": "afed763254c041b1b191fc711b69b1dd",
+            "recoveries": 1,
+            "state": "ready",
+            "time": 7.751690631
+          },
+          "slaves": [
+            "sdd1"
+          ],
+          "dm_uuid": "RAMRESCUE-DATA-VM-EXT4",
+          "active_table": [
+            [
+              0,
+              131072,
+              "multipath",
+              "3 queue_if_no_path queue_mode bio 0 1 1 round-robin 0 1 1 8:49 1 "
+            ]
+          ],
+          "transaction_phase": "ready",
+          "previous_active_table": [
+            [
+              0,
+              131072,
+              "multipath",
+              "3 queue_if_no_path queue_mode bio 0 1 1 round-robin 0 1 1 8:17 1 "
+            ]
+          ]
+        },
+        "rr-data-vm-vfat": {
+          "state": {
+            "multipath_target_version": [
+              1,
+              15,
+              0
+            ],
+            "node": "/dev/sdc1",
+            "observations": {
+              "control": "idle",
+              "identity": "enrolled",
+              "transport": {
+                "completed": 0,
+                "in_flight": 0,
+                "state": "no_io",
+                "without_completion_seconds": 0.0
+              },
+              "upper_errors": {
+                "reason": "application and filesystem history not fully observed",
+                "state": "incomplete"
+              }
+            },
+            "outcome": "initial_mapping",
+            "owner_epoch": "cf140b012e784c5a83bf9a5b6ed51ec8",
+            "recoveries": 0,
+            "state": "ready",
+            "time": 5.565969084
+          },
+          "slaves": [
+            "sdc1"
+          ],
+          "dm_uuid": "RAMRESCUE-DATA-VM-VFAT",
+          "active_table": [
+            [
+              0,
+              131072,
+              "multipath",
+              "3 queue_if_no_path queue_mode bio 0 1 1 round-robin 0 1 1 8:33 1 "
+            ]
+          ],
+          "transaction_phase": "idle",
+          "previous_active_table": null
+        }
+      }
+    }
+  ],
+  "limitations": [
+    "This is an x86_64 VM dependency lifecycle experiment, not a physical USB reliability or application-data durability claim.",
+    "Both libraries have the same libcrypto.so.3 ABI; incompatible ABI migrations are not exercised.",
+    "The old library comes from a verified Canonical archive; current installed dpkg metadata is provenance, not independent package signature verification.",
+    "The ordinary Ubuntu seed emits the previously recorded optional binfmt_misc module mount failure; each normal shutdown also waited for the default snapd stop timeout."
+  ]
+}

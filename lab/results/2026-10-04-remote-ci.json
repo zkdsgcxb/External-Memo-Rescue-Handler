@@ -1,0 +1,29 @@
+{
+  "schema": 1,
+  "source_commit": "25b76b7be8fea3d5a5279cd00f541e36f972bfa7",
+  "status": "completed",
+  "conclusion": "success",
+  "run_url": "https://github.com/zkdsgcxb/External-Memo-Rescue-Handler/actions/runs/37214536482",
+  "workflow_sha256": "57680fa976193046b63ec21e5053f3bd6f69f59f68eadf29d4a8cdf5a43e1f71",
+  "jobs": [
+    {
+      "name": "native (release)",
+      "status": "completed",
+      "conclusion": "success",
+      "startedAt": "2026-10-04T15:50:50Z",
+      "completedAt": "2026-10-04T15:52:09Z",
+      "url": "https://github.com/zkdsgcxb/External-Memo-Rescue-Handler/actions/runs/37214536482/job/111472254526"
+    },
+    {
+      "name": "native (sanitizers)",
+      "status": "completed",
+      "conclusion": "success",
+      "startedAt": "2026-10-04T15:50:50Z",
+      "completedAt": "2026-10-04T15:53:11Z",
+      "url": "https://github.com/zkdsgcxb/External-Memo-Rescue-Handler/actions/runs/37214536482/job/111472254704"
+    }
+  ],
+  "scope": "GitHub Ubuntu 24.04 release and ASan/UBSan native builds, ELF checks and 10000 input mutations per build; not privileged QEMU or host boot acceptance",
+  "raw_record": "lab/work/roadmap-ci-25b76b7.json",
+  "raw_record_sha256": "6c6bab87ae0c061714b71e13c8a249b5ef90c20868de503f3d6046851fbe32f8"
+}

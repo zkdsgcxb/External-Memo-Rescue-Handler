@@ -26,7 +26,7 @@
 
 自动恢复仅使用 C++ 运行时；Python 负责管理、实验与人工救援。旧 Python 自动恢复实现已从当前源码移除，历史对照从固定 Git 提交复现，见 [清退记录](research/2026-10-02/PYTHON-RUNTIME-RETIREMENT.md)。
 
-Guard 是用户空间服务。内核负责块 I/O、USB/SCSI 和文件系统处理；Guard 不替代这些实现。健康期等待设备/DM 事件，每秒兜底检查，不主动读盘；恢复期才执行必要的身份和介质核验。
+Guard 是用户空间服务。内核负责块 I/O、USB/SCSI 和文件系统处理；Guard 不替代这些实现。健康期等待设备/DM 事件，按配置定期兜底检查，不主动读盘；恢复期才执行必要的身份和介质核验。
 
 职责划分、复用的开源实现和可替换边界见 [架构说明](ARCHITECTURE.md)。
 
@@ -82,21 +82,24 @@ python3 lab/reproduce.py --run
 
 ## 性能与验证
 
-2026-10-02 在相同完整 Ubuntu QEMU 环境中，对 Python 与完整 C++ 运行时各做三次独立实验。以下为**根盘、ext4 与 FAT 三个 Guard 及其子进程合计**，一个逻辑核占满为 100%。
+2026-10-04—05 对改进前后的完整 C++ 包执行 AB/BA 四场 Ubuntu QEMU 实验，每场 **26/26** 验收通过。两边使用相同内核、种子、基础工具与观察器；统计**根盘、ext4 与 FAT 三个 Guard 及其子进程合计**，一个逻辑核占满为 100%。
 
-| 指标 | Python | C++ |
+| 指标 | 改进前 C++ | 本轮 C++ |
 | --- | ---: | ---: |
-| 常态平均 CPU | 0.116% | 0.071% |
-| 常态内存 PSS | 37.82 MiB | 9.89 MiB |
-| 常态 CPU 峰值，约 20 ms 窗口 | 10.93% | 2.34% |
-| 恢复 CPU 峰值，约 20 ms 窗口 | 46.55% | 27.36% |
-| 恢复耗时 | 3.284 s | 3.244 s |
+| 常态平均 CPU | 0.070% | 0.077% |
+| 常态 CPU 峰值，约 20 ms 窗口 | 2.49% | 2.92% |
+| 常态 PSS 采样峰值 | 9.56 MiB | 9.73 MiB |
+| 恢复 CPU 峰值，约 20 ms 窗口 | 36.66% | 32.34% |
+| 恢复 PSS 采样峰值 | 10.51 MiB | 17.74 MiB |
+| 三映射恢复耗时 | 2.855 s | 3.282 s |
 
-均值、PSS 和耗时取三次实验的中位数；峰值取三次实验中最大的采样窗口。CPU 统计不包含业务负载、采样器、udev 及其他内核工作线程，窗口峰值也不等于任意瞬间的硬上限。
+CPU 均值和耗时取每版两场的中位数，峰值取两场最大的观察窗口；PSS 每 200 ms 采样。本轮补齐安全与接入能力后，常态开销略增，恢复 CPU 峰值降低，但恢复耗时未改善。新版恢复 PSS 峰值捕获了短命 helper，旧版最大快照仅含三个控制器；这些采样不能证明两者真正的瞬时内存上限。
 
-常态 PSS 降低约 **74%**，常态平均 CPU 降低约 **39%**，恢复耗时基本相当。完整救援包因保留人工救援用 Python 并新增 C++ 库，文件负载增加约 **3.33 MiB**。
+CPU 不包含业务程序、日志服务、采样器、udev 及其他内核工作线程。根服务与数据盘父 slice 各有单核 20% 配额，合计预算为 40%；短窗口峰值不等于任意瞬间的硬上限。PSS、cgroup 内存和 RAM 工具文件大小不可相加作为整机内存。
 
-迁移对照时通过了 355 项 Python 回归、110 项原生检查，以及完整 Ubuntu 挂载验收、十轮连续恢复、事务故障矩阵和生产打包集成验证。方法、数值范围、原始数据索引与限制见 [C++ 迁移和性能报告](research/2026-10-02/CPP-MIGRATION.md)；移除旧实现及其专用测试后的检查见 [清退记录](research/2026-10-02/PYTHON-RUNTIME-RETIREMENT.md)。
+常态、两类事件风暴、恢复期、子进程与各次样本的完整结果见 [本轮性能报告](research/2026-10-04/PERFORMANCE-METHOD.md)。测量绑定当时冻结的运行包；后续冷态诊断和实验结果通道修复未改动被测 C++、服务限制或健康/恢复路径。
+
+早期 Python→C++ 三次迁移对照及其原始数据仍保留在 [迁移报告](research/2026-10-02/CPP-MIGRATION.md)，旧 Python 自动恢复实现的移除见 [清退记录](research/2026-10-02/PYTHON-RUNTIME-RETIREMENT.md)。当前功能、安全与实机启用状态见 [逐项验收报告](research/2026-10-04/ROADMAP-IMPLEMENTATION.md)。
 
 ## 支持范围
 
@@ -112,9 +115,9 @@ python3 lab/reproduce.py --run
 
 Guard 不自动执行文件系统修复或强制读写重挂。EFI 有独立的 [udev/systemd 检查与挂载集成](guard/EFI.md)，不属于根卷 DM 排队保护。RAM 救援终端是共享宿主内核的 root shell，临时日志重启即失。
 
-安全边界：设备身份核验用于防误接和实例确认，不是防克隆设备的认证；RAM/chroot 也不是 root 安全沙箱。启动失败控制台、救援认证、服务权限与安装信任边界见 [攻击面评估](research/2026-10-03/ATTACK-SURFACE.md)。本轮已实现保护启动失败停机、救援提示符超时退出和新设密码检查，通过 7 项失败启动与 36 项完整 Ubuntu 集成检查，见 [P0 实现与验收](research/2026-10-03/P0-BOOT-AND-RESCUE.md)。
+安全边界：设备身份核验用于防误接和实例确认，不是防克隆设备的认证；RAM/chroot 也不是 root 安全沙箱。启动失败控制台、救援认证、服务权限与安装信任边界见 [攻击面评估](research/2026-10-03/ATTACK-SURFACE.md)。保护启动失败停机、救援提示符超时退出和新设密码检查见 [P0 实现与验收](research/2026-10-03/P0-BOOT-AND-RESCUE.md)。本轮新增权限与可信安装策略后，完整根盘联合验收通过 39 项，普通 Ubuntu 独立数据盘两次启动通过 42 项；最终证据见 [本轮报告](research/2026-10-04/ROADMAP-IMPLEMENTATION.md)。
 
-[ROADMAP](ROADMAP.md) 跟踪安全加固、按需诊断、干净环境复现、数据盘独立接入与实机验收。逐项实现与当前验证状态见 [本轮报告](research/2026-10-04/ROADMAP-IMPLEMENTATION.md)；QEMU 验收与实机启用分开记录。
+[ROADMAP](ROADMAP.md) 跟踪安全加固、按需诊断、干净环境复现、数据盘独立接入与实机验收。本轮 P0–P3 软件和 QEMU 验收已落实，普通回归 **400 + 27** 项通过；新管理包和保护镜像已完成 [本机冷态部署](research/2026-10-04/HOST-COLD-UPGRADE.md)，当前仍运行旧实例，下一次保护启动及真实使用观察待验收。逐项证据见 [本轮报告](research/2026-10-04/ROADMAP-IMPLEMENTATION.md)。
 
 ## 项目结构
 
@@ -169,7 +172,7 @@ External-Memo-Rescue-Handler/
 | --- | --- |
 | 组件职责与实现方式 | [ARCHITECTURE.md](ARCHITECTURE.md) |
 | 下一版本与安全边界 | [下一版本目标](ROADMAP.md) · [攻击面评估](research/2026-10-03/ATTACK-SURFACE.md) |
-| 安装信任链与本轮实现 | [可信安装](research/2026-10-04/INSTALLATION-AND-TRUST.md) · [逐项落实报告](research/2026-10-04/ROADMAP-IMPLEMENTATION.md) |
+| 安装信任链与本轮实现 | [可信安装](research/2026-10-04/INSTALLATION-AND-TRUST.md) · [逐项落实报告](research/2026-10-04/ROADMAP-IMPLEMENTATION.md) · [本机冷态部署](research/2026-10-04/HOST-COLD-UPGRADE.md) |
 | 日常登记、状态查看与维护 | [统一后台维护](guard/MANAGER.md) |
 | 根盘构建、安装与回退 | [根盘保护启动](guard/README.md) |
 | 数据盘与挂载计划 | [数据映射](guard/DATA.md) · [挂载与子挂载](guard/MOUNTS.md) |

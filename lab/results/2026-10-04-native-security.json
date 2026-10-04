@@ -107,5 +107,32 @@
     "ASan/UBSan artifacts are test-only; no CPU or RAM performance result is inferred.",
     "GCC13 libstdc++ regex maybe-uninitialized warnings are visible but not fatal only in sanitizer builds."
   ],
-  "final_runtime_note": "Data startup admission reads the single host fstab supplied at /etc/rescue/host-fstab; no CAP_SYS_PTRACE."
+  "final_runtime_note": "Data startup admission reads the single host fstab supplied at /etc/rescue/host-fstab; no CAP_SYS_PTRACE.",
+  "separate_vm_reports": {
+    "protected": {
+      "path": "lab/work/cpp-int-1004-224707-476521/report.json",
+      "sha256": "39d8fd568eafd55ff50fc481b3a885acd3684c288b3fc4b743b56fe3c540791d",
+      "passed": true,
+      "checks": 39
+    },
+    "standalone": {
+      "path": "lab/work/sd-1005-000949-799661/report.json",
+      "sha256": "98c3e99154e09f2c7e30537aa07a72375c6139fe160beddf3f72b54f97af9256",
+      "passed": true,
+      "checks": 42,
+      "note": "v9 retains byte-identical native runtime and RAM archive; final diagnostic candidate fields also checked"
+    },
+    "transaction_per_case": {
+      "path": "lab/results/2026-10-04-transaction-policy.json",
+      "sha256": "41d396abb009758c3511b2a5b94efb4cb403db97429272fa17cb7fc6a9f6bec6",
+      "passed": true,
+      "checks": 138
+    },
+    "standalone_prior_v8": {
+      "path": "lab/work/sd-1004-232607-652502/report.json",
+      "sha256": "8dcae3246d896a61003769afd561549ca83f1d34d2da1ae0ea3de58a80b4647d",
+      "passed": true,
+      "checks": 42
+    }
+  }
 }

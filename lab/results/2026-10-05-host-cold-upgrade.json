@@ -1,0 +1,87 @@
+{
+  "schema": 1,
+  "date": "2026-10-05",
+  "scope": "authenticated host cold deployment; no reboot or physical disconnect",
+  "installed": true,
+  "next_boot_accepted": false,
+  "package": {
+    "version": "0.3.0+2f5bf9a687263df093e11293",
+    "sha256": "dc1829017a88c3812deaeeefef368231f4678d206cfda14d94888b1d79aa02ba"
+  },
+  "kernel": "7.0.0-34-generic",
+  "installed_image_sha256": "619c03696311a71a9e5c950ccd06dd5a37d43c228f2e0379311fad200e2e547d",
+  "installed_binary_sha256": "479c8ba7e2445ae3fbb99d58e1b79d836170c6fe463953ca636cde9857ee8718",
+  "running_binary_sha256": "72d9d550079b4f73e1954e13f99fa614826758c623eec1d3026aa22bc891b21f",
+  "guard_pid_before_after": 689,
+  "logger_pid_before_after": 1495,
+  "current_guard": {
+    "state": "ready",
+    "owner_matches": true,
+    "service_state": "active",
+    "runtime_context": "protected_boot"
+  },
+  "persistent_receipts": {
+    "root": "installed",
+    "manager": "installed"
+  },
+  "manager_runtime_prepared": false,
+  "services_started": [],
+  "grub_changed": false,
+  "image_backup_evidence": "/var/lib/ram-rescue-guard/upgrades/20261004T161634Z-3fd911e67f87",
+  "manager_backup": "/var/lib/ram-rescue-manager/upgrade-qzwxwu7s",
+  "logger_backup": "/var/lib/ram-rescue-package-review/20261005-roadmap-v9/ram-rescue-log.service.before",
+  "logger_previous_sha256": "a0a7f81a700e1afc3f24e2ddbdd41ba1bc7f071f7936f770714244e7ec0e8019",
+  "logger_installed_sha256": "f4034d93b7e6fb23988fe4fd70bb710ac20d867e53798c474d35982bdca5ba87",
+  "actual_root_security_is_previous_version": true,
+  "frozen_runtime_manifests_available": false,
+  "diagnostic_issues": [
+    {
+      "source": "id-ff8ff2c4f08bfaaff15ee649",
+      "code": "unavailable_or_untrusted"
+    }
+  ],
+  "private_evidence": {
+    "stage.json": {
+      "path": "lab/work/roadmap-host-deploy-20261005/stage.json",
+      "sha256": "eb3a7b65c783f4891586f3371adc2d2f6cda25769fbc96ab07c68cbae46fe336"
+    },
+    "preflight.json": {
+      "path": "lab/work/roadmap-host-deploy-20261005/preflight.json",
+      "sha256": "7c9995a8d4c5ff338f6f1871617d3e65d307b095e9f2b44ea55e7decf6a7bf18"
+    },
+    "upgrade.json": {
+      "path": "lab/work/roadmap-host-deploy-20261005/upgrade.json",
+      "sha256": "667dba3d5aa3872244a0af60664ba53d0b5176592e80d304c8a4c0402ce52eee"
+    },
+    "manager-upgrade.json": {
+      "path": "lab/work/roadmap-host-deploy-20261005/manager-upgrade.json",
+      "sha256": "5b6aaa2cca5cc248874fdc68dccc0998f372cce6c2365a7cf8b641d72b4501d9"
+    },
+    "doctor-after.json": {
+      "path": "lab/work/roadmap-host-deploy-20261005/doctor-after.json",
+      "sha256": "220f0d4f7da199947c7467b5ef5c4178fddd170e32aec39eb25cff5e1c5d4a42"
+    },
+    "services-after.txt": {
+      "path": "lab/work/roadmap-host-deploy-20261005/services-after.txt",
+      "sha256": "b7a7eb673106b9e8a57dd0462ad686a33c4e3c7d64dc63386da914cc2d03d491"
+    },
+    "installed-image.sha256": {
+      "path": "lab/work/roadmap-host-deploy-20261005/installed-image.sha256",
+      "sha256": "cbcbf019f99f95c7acb81d4770479162d0758323ee301a8c5d1b6f58c2700b81"
+    },
+    "package-copy.sha256": {
+      "path": "lab/work/roadmap-host-deploy-20261005/package-copy.sha256",
+      "sha256": "56f54c3a1871fedc4bdf7f58a8a044dc754bf101df27f7d75201f9dc619c8091"
+    },
+    "logger-before.sha256": {
+      "path": "lab/work/roadmap-host-deploy-20261005/logger-before.sha256",
+      "sha256": "07fd81e3537a3f90d4e0a24755286efdc53cf72b011299e53ff381ea4db08873"
+    }
+  },
+  "limits": [
+    "Only the actual running ELF hash and owner health are established for the old live runtime; one unavailable_or_untrusted input prevents frozen library manifest comparison.",
+    "The new binary and systemd restrictions take effect only after a verified protected boot; package installation is not activation.",
+    "F9/F10 login, desktop/application use, suspend/resume, shutdown and real USB failure remain host acceptance work.",
+    "No passwords, credentials, original enrollment or GRUB contents are published here."
+  ]
+}
