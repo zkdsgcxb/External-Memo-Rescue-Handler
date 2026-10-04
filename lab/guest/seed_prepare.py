@@ -5,8 +5,10 @@ import os
 from pathlib import Path
 import subprocess
 import sys
+import termios
 import time
 import traceback
+import tty
 
 sys.path.insert(0, '/opt/seed/guard')
 sys.path.insert(0, '/opt/seed')
@@ -21,6 +23,16 @@ def run(*arguments, **kwargs):
                                        timeout=240, **kwargs)
     except subprocess.CalledProcessError as exc:
         raise RuntimeError(f'{arguments}: {exc.output[-6000:]}') from exc
+
+
+def emit_result(result):
+    # ttyS0 also carries asynchronous kernel printk messages. Keep the
+    # machine-readable result on its own serial port, including during shutdown.
+    with open('/dev/ttyS1', 'w') as serial:
+        tty.setraw(serial.fileno(), when=termios.TCSANOW)
+        serial.write(json.dumps(result) + '\n')
+        serial.flush()
+        termios.tcdrain(serial.fileno())
 
 
 def prepare():
@@ -112,9 +124,13 @@ def prepare():
 if __name__ == '__main__':
     try:
         value = prepare()
-        print('RAM_RESCUE_SEED=' + json.dumps({'ok': True, 'value': value}), flush=True)
+        result = {'ok': True, 'value': value}
     except BaseException:
-        print('RAM_RESCUE_SEED=' + json.dumps({'ok': False, 'error': traceback.format_exc()}), flush=True)
+        result = {'ok': False, 'error': traceback.format_exc()}
+    try:
+        emit_result(result)
+    except BaseException:
+        traceback.print_exc()
     subprocess.run(['/bin/poweroff', '-f'], check=False)
     while True:
         time.sleep(60)

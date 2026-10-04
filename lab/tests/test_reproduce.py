@@ -85,6 +85,24 @@ class ReproductionTests(unittest.TestCase):
         with patch.object(reproduce.subprocess, 'run'), self.assertRaises(ValueError):
             reproduce.verify_ubuntu(self.folder, keyring)
 
+    def test_seed_result_uses_one_bounded_independent_message(self):
+        result = self.folder/'seed-result.json'
+        result.write_text('{"ok":true,"value":{"schema":1}}\n')
+        self.assertEqual(reproduce.read_seed_result(result, 0), {'schema': 1})
+        # Kernel console corruption, duplicate results and partial writes must
+        # fail explicitly; the reader never reconstructs plausible JSON.
+        for payload in (b'', b'x' * 65537, b'{"ok":false,"error":"seed failed"}',
+                        b'{"ok":true,"value":{}}\n{"ok":true,"value":{}}',
+                        b'{"ok":true,"value":{"sc[ 1.0] kernel message\nhema":1}}',
+                        b'{"ok":true,"value":'):
+            with self.subTest(payload=payload[:60]):
+                result.write_bytes(payload)
+                with self.assertRaises((ValueError, RuntimeError)):
+                    reproduce.read_seed_result(result, 0)
+        result.write_text('{"ok":true,"value":{}}')
+        with self.assertRaises(RuntimeError):
+            reproduce.read_seed_result(result, 1)
+
     def test_payload_modes_ignore_permissive_host_umask(self):
         builder = reproduce.load_builder().base_builder()
         root = self.folder/'payload'

@@ -58,10 +58,155 @@ class DiagnosticTests(unittest.TestCase):
         self.assertEqual(doctor.doctor(**self.options)['state'], 'not_installed')
         self.write(doctor.ROOT_RECEIPT, {'state': 'installed'})
         self.assertEqual(doctor.doctor(**self.options)['state'], 'installed_not_running')
-        self.write(doctor.ROOT_RECEIPT, {'state': 'uninstalled'})
-        self.assertEqual(doctor.doctor(**self.options)['state'], 'not_installed')
         self.options['service_reader'].assert_not_called()
         self.options['map_reader'].assert_not_called()
+
+    def test_removed_and_rolled_back_installations_are_not_installed(self):
+        for role, path, states in (
+                ('root', doctor.ROOT_RECEIPT, ('removed', 'failed_rolled_back')),
+                ('manager', doctor.MANAGER_RECEIPT, ('uninstalled',))):
+            for state in states:
+                with self.subTest(role=role, state=state):
+                    receipt = self.write(path, {'state': state, 'image_sha256': 'a' * 64,
+                                                'build': {'native_runtime': {'binary_sha256': 'b' * 64}}})
+                    report = doctor.doctor(**self.options)
+                    self.assertEqual(report['state'], 'not_installed')
+                    self.assertIs(report['installed'], False)
+                    self.assertEqual(report['installation_receipts'][role], state)
+                    self.assertIsNone(report['versions']['installed_image_sha256'])
+                    self.assertIsNone(report['versions']['installed_binary_sha256'])
+                    self.assertIsNone(report['versions']['installed_candidates'][role])
+                    receipt.unlink()
+        self.options['service_reader'].assert_not_called()
+        self.options['map_reader'].assert_not_called()
+
+    def test_incomplete_and_unrecognised_installations_cannot_look_normal(self):
+        for role, path, states in (
+                ('root', doctor.ROOT_RECEIPT, ('preparing', 'upgrading', 'failed', 'upgraded', [])),
+                ('manager', doctor.MANAGER_RECEIPT, ('installing', 'upgrading', 'failed', 'upgraded', []))):
+            for state in states:
+                with self.subTest(role=role, state=state):
+                    receipt = self.write(path, {'state': state})
+                    report = doctor.doctor(**self.options)
+                    self.assertEqual(report['state'], 'unknown')
+                    self.assertIsNone(report['installed'])
+                    # A healthy current owner cannot certify an unfinished next-boot change.
+                    report = self.ready()
+                    self.assertEqual(report['state'], 'unknown')
+                    self.assertEqual(report['devices'][0]['state'], 'ready')
+                    self.assertIs(report['installed'], True)
+                    (self.root / doctor.ROOT_CONFIG.lstrip('/')).unlink()
+                    receipt.unlink()
+
+    def test_failed_manager_upgrade_is_distinct_from_current_owner_health(self):
+        self.write(doctor.MANAGER_RECEIPT, {'state': 'upgrade_failed'})
+        report = doctor.doctor(**self.options)
+        self.assertEqual(report['state'], 'failed')
+        self.assertIsNone(report['installed'])
+        report = self.ready()
+        self.assertEqual(report['state'], 'failed')
+        self.assertEqual(report['devices'][0]['state'], 'ready')
+        self.assertEqual(report['installation_receipts']['manager'], 'upgrade_failed')
+
+    def test_removed_persistent_entry_does_not_hide_still_running_owner(self):
+        self.write(doctor.ROOT_RECEIPT, {'state': 'removed'})
+        report = self.ready()
+        self.assertEqual(report['state'], 'ready')
+        self.assertIs(report['installed'], True)
+        self.assertEqual(report['installation_receipts']['root'], 'removed')
+
+    def manager_candidate_fixture(self, native, *, base_sha='b' * 64):
+        program = '/usr/local/lib/ram-rescue-manager/' + 'c' * 64 + '/guard/manage.py'
+        self.write(program, b'raise RuntimeError("diagnostics must not execute installed code")\n')
+        manifest = str(Path(program).parent.parent / 'runtime/manifest.json')
+        self.write(manifest, {'schema': 1, 'kind': 'data-runtime', 'binary_sha256': native['binary_sha256'],
+                              'archive_sha256': 'd' * 64, 'base_sha256': base_sha, 'native_runtime': native})
+        self.write(doctor.MANAGER_RECEIPT, {'state': 'installed', 'program': program})
+        return program, manifest
+
+    def test_root_and_manager_candidates_detect_same_binary_different_libraries(self):
+        native = {'binary_sha256': 'a' * 64, 'library_sha256': {'/usr/lib/test/libexample.so': 'e' * 64}}
+        next_native = {**native, 'library_sha256': {'/usr/lib/test/libexample.so': 'f' * 64}}
+        program, manifest = self.manager_candidate_fixture(next_native)
+        self.write(doctor.ROOT_RECEIPT, {'state': 'installed', 'image_sha256': '1' * 64,
+                                       'build': {'native_runtime': native, 'base_rescue_payload_sha256': 'b' * 64}})
+        self.write(doctor.PRIVATE_RAM + '/opt/guard-runtime/runtime.json', native)
+        self.write(doctor.PRIVATE_RAM + '/etc/rescue/base-source.json', {'schema': 1, 'sha256': 'b' * 64})
+        with patch.object(self.reader, 'read', wraps=self.reader.read) as reads:
+            versions = doctor.doctor(**self.options)['versions']
+        candidates = versions['installed_candidates']
+        self.assertEqual(candidates['root']['binary_sha256'], candidates['manager']['binary_sha256'])
+        matches = versions['runtimes'][0]['installed_candidate_matches']
+        self.assertEqual(matches['root'], {'native_manifest': True, 'base_source': True})
+        self.assertEqual(matches['manager'], {'native_manifest': False, 'base_source': True})
+        self.assertEqual(candidates['manager']['archive_sha256'], 'd' * 64)
+        self.assertIs(candidates['manager']['archive_integrity_checked'], False)
+        self.assertNotIn(program, doctor.encode(versions).decode())
+        self.assertIn(manifest, [call.args[0] for call in reads.call_args_list])
+        self.assertFalse(any(call.args[0].endswith('tools.tar.gz') for call in reads.call_args_list))
+
+    def test_manager_base_update_and_removed_candidate_leave_ram_visible(self):
+        native = {'binary_sha256': 'a' * 64, 'library_sha256': {}}
+        self.manager_candidate_fixture(native, base_sha='e' * 64)
+        self.write(doctor.PRIVATE_RAM + '/opt/guard-runtime/runtime.json', native)
+        self.write(doctor.PRIVATE_RAM + '/etc/rescue/base-source.json', {'schema': 1, 'sha256': 'b' * 64})
+        report = doctor.doctor(**self.options)
+        matches = report['versions']['runtimes'][0]['installed_candidate_matches']['manager']
+        self.assertEqual(matches, {'native_manifest': True, 'base_source': False})
+        self.write(doctor.MANAGER_RECEIPT, {'state': 'uninstalled'})
+        versions = doctor.doctor(**self.options)['versions']
+        self.assertIsNone(versions['installed_candidates']['manager'])
+        self.assertEqual(versions['runtimes'][0]['frozen_manifest_binary_sha256'], 'a' * 64)
+        self.assertIsNone(versions['runtimes'][0]['installed_candidate_matches']['manager'])
+
+    def test_candidate_program_cannot_select_foreign_paths(self):
+        for program in ('/etc/shadow', '/usr/local/lib/ram-rescue-manager/../guard/manage.py',
+                        '/usr/local/lib/ram-rescue-manager/private-host/guard/manage.py'):
+            with self.subTest(program=program):
+                self.write(doctor.MANAGER_RECEIPT, {'state': 'installed', 'program': program})
+                with patch.object(self.reader, 'hash', wraps=self.reader.hash) as hashes:
+                    report = doctor.doctor(**self.options)
+                self.assertIsNone(report['versions']['installed_candidates']['manager'])
+                self.assertEqual(report['state'], 'unknown')
+                self.assertTrue(report['issues'])
+                hashes.assert_not_called()
+
+    def test_candidate_program_and_parent_must_be_trusted(self):
+        program, _ = self.manager_candidate_fixture({'binary_sha256': 'a' * 64})
+        target = self.root / program.lstrip('/')
+        target.parent.chmod(0o777)
+        self.assertIsNone(doctor.doctor(**self.options)['versions']['installed_candidates']['manager'])
+        target.parent.chmod(0o700)
+        target.unlink()
+        target.symlink_to('/etc/shadow')
+        self.assertIsNone(doctor.doctor(**self.options)['versions']['installed_candidates']['manager'])
+
+    def test_candidate_manifest_is_bounded_and_must_be_consistent(self):
+        _, manifest = self.manager_candidate_fixture({'binary_sha256': 'a' * 64})
+        target = self.root / manifest.lstrip('/')
+        original = json.loads(target.read_text())
+        for content in (b'x' * (doctor.JSON_LIMIT + 1),
+                        {**original, 'binary_sha256': 'b' * 64},
+                        {**original, 'kind': 'unrecognised'}, {**original, 'base_sha256': 'invalid'}):
+            with self.subTest(kind=type(content).__name__):
+                self.write(manifest, content)
+                report = doctor.doctor(**self.options)
+                self.assertIsNone(report['versions']['installed_candidates']['manager'])
+                self.assertTrue(report['issues'])
+        self.write(manifest, original).unlink()
+        report = doctor.doctor(**self.options)
+        self.assertIsNone(report['versions']['installed_candidates']['manager'])
+        self.assertEqual(report['state'], 'installed_not_running')
+
+    def test_unfinished_receipt_never_reads_a_candidate(self):
+        program, _ = self.manager_candidate_fixture({'binary_sha256': 'a' * 64})
+        for state in ('installing', 'upgrading', 'upgrade_failed', 'uninstalled'):
+            with self.subTest(state=state):
+                self.write(doctor.MANAGER_RECEIPT, {'state': state, 'program': program})
+                with patch.object(self.reader, 'hash', wraps=self.reader.hash) as hashes:
+                    report = doctor.doctor(**self.options)
+                self.assertIsNone(report['versions']['installed_candidates']['manager'])
+                hashes.assert_not_called()
 
     def test_current_owner_and_mapping_are_required_for_ready(self):
         report = self.ready()

@@ -42,6 +42,11 @@ PHASES = frozenset(('idle', 'starting', 'waiting', 'verified', 'suspend_intent',
                     'probe_intent', 'probing', 'confirming', 'ready', 'expired',
                     'interrupted', 'failed', 'blocked'))
 TERMINAL = frozenset(('failed', 'expired', 'interrupted', 'blocked'))
+RECEIPT_STATES = {
+    'root': frozenset(('installed', 'preparing', 'upgrading', 'removed', 'failed_rolled_back')),
+    'manager': frozenset(('installed', 'installing', 'upgrading', 'upgrade_failed', 'uninstalled')),
+}
+PENDING_INSTALLATION = frozenset(('preparing', 'installing', 'upgrading'))
 PROPERTIES = ('LoadState', 'ActiveState', 'SubState', 'MainPID', 'Result',
               'NoNewPrivileges', 'PrivateDevices', 'ProtectSystem', 'ProtectHome',
               'MemoryMax', 'MemorySwapMax', 'CPUQuotaPerSecUSec',
@@ -468,7 +473,7 @@ class Collector:
                                  'package_version_differs': None if not frozen_package or not host_package else frozen_package != host_package})
         return dependencies
 
-    def runtime_version(self, root):
+    def runtime_version(self, root, candidates):
         manifest = root + '/opt/guard-runtime/runtime.json'
         runtime = self.read(manifest, lambda: self.reader.json(manifest), missing={})
         if not runtime:
@@ -478,9 +483,17 @@ class Collector:
         if base and (base.get('schema') != 1 or base.get('kind') != 'base-rescue-tools'):
             self.issues.append({'source': 'base_runtime_manifest', 'code': 'invalid_manifest'})
             base = {}
+        source_path = root + '/etc/rescue/base-source.json'
+        source = self.read(source_path, lambda: self.reader.json(source_path), missing={})
+        base_sha = checksum(source.get('sha256')) if source.get('schema') == 1 else None
         binary = self.read('frozen_binary', lambda: self.reader.hash(root + '/opt/guard-runtime/guard-runtime'))
         return {'context': 'protected_boot' if root == RAM else 'standalone_data',
                 'frozen_binary_sha256': binary, 'frozen_manifest_binary_sha256': checksum(runtime.get('binary_sha256')),
+                'base_source_sha256': base_sha,
+                'installed_candidate_matches': {
+                    role: {'native_manifest': runtime == candidate['native_runtime'] if candidate['native_runtime'] else None,
+                           'base_source': base_sha == candidate['base_sha256'] if base_sha and candidate['base_sha256'] else None}
+                    if candidate else None for role, candidate in candidates.items()},
                 'dependencies': self.dependency_rows(root, runtime.get('library_sha256'), runtime.get('dependency_packages')),
                 'base_manifest_present': bool(base),
                 'base_dependencies': self.dependency_rows(root, base.get('file_sha256'), base.get('dependency_packages'), base=True)}
@@ -494,11 +507,45 @@ class Collector:
             return {}
         return {key: value[key] for key in patterns}
 
-    def versions(self, receipt):
-        build = object_value(receipt.get('build'))
-        runtimes = [runtime for root in (RAM, PRIVATE_RAM) if (runtime := self.runtime_version(root))]
-        return {'installed_image_sha256': checksum(receipt.get('image_sha256')),
-                'installed_binary_sha256': checksum(object_value(build.get('native_runtime')).get('binary_sha256')),
+    def manager_candidate(self, receipt):
+        """Read the selected immutable version; never execute or unpack it."""
+        program = receipt.get('program')
+        if not isinstance(program, str) or not re.fullmatch(
+                r'/usr/local/lib/ram-rescue-manager/[0-9a-f]{64}/guard/manage\.py', program):
+            raise InputError('invalid_manager_program')
+        program_sha = self.reader.hash(program, limit=8 * 1024 * 1024)
+        path = str(PurePosixPath(program).parent.parent / 'runtime/manifest.json')
+        manifest = self.reader.json(path)
+        native = object_value(manifest.get('native_runtime'))
+        if (manifest.get('schema') != 1 or manifest.get('kind') != 'data-runtime'
+                or not checksum(manifest.get('binary_sha256'))
+                or manifest['binary_sha256'] != native.get('binary_sha256')
+                or not checksum(manifest.get('archive_sha256'))
+                or not checksum(manifest.get('base_sha256'))):
+            raise InputError('invalid_manager_runtime_manifest')
+        return {'native_runtime': native, 'base_sha256': manifest['base_sha256'],
+                'summary': {'program': self.token(program), 'program_sha256': program_sha,
+                            'binary_sha256': manifest['binary_sha256'], 'base_sha256': manifest['base_sha256'],
+                            'archive_sha256': manifest['archive_sha256'], 'archive_integrity_checked': False}}
+
+    def versions(self, root_receipt, manager_receipt):
+        candidates = {'root': None, 'manager': None}
+        if root_receipt.get('state') == 'installed':
+            build = object_value(root_receipt.get('build'))
+            native = object_value(build.get('native_runtime'))
+            base_sha = checksum(build.get('base_rescue_payload_sha256'))
+            candidates['root'] = {'native_runtime': native, 'base_sha256': base_sha,
+                                  'summary': {'image_sha256': checksum(root_receipt.get('image_sha256')),
+                                              'binary_sha256': checksum(native.get('binary_sha256')),
+                                              'base_sha256': base_sha}}
+        if manager_receipt.get('state') == 'installed':
+            candidates['manager'] = self.read('installed_manager_candidate', lambda: self.manager_candidate(manager_receipt))
+        summaries = {role: candidate['summary'] if candidate else None for role, candidate in candidates.items()}
+        root_summary = summaries['root'] or {}
+        runtimes = [runtime for root in (RAM, PRIVATE_RAM) if (runtime := self.runtime_version(root, candidates))]
+        return {'installed_image_sha256': root_summary.get('image_sha256'),
+                'installed_binary_sha256': root_summary.get('binary_sha256'),
+                'installed_candidates': summaries,
                 'runtimes': runtimes,
                 'dependency_scope': 'native_guard_libraries_and_manifested_base_elf_tools_libraries'}
 
@@ -536,12 +583,20 @@ class Collector:
         if len(entries) > MAX_DEVICES:
             raise InputError('too_many_selected_maps')
         devices = [self.device(config, unit, boot_id) for config, unit in entries]
-        versions = self.versions(root_receipt)
+        versions = self.versions(root_receipt, manager_receipt)
         receipts = (root_receipt, manager_receipt)
-        installed = (any(value and value.get('state') != 'uninstalled' for value in receipts)
+        receipt_states = {role: choice(value.get('state'), RECEIPT_STATES[role])
+                          for role, value in zip(('root', 'manager'), receipts)}
+        uncertain_installation = any(value and receipt_states[role] == 'unknown'
+                                     for role, value in zip(('root', 'manager'), receipts))
+        uncertain_installation |= any(state in PENDING_INSTALLATION for state in receipt_states.values())
+        failed_installation = 'upgrade_failed' in receipt_states.values()
+        installed = (any(state == 'installed' for state in receipt_states.values())
                      or root is not None or bool(temporary)
                      or any(device['owner_matches'] or device['service_state'] == 'failed' for device in devices))
-        if self.issues and not devices:
+        if failed_installation:
+            state = 'failed'
+        elif uncertain_installation or (self.issues and not devices):
             state = 'unknown'
         elif not installed:
             state = 'not_installed'
@@ -551,11 +606,11 @@ class Collector:
             order = ('failed', 'unknown', 'refused', 'recovering', 'installed_not_running', 'ready')
             state = next(item for item in order if any(d['state'] == item for d in devices))
         result = {'schema': 1, 'state': state, 'captured_at_unix': int(time.time()),
-                  'boot': self.token(boot_id), 'installed': installed if installed or not self.issues else None, 'devices': devices,
+                  'boot': self.token(boot_id),
+                  'installed': installed if installed or not (self.issues or uncertain_installation or failed_installation) else None,
+                  'devices': devices,
                   'versions': versions, 'issues': self.issues,
-                  'installation_receipts': {
-                      role: choice(value.get('state'), {'installed', 'preparing', 'upgraded', 'uninstalled', 'upgrade_failed', 'failed'})
-                      for role, value in zip(('root', 'manager'), receipts)},
+                  'installation_receipts': receipt_states,
                   'redaction': 'whitelist_with_per_report_hmac_tokens', 'limitations': LIMITATIONS}
         if len(encode(result)) > EXPORT_LIMIT:
             raise InputError('report_output_limit')

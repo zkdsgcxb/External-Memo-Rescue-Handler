@@ -23,7 +23,7 @@
 `lab/cpp_architecture_probe.py` 验证当前完整 C++ 的交叉构建与用户态执行。前两行及 ARM64 独立内核结果属于历史 Python 实验；`lab/architecture_probe.py`、`lab/arm64_probe.py` 通过 [固定版本入口](../lab/README.md#历史实验复现) 复现，不从当前工作树装入旧控制器。
 ARM64 实验使用 Ubuntu 同版本内核和软件包、RAM 中的最小用户空间；它不包含桌面、systemd 启动接管或真实 ARM USB 控制器。
 不同架构必须在对应系统上准备其原生 Python、libdevmapper、blkid/LVM 等二进制，不能复用 x86_64 救援归档。
-现有早期 `ram-rescue-demo/build.py` 仍有本机磁盘登记与 x86_64 路径约束，不是通用交叉构建安装器。
+当前 `ram-rescue-demo/build.py` 已解除本机磁盘身份耦合，默认构建不带登记信息的通用工具包；完整构建、安装与故障验收仍以 x86_64 为准，不是通用交叉构建安装器。本轮未重新执行 ARM64 / RISC-V64 检查，上述跨架构证据保留其原始日期与实现范围。
 
 ## 接口来源与约束
 

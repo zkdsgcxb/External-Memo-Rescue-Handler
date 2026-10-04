@@ -131,6 +131,17 @@ def build_seed_initrd(folder, base_directory, release, builder):
     return image
 
 
+def read_seed_result(path, returncode):
+    with path.open('rb') as stream:
+        payload = stream.read(65537)
+    if returncode or not payload or len(payload) > 65536:
+        raise RuntimeError('Seed exited unsuccessfully or returned an empty/oversized result')
+    result = json.loads(payload)
+    if not isinstance(result, dict) or result.get('ok') is not True or not isinstance(result.get('value'), dict):
+        raise RuntimeError('Seed creation failed; inspect ' + str(path))
+    return result['value']
+
+
 def seed_vm(folder, kernel, image, ubuntu):
     seed_folder = folder/'seed'
     runtime = seed_folder/'s0'
@@ -143,6 +154,8 @@ def seed_vm(folder, kernel, image, ubuntu):
     command = qemu_command(Path('.'), same_port=True, kernel=kernel, initramfs=image,
                            extra_kernel_args='ram_rescue_seed_create=1')
     command[command.index('-m')+1] = '3072'
+    serials = [index + 1 for index, argument in enumerate(command) if argument == '-serial']
+    command[serials[1]] = 'file:seed-result.json'
     command += ['-blockdev', json.dumps({'driver': 'raw', 'node-name': 'ubuntu-seed',
         'read-only': True, 'file': {'driver': 'file', 'filename': str(ubuntu/'rootfs.raw')}}),
         '-device', 'virtio-blk-pci,drive=ubuntu-seed,serial=UBUNTU-ROOTFS-SEED']
@@ -158,12 +171,7 @@ def seed_vm(folder, kernel, image, ubuntu):
             except subprocess.TimeoutExpired:
                 process.kill(); process.wait()
             raise
-    console = (runtime/'console.log').read_text(errors='replace')
-    messages = [json.loads(line.split('RAM_RESCUE_SEED=', 1)[1]) for line in console.splitlines()
-                if 'RAM_RESCUE_SEED=' in line]
-    if process.returncode or len(messages) != 1 or not messages[0].get('ok'):
-        raise RuntimeError('Seed creation failed; inspect '+str(runtime/'console.log'))
-    profile = messages[0]['value']
+    profile = read_seed_result(runtime/'seed-result.json', process.returncode)
     digest = fetch_ubuntu.sha256(runtime/'usb.raw')
     report = {'schema': 1, 'passed': True, 'source_image_sha256_after': digest,
               'cases': {'seed': {'observation': {'gate': {'identity': profile['identity']}}}},
