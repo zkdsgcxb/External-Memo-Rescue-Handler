@@ -113,6 +113,10 @@ class GuardUpgradeTests(unittest.TestCase):
         paths = patch('trusted_paths.open_trusted', fixture_file)
         paths.start()
         self.addCleanup(paths.stop)
+        directories = patch('trusted_paths.open_directory',
+                            lambda path: os.open(path, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW))
+        directories.start()
+        self.addCleanup(directories.stop)
         self.patch('shutil.disk_usage', return_value=SimpleNamespace(free=2**40))
         self.original_image = self.image.read_bytes()
         self.untouched = {path: path.read_bytes() for path in
@@ -273,7 +277,7 @@ class GuardUpgradeTests(unittest.TestCase):
         self.assertEqual(self.image.read_bytes(), self.original_image)
 
     def test_another_deployment_holds_the_same_lock(self):
-        with upgrade.deployment_lock():
+        with upgrade.deployment_lock(self.state):
             with self.assertRaisesRegex(RuntimeError, 'already running'):
                 self.perform()
         self.assert_original()

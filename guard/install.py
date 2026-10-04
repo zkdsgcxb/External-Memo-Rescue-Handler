@@ -1,6 +1,8 @@
 #!/usr/bin/python3
 """Install one optional GRUB entry and initrd; preserve the normal boot entry."""
 import argparse
+from contextlib import contextmanager
+import fcntl
 import hashlib
 import json
 import os
@@ -16,6 +18,22 @@ STATE=Path('/var/lib/ram-rescue-guard')
 HOOK=Path('/etc/grub.d/42_ram_rescue_guard')
 GRUB=Path('/boot/grub/grub.cfg')
 PROJECT=Path(__file__).resolve().parent.parent
+
+
+@contextmanager
+def deployment_lock(state=None):
+    """Serialize boot installation, upgrade and removal without creating a file."""
+    from trusted_paths import open_directory
+    directory = STATE if state is None else state
+    descriptor = open_directory(directory)
+    try:
+        try:
+            fcntl.flock(descriptor, fcntl.LOCK_EX | fcntl.LOCK_NB)
+        except BlockingIOError as error:
+            raise RuntimeError('Another protection deployment is already running') from error
+        yield
+    finally:
+        os.close(descriptor)
 
 
 def optional_hash(path):
@@ -134,50 +152,51 @@ def install(build_dir,enrollment,vm_report):
     entry=menu(profile,image_name)
     hook=('#!/bin/sh\ncat <<\'RAM_RESCUE_MENU\'\n'+entry+'RAM_RESCUE_MENU\n').encode()
     STATE.mkdir(mode=0o700)
-    original=GRUB.read_bytes()
-    atomic(STATE/'grub.cfg.before',original)
-    record={'state':'preparing','kernel_release':release,'image':str(image),
-        'image_sha256':build['initramfs_sha256'],'hook_sha256':hashlib.sha256(hook).hexdigest(),
-        'normal_grub_sha256':hashlib.sha256(original).hexdigest(),
-        'normal_initrd_sha256':baseline['initrd_sha256'],
-        'vm_report_sha256':sha256(vm_report),'build':build}
-    atomic(STATE/'install.json',(json.dumps(record,indent=2)+'\n').encode())
-    try:
-        atomic(image,(build_dir/'initrd.img').read_bytes())
-        if sha256(image)!=build['initramfs_sha256']:
-            raise RuntimeError('Installed image checksum differs')
-        atomic(HOOK,hook,0o755)
-        candidate=STATE/'grub.cfg.candidate'
-        with (STATE/'grub-generation.log').open('wb') as log:
-            subprocess.run(['grub-mkconfig','-o',str(candidate)],check=True,
-                           stdout=log,stderr=subprocess.STDOUT)
-        subprocess.run(['grub-script-check',str(candidate)],check=True)
-        text=candidate.read_text()
-        normal_image='/boot/initrd.img-'+release
-        normal_lines=[line.strip() for line in original.decode().splitlines()
-                      if line.strip().startswith('initrd ') or line.strip().startswith('initrd\t')]
-        normal_lines=[line for line in normal_lines if normal_image in line.split()[1:]]
-        if (text.count('--id ram-rescue-guard')!=1 or 'set default="0"' not in text
-                or not normal_lines or any(line not in text for line in normal_lines)
-                or first_entry(text)!=first_entry(original.decode())):
-            raise RuntimeError('Generated menu does not preserve the expected normal/default entry')
-        record['protected_grub_sha256']=sha256(candidate)
+    with deployment_lock():
+        original=GRUB.read_bytes()
+        atomic(STATE/'grub.cfg.before',original)
+        record={'state':'preparing','kernel_release':release,'image':str(image),
+            'image_sha256':build['initramfs_sha256'],'hook_sha256':hashlib.sha256(hook).hexdigest(),
+            'normal_grub_sha256':hashlib.sha256(original).hexdigest(),
+            'normal_initrd_sha256':baseline['initrd_sha256'],
+            'vm_report_sha256':sha256(vm_report),'build':build}
         atomic(STATE/'install.json',(json.dumps(record,indent=2)+'\n').encode())
-        atomic(GRUB,candidate.read_bytes())
-        record['state']='installed'
-        atomic(STATE/'install.json',(json.dumps(record,indent=2)+'\n').encode())
-    except BaseException:
-        # atomic() can replace the file and then fail while syncing its parent.
-        # Inspect the result itself before removing the image it may reference.
-        if sha256(GRUB)==record.get('protected_grub_sha256'):
-            atomic(GRUB,original)
-        if HOOK.exists() and sha256(HOOK)==record['hook_sha256']:
-            HOOK.unlink()
-        if image.exists() and sha256(image)==record['image_sha256']:
-            image.unlink()
-        record['state']='failed_rolled_back'
-        atomic(STATE/'install.json',(json.dumps(record,indent=2)+'\n').encode())
-        raise
+        try:
+            atomic(image,(build_dir/'initrd.img').read_bytes())
+            if sha256(image)!=build['initramfs_sha256']:
+                raise RuntimeError('Installed image checksum differs')
+            atomic(HOOK,hook,0o755)
+            candidate=STATE/'grub.cfg.candidate'
+            with (STATE/'grub-generation.log').open('wb') as log:
+                subprocess.run(['grub-mkconfig','-o',str(candidate)],check=True,
+                               stdout=log,stderr=subprocess.STDOUT)
+            subprocess.run(['grub-script-check',str(candidate)],check=True)
+            text=candidate.read_text()
+            normal_image='/boot/initrd.img-'+release
+            normal_lines=[line.strip() for line in original.decode().splitlines()
+                          if line.strip().startswith('initrd ') or line.strip().startswith('initrd\t')]
+            normal_lines=[line for line in normal_lines if normal_image in line.split()[1:]]
+            if (text.count('--id ram-rescue-guard')!=1 or 'set default="0"' not in text
+                    or not normal_lines or any(line not in text for line in normal_lines)
+                    or first_entry(text)!=first_entry(original.decode())):
+                raise RuntimeError('Generated menu does not preserve the expected normal/default entry')
+            record['protected_grub_sha256']=sha256(candidate)
+            atomic(STATE/'install.json',(json.dumps(record,indent=2)+'\n').encode())
+            atomic(GRUB,candidate.read_bytes())
+            record['state']='installed'
+            atomic(STATE/'install.json',(json.dumps(record,indent=2)+'\n').encode())
+        except BaseException:
+            # atomic() can replace the file and then fail while syncing its parent.
+            # Inspect the result itself before removing the image it may reference.
+            if sha256(GRUB)==record.get('protected_grub_sha256'):
+                atomic(GRUB,original)
+            if HOOK.exists() and sha256(HOOK)==record['hook_sha256']:
+                HOOK.unlink()
+            if image.exists() and sha256(image)==record['image_sha256']:
+                image.unlink()
+            record['state']='failed_rolled_back'
+            atomic(STATE/'install.json',(json.dumps(record,indent=2)+'\n').encode())
+            raise
     print(json.dumps({'installed':True,'default_boot_changed':False,
         'entry':'Ubuntu USB root protection ('+release+')','rebooted':False,
         'normal_initrd_unchanged':sha256(Path('/boot')/('initrd.img-'+release))==baseline['initrd_sha256']}))
@@ -186,18 +205,21 @@ def install(build_dir,enrollment,vm_report):
 def rollback():
     if os.geteuid()!=0:
         raise RuntimeError('Rollback requires local administrator authentication')
-    record=json.loads((STATE/'install.json').read_text())
-    image=Path(record['image'])
-    if (record['state']!='installed' or sha256(GRUB)!=record['protected_grub_sha256']
-            or sha256(HOOK)!=record['hook_sha256'] or sha256(image)!=record['image_sha256']):
-        raise RuntimeError('Files changed since installation; review before rollback')
-    if sha256(STATE/'grub.cfg.before')!=record['normal_grub_sha256']:
-        raise RuntimeError('Normal menu backup checksum differs')
-    atomic(GRUB,(STATE/'grub.cfg.before').read_bytes())
-    HOOK.unlink()
-    image.unlink()
-    record['state']='removed'
-    atomic(STATE/'install.json',(json.dumps(record,indent=2)+'\n').encode())
+    from trusted_paths import read_trusted, read_trusted_json, trusted_sha256
+    with deployment_lock():
+        record=read_trusted_json(STATE/'install.json', limit=1024**2)
+        image=Path(record['image'])
+        if (record['state']!='installed' or trusted_sha256(GRUB)!=record['protected_grub_sha256']
+                or trusted_sha256(HOOK)!=record['hook_sha256'] or trusted_sha256(image)!=record['image_sha256']):
+            raise RuntimeError('Files changed since installation; review before rollback')
+        original=read_trusted(STATE/'grub.cfg.before', limit=16*1024**2)
+        if hashlib.sha256(original).hexdigest()!=record['normal_grub_sha256']:
+            raise RuntimeError('Normal menu backup checksum differs')
+        atomic(GRUB,original)
+        HOOK.unlink()
+        image.unlink()
+        record['state']='removed'
+        atomic(STATE/'install.json',(json.dumps(record,indent=2)+'\n').encode())
     print(json.dumps({'removed':True,'normal_menu_restored':True,'rebooted':False}))
 
 

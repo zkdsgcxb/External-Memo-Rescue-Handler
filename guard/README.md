@@ -35,15 +35,25 @@
 
 ## 构建与安装
 
-构建器只打包 C++ 运行时及完整共享库闭包，不提供 Python 自动恢复选项。源码、私有登记、镜像和实验记录留在工作区，构建不升级当前会话。特权管理代码须先按 [可信安装说明](../research/2026-10-04/INSTALLATION-AND-TRUST.md) 通过审阅后的离线包安装，再从 root 所有的 `/usr/bin/rescue-guard-admin` 执行，不直接提权运行用户可写工作区中的脚本。
+构建器只打包 C++ 运行时及完整共享库闭包，不提供 Python 自动恢复选项。源码、用于开发的私有登记副本、镜像和实验记录留在工作区，构建不升级当前会话。原始登记收据暂存在 root 私有的 `/var/lib/ram-rescue-enrollments/<name>`，仅作为受核验的导出源。特权管理代码须先按 [可信安装说明](../research/2026-10-04/INSTALLATION-AND-TRUST.md) 通过审阅后的离线包安装，再从 root 所有的 `/usr/bin/rescue-guard-admin` 执行，不直接提权运行用户可写工作区中的脚本。
 
 ```bash
-# 固定管理入口只读登记，私有输出交回当前操作者用于普通用户构建。
+# 明确指定当前根卷的 USB PV 分区及预期序列号；替换占位内容。
+# name 只能是一个新目录名，不能提供任意输出路径，也不改变输出所有者。
 sudo /usr/bin/rescue-guard-admin enroll-root \
-  --output "$PWD/lab/work/host-enrollment" --uid "$(id -u)" --gid "$(id -g)"
+  --name host-enrollment --partition /dev/明确的PV分区 --usb-serial '明确的USB序列号'
+
+# 核对上一步打印的 root 私有目录；root 只读取以下三个固定文件。
+# 管道右侧以普通用户写入 workspace，不提权解包，不沿用归档所有者。
+mkdir -m 0700 lab/work/host-enrollment
+sudo /usr/bin/tar -C /var/lib/ram-rescue-enrollments/host-enrollment \
+  -cf - enrollment.json vmlinuz original-initrd.img | \
+  tar --no-same-owner -xf - -C lab/work/host-enrollment
 python3 guard/build.py --enrollment lab/work/host-enrollment/enrollment.json \
-  --work-dir lab/work/host-build
+  --kernel lab/work/host-enrollment/vmlinuz --work-dir lab/work/host-build
 ```
+
+登记只读取显式选定的盘，仍会完整核对 USB、分区、PV/VG/LV、当前根挂载及切换前设备实例。若改用 `--identity`，输入 JSON 必须先经人工核验并封存为 root 所有、父链不可由普通用户修改的可信文件；不能直接把用户可写工作区的 JSON 交给特权入口。`--base-rescue-dir` 同样要求已有可信身份清单，通用无身份工具包不能用于登记。已有名称、目录符号链接、非 0700 登记根目录或复制期间变化的内核输入都会拒绝；失败的私有记录留待检查，重试用新名称。
 
 先取得与候选内核、源码及基础工具相匹配的完整 Ubuntu VM 通过报告，再按可信安装说明生成 bundle、核对 SHA256 并封存到 `/var/lib/ram-rescue-candidates/<SHA256>/`。固定入口仅接受这些 root 私有、受核验的输入。下面是已封存候选的只读预检，路径占位符须替换为实际封存结果：
 

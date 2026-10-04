@@ -5,15 +5,18 @@ import hashlib
 import json
 import os
 from pathlib import Path
-import shutil
+import re
 import stat
 import subprocess
 import sys
 import time
 
-from host_files import sha256
+from trusted_paths import open_directory, open_trusted, read_trusted_json, trusted_sha256
 
 BASE=Path(__file__).resolve().parent
+ENROLLMENTS=Path('/var/lib/ram-rescue-enrollments')
+BOOT=Path('/boot')
+LVM_CONFIG=Path('/etc/lvm/lvmlocal.conf')
 sys.path.insert(0, str(BASE.parent / 'ram-rescue-demo/src'))
 from admin.admission import Admission, layout, readonly
 from admin.identity import LVMIdentity
@@ -135,49 +138,113 @@ def identify(partition, expected_serial):
             'vg_name': pv['vg_name'].strip(), 'vg_uuid': vg_uuid, 'lvs': lvs}
 
 
+def enrollment_name(value):
+    if not re.fullmatch(r'[A-Za-z0-9][A-Za-z0-9_.-]{0,63}', value) or value in ('.', '..'):
+        raise argparse.ArgumentTypeError('name must be one safe directory name, at most 64 characters')
+    return value
+
+
+def enrollment_store():
+    """Create only the fixed private store below a verified root-owned parent."""
+    parent = open_directory(ENROLLMENTS.parent)
+    try:
+        try:
+            os.mkdir(ENROLLMENTS.name, mode=0o700, dir_fd=parent)
+        except FileExistsError:
+            pass
+    finally:
+        os.close(parent)
+    directory = open_directory(ENROLLMENTS)
+    if stat.S_IMODE(os.fstat(directory).st_mode) != 0o700:
+        os.close(directory)
+        raise RuntimeError('Enrollment store must be private (mode 0700)')
+    return directory
+
+
+def copy_boot_file(source, directory, name):
+    """Read one verified boot inode and write only into the held private directory."""
+    with open_trusted(source) as source_fd:
+        before = os.fstat(source_fd)
+        destination = os.open(name, os.O_WRONLY | os.O_CREAT | os.O_EXCL |
+                              os.O_NOFOLLOW | os.O_CLOEXEC, 0o600, dir_fd=directory)
+        checksum = hashlib.sha256()
+        with os.fdopen(destination, 'wb') as output:
+            while block := os.read(source_fd, 1024**2):
+                output.write(block)
+                checksum.update(block)
+            output.flush()
+            os.fsync(output.fileno())
+        after = os.fstat(source_fd)
+        if (before.st_size, before.st_mtime_ns, before.st_ctime_ns) != (
+                after.st_size, after.st_mtime_ns, after.st_ctime_ns):
+            raise RuntimeError('Boot input changed while copying enrollment')
+        return checksum.hexdigest()
+
+
+def enroll(name, identity):
+    """Leave a root-private receipt/export source; never write into a user's tree."""
+    name = enrollment_name(name)
+    store = enrollment_store()
+    directory = None
+    try:
+        try:
+            os.stat(name, dir_fd=store, follow_symlinks=False)
+        except FileNotFoundError:
+            pass
+        else:
+            raise RuntimeError('Enrollment already exists; choose a new name')
+        profile = collect(identity)
+        release = profile['guard']['kernel_release']
+        if not re.fullmatch(r'[A-Za-z0-9+_.-]+', release):
+            raise RuntimeError('Invalid enrolled kernel release')
+        os.mkdir(name, mode=0o700, dir_fd=store)
+        directory = os.open(name, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW |
+                            os.O_CLOEXEC, dir_fd=store)
+        profile['baseline'] = {
+            'kernel_sha256': copy_boot_file(BOOT / ('vmlinuz-' + release), directory, 'vmlinuz'),
+            'initrd_sha256': copy_boot_file(BOOT / ('initrd.img-' + release), directory, 'original-initrd.img'),
+            'grub_default_path': '/boot/grub/grub.cfg',
+            'lvmlocal_sha256': trusted_sha256(LVM_CONFIG) if os.path.lexists(LVM_CONFIG) else None,
+        }
+        descriptor = os.open('enrollment.json', os.O_WRONLY | os.O_CREAT | os.O_EXCL |
+                             os.O_NOFOLLOW | os.O_CLOEXEC, 0o600, dir_fd=directory)
+        with os.fdopen(descriptor, 'w') as stream:
+            stream.write(json.dumps(profile, indent=2) + '\n')
+            stream.flush()
+            os.fsync(stream.fileno())
+        os.fsync(directory)
+        os.fsync(store)
+        return {'enrollment': 'verified', 'kernel_release': release,
+                'output': str(ENROLLMENTS / name), 'lvs': sorted(profile['identity']['lvs']),
+                'disk_mutations': False, 'boot_changes': False,
+                'export_files': ['enrollment.json', 'vmlinuz', 'original-initrd.img']}
+    finally:
+        if directory is not None:
+            os.close(directory)
+        os.close(store)
+
+
 def main():
     parser=argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--output',type=Path,required=True)
+    parser.add_argument('--name',type=enrollment_name,required=True,
+                        help='New private record under /var/lib/ram-rescue-enrollments')
     identity_source=parser.add_mutually_exclusive_group(required=True)
     identity_source.add_argument('--identity',type=Path,help='Explicit USB/LVM identity JSON')
     identity_source.add_argument('--partition',type=Path,help='Explicit root PV partition to identify read-only')
     parser.add_argument('--usb-serial',help='Required expected USB serial with --partition')
     identity_source.add_argument('--base-rescue-dir',type=Path,
                                  help='Explicit older rescue bundle with a recorded identity')
-    parser.add_argument('--uid',type=int,required=True)
-    parser.add_argument('--gid',type=int,required=True)
     args=parser.parse_args()
     if os.geteuid()!=0:
         parser.error('Read-only disk enrollment requires local administrator authentication')
-    work=(BASE.parent/'lab/work').resolve()
-    out=args.output.resolve()
-    if not out.is_relative_to(work) or out.exists():
-        parser.error('output must be a new directory under lab/work')
     if bool(args.partition) != bool(args.usb_serial):
         parser.error('--partition and --usb-serial must be supplied together')
     identity=(identify(args.partition,args.usb_serial) if args.partition else
-        json.loads(args.identity.read_text()) if args.identity else json.loads(
-        (args.base_rescue_dir/'manifest.json').read_text()).get('identity'))
+        read_trusted_json(args.identity) if args.identity else
+        read_trusted_json(args.base_rescue_dir/'manifest.json').get('identity'))
     if not isinstance(identity,dict) or not identity:
         parser.error('Explicit root identity is required; generic tools do not enroll devices')
-    profile=collect(identity)
-    out.mkdir(mode=0o700,parents=True)
-    release=profile['guard']['kernel_release']
-    for source,dest in [(Path('/boot')/('vmlinuz-'+release),'vmlinuz'),
-                        (Path('/boot')/('initrd.img-'+release),'original-initrd.img')]:
-        shutil.copyfile(source,out/dest)
-    profile['baseline']={'kernel_sha256':sha256(out/'vmlinuz'),
-        'initrd_sha256':sha256(out/'original-initrd.img'),
-        'grub_default_path':'/boot/grub/grub.cfg',
-        'lvmlocal_sha256':(sha256(Path('/etc/lvm/lvmlocal.conf'))
-                           if Path('/etc/lvm/lvmlocal.conf').exists() else None)}
-    (out/'enrollment.json').write_text(json.dumps(profile,indent=2)+'\n')
-    for path in [out,*out.iterdir()]:
-        os.chmod(path,0o700 if path.is_dir() else 0o600)
-        os.chown(path,args.uid,args.gid)
-    print(json.dumps({'enrollment':'verified','kernel_release':release,
-        'output':str(out),'lvs':sorted(profile['identity']['lvs']),
-        'disk_mutations':False,'boot_changes':False}))
+    print(json.dumps(enroll(args.name, identity)))
 
 
 if __name__=='__main__':

@@ -5,6 +5,7 @@ import importlib.util
 import json
 import os
 from pathlib import Path
+import select
 import subprocess
 import sys
 import tempfile
@@ -17,6 +18,57 @@ sys.path.insert(0, str(BASE.parent / 'guard'))
 spec = importlib.util.spec_from_file_location('host_guard_install', BASE.parent / 'guard/install.py')
 installer = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(installer)
+import trusted_paths
+
+REAL_OPEN_DIRECTORY = trusted_paths.open_directory
+REAL_OPEN_TRUSTED = trusted_paths.open_trusted
+
+
+def lock_process(directory, *, hold=False):
+    """Use a separate interpreter so lock contention crosses process boundaries."""
+    script = """
+import sys
+from pathlib import Path
+sys.path.insert(0, sys.argv[1])
+import os
+import trusted_paths
+# This child uses only an ordinary-user fixture, while production always
+# requires the root-owned absolute namespace. Retain real directory checks.
+verified_directory = trusted_paths.open_directory
+trusted_paths.open_directory = lambda path: verified_directory(
+    path, uid=os.getuid(), anchor=Path(sys.argv[2]).parent)
+from install import deployment_lock
+try:
+    with deployment_lock(Path(sys.argv[2])):
+        print('locked', flush=True)
+        if sys.argv[3] == 'hold':
+            sys.stdin.readline()
+except RuntimeError as error:
+    if 'already running' not in str(error):
+        raise
+    print('busy', flush=True)
+"""
+    return subprocess.Popen(
+        [sys.executable, '-I', '-c', script, str(BASE.parent / 'guard'),
+         str(directory), 'hold' if hold else 'probe'],
+        stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+
+
+@contextmanager
+def foreign_deployment_lock(directory):
+    process = lock_process(directory, hold=True)
+    try:
+        if not select.select([process.stdout], [], [], 5)[0]:
+            raise RuntimeError('Child did not acquire the deployment lock in time')
+        if process.stdout.readline().strip() != 'locked':
+            raise RuntimeError('Child could not acquire the deployment lock')
+        yield
+    finally:
+        try:
+            process.communicate('\n', timeout=5)
+        except subprocess.TimeoutExpired:
+            process.kill()
+            process.communicate()
 
 
 class GuardInstallTests(unittest.TestCase):
@@ -107,6 +159,11 @@ class GuardInstallTests(unittest.TestCase):
             key: self.profile[key] for key in ('schema', 'identity', 'guard')})
         self.commands = self.patch('subprocess.run', side_effect=self.run_command)
         self.patch('print', create=True)
+        # Shared-workspace umasks may default to group-writable directories.
+        # These transaction fixtures represent an administrator's private tree.
+        for directory in self.root.rglob('*'):
+            if directory.is_dir():
+                directory.chmod(0o700)
 
     def patch(self, name, *args, **kwargs):
         patcher = patch.object(installer, name, *args, **kwargs) if '.' not in name else \
@@ -219,6 +276,102 @@ class GuardInstallTests(unittest.TestCase):
         installer.rollback()
         self.assert_original_boot()
         self.assertEqual(json.loads((self.state / 'install.json').read_text())['state'], 'removed')
+
+    def test_foreign_deployment_blocks_rollback_and_upgrade_before_receipt_reads(self):
+        import upgrade
+        self.perform_install()
+        receipt = self.state / 'install.json'
+        valid_receipt = receipt.read_bytes()
+        receipt.write_bytes(b'incomplete receipt must not be read before locking')
+        before = {path: path.read_bytes() for path in
+                  (receipt, self.grub, self.hook, self.image, self.normal_initrd)}
+        with foreign_deployment_lock(self.state):
+            with self.assertRaisesRegex(RuntimeError, 'already running'):
+                installer.rollback()
+            with patch.object(upgrade, 'STATE', self.state):
+                with self.assertRaisesRegex(RuntimeError, 'already running'):
+                    upgrade.upgrade(self.build_dir, self.enrollment, self.vm_report, install=True)
+        self.assertEqual(before, {path: path.read_bytes() for path in before})
+        receipt.write_bytes(valid_receipt)
+        installer.rollback()
+        self.assert_original_boot()
+
+    def test_first_install_holds_lock_through_late_commit_failure_and_cleanup(self):
+        real_atomic = installer.atomic
+        observed = []
+
+        def interrupted(path, data, mode=0o600):
+            real_atomic(path, data, mode)
+            phase = None
+            if path == self.state / 'grub.cfg.before':
+                phase = 'backup'
+            elif path == self.state / 'install.json':
+                phase = json.loads(data)['state']
+            if phase not in ('backup', 'installed', 'failed_rolled_back'):
+                return
+            process = lock_process(self.state)
+            try:
+                output, error = process.communicate(timeout=5)
+            except subprocess.TimeoutExpired:
+                process.kill()
+                process.communicate()
+                self.fail('Child lock probe timed out')
+            self.assertEqual(process.returncode, 0, error)
+            self.assertEqual(output.strip(), 'busy')
+            observed.append(phase)
+            if phase == 'installed':
+                raise OSError('simulated receipt fsync failure after replace')
+
+        with patch.object(installer, 'atomic', side_effect=interrupted):
+            with self.assertRaisesRegex(OSError, 'receipt fsync'):
+                self.perform_install()
+        self.assertEqual(observed, ['backup', 'installed', 'failed_rolled_back'])
+        self.assert_original_boot()
+        with foreign_deployment_lock(self.state):
+            pass  # The transaction released its lock even after rollback.
+
+    def test_deployment_lock_rejects_untrusted_parent_and_directory_symlink(self):
+        self.state.mkdir(mode=0o700)
+        def fixture_directory(path):
+            return REAL_OPEN_DIRECTORY(path, uid=os.getuid(), anchor=self.root)
+        with patch('trusted_paths.open_directory', fixture_directory):
+            self.state.parent.chmod(0o777)
+            with self.assertRaisesRegex(RuntimeError, 'Untrusted'):
+                with installer.deployment_lock():
+                    self.fail('Untrusted lock directory was accepted')
+            self.state.parent.chmod(0o755)
+            link = self.state.parent / 'alias'
+            link.symlink_to(self.state, target_is_directory=True)
+            with self.assertRaises(OSError):
+                with installer.deployment_lock(link):
+                    self.fail('Symlink lock directory was accepted')
+
+    def test_rollback_rejects_linked_or_writable_inputs_without_modifying_boot(self):
+        self.perform_install()
+        before = {path: path.read_bytes() for path in
+                  (self.grub, self.hook, self.image, self.state / 'install.json',
+                   self.state / 'grub.cfg.before')}
+        def fixture_directory(path, **_):
+            return REAL_OPEN_DIRECTORY(path, uid=os.getuid(), anchor=self.root)
+        def fixture_file(path, **_):
+            return REAL_OPEN_TRUSTED(path, uid=os.getuid(), anchor=self.root)
+        with patch('trusted_paths.open_directory', fixture_directory), \
+                patch('trusted_paths.open_trusted', fixture_file):
+            for path in before:
+                with self.subTest(path=path):
+                    mode = path.stat().st_mode & 0o777
+                    path.chmod(mode | 0o020)
+                    with self.assertRaisesRegex(RuntimeError, 'Untrusted'):
+                        installer.rollback()
+                    path.chmod(mode)
+                    saved = path.with_name(path.name + '.saved')
+                    path.rename(saved)
+                    path.symlink_to(saved)
+                    with self.assertRaises(OSError):
+                        installer.rollback()
+                    path.unlink()
+                    saved.rename(path)
+                    self.assertEqual(before, {item: item.read_bytes() for item in before})
 
 
 if __name__ == '__main__':

@@ -95,7 +95,7 @@ def guest_source():
         "['/bin/chroot', str(self.ROOT),", '[')
 
 
-def create_initrd(folder, original, package, metadata):
+def create_initrd(folder, original, package, metadata, *, kernel=None):
     unpacked = folder / 'unpacked'
     subprocess.run(['unmkinitramfs', str(original), str(unpacked)], check=True,
                    stdout=subprocess.DEVNULL, stderr=subprocess.PIPE)
@@ -111,8 +111,13 @@ def create_initrd(folder, original, package, metadata):
     (payload / 'probe.py').write_text(guest_source())
     shutil.copyfile(BASE / 'guest/dm_observer.py', payload / 'dm_observer.py')
     shutil.copyfile(package, payload / 'handler.deb')
+    # The minimal seed has no /boot payload. Supply the exact real boot inputs
+    # solely for enrollment's read-only copy/hash test inside the disposable VM.
+    shutil.copyfile(kernel, payload / 'enrollment-vmlinuz')
+    shutil.copyfile(original, payload / 'enrollment-initrd.img')
     (payload / 'fixture.json').write_text(json.dumps({'specs': data.SPECS,
-        'administration_version': metadata['administration_version'], 'native_sha256': metadata['runtime']['binary_sha256']}))
+        'administration_version': metadata['administration_version'], 'native_sha256': metadata['runtime']['binary_sha256'],
+        'boot_inputs': {'kernel_sha256': sha256(kernel), 'initrd_sha256': sha256(original)}}))
     (payload / 'standalone-probe.service').write_text(UNIT)
     module = Path(subprocess.check_output(['modinfo', '-k', metadata['runtime']['kernel_release'], '-F', 'filename', 'autofs4'], text=True).strip())
     content = subprocess.check_output(['zstd', '-dc', str(module)]) if module.suffix == '.zst' else module.read_bytes()
@@ -217,6 +222,10 @@ def run_scenarios(channel, qmp, report):
     report['finished'] = call(channel, 'finish')
     checked = report['checks'] = {
         'ordinary_ubuntu_without_root_guard': report['preflight']['root_config_absent'] and report['preflight']['protected_ram_absent'] and 'ram-rescue-path' not in report['preflight']['maps'],
+        'installed_root_enrollment_identifies_real_usb_lvm': report['configured']['root_enrollment']['identity_verified'],
+        'root_enrollment_private_files_match_boot_inputs': report['configured']['root_enrollment']['private_files_verified'],
+        'root_enrollment_preserves_boot_and_maps': report['configured']['root_enrollment']['boot_and_maps_unchanged'],
+        'root_enrollment_standard_tar_export_matches': report['configured']['root_enrollment']['tar_verified'],
         'independent_private_ram_created': report['configured']['environment']['root'] == '/run/ram-rescue-manager/rootfs',
         'two_shipped_native_controllers': len(report['manager']['controllers']) == 2 and all(c['binary_sha256'] == report['package']['runtime']['binary_sha256'] for c in report['manager']['controllers']),
         'two_actual_controller_namespaces_restricted': len(report['manager']['controllers']) == 2 and all(
@@ -317,7 +326,7 @@ def main():
     with (folder / 'qemu.log').open('w') as log, (folder / 'qmp.jsonl').open('w') as qlog, (folder / 'actions.jsonl').open('w') as actions:
         try:
             overlay = data.create_images(folder, inputs['seed'])
-            image = create_initrd(folder, inputs['initrd'], inputs['package'], package)
+            image = create_initrd(folder, inputs['initrd'], inputs['package'], package, kernel=inputs['kernel'])
             command = vm_command(folder, inputs, image, overlay)
             report['command'] = command
             vm = subprocess.Popen(command, stdout=log, stderr=subprocess.STDOUT)

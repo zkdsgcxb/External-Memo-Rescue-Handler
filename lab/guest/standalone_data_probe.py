@@ -1,7 +1,9 @@
 """VM-only ordinary Ubuntu data-map acceptance; appended after mount observer."""
 import contextlib
 import io
+import shutil
 import stat
+import tarfile
 import termios
 import traceback
 import tty
@@ -74,6 +76,7 @@ class StandaloneProbe(MountProbe):
         installed = self.host('/usr/bin/dpkg', '--install', '/run/standalone/handler.deb', timeout=90)
         package = Path('/usr/lib/ram-rescue-handler') / FIXTURE['administration_version']
         sys.path[:0] = [str(package / 'guard'), str(package / 'ram-rescue-demo/src')]
+        root_enrollment = self.enroll_root()
         integration = self.manager('install')
         enrolled = {}
         for spec in self.specs:
@@ -82,7 +85,78 @@ class StandaloneProbe(MountProbe):
         return {'before': before, 'package_install': installed, 'manager_install': integration,
                 'administration_manifest': self.read(package / 'administration.json'),
                 'installed_entry_sha256': hashlib.sha256(Path('/usr/bin/rescue-guard-admin').read_bytes()).hexdigest(),
-                'registrations': enrolled, 'environment': self.read('/run/ram-rescue-manager/runtime-environment.json')}
+                'root_enrollment': root_enrollment, 'registrations': enrolled,
+                'environment': self.read('/run/ram-rescue-manager/runtime-environment.json')}
+
+    def enroll_root(self):
+        """Exercise the installed entry with actual seed PV and real boot files."""
+        release = os.uname().release
+        boot = Path('/boot')
+        boot.mkdir(exist_ok=True)
+        inputs = {'vmlinuz': ('enrollment-vmlinuz', 'vmlinuz-' + release, 'kernel_sha256'),
+                  'original-initrd.img': ('enrollment-initrd.img', 'initrd.img-' + release, 'initrd_sha256')}
+        for source, name, checksum in inputs.values():
+            payload = Path('/run/standalone') / source
+            with payload.open('rb') as stream:
+                if hashlib.file_digest(stream, 'sha256').hexdigest() != FIXTURE['boot_inputs'][checksum]:
+                    raise RuntimeError('Enrollment fixture boot input changed')
+            destination = boot / name
+            if os.path.lexists(destination):
+                raise RuntimeError('Minimal seed unexpectedly already contains enrollment boot input')
+            shutil.copyfile(payload, destination)
+            destination.chmod(0o644)
+        before = self.preflight()
+        root = (Path('/sys/dev/block') / before['root_mount'].split()[2]).resolve(strict=True)
+        slaves = list((root / 'slaves').iterdir())
+        if len(slaves) != 1 or not (slaves[0] / 'partition').is_file():
+            raise RuntimeError('Enrollment fixture requires its original ordinary single-PV root')
+        command = self.host('/usr/bin/rescue-guard-admin', 'enroll-root', '--name', 'vm-root-enrollment',
+                            '--partition', '/dev/' + slaves[0].name, '--usb-serial', 'RAMRESCUE-LAB-001', timeout=90)
+        value = json.loads(command['stdout'])
+        directory = Path('/var/lib/ram-rescue-enrollments/vm-root-enrollment')
+        profile = self.read(directory / 'enrollment.json')
+        checksums = {}
+        private = all(path.stat().st_uid == 0 and stat.S_IMODE(path.stat().st_mode) == 0o700
+                      for path in (directory, directory.parent))
+        for path in sorted(directory.iterdir()):
+            info = path.lstat()
+            private &= stat.S_ISREG(info.st_mode) and info.st_uid == 0 and stat.S_IMODE(info.st_mode) == 0o600
+            with path.open('rb') as stream:
+                checksums[path.name] = hashlib.file_digest(stream, 'sha256').hexdigest()
+        if set(checksums) != {'enrollment.json', *inputs}:
+            raise RuntimeError('Unexpected enrollment export files')
+        private &= all(checksums[name] == FIXTURE['boot_inputs'][spec[2]] == profile['baseline'][spec[2]]
+                       for name, spec in inputs.items())
+        unchanged = all(hashlib.sha256((boot / spec[1]).read_bytes()).hexdigest() == FIXTURE['boot_inputs'][spec[2]]
+                        for spec in inputs.values())
+        after = self.preflight()
+        unchanged &= all(before[key] == after[key] for key in ('boot_id', 'pid1', 'root_mount', 'maps'))
+        archive_hashes = {}
+        exporter = subprocess.Popen(['/usr/bin/tar', '-C', str(directory), '-cf', '-', *sorted(checksums)],
+                                    stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        try:
+            with tarfile.open(fileobj=exporter.stdout, mode='r|') as archive:
+                for member in archive:
+                    if member.name not in checksums or not member.isfile() or member.name in archive_hashes:
+                        raise RuntimeError('Unexpected enrollment tar member')
+                    with archive.extractfile(member) as stream:
+                        archive_hashes[member.name] = hashlib.file_digest(stream, 'sha256').hexdigest()
+            exporter.stdout.close()
+            exporter.wait(timeout=20)
+            if exporter.returncode:
+                raise RuntimeError('Enrollment tar export failed')
+        finally:
+            if exporter.poll() is None:
+                exporter.kill()
+                exporter.wait()
+            exporter.stdout.close()
+            exporter.stderr.close()
+        return {'result': value, 'file_sha256': checksums, 'private_files_verified': bool(private),
+                'identity_verified': profile['identity']['usb_serial'] == 'RAMRESCUE-LAB-001'
+                    and profile['identity']['vg_name'] == 'labrescue'
+                    and profile['identity']['lvs'][profile['guard']['root_lv']]['dm_uuid'] == (root / 'dm/uuid').read_text().strip()
+                    and profile['guard']['kernel_release'] == release,
+                'boot_and_maps_unchanged': bool(unchanged), 'tar_verified': archive_hashes == checksums}
 
     def manager_status(self):
         controllers = []

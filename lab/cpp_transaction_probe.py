@@ -105,6 +105,14 @@ def build_fixture(folder, original, binary):
                         'mount -t tmpfs -o noswap,mode=0755 tmpfs /run')
     init = replace_once(init, 'mount -t tmpfs -o noswap,size=256M tmpfs /run/rescue',
                         'mount -t tmpfs -o noswap,size=256M,mode=0700 tmpfs /run/rescue')
+    init = replace_once(init, 'mount --bind /dev /run/rescue/dev',
+        '# The historical initrd carries group-writable /etc directories.\n'
+        '# Normalize only the freshly copied disposable control inputs.\n'
+        'chmod 0755 /run/rescue/etc\n'
+        'chmod 0700 /run/rescue/etc/rescue\n'
+        'chmod 0600 /run/rescue/etc/rescue/*.json\n'
+        "stat -c 'LAB_CONTROL_MODE %a %u %h %n' /run/rescue /run/rescue/etc /run/rescue/etc/rescue /run/rescue/etc/rescue/*.json\n"
+        'mount --bind /dev /run/rescue/dev')
     init = replace_once(init, 'python3 /opt/lab/path_guard.py; exec python3 /opt/lab/path_guard.py --takeover',
                         f'{NATIVE} run --config {CONFIG}; exec {NATIVE} takeover --config {CONFIG}')
     (staging / 'init').write_text(init)
@@ -114,7 +122,15 @@ def build_fixture(folder, original, binary):
                             f'{NATIVE} takeover --config {CONFIG}')
     ubuntu = ubuntu.replace('/usr/bin/python3 /opt/lab/path_guard.py', f'{NATIVE} run --config {CONFIG}')
     ubuntu = replace_once(ubuntu, "    (units/'lab-workload.service').write_text(",
+        "    # Terminal Guard failures deliberately isolate emergency.target.\n"
+        "    # Keep only the independent RAM observers alive to collect the result.\n"
+        "    for observer in ('lab-agent', 'lab-shell'):\n"
+        "        observer_unit = units/(observer+'.service')\n"
+        "        observer_unit.write_text(observer_unit.read_text().replace('[Unit]\\n', '[Unit]\\nDefaultDependencies=no\\nIgnoreOnIsolate=yes\\n', 1))\n"
         "    (units/'lab-guard.service').write_text(Path('/opt/lab/production-guard.service').read_text())\n"
+        "    journal = root/'etc/systemd/journald.conf.d'\n"
+        "    journal.mkdir(parents=True, exist_ok=True)\n"
+        "    (journal/'lab-console.conf').write_text('[Journal]\\nForwardToConsole=yes\\nMaxLevelConsole=debug\\n')\n"
         "    (units/'lab-workload.service').write_text(")
     (lab / 'ubuntu.py').write_text(ubuntu)
     service = transaction_service()

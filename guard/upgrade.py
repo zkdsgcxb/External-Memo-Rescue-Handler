@@ -6,8 +6,6 @@ and its receipt, keeping private rollback evidence. GRUB, hooks, ordinary
 initrds and running services are never written by this command.
 """
 import argparse
-from contextlib import contextmanager
-import fcntl
 import hashlib
 import json
 import os
@@ -20,6 +18,7 @@ import time
 import uuid
 
 import install as installer
+from install import deployment_lock
 from enroll import collect
 from host_files import atomic, sha256
 
@@ -43,20 +42,6 @@ def regular(path):
         with open_trusted(path):
             pass
     return path
-
-
-@contextmanager
-def deployment_lock():
-    """Lock the installed state directory; even a dry run creates no file."""
-    descriptor = os.open(STATE, os.O_RDONLY | os.O_DIRECTORY | os.O_CLOEXEC | os.O_NOFOLLOW)
-    try:
-        try:
-            fcntl.flock(descriptor, fcntl.LOCK_EX | fcntl.LOCK_NB)
-        except BlockingIOError as error:
-            raise RuntimeError('Another protection upgrade is already running') from error
-        yield
-    finally:
-        os.close(descriptor)
 
 
 def incomplete_upgrade():
@@ -273,7 +258,7 @@ def apply_upgrade(context, vm_report):
 def upgrade(build_dir, enrollment, vm_report, *, install=False):
     if install and os.geteuid() != 0:
         raise RuntimeError('Upgrade requires local administrator authentication')
-    with deployment_lock():
+    with deployment_lock(STATE):
         context = preflight(build_dir, enrollment, vm_report)
         if not install:
             return {'validated': True, 'installed': False, 'image': str(context['image']),

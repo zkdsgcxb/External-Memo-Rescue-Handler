@@ -54,6 +54,30 @@ class ProcessAccountingTests(unittest.TestCase):
 
 
 class ProductionCompositionTests(unittest.TestCase):
+    def test_namespace_check_enforces_each_versions_actual_root_policy(self):
+        class Parent:
+            @staticmethod
+            def read_namespace_policy(pid, writable):
+                return {'current_policy_checked': (pid, writable)}
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            unit = root / 'proc/1/root/run/systemd/system/ram-rescue-guard.service'
+            unit.parent.mkdir(parents=True)
+            info = root / 'proc/7/mountinfo'
+            info.parent.mkdir(parents=True)
+            namespace = {'ProductionIntegrationProbe': Parent,
+                         'Path': lambda path: root / str(path).lstrip('/')}
+            exec(compile(probe.GUEST.read_text(), str(probe.GUEST), 'exec'), namespace)
+            check = namespace['RoadmapPerformanceProbe'].read_namespace_policy
+            unit.write_text('[Service]\nRootDirectory=/run/tools\n')
+            info.write_text('20 1 0:1 / / rw,relatime - tmpfs tmpfs rw\n')
+            self.assertTrue(check(7, ['/run'])['historical_unrestricted_root'])
+            info.write_text('20 1 0:1 / / ro,relatime - tmpfs tmpfs rw\n')
+            with self.assertRaisesRegex(RuntimeError, 'Historical service'):
+                check(7, ['/run'])
+            unit.write_text('[Service]\nProtectSystem=strict\n')
+            self.assertEqual(check(7, ['/run']), {'current_policy_checked': (7, ['/run'])})
+
     def test_logger_verification_preserves_each_releases_policy(self):
         class Parent:
             pass
