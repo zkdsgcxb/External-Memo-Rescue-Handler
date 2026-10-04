@@ -246,7 +246,7 @@ def run_scenarios(channel, qmp, report):
     }
     for stage in ('initial_diagnostics', 'final_diagnostics'):
         diagnostics = report[stage]
-        checked[stage + '_ready'] = diagnostics['doctor']['state'] == 'ready' and all(d['owner_matches'] and d['runtime_context'] == 'standalone_data' for d in diagnostics['doctor']['devices'])
+        checked[stage + '_ready'] = doctor_matches_installed_runtime(diagnostics['doctor'], report['package'])
         checked[stage + '_private_redacted_export'] = diagnostics['redaction_passed'] and diagnostics['file_mode'] == 0o600 and diagnostics['directory_mode'] == 0o700
     for name in names:
         old, new = before['devices'][name], after['devices'][name]
@@ -257,6 +257,23 @@ def run_scenarios(channel, qmp, report):
         checked[name + '_original_process'] = all(before['children'][name]['process'][key] == after['children'][name]['process'][key] for key in ('pid', 'start_ticks'))
         checked[name + '_durable_hash'] = report['audit']['children'][name]['hash_matches']
     call(channel, 'shutdown')
+
+
+def doctor_matches_installed_runtime(doctor, package):
+    """Require actual owner health and the installed data candidate's provenance."""
+    versions = doctor.get('versions', {})
+    candidates = versions.get('installed_candidates', {})
+    manager = candidates.get('manager') or {}
+    runtimes = versions.get('runtimes', [])
+    expected = package['runtime']
+    return (doctor.get('state') == 'ready' and len(doctor.get('devices', [])) == 2
+            and all(item['owner_matches'] and item['runtime_context'] == 'standalone_data' for item in doctor['devices'])
+            and candidates.get('root') is None and versions.get('installed_image_sha256') is None
+            and all(manager.get(key) == expected[key] for key in ('binary_sha256', 'base_sha256', 'archive_sha256'))
+            and manager.get('archive_integrity_checked') is False
+            and len(runtimes) == 1 and runtimes[0].get('context') == 'standalone_data'
+            and runtimes[0].get('installed_candidate_matches', {}).get('manager') == {
+                'native_manifest': True, 'base_source': True})
 
 
 def second_boot(folder, command, log, qlog, actions, report):
@@ -281,8 +298,7 @@ def second_boot(folder, command, log, qlog, actions, report):
                 item['binary_sha256'] == report['package']['runtime']['binary_sha256'] for item in manager['controllers']),
             'second_boot_actual_controller_namespaces_restricted': len(manager['controllers']) == 2 and all(
                 item['namespace']['verified'] for item in manager['controllers']),
-            'second_boot_doctor_ready': manager['doctor']['state'] == 'ready' and all(
-                item['owner_matches'] and item['runtime_context'] == 'standalone_data' for item in manager['doctor']['devices']),
+            'second_boot_doctor_ready': doctor_matches_installed_runtime(manager['doctor'], report['package']),
         })
         call(channel, 'finish')
         call(channel, 'shutdown')

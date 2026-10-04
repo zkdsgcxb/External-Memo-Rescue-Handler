@@ -45,6 +45,23 @@ class StandaloneFixtureTests(unittest.TestCase):
         self.assertIn("or 'ram_rescue_guard=1' in flags", source)
         self.assertIn("len(line) > 4096", source)
 
+    def test_doctor_acceptance_requires_candidate_and_current_library_match(self):
+        package = {'runtime': dict.fromkeys(('binary_sha256', 'base_sha256', 'archive_sha256'), 'a' * 64)}
+        manager = {**package['runtime'], 'archive_integrity_checked': False}
+        matches = {'native_manifest': True, 'base_source': True}
+        report = {'state': 'ready', 'devices': [
+            {'owner_matches': True, 'runtime_context': 'standalone_data'} for _ in range(2)],
+            'versions': {'installed_candidates': {'manager': manager, 'root': None},
+                         'runtimes': [{'context': 'standalone_data', 'installed_candidate_matches': {'manager': matches}}]}}
+        self.assertTrue(standalone.doctor_matches_installed_runtime(report, package))
+        matches['native_manifest'] = False
+        self.assertFalse(standalone.doctor_matches_installed_runtime(report, package))
+        matches['native_manifest'] = True
+        manager['base_sha256'] = 'b' * 64
+        self.assertFalse(standalone.doctor_matches_installed_runtime(report, package))
+        report['versions'].pop('installed_candidates')
+        self.assertFalse(standalone.doctor_matches_installed_runtime(report, package))
+
     def test_hook_is_double_gated_and_does_not_install_protection(self):
         self.assertIn('ram_rescue_standalone_test=1', standalone.HOOK)
         self.assertIn('RAMRescueLab', standalone.HOOK)
