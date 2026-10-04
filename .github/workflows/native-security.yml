@@ -1,0 +1,30 @@
+name: Native security checks
+on:
+  push:
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  native:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        instrumentation: [release, sanitizers]
+    steps:
+      # actions/checkout v4.2.2; pin the code, not a mutable major-version tag.
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
+      - name: Install compiler and ELF inspector
+        run: sudo apt-get update && sudo apt-get install -y g++ libssl-dev binutils
+      - name: Build, inspect ELF, and exercise hostile inputs
+        env:
+          INSTRUMENTATION: ${{ matrix.instrumentation }}
+          ASAN_OPTIONS: detect_leaks=1:abort_on_error=1
+          UBSAN_OPTIONS: halt_on_error=1:print_stacktrace=1
+        run: |
+          extra=()
+          if [ "$INSTRUMENTATION" = sanitizers ]; then extra+=(--sanitizers); fi
+          python3 guard/native/build_runtime.py --output "lab/work/native-$INSTRUMENTATION" --fuzz-cases 10000 "${extra[@]}"

@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/python3 -I
 """One entry point for quiet maintenance of enrolled USB multipath maps.
 
 systemd starts controllers when registered stable maps appear. Root protection
@@ -14,14 +14,18 @@ from pathlib import Path
 import stat
 import sys
 import tempfile
+import shutil
 
 BASE = Path(__file__).resolve().parent
+sys.path.insert(0, str(BASE))
 sys.path.insert(0, str(BASE.parent / 'ram-rescue-demo/src'))
 
 import data as services
 from admin.data import collect
 from host_files import atomic, sha256
 from admin.registry import record_from_profile, validate_record
+from trusted_paths import read_trusted, read_trusted_json, open_directory
+from security_policy import controller_restrictions
 
 REGISTRY = Path('/etc/ram-rescue-manager/devices')
 RUNTIME = Path('/run/ram-rescue-manager')
@@ -33,7 +37,7 @@ CONTROLLER = UNIT.with_name('ram-rescue-maintain@.service')
 SLICE = UNIT.with_name(services.SLICE)
 RULE = Path('/etc/udev/rules.d/58-ram-rescue-manager.rules')
 ROOT_CONFIG = Path('/run/ram-rescue-guard/config.json')
-CONTROL_LOCK = Path('/run/lock/ram-rescue-manager.lock')
+CONTROL_LOCK = RUNTIME / 'control.lock'
 
 
 def exclusive_control(function):
@@ -41,8 +45,15 @@ def exclusive_control(function):
     @wraps(function)
     def locked(*args, **kwargs):
         services.require_root()
-        fd = os.open(CONTROL_LOCK, os.O_CREAT | os.O_RDWR | os.O_CLOEXEC, 0o600)
+        CONTROL_LOCK.parent.mkdir(mode=0o700, parents=True, exist_ok=True)
+        if os.geteuid() == 0:
+            os.close(open_directory(CONTROL_LOCK.parent))
+        fd = os.open(CONTROL_LOCK, os.O_CREAT | os.O_RDWR | os.O_CLOEXEC | os.O_NOFOLLOW, 0o600)
         try:
+            info = os.fstat(fd)
+            if (not stat.S_ISREG(info.st_mode) or info.st_uid != os.geteuid()
+                    or info.st_mode & 0o077 or info.st_nlink != 1):
+                raise RuntimeError('Untrusted manager lock file')
             fcntl.flock(fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
             return function(*args, **kwargs)
         finally:
@@ -52,12 +63,16 @@ def exclusive_control(function):
 
 def read_json(path):
     path = Path(path)
+    if os.geteuid() == 0:
+        return read_trusted_json(path)
     if path.stat().st_size > 65536:
         raise ValueError('Oversized manager record: ' + str(path))
     return json.loads(path.read_text())
 
 
 def write_json(path, value):
+    if os.geteuid() == 0:
+        os.close(open_directory(path.parent))
     atomic(path, (json.dumps(value, indent=2, sort_keys=True) + '\n').encode())
 
 
@@ -82,7 +97,9 @@ def root_profile():
     if not ROOT_CONFIG.exists():
         return None
     config = read_json(ROOT_CONFIG)
-    identity = services.RAM / config['identity_path'].lstrip('/')
+    if config.get('identity_path') != '/etc/rescue/identity.json':
+        raise RuntimeError('Unexpected root identity path')
+    identity = services.ram_environment.SHARED / config['identity_path'].lstrip('/')
     return {'schema': 1, 'identity': read_json(identity), 'guard': config}
 
 
@@ -125,10 +142,9 @@ def render_rules(entries):
 
 def render_manager(program):
     return ('[Unit]\nDescription=Prepare quiet USB mapping maintenance\n'
-            'Requires=ram-rescue-guard.service\nAfter=ram-rescue-guard.service systemd-udevd.service\n'
-            'ConditionKernelCommandLine=ram_rescue_guard=1\n\n'
+            'After=ram-rescue-guard.service ram-rescue-prepare.service systemd-udevd.service\n\n'
             '[Service]\nType=oneshot\nRemainAfterExit=yes\n'
-            f'ExecStart=/usr/bin/python3 {program} prepare\nTimeoutStartSec=45\n\n'
+            f'ExecStart=/usr/bin/python3 -I {program} prepare\nTimeoutStartSec=45\n\n'
             '[Install]\nWantedBy=multi-user.target\n')
 
 
@@ -137,12 +153,12 @@ def render_controller():
             'Requires=ram-rescue-manager.service\nAfter=ram-rescue-manager.service\n'
             'Before=shutdown.target\nConflicts=shutdown.target\n\n'
             '[Service]\nType=notify\nNotifyAccess=main\nSlice=ramrescuedata.slice\n'
-            f'RootDirectory={services.RAM}\nWorkingDirectory=/\n'
+            f'RootDirectory={services.ram_environment.PRIVATE}\nWorkingDirectory=/\n'
             'ExecStart=/opt/manager/maintain --record /run/ram-rescue-manager/entries/%i.json\n'
             'ExecStopPost=/opt/manager/maintain --record /run/ram-rescue-manager/entries/%i.json --takeover\n'
             'Restart=no\nTimeoutStartSec=30\nTimeoutStopSec=15\n'
             'MemoryAccounting=yes\nMemoryMax=128M\nMemorySwapMax=0\n'
-            'StandardOutput=journal\nStandardError=journal\n')
+            'StandardOutput=journal\nStandardError=journal\n' + controller_restrictions())
 
 
 def prepare():
@@ -154,7 +170,7 @@ def prepare():
     try:
         alias.symlink_to(runtime.relative_to(alias.parent))
     except FileExistsError:
-        if not alias.is_symlink() or alias.resolve() != runtime:
+        if not alias.is_symlink() or alias.resolve() != runtime.resolve():
             raise RuntimeError('This boot already uses another manager runtime; do not replace live code')
     folder = RUNTIME / 'entries'
     folder.mkdir(mode=0o700, parents=True, exist_ok=True)
@@ -165,7 +181,8 @@ def prepare():
                 raise RuntimeError('RAM enrollment differs; never replace a live identity')
         else:
             write_json(path, record)
-    return {'prepared': len(entries), 'runtime': str(runtime), 'root_owner': 'existing_boot_service'}
+    return {'prepared': len(entries), 'runtime': str(runtime),
+            'root_owner': 'existing_boot_service' if root_profile() else None}
 
 
 def activate_present(entries):
@@ -214,7 +231,8 @@ def register(device):
         raise RuntimeError('Expected one enrolled USB partition behind the mapping')
     profile = collect(item['name'], '/dev/' + slaves[0].name)
     record = record_from_profile(profile)
-    REGISTRY.mkdir(mode=0o700, parents=True, exist_ok=True)
+    REGISTRY.parent.mkdir(mode=0o755, parents=True, exist_ok=True)
+    REGISTRY.mkdir(mode=0o700, exist_ok=True)
     target = REGISTRY / (item['name'] + '.json')
     if target.exists():
         if read_json(target) != record:
@@ -233,22 +251,43 @@ def register(device):
 
 
 def install_sources():
-    relative = [Path('guard/manage.py'), Path('guard/data.py'), Path('guard/host_files.py'),
-                Path('guard/native_payload.py'),
+    relative = [*[p.relative_to(BASE.parent) for p in sorted(BASE.glob('*.py'))],
                 Path('ram-rescue-demo/src/rescue.py'),
                 *[p.relative_to(BASE.parent) for p in sorted((BASE / 'admin').glob('*.py'))]]
     content = {path: (BASE.parent / path).read_bytes() for path in relative}
     hashed = hashlib.sha256()
     for path, data in sorted(content.items()):
         hashed.update(str(path).encode() + b'\0' + data + b'\0')
+    payload = BASE.parent / 'runtime'
+    if payload.exists():
+        details = services.ram_environment.package_manifest(payload)
+        hashed.update(details['archive_sha256'].encode())
+    VERSIONS.mkdir(mode=0o755, parents=True, exist_ok=True)
     destination = VERSIONS / hashed.hexdigest()
     if destination.exists():
-        raise RuntimeError('Installation version already exists; refusing an incomplete retry')
+        # A cold rollback may select an earlier immutable version. Reuse only
+        # the complete, byte-identical package; never repair it in place.
+        if os.geteuid() == 0:
+            os.close(open_directory(destination))
+        for path, expected in content.items():
+            source = destination / path
+            actual = (read_trusted(source, limit=8 * 1024**2) if os.geteuid() == 0
+                      else source.read_bytes())
+            if source.is_symlink() or actual != expected:
+                raise RuntimeError('Existing administration version is incomplete or changed')
+        if payload.exists() and services.ram_environment.package_manifest(destination / 'runtime') != details:
+            raise RuntimeError('Existing runtime version differs from the selected package')
+        return destination / 'guard/manage.py'
     destination.mkdir(mode=0o755, parents=True)
     for path, data in content.items():
         target = destination / path
         target.parent.mkdir(mode=0o755, parents=True, exist_ok=True)
         atomic(target, data, mode=0o755 if path == Path('guard/manage.py') else 0o644)
+    if payload.exists():
+        shutil.copytree(payload, destination / 'runtime')
+    for folder in destination.rglob('*'):
+        if folder.is_dir():
+            folder.chmod(0o755)
     return destination / 'guard/manage.py'
 
 
@@ -286,15 +325,19 @@ def install():
     write_json(INSTALL / 'install.json', record)
     started = activate_present(entries)
     return {'state': 'installed', 'command': str(ENTRY), 'services': started,
-            'root_owner': 'existing_boot_service', 'new_polling_daemon': False}
+            'root_owner': 'existing_boot_service' if root_profile() else None,
+            'new_polling_daemon': False}
 
 
-def require_empty_data_scope():
-    """This upgrade only changes next-boot administration of an existing root."""
+def require_quiescent_data_scope():
+    """Keep registrations, but never upgrade an active data maintenance scope."""
     if os.path.lexists(REGISTRY) and (REGISTRY.is_symlink() or not REGISTRY.is_dir()):
         raise RuntimeError('Expected the original data registry directory')
-    if REGISTRY.exists() and any(REGISTRY.iterdir()):
-        raise RuntimeError('Manager upgrade requires an empty data registry')
+    entries = records()
+    # Even an inactive controller's stable map can have mounted users or queued
+    # requests. Require the owner to retire these maps through normal teardown.
+    if any(item['uuid'].startswith('RAMRESCUE-DATA-') for item in maps().values()):
+        raise RuntimeError('Data mappings still exist; retire them normally before upgrading')
     output = services.run(['systemctl', 'list-units', '--all', '--type=service',
                            '--no-legend', '--plain', '--no-pager',
                            'ram-rescue-maintain@*.service', 'ram-rescue-data-*.service'])
@@ -305,6 +348,7 @@ def require_empty_data_scope():
         # A failed unit can still retain an uninterruptible helper in its cgroup.
         if fields[2] != 'inactive':
             raise RuntimeError('Data controller may still be active: ' + fields[0])
+    return entries
 
 
 def replace_entry(target):
@@ -322,8 +366,7 @@ def replace_entry(target):
 
 @exclusive_control
 def upgrade():
-    """Stage new persistent integration; only a protected reboot activates it."""
-    services.require_ram()
+    """Stage persistent integration for next boot without touching live RAM."""
     receipt_path = INSTALL / 'install.json'
     if INSTALL.is_symlink() or receipt_path.is_symlink() or not receipt_path.is_file():
         raise RuntimeError('Expected the original manager installation receipt')
@@ -348,9 +391,9 @@ def upgrade():
         raise RuntimeError('Installed manager program is outside its version directory')
     if not ENTRY.is_symlink() or str(ENTRY.readlink()) != record['program']:
         raise RuntimeError('Manager command changed independently')
-    require_empty_data_scope()
-    if previous[RULE][0] != render_rules([]).encode():
-        raise RuntimeError('Empty-registry upgrade requires empty manager rules')
+    entries = require_quiescent_data_scope()
+    if previous[RULE][0] != render_rules(entries).encode():
+        raise RuntimeError('Manager rules differ from the retained registry')
 
     backup = Path(tempfile.mkdtemp(prefix='upgrade-', dir=INSTALL))
     journal = {'state': 'staging', 'previous_program': record['program'], 'program': None,
@@ -367,10 +410,11 @@ def upgrade():
     try:
         program = install_sources()
         files = {UNIT: render_manager(program).encode(), CONTROLLER: render_controller().encode(),
-                 SLICE: services.slice_unit().encode(), RULE: render_rules([]).encode()}
+                 SLICE: services.slice_unit().encode(), RULE: render_rules(entries).encode()}
         journal.update(state='applying', program=str(program))
         write_json(backup / 'upgrade.json', journal)
-        require_empty_data_scope()
+        if require_quiescent_data_scope() != entries:
+            raise RuntimeError('Data registry changed while staging the upgrade')
         pending = {**record, 'state': 'upgrading', 'upgrade_backup': str(backup)}
         changed = True  # atomic() may replace its target before reporting a sync error.
         write_json(receipt_path, pending)
@@ -383,7 +427,7 @@ def upgrade():
                        'files': {str(path): hashlib.sha256(content).hexdigest()
                                  for path, content in files.items()},
                        'rule_sha256': hashlib.sha256(files[RULE]).hexdigest(),
-                       'upgrade_backup': str(backup), 'activation': 'protected_reboot'}
+                       'upgrade_backup': str(backup), 'activation': 'next_boot'}
         write_json(receipt_path, next_record)
         journal['state'] = 'complete'
         write_json(backup / 'upgrade.json', journal)
@@ -421,7 +465,7 @@ def upgrade():
         write_json(backup / 'upgrade.json', journal)
         raise RuntimeError('Manager upgrade failed; ' + journal['state'] + '; inspect ' + str(backup)) from error
     return {'state': 'upgraded', 'command': str(ENTRY), 'backup': str(backup),
-            'requires_protected_reboot': True, 'running_root_changed': False,
+            'requires_reboot': True, 'running_root_changed': False,
             'runtime_prepared': False, 'services_started': []}
 
 
@@ -485,13 +529,19 @@ def main():
     commands = parser.add_subparsers(dest='command', required=True)
     registration = commands.add_parser('register', help='Enroll a protected device or recognize its existing owner')
     registration.add_argument('--device', required=True)
-    for command in ('install', 'upgrade', 'status', 'uninstall'):
+    for command in ('install', 'upgrade', 'status', 'uninstall', 'doctor'):
         commands.add_parser(command)
+    export = commands.add_parser('export', help='Write a local redacted diagnostic report')
+    export.add_argument('--output', type=Path)
     commands.add_parser('prepare', help=argparse.SUPPRESS)
     args = parser.parse_args()
     actions = {'install': install, 'upgrade': upgrade, 'status': status,
                'uninstall': uninstall, 'prepare': prepare}
-    result = register(args.device) if args.command == 'register' else actions[args.command]()
+    if args.command in ('doctor', 'export'):
+        import diagnostics
+        result = diagnostics.doctor() if args.command == 'doctor' else diagnostics.export_report(args.output)
+    else:
+        result = register(args.device) if args.command == 'register' else actions[args.command]()
     print(json.dumps(result, ensure_ascii=False, indent=2))
 
 

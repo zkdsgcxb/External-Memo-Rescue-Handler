@@ -123,6 +123,7 @@ class ManagerTests(unittest.TestCase):
         self.assertNotIn('SYSTEMD_WANTS', raw)
         self.assertNotIn('BindsTo=', manager.render_controller())
         self.assertNotIn('Restart=always', manager.render_controller())
+        self.assertNotIn('BindReadOnlyPaths=/etc/fstab:', manager.render_controller())
         self.assertIn('ExecStart=/opt/manager/maintain --record ', manager.render_controller())
         self.assertIn('ExecStopPost=/opt/manager/maintain --record ', manager.render_controller())
         self.assertNotIn('/opt/manager/guard-runtime', manager.render_controller())
@@ -238,6 +239,14 @@ class ManagerTests(unittest.TestCase):
         self.assertIn('register', result.stdout)
         self.assertIn('upgrade', result.stdout)
 
+    def test_complete_prior_version_can_be_reselected_but_never_repaired(self):
+        program = manager.install_sources()
+        self.assertEqual(manager.install_sources(), program)
+        program.write_bytes(b'changed installed code')
+        with self.assertRaisesRegex(RuntimeError, 'incomplete or changed'):
+            manager.install_sources()
+        self.assertEqual(program.read_bytes(), b'changed installed code')
+
     def test_upgrade_stages_next_boot_only_and_status_reads_existing_python_owner(self):
         old = self.installed_integration()
         with patch.object(manager, 'prepare') as prepare, \
@@ -248,12 +257,12 @@ class ManagerTests(unittest.TestCase):
         stage_runtime.assert_not_called()
         activate.assert_not_called()
         record = manager.receipt()
-        self.assertEqual(record['activation'], 'protected_reboot')
+        self.assertEqual(record['activation'], 'next_boot')
         self.assertNotEqual(record['program'], old['program'])
         self.assertEqual(str(manager.ENTRY.readlink()), record['program'])
         self.assertIn(record['program'], manager.UNIT.read_text())
         self.assertEqual(manager.CONTROLLER.read_text(), manager.render_controller())
-        self.assertTrue(result['requires_protected_reboot'])
+        self.assertTrue(result['requires_reboot'])
         self.assertFalse(result['running_root_changed'])
         self.assertFalse(result['runtime_prepared'])
         self.assertEqual(result['services_started'], [])
@@ -312,15 +321,37 @@ class ManagerTests(unittest.TestCase):
                 stage.assert_not_called()
         self.commands.assert_not_called()
 
-    def test_upgrade_refuses_any_registration_even_without_a_live_map(self):
+    def test_upgrade_refuses_invalid_registration_even_without_a_live_map(self):
         self.installed_integration()
         (manager.REGISTRY / 'unreadable-entry.json').write_text('not a valid registration')
         with patch.object(manager, 'install_sources') as stage:
-            with self.assertRaisesRegex(RuntimeError, 'empty data registry'):
+            with self.assertRaises(ValueError):
                 manager.upgrade()
             stage.assert_not_called()
         self.assert_original_integration()
         self.commands.assert_not_called()
+
+    def test_upgrade_retains_quiescent_registration_without_preparing_ram(self):
+        record = self.installed_integration()
+        manager.write_json(manager.REGISTRY / 'rr-data-test.json', self.record)
+        rule = manager.render_rules([self.record]).encode()
+        manager.RULE.write_bytes(rule)
+        record['rule_sha256'] = hashlib.sha256(rule).hexdigest()
+        manager.write_json(manager.INSTALL / 'install.json', record)
+        with patch.object(manager.services, 'require_ram') as prepare_ram:
+            result = manager.upgrade()
+        prepare_ram.assert_not_called()
+        self.assertTrue(result['requires_reboot'])
+        self.assertEqual(manager.RULE.read_bytes(), rule)
+        self.assertEqual(manager.records(), [self.record])
+
+    def test_upgrade_rejects_even_an_unregistered_data_mapping(self):
+        self.installed_integration()
+        self.live_maps.return_value = {'dm-9': self.item}
+        with patch.object(manager, 'install_sources') as stage:
+            with self.assertRaisesRegex(RuntimeError, 'Data mappings still exist'):
+                manager.upgrade()
+        stage.assert_not_called()
 
     def test_upgrade_refuses_running_or_transitioning_data_controllers(self):
         self.installed_integration()
@@ -408,7 +439,7 @@ class ManagerTests(unittest.TestCase):
         with patch.object(manager, 'install_sources', return_value=program):
             result = manager.install()
         self.assertEqual(result['services'], [])
-        self.assertEqual(result['root_owner'], 'existing_boot_service')
+        self.assertIsNone(result['root_owner'])
         self.assertEqual(manager.read_json(manager.INSTALL / 'install.json')['state'], 'installed')
         self.assertFalse(manager.ROOT_CONFIG.exists())
         commands = [call.args[0] for call in self.commands.call_args_list]

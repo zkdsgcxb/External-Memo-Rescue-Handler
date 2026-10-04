@@ -2,7 +2,7 @@
 
 使用一个入口登记和查看保护对象，不需要选择“根盘模式”或“数据盘模式”。程序根据已有映射与登记身份选择核验策略；已有根盘控制器由启动流程负责，数据映射出现时由 systemd 自动启动同一套 Guard。
 
-新的保护镜像只使用完整 C++ 运行时；管理命令与 `admin/` 中的冷态登记、只读校验仍由 Python 实现。启动时校验并复用 RAM 内的 ELF 与共享库，一小段 exec 入口交接到原生程序，没有新增常驻 shell。缺少原生运行包时明确拒绝启动，不回退到旧 Python 控制器。因此仍运行旧 Python 保护包的会话不能用新管理工具新增维护实例，需先完成原生镜像部署并进入新保护启动。
+新的保护镜像只使用完整 C++ 运行时；管理命令与 `admin/` 中的冷态登记、只读校验仍由 Python 实现。启动时校验 RAM 内的 ELF 与共享库，一小段 exec 入口交接到原生程序，没有新增常驻 shell。普通 Ubuntu 可从离线安装包独立准备数据维护环境，无需先进入保护根盘启动；当前已运行的不同版本 RAM 环境不会被热替换。缺少匹配当前内核的原生运行包时明确拒绝启动。
 
 正常维护不弹窗，也不需要拔插后手动运行命令。没有新增定时扫盘的总管进程：`ram-rescue-manager.service` 只在启动时准备 RAM 文件，完成后为 `active (exited)`；持续监视仍由原有 Guard 实例承担。
 
@@ -18,24 +18,25 @@
 
 ## 安装与使用
 
-在当前已进入保护启动、根盘 Guard 正常运行的本机上执行：
+先按 [可信安装说明](../research/2026-10-04/INSTALLATION-AND-TRUST.md) 审阅、构建和安装离线包。特权操作只使用 root 所有的固定入口，不从用户可写工作区提权加载 Python。普通启动不要求根盘 Guard 或 `nompath`，但内核须匹配包记录、stock `multipathd.service/socket` 不得竞争，且全局 `dm_multipath.queue_if_no_path_timeout_secs` 须由管理员显式配置为至少 10 秒；默认 0 会被拒绝，工具不擅自修改全局策略。
 
 ```bash
-pkexec python3 guard/manage.py install
-pkexec /usr/local/sbin/rescue-guard status
+sudo /usr/bin/rescue-guard-admin manager install
+sudo /usr/bin/rescue-guard-admin manager status
+sudo /usr/bin/rescue-guard-admin manager doctor
 ```
 
 安装器添加统一入口、持久化 systemd/udev 配置和独立代码版本，不替换正在运行的根盘代码，不改 initrd、GRUB、rEFInd 或 fstab。后续启动自动准备维护环境。已有根盘自动出现在统一状态中，不要求重新登记：
 
 ```bash
 # 可选核对：自动认出根卷对应的已有保护实例，不启动第二个 owner。
-pkexec /usr/local/sbin/rescue-guard register --device /
+sudo /usr/bin/rescue-guard-admin manager register --device /
 ```
 
 对于已经按约定建立的额外数据映射，只需登记一次：
 
 ```bash
-pkexec /usr/local/sbin/rescue-guard register \
+sudo /usr/bin/rescue-guard-admin manager register \
   --device /dev/mapper/rr-data-example
 ```
 
@@ -43,7 +44,7 @@ pkexec /usr/local/sbin/rescue-guard register \
 
 登记后，当前存在的映射立即进入维护；后续匹配的 DM 映射出现时自动启动。**重启后自动维护，不等于自动重建数据映射**：若未配置数据映射的启动创建，状态会显示 `waiting_for_map`。精确的裸分区自动挂载排除规则仍保留，因此登记前应安排好其映射创建方式。
 
-状态中 `ready` 表示当前控制器已就绪；`waiting_for_map` 表示登记存在但映射尚未出现；`expired/failed/interrupted/blocked` 需要检查日志，不能通过重复热插拔清空旧事务、无限延长恢复期限。过去的事件另列为 `last_state`，不将它当作当前设备仍受保护的证据。
+`manager status` 中 `ready` 表示当前控制器已就绪；`waiting_for_map` 表示登记存在但映射尚未出现；`expired/failed/interrupted/blocked` 需要检查日志，不能通过重复热插拔清空旧事务、无限延长恢复期限。过去的事件另列为 `last_state`，不将它当作当前设备仍受保护的证据。按需 `doctor` 进一步核对本次启动、实际 owner、运行副本、映射和依赖；其 `ready` 仍不保证文件系统与应用没有错误。
 
 ```bash
 systemctl status ram-rescue-manager.service
@@ -54,21 +55,23 @@ journalctl -b -u 'ram-rescue-maintain@*.service'
 
 ## 升级管理包
 
-本次升级入口支持只有根盘保护、尚无登记数据盘的已有安装。在 [保护镜像升级](README.md#升级已有保护入口) 完成后执行：
+先以可信流程安装已验证的新包，再调用固定入口：
 
 ```bash
-pkexec python3 "$PWD/guard/manage.py" upgrade
+sudo /usr/bin/rescue-guard-admin manager upgrade
 ```
 
-入口核验已安装文件和收据，要求数据登记目录为空且无运行中或失败的数据控制器。保存旧配置、链接目标与收据后，安装独立的新代码版本，原子更新持久配置和命令链接，执行 `daemon-reload`；不准备当前 RAM 环境，不启动或停止控制器。失败会尝试恢复旧配置，外部改动或回滚失败会保留待检查记录。
+升级可以保留数据登记，但要求全部本项目数据 DM 映射已按正常流程退出，相关控制器均为 `inactive`；运行中、失败或正在退出的实例都会阻止升级。命令核验已有配置、规则和收据，备份后安装独立版本并切换持久入口，执行 `daemon-reload`；不准备或替换本次 RAM 环境，不启动或停止 owner。失败尝试恢复旧配置，外部改动或回退失败保留待检查记录。
 
-下一次从已升级的保护项启动时，管理服务才使用新 C++ 包。当前启动中的旧 owner 和 RAM alias 保留；`rescue-guard status` 可继续查看当前根盘。已登记数据盘的在线升级不在此入口范围内。
+新版本仅在下一次启动生效。根盘保护镜像需另按 [保护镜像升级](README.md#升级已有保护入口) 配套更新；普通数据维护不要求进入根盘保护项。冷回退时安装保留的旧包，再执行同一 `manager upgrade` 并重启。已有完整旧版本只有在代码、依赖清单和归档逐项一致时才复用，支持 A→B→A；不修补或覆盖被改动的旧目录，不提供活跃 owner 的热升级。
 
 ## 生命周期与资源
 
 - 精确的 DM_NAME + DM_UUID udev 规则设置 `SYSTEMD_WANTS`，只启动对应登记的维护实例；裸 USB 分区规则仅排除桌面自动挂载。
 - Guard 不绑定裸设备的 systemd 生命周期。USB 消失时，Guard、稳定映射、原挂载与原进程继续存在，便于原有 I/O 排队和恢复。
 - 持久登记放在 `/etc/ram-rescue-manager/devices/`，不保存 `/dev/sdX`、sysfs 实例路径或 diskseq；每次冷启动重新核验、生成当次运行配置。
+- 普通启动使用独立 `tmpfs,noswap`；匹配的根盘环境通过 bind 挂载复用同一 RAM 文件，不复制第二套工具页。服务的 `RootDirectory` 使用真实 `/run/ram-rescue-manager/rootfs`，管理路径 `tools` alias 不作为 systemd 根目录。
+- 冷态准备只读绑定宿主 fstab 单文件；原 inode 上编辑可见，原子替换后再次管理准入拒绝并要求正常结束数据使用后重启。udev 自动启动沿用本轮冷态基线；修改相关 fstab 规则后应重启核验。实际挂载、swap 和设备身份仍实时检查。恢复/死亡接管不重新访问宿主 fstab，不增加 `CAP_SYS_PTRACE`。
 - 代码与当次登记复制到 RAM。准入及其子进程继承同一 owner fence；准备过程直接进入共用 `run_owned()`，不释放锁后另启竞争者。
 - `ExecStopPost` 必须匹配本次 systemd invocation、owner 和配置摘要才能接管。未获得旧实例锁的新服务，没有权限在退出时清理旧实例。
 - 继续使用 `Restart=no` 和终态记录，不增加重复恢复循环。数据实例合计 CPU 20%／20 ms、内存 256 MiB、零 swap；原根盘的配额独立保留。统一入口没有把三个 Guard 合并成一个进程。
@@ -78,11 +81,11 @@ pkexec python3 "$PWD/guard/manage.py" upgrade
 先按正常文件系统流程退出并删除额外数据映射，再撤除统一管理集成：
 
 ```bash
-pkexec /usr/local/sbin/rescue-guard uninstall
+sudo /usr/bin/rescue-guard-admin manager uninstall
 ```
 
 注册的数据映射仍存在时，撤除会拒绝，防止移除裸分区排除规则后出现二次挂载。撤除不停止现有根盘保护；登记、版本文件和安装收据保留。旧设备数据库里的属性可能保留到重新插入设备。
 
-首次安装失败会保留 `/var/lib/ram-rescue-manager/install.json` 及已写入内容，明确记录未完成状态；不会覆盖已有安装，也没有通用就地升级或失败后自动重装功能。核对日志和收据后再处理，不能把部分安装视为已启用。
+首次安装失败会保留 `/var/lib/ram-rescue-manager/install.json` 及已写入内容，明确记录未完成状态；不会覆盖已有安装，也没有任意部分安装的就地修补或失败后自动重装功能。核对日志和收据后再处理，不能把部分安装视为已启用。
 
-实验与部署证据见 [统一后台维护验收](../research/2026-10-01/UNIFIED-MANAGER.md)。
+当前普通启动的真实离线包、两次冷启动、挂载与恢复结果见 [独立数据盘验收](../research/2026-10-04/STANDALONE-DATA.md)。此前部署记录见 [统一后台维护验收](../research/2026-10-01/UNIFIED-MANAGER.md)。

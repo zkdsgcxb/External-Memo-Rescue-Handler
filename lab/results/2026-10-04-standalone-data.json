@@ -1,0 +1,250 @@
+{
+  "schema": 1,
+  "scenario": "ordinary-ubuntu-independent-data",
+  "implementation": "cpp",
+  "passed": true,
+  "scope": "Fresh ordinary Ubuntu VM; real offline package; no protected root initrd; two registered disposable USB multipath maps",
+  "raw_report": "lab/work/sd-1004-223037-365281/report.json",
+  "raw_report_sha256": "093b85cf7687c07961994932e059b0f4267f08442a4aec52f939989a6d849632",
+  "package": {
+    "package": "ram-rescue-handler_2ef88c1e08d22b4c45c5ee23_amd64.deb",
+    "sha256": "8a9252b11dea1f299c57664468a54cf6f69dc64d40aacbf738712d06add376a0",
+    "administration_version": "2ef88c1e08d22b4c45c5ee23",
+    "maintainer_scripts": false
+  },
+  "kernel": "7.0.0-34-generic",
+  "native_binary_sha256": "479c8ba7e2445ae3fbb99d58e1b79d836170c6fe463953ca636cde9857ee8718",
+  "base_sha256": "cdc8ffb3060ffd198265bbdeaefc6122866459c2e57adba1372db6a430d87cee",
+  "input_sha256": {
+    "seed": "7565aae2d5866f905e2e9c523d28a4bcb7eda0b2bfce1576424303574de579b7",
+    "kernel": "73d9c6e40b210deb638070d6af591a68bb6d7ff0280d0ec34c9ccf705a4f47ac",
+    "initrd": "4de63cacb1dfa01cc1bce5361ff6929d03fc66703fd7d2a89c50d60fff49799a",
+    "package": "8a9252b11dea1f299c57664468a54cf6f69dc64d40aacbf738712d06add376a0"
+  },
+  "observer_sha256": {
+    "lab/standalone_data_probe.py": "a2dc1d86010b5e80c100eeae0d1b2fd7963638cb55d7c2141735de927223eac9",
+    "lab/guest/standalone_data_probe.py": "d0083a83463d6f9896128cde3730571c23f680c73230f4b3d54bf94f96f8218b",
+    "lab/guest/data_probe.py": "26adbb97a045adfed4f0dc4a44116ead84170c65e73550526bf70c09960422e4",
+    "lab/guest/unified_probe.py": "b3727e7ad51421103a2d2e2615612ad6261d7932c2e0e70dae2533053402d4d6",
+    "lab/guest/mount_probe.py": "accdb0200c9462140d808d49d3ffda1ac484774aaa160b73c89494e6815f2f84",
+    "lab/guest/dm_observer.py": "700cfeec56d2841cb2f73435641d8cc2b0c25c9dde0ee6284c0b296896f0fd80"
+  },
+  "administration_sha256": {
+    "guard/ARCHITECTURES.md": "20fe438fcbf1d8d80f0eee7e9e8a1c99aa0b6dbb2d89672715100f4b468fd1d1",
+    "guard/DATA.md": "b684fb896459cf1c1a16a4b3f4b87eaccf4c08972610039b880189b6d9191fb9",
+    "guard/EFI.md": "6a272995b301323856a7ff8dc7bfb70ba69f51df0393923382250faee6e94523",
+    "guard/MANAGER.md": "4c7bd7f1bcd840b6f482bc580c75c4e60c70f2c37b6380734bd4b8493e2b5ea0",
+    "guard/MOUNTS.md": "4c1bd9149defa96dc2e0144a1b594c4b7d42dc4f62c4ffafbb14fca28690e182",
+    "guard/README.md": "943046341ad8f26a623b94c2b802256b7410e98b80c025d0af60359a0a1fab41",
+    "guard/admin/__init__.py": "bf2ab088e7c59535cc5e0f7ffd567b9afba2e94dbe7a88bd54fec7647b86b64b",
+    "guard/admin/admission.py": "9943b00ef6a5a755ff4152bf40776ca6b3281fe840459c27721c1c2dfcbe8202",
+    "guard/admin/data.py": "1f5ce0e56df06464b749fb1165b07e9e0d49db35e743a2c960043c14e96cdc20",
+    "guard/admin/dm.py": "fc5e39e7c20f0332a6b12b4d162a8a654a2789a2f10e4ec691b1b4bee3a46399",
+    "guard/admin/identity.py": "2f36daebf703cda7a514d53c4236f3912050fc6fbed6ded51ca17e758260806f",
+    "guard/admin/linux_abi.py": "9d5f147bf54de04245ae1f5d5a8862fd91f72364f58d67f776ea79e1eda00868",
+    "guard/admin/registry.py": "6525285b9512c40ab62c3e952d0d5280e254cdf5614349a08df90b4e9280c965",
+    "guard/admin_entry.py": "08111853bf811600270926f52e179a295e80bebf998141db85b0f4c4f9ae4998",
+    "guard/build.py": "51f6c4b29d99367a465c5c23344c034a90a918975754f5898e1f7b23d4fa043d",
+    "guard/data.py": "7e4b1dbbd88ae84551a910e8aa1e52a46b032aab5224d4e96c018d7cb72b40ad",
+    "guard/diagnostics.py": "28dec723fb42f50c10759e4ab05d9d02690475a4cc4395c0c87582b43873729e",
+    "guard/efi_mount.py": "8f89422897a3b1bb6379e5e035210f13a9923732adb3906659e94997d4a9cd26",
+    "guard/enroll.py": "4bac57b8041daf88ab8e73a43c3ea097579a1bf179776f61703a7eabcd3cb03a",
+    "guard/host_files.py": "16466bb5327e3f1a0ffdda7d0c97246f05e5d665606c640ea7d9880ab4693497",
+    "guard/install.py": "b637cbc73aea64fe6e9967d18e0c77c3ccb6bb31a0b2c0b4e876135ecf716a5f",
+    "guard/integration/58-ram-rescue-guard.rules": "433c883e46fc92216d81b41dd1fc2fc7e8df4380266092613efdbb2666e1be0c",
+    "guard/integration/boot-policy.conf": "05f5eb37d562addb998f847ef7da86cd06ef3c147da02375c9beceb8d9d1bbf4",
+    "guard/integration/init-bottom": "fe4b9d75f70f9c78bc54ecc5d6c7ae7e8085633bbc040dfc21523353e2346d4b",
+    "guard/integration/initramfs-hook": "fd46613aee31ea8532d3f74c34b0a24e0941ad98f749c83d835d315b815d1a73",
+    "guard/integration/local-top": "798c59d27252a50fe58739ddae85e0d3b1cb2ea43dde8bd9f41cad29a89dbbba",
+    "guard/integration/lvmlocal.conf": "ff4e3848b3c5033b9a8a79b5349701b676a1fd1b9e51941460ef2a2945cb7ded",
+    "guard/integration/manual-rescue-guard.conf": "0455e5a22543f595800df0a9caaf6b684f0363d3f2e05dbb1afb30f2f1bdfde0",
+    "guard/integration/prepare-shared-rescue": "9e18e3d302325eb1bfa26a43506fd431f121e9ad8b7e7939ec159c6eb53a48b6",
+    "guard/integration/ram-rescue-guard.service": "6e1dc55ccb7bab237d296fd8426f6d44c7fcfa2cb97501ff418912cae39e4373",
+    "guard/manage.py": "cc9aeaab7490bd7a7aeadde1164a038ac18c6e01e5ec24017d2479551bf3e642",
+    "guard/mounts.py": "fde1c55070af5194f312e77a942b9064bbc3b401b0c3b68333d0c85eaee93e74",
+    "guard/native/OBSERVER.md": "555100d97ae581fb1b8b0a92ae14c17065051f17a1e096de3d953c5e305c52f3",
+    "guard/native/README.md": "a4bf1100e329740a731ad9ec48712de4999afa97e568f7321e289c5d7af8b56a",
+    "guard/native/build_runtime.py": "8359f990cb159f044f39722d2df74a7bc78a82b2ea5471cb3618a4f4868d2e20",
+    "guard/native/runtime/admission.cpp": "7018b3e51cba1cea28ce4678f753c5422e7ac43a320ea8c677c708386412e8d1",
+    "guard/native/runtime/admission.hpp": "d8f31f68a49c40dc4add300e47a39adc9a8ab129e4f6723473b9ce2c72fa8388",
+    "guard/native/runtime/admission_test.cpp": "ff0693e240c6b600e40bd1acd240925a72a069372fbab3ad16b89fd69b86953c",
+    "guard/native/runtime/boot.cpp": "50d46e70273622e202bfa00c420a93e12b56dcd1af60a76cd318809b568cc1ca",
+    "guard/native/runtime/controller.cpp": "91ca083677da9d080dd697774f70158e9a2f43fe33390c223875296b0e2dfc0e",
+    "guard/native/runtime/controller.hpp": "85a14171211e212d0f4edc1d838a273de4794638aa587b53bef9479467047122",
+    "guard/native/runtime/controller_test.cpp": "f6e65b6dd076bf69ee2667845c583d3f9d23b1c9ebf9a845c8add02200829d0c",
+    "guard/native/runtime/core.cpp": "d8bf96b8ae4c56118367a8aeae467002ed038536f91ba8d678dc26c3d7db2c26",
+    "guard/native/runtime/core.hpp": "e5a12beecf4a8df07aeb2166e1c5cd9ae34e46195059034a652d77fdf0b35099",
+    "guard/native/runtime/core_test.cpp": "9fa86673fe234a48e51125224a3559f5ef03bd7280b7b8aec20e6b19cb07b46d",
+    "guard/native/runtime/input_fuzz.cpp": "d2620d8fdea502d7780293fc493e3908035b57ee5e29eb15a8bb95c1afd96716",
+    "guard/native/runtime/main.cpp": "48234dcc77b8dd9a84197fc673ca81d2469309fa410e3fded012d5967792e919",
+    "guard/native/runtime/security_test.cpp": "2efde6baa4ca1c88a1a12319d8dd7ca5ea0d32409b075aa480735762f3ff9abd",
+    "guard/native/vendor/LICENSE.nlohmann-json": "46a65cffd1ea955132d95a8dd921640714a8d6b537d2e4e482d31145ae95b603",
+    "guard/native/vendor/README.md": "57df1ddf02af023ce35bce4968c4f8187cec450a5a0737086e0f7fb1a932ace4",
+    "guard/native/vendor/nlohmann/json.hpp": "aaf127c04cb31c406e5b04a63f1ae89369fccde6d8fa7cdda1ed4f32dfc5de63",
+    "guard/native_payload.py": "ad714ec5808f45aa684e6799a8538a47b1d45a9ef861cba5a7f519c6a465d445",
+    "guard/package.py": "39b136c6d42334d1dc073c63abc6b8a17f7c13a3789d643fc86a6fdd0a67379a",
+    "guard/ram_environment.py": "4f54ee52266a2cb18774528fe7eb98813be8abeda24159c7c9b9bac335fc0808",
+    "guard/security_policy.py": "87a8486dd393569ffa7221f603bd1a7269c306f7bc4881cabf5a127640cc1010",
+    "guard/stage_inputs.py": "9c0787b27228630e8b652ca12907a061d0e69727a5b96d675daadad2652a8991",
+    "guard/trusted_paths.py": "59884cd6a77dd5c97b4cf0d5c63c45572533adf90d8697500d3a24126c772a23",
+    "guard/upgrade.py": "17908eff9c286b936b81f8ee9d7acbcbe2033c4725eb761841d981e7196eb035",
+    "ram-rescue-demo/build.py": "b84ba2b2142b7bf73bddd8b496d9fad09c16b695130e0bf676ac125fcfc78d8f",
+    "ram-rescue-demo/install.py": "e2c5be5083c966b34a9e3bd5761f5a5e00628d13a188e6ad194510ad920713ef",
+    "ram-rescue-demo/session_payload.py": "b3eda5025cc00f746e860c00dc54497e6fc6f15be9ec96e2b98d79e0a7bd0d81",
+    "ram-rescue-demo/src/check.py": "17059537c0c5da71e7d5b134aec10b5707aaac8067ff3a755530af29533708ce",
+    "ram-rescue-demo/src/kernel_log.py": "8b7e87481153c8ada0e3214890de31fb9c6cf0c54a0639e6791f8eb9277b1805",
+    "ram-rescue-demo/src/lvm.conf": "10708bf37ce4b01ec3e7e3e0d3d6394301f0bf3d4046fbd1da8521dad80d0cd3",
+    "ram-rescue-demo/src/prepare.sh": "024920f5c6ba7bdebc6599271719347f595c0bcc32d58affe43e96e1c995c87d",
+    "ram-rescue-demo/src/ram-rescue-log.service": "6f9e5bafedcba657d5be16455f33a0f1b6d44d0b3e32b5bbb5c8668961891098",
+    "ram-rescue-demo/src/ram-rescue-prepare.service": "757bc95927bfd96982d8f3ab16aa1e3f4a69fc73015e3da89f88828d39e72f95",
+    "ram-rescue-demo/src/ram-rescue@.service": "cbc7ce813f8a857fc9d75701f5a7750284a270f6df5764cb0ec0148938bfdd15",
+    "ram-rescue-demo/src/ramrescue.slice": "d2022cec349913a723cf381a6c9078d393d9fb798a64659a309d6a64cab92f67",
+    "ram-rescue-demo/src/rescue.py": "e71b91ff4d0fce653bd64fb9c742583648d89ed704bd0a285edd0f6ccc0765f0",
+    "ram-rescue-demo/src/session.conf": "0cc3074ddc6c456c4c8e0248ca1988ec92dabe6d8eed0d2392775c8eb1164232",
+    "ram-rescue-demo/src/session.sh": "3b47898db8884b215e6456e9c0adf715b3ac079bce265849fc4dda3dd9940c32",
+    "ram-rescue-demo/src/supervisor.sh": "45de93ade73455631c25c1c21d1b80cc27416447fab0e257b2f2abb815a988f1",
+    "ram-rescue-demo/src/uninstall.py": "e28bf22b111d9104b2c2e32e1813e3ba1f7e239a1ccf4b08607b9dad2e3e3f8b"
+  },
+  "checks": {
+    "ordinary_ubuntu_without_root_guard": true,
+    "independent_private_ram_created": true,
+    "two_shipped_native_controllers": true,
+    "no_service_overrides": true,
+    "systemd_mount_units_verified": true,
+    "automount_deferred_until_access": true,
+    "mounts_and_submounts_present": true,
+    "original_mount_graph_continuous": true,
+    "wrong_identity_not_committed": true,
+    "wrong_identity_preserved_mounts": true,
+    "ext4_reenumerated": true,
+    "same_boot_and_pid1": true,
+    "root_mapping_unchanged": true,
+    "unknown_usb_not_enrolled": true,
+    "readonly_not_forced_writable": true,
+    "orderly_unmounts": true,
+    "initial_diagnostics_ready": true,
+    "initial_diagnostics_private_redacted_export": true,
+    "final_diagnostics_ready": true,
+    "final_diagnostics_private_redacted_export": true,
+    "rr-data-vm-ext4_original_process": true,
+    "rr-data-vm-ext4_no_io_errors": true,
+    "rr-data-vm-ext4_durable_hash": true,
+    "rr-data-vm-vfat_original_process": true,
+    "rr-data-vm-vfat_no_io_errors": true,
+    "rr-data-vm-vfat_durable_hash": true,
+    "child-ext4_original_process": true,
+    "child-ext4_durable_hash": true,
+    "child-vfat_original_process": true,
+    "child-vfat_durable_hash": true,
+    "clean_shutdown": true,
+    "second_boot_has_new_boot_id": true,
+    "second_boot_still_without_root_guard": true,
+    "persistent_registration_auto_starts_native_owners": true,
+    "second_boot_doctor_ready": true,
+    "second_clean_shutdown": true
+  },
+  "inputs_unchanged": true,
+  "readonly_fsck_exit_codes": {
+    "rr-data-vm-ext4": 0,
+    "rr-data-vm-vfat": 0
+  },
+  "ext4_disconnect_seconds": 0.25194452199957595,
+  "durable_workloads": {
+    "rr-data-vm-ext4": {
+      "ack_count": 28,
+      "bytes": 114688,
+      "hash_matches": true,
+      "max_write_and_direct_read_seconds": 1.9795380559999955
+    },
+    "rr-data-vm-vfat": {
+      "ack_count": 29,
+      "bytes": 118784,
+      "hash_matches": true,
+      "max_write_and_direct_read_seconds": 1.9519472469999997
+    }
+  },
+  "durable_child_workloads": {
+    "child-ext4": {
+      "acks": 26,
+      "hash_matches": true,
+      "max_write_and_direct_read_seconds": 1.979214448999997
+    },
+    "child-vfat": {
+      "acks": 28,
+      "hash_matches": true,
+      "max_write_and_direct_read_seconds": 1.951732432
+    }
+  },
+  "idle": {
+    "scope": "aggregate of both data Guards, excludes root Guard and observer",
+    "one_cpu_equals_percent": 100,
+    "duration_seconds": 20.09874357,
+    "cpu_mean_percent": 0.06513342465615625,
+    "cpu_peak_sample_window_percent": 0.7142048877512985,
+    "nominal_sample_seconds": 0.1,
+    "memory_mean_bytes": 3416064.0,
+    "memory_peak_bytes": 3416064,
+    "cpu_max": "4000 20000",
+    "memory_max": "268435456",
+    "memory_swap_max": "0",
+    "controller_memory_snapshot": [
+      {
+        "Rss": 9289728,
+        "Pss": 5154816,
+        "Private_Dirty": 1028096,
+        "Swap": 0
+      },
+      {
+        "Rss": 9252864,
+        "Pss": 5117952,
+        "Private_Dirty": 991232,
+        "Swap": 0
+      }
+    ],
+    "controller_pss_sum_bytes": 10272768,
+    "private_tmpfs_used_bytes": 92459008,
+    "private_tmpfs_limit_bytes": 268435456,
+    "memory_scope_note": "Process PSS, controller cgroup charge and total tool tmpfs use overlap; do not add them."
+  },
+  "diagnostics": {
+    "initial_diagnostics": {
+      "state": "ready",
+      "owner_matches": true,
+      "export_redaction_passed": true,
+      "export_bytes": 99551,
+      "export_file_mode": "0o600",
+      "export_parent_mode": "0o700"
+    },
+    "final_diagnostics": {
+      "state": "ready",
+      "owner_matches": true,
+      "export_redaction_passed": true,
+      "export_bytes": 103438,
+      "export_file_mode": "0o600",
+      "export_parent_mode": "0o700"
+    }
+  },
+  "dependency_observation": {
+    "dependencies": {
+      "files": 11,
+      "frozen_matches": 11,
+      "host_differs": 1,
+      "package_version_differs": 1
+    },
+    "base_dependencies": {
+      "files": 100,
+      "frozen_matches": 100,
+      "host_differs": 4,
+      "package_version_differs": 4
+    }
+  },
+  "limitations": [
+    "CPU 100% is one core; 20.10 s is one short idle observation, not a worst-case bound.",
+    "The configured 0.2 s detach became 0.25194 s in QMP; held-fd completion also includes enumeration and recovery.",
+    "Controller cgroup charge, PSS and RAM-tool tmpfs use overlap and must not be added.",
+    "The normal Ubuntu seed reports unrelated binfmt_misc module/mount warnings; no desktop or real USB bridge was validated.",
+    "The test fixture creates disposable maps; production management enrolls existing supported maps and does not create them.",
+    "Kernel no-path timeout 10 s was configured explicitly for these test maps; the default 0 s was correctly refused in a preserved negative run.",
+    "Real-machine deployment, malicious hardware identity authentication and long-term reliability are not proven by this VM acceptance."
+  ]
+}

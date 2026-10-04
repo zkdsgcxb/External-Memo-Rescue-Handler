@@ -1,7 +1,9 @@
 """Optional boot-entry installation and rollback, entirely in a temp directory."""
 import copy
+from contextlib import contextmanager
 import importlib.util
 import json
+import os
 from pathlib import Path
 import subprocess
 import sys
@@ -60,9 +62,13 @@ class GuardInstallTests(unittest.TestCase):
         self.build_dir = self.root / 'build'
         self.build_dir.mkdir()
         (self.build_dir / 'initrd.img').write_bytes(b'candidate protected image')
+        self.project = self.root / 'source'
+        source = self.project / 'guard/native/runtime/controller.cpp'
+        source.parent.mkdir(parents=True)
+        source.write_text('// tested source\n')
         self.build = {
             'schema': 1, 'kernel_release': self.release,
-            'source_sha256': {'guard/native/runtime/controller.cpp': 'source-hash'},
+            'source_sha256': {str(source.relative_to(self.project)): installer.sha256(source)},
             'kernel_sha256': self.profile['baseline']['kernel_sha256'],
             'base_rescue_payload_sha256': 'base-tools-hash',
             'enrollment_sha256': installer.sha256(self.enrollment),
@@ -76,10 +82,26 @@ class GuardInstallTests(unittest.TestCase):
         self.generated = None
         self.generation_error = None
         self.patch('STATE', self.state)
+        self.patch('PROJECT', self.project)
         self.patch('HOOK', self.hook)
         self.patch('GRUB', self.grub)
         self.patch('Path', side_effect=self.mapped_path)
         self.patch('os.geteuid', return_value=0)
+        # Transaction fixtures belong to the ordinary test user. Trust-policy
+        # checks have their own tests; retain actual reads and checksums here.
+        @contextmanager
+        def fixture_file(path, **_):
+            descriptor = os.open(path, os.O_RDONLY | os.O_NOFOLLOW)
+            try:
+                yield descriptor
+            finally:
+                os.close(descriptor)
+        for target, implementation in (
+                ('open_trusted', fixture_file),
+                ('open_directory', lambda path: os.open(path, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW))):
+            boundary = patch('trusted_paths.' + target, implementation)
+            boundary.start()
+            self.addCleanup(boundary.stop)
         self.patch('shutil.disk_usage', return_value=SimpleNamespace(free=2**40))
         self.collect = self.patch('collect', return_value={
             key: self.profile[key] for key in ('schema', 'identity', 'guard')})

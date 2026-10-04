@@ -1,0 +1,318 @@
+{
+  "schema": 1,
+  "scenario": "production-integration-mounts",
+  "passed": true,
+  "raw_report": "lab/work/cpp-int-1004-224707-476521/report.json",
+  "raw_report_sha256": "39d8fd568eafd55ff50fc481b3a885acd3684c288b3fc4b743b56fe3c540791d",
+  "kernel": "7.0.0-34-generic",
+  "protected_initrd_sha256": "cf053954b9ae5e0d48bdcff64abbdbdc8a58bf303eee6c22eac4dedb980dbf3a",
+  "native_runtime": {
+    "binary_path": "/opt/guard-runtime/guard-runtime",
+    "binary_sha256": "479c8ba7e2445ae3fbb99d58e1b79d836170c6fe463953ca636cde9857ee8718",
+    "dependency_packages": {
+      "/lib/x86_64-linux-gnu/libc.so.6": {
+        "architecture": "amd64",
+        "package": "libc6:amd64",
+        "version": "2.39-0ubuntu8.9"
+      },
+      "/lib/x86_64-linux-gnu/libcap.so.2": {
+        "architecture": "amd64",
+        "package": "libcap2:amd64",
+        "version": "1:2.66-5ubuntu2.4"
+      },
+      "/lib/x86_64-linux-gnu/libcrypto.so.3": {
+        "architecture": "amd64",
+        "package": "libssl3t64:amd64",
+        "version": "3.0.13-0ubuntu3.16"
+      },
+      "/lib/x86_64-linux-gnu/libdevmapper.so.1.02.1": {
+        "architecture": "amd64",
+        "package": "libdevmapper1.02.1:amd64",
+        "version": "2:1.02.185-3ubuntu3.2"
+      },
+      "/lib/x86_64-linux-gnu/libgcc_s.so.1": {
+        "architecture": "amd64",
+        "package": "libgcc-s1:amd64",
+        "version": "14.2.0-4ubuntu2~24.04.1"
+      },
+      "/lib/x86_64-linux-gnu/libm.so.6": {
+        "architecture": "amd64",
+        "package": "libc6:amd64",
+        "version": "2.39-0ubuntu8.9"
+      },
+      "/lib/x86_64-linux-gnu/libpcre2-8.so.0": {
+        "architecture": "amd64",
+        "package": "libpcre2-8-0:amd64",
+        "version": "10.42-4ubuntu2.1"
+      },
+      "/lib/x86_64-linux-gnu/libselinux.so.1": {
+        "architecture": "amd64",
+        "package": "libselinux1:amd64",
+        "version": "3.5-2ubuntu2.1"
+      },
+      "/lib/x86_64-linux-gnu/libstdc++.so.6": {
+        "architecture": "amd64",
+        "package": "libstdc++6:amd64",
+        "version": "14.2.0-4ubuntu2~24.04.1"
+      },
+      "/lib/x86_64-linux-gnu/libudev.so.1": {
+        "architecture": "amd64",
+        "package": "libudev1:amd64",
+        "version": "255.4-1ubuntu8.17"
+      },
+      "/lib64/ld-linux-x86-64.so.2": {
+        "architecture": "amd64",
+        "package": "libc6:amd64",
+        "version": "2.39-0ubuntu8.9"
+      }
+    },
+    "entrypoint_path": "/opt/guard-runtime/maintain",
+    "entrypoint_sha256": "e2cd3b560621354d5110908b715095dc470bea369071708740ec3ab47b4d7b3c",
+    "library_sha256": {
+      "/lib/x86_64-linux-gnu/libc.so.6": "3a15d66867d83762c7f2f1e37359cb8f6c5743edb369c65285cb0b1c4f7498bf",
+      "/lib/x86_64-linux-gnu/libcap.so.2": "6ac6abc86ac891c6e13486470e26f1d939f47fda9e6b5d5508a7f5ec881adc84",
+      "/lib/x86_64-linux-gnu/libcrypto.so.3": "6866ed711dab8927e1bf82bf1cd30e828bdfc34f3cc1e83b1c9eb01ce6c37d9a",
+      "/lib/x86_64-linux-gnu/libdevmapper.so.1.02.1": "0b33f9e9780b2e22bd40170f4cfe358b0cf525974d01896b3bb2b02d6e4e2582",
+      "/lib/x86_64-linux-gnu/libgcc_s.so.1": "d93224d2b0dab4247598be683adca02f5cf00586f99c187579cd7e92058fb7cb",
+      "/lib/x86_64-linux-gnu/libm.so.6": "fce00b6f25f459cf4ae0b7fae4257909a1a8a86f9149e7c029a5d617baf1ccd0",
+      "/lib/x86_64-linux-gnu/libpcre2-8.so.0": "e00576d71d81d3ba0cfa4903c835a44a8723aac96f72f79ff75200b4cff9071b",
+      "/lib/x86_64-linux-gnu/libselinux.so.1": "0ec0843463f90e227b0e138e1f379774f50b5514bd7f5dbd4c8a87aca0aa6670",
+      "/lib/x86_64-linux-gnu/libstdc++.so.6": "1fd75fe70354a416d75aef22bcae68c47bd25d20e2d0568c30b1a9838cf62f11",
+      "/lib/x86_64-linux-gnu/libudev.so.1": "4298228175fa62a36af88b1afd4406cdd8b1bf166621f957d0dbbde45a698fe5",
+      "/lib64/ld-linux-x86-64.so.2": "c20a2dc8917c755f02b94049356320fe1f62ac7d9f8994731f807d9df39302da"
+    },
+    "payload_file_bytes": 13706974,
+    "runtime": "cpp",
+    "schema": 1
+  },
+  "checks": {
+    "unit_syntax_verified_by_guest_systemd": true,
+    "initial_mount_absent_until_automount_access": true,
+    "initial_mount_and_nested_mounts_created": true,
+    "all_original_mount_ids_and_options_preserved": true,
+    "wrong_identity_kept_original_mounts": true,
+    "wrong_identity_was_not_committed": true,
+    "all_three_controllers_maintained": true,
+    "same_boot_and_pid1": true,
+    "same_root_guard_process": true,
+    "root_recovered_and_writable": true,
+    "root_durable_data_matches": true,
+    "readonly_mount_not_changed_by_start": true,
+    "readonly_mount_still_readonly_after_recovery": true,
+    "terminal_guard_prevents_new_mount": true,
+    "orderly_unmounts_completed": true,
+    "rr-data-vm-ext4_original_open_fd_process": true,
+    "rr-data-vm-ext4_no_io_errors": true,
+    "rr-data-vm-ext4_durable_data_matches": true,
+    "rr-data-vm-vfat_original_open_fd_process": true,
+    "rr-data-vm-vfat_no_io_errors": true,
+    "rr-data-vm-vfat_durable_data_matches": true,
+    "child-ext4_original_open_fd_process": true,
+    "child-ext4_no_io_errors": true,
+    "child-ext4_durable_data_matches": true,
+    "child-vfat_original_open_fd_process": true,
+    "child-vfat_no_io_errors": true,
+    "child-vfat_durable_data_matches": true,
+    "shutdown_clean": true,
+    "shipped_payload_verified_before_recovery": true,
+    "shipped_payload_verified_after_terminal_case": true,
+    "three_wrapper_started_native_controllers": true,
+    "no_controller_command_overrides": true,
+    "three_actual_controller_namespaces_restricted": true,
+    "rescue_sessions_before_recovery": true,
+    "rescue_session_fixture_removed_before_recovery": true,
+    "restricted_rescue_logging_before_recovery": true,
+    "rescue_sessions_after_recovery": true,
+    "rescue_session_fixture_removed_after_recovery": true,
+    "restricted_rescue_logging_after_recovery": true
+  },
+  "source_image_unchanged": true,
+  "sources_unchanged": true,
+  "source_sha256": {
+    "lab/cpp_guard_probe.py": "dde70830f42d8221e389b00559e3107a1ec38a341476fe4e4206e0cc2befde13",
+    "lab/guest/cpp_probe.py": "ee8a7a2128121e784f77f00bf403861b29968fa255ea42b517c7957114696c1d",
+    "lab/guest/performance_probe.py": "f5608100301ec58ac0400d4f7336f6ec4b295c995400daa6f07823fd4efcf24b",
+    "lab/guest/mount_probe.py": "accdb0200c9462140d808d49d3ffda1ac484774aaa160b73c89494e6815f2f84",
+    "lab/guest/soak_probe.py": "a21d241b00cd98fb4d650125d8dd392988497502b2ecd397364e8d5ce5fc3e7f",
+    "lab/performance_probe.py": "db5154db14ee6ebe6560009d4863adbf4fda6933ed3297569d9a25e4a0b9561c",
+    "lab/mount_guard_probe.py": "d06033f499b4afa0ce668f53a3b5ecd2289c50fdcee7b9a0ff59cf2ac93349af",
+    "lab/soak_guard_probe.py": "ed50d252cb76fb09667d7ac1630adc090637bc880852bd3dd02d6807ab41acaf",
+    "lab/unified_guard_probe.py": "b2e41adacb661c11c364003d9f955fe6c944b3a16d208300d3b2117180b8ba54",
+    "lab/data_guard_probe.py": "53dfd99f1710286f29de786da4867815067a7d5cddbc581af629a45d96f5f9f3",
+    "lab/host_boot_probe.py": "caf4016af97d0cb66ae4a7fa97de0fa4139cb7421c845bf668db2d0c8a271f29",
+    "lab/measure_guard.py": "ddb789a20985ec4d67f33418a2d0790f39c55927c5921357b163b77dcd3b8bf8",
+    "lab/historical.py": "917ecd9edace424919fee1bf954d46c42ee8558a4cdc6efb2469723d5f0fed48",
+    "guard/native/build_runtime.py": "8359f990cb159f044f39722d2df74a7bc78a82b2ea5471cb3618a4f4868d2e20",
+    "guard/native/runtime/controller.hpp": "85a14171211e212d0f4edc1d838a273de4794638aa587b53bef9479467047122",
+    "guard/native/runtime/admission_test.cpp": "ff0693e240c6b600e40bd1acd240925a72a069372fbab3ad16b89fd69b86953c",
+    "guard/native/runtime/boot.cpp": "50d46e70273622e202bfa00c420a93e12b56dcd1af60a76cd318809b568cc1ca",
+    "guard/native/runtime/admission.hpp": "d8f31f68a49c40dc4add300e47a39adc9a8ab129e4f6723473b9ce2c72fa8388",
+    "guard/native/runtime/core.cpp": "d8bf96b8ae4c56118367a8aeae467002ed038536f91ba8d678dc26c3d7db2c26",
+    "guard/native/runtime/core_test.cpp": "9fa86673fe234a48e51125224a3559f5ef03bd7280b7b8aec20e6b19cb07b46d",
+    "guard/native/runtime/controller_test.cpp": "f6e65b6dd076bf69ee2667845c583d3f9d23b1c9ebf9a845c8add02200829d0c",
+    "guard/native/runtime/input_fuzz.cpp": "d2620d8fdea502d7780293fc493e3908035b57ee5e29eb15a8bb95c1afd96716",
+    "guard/native/runtime/controller.cpp": "91ca083677da9d080dd697774f70158e9a2f43fe33390c223875296b0e2dfc0e",
+    "guard/native/runtime/security_test.cpp": "2efde6baa4ca1c88a1a12319d8dd7ca5ea0d32409b075aa480735762f3ff9abd",
+    "guard/native/runtime/main.cpp": "48234dcc77b8dd9a84197fc673ca81d2469309fa410e3fded012d5967792e919",
+    "guard/native/runtime/admission.cpp": "7018b3e51cba1cea28ce4678f753c5422e7ac43a320ea8c677c708386412e8d1",
+    "guard/native/runtime/core.hpp": "e5a12beecf4a8df07aeb2166e1c5cd9ae34e46195059034a652d77fdf0b35099",
+    "guard/native/vendor/nlohmann/json.hpp": "aaf127c04cb31c406e5b04a63f1ae89369fccde6d8fa7cdda1ed4f32dfc5de63",
+    "lab/work/protected-rm4-1004/native-runtime/guard-runtime": "479c8ba7e2445ae3fbb99d58e1b79d836170c6fe463953ca636cde9857ee8718",
+    "lab/cpp_integration_probe.py": "6101674aa7e50fad3d53d0699621fd0c64ac3cbf80ca51d8ec855689089903b4",
+    "ram-rescue-demo/src/rescue.py": "e71b91ff4d0fce653bd64fb9c742583648d89ed704bd0a285edd0f6ccc0765f0",
+    "lab/guest/rescue_session_probe.py": "458780dddefd3ec450206c83e4a2e8258c417d564974c522c89fda20cf509fba",
+    "lab/guest/dm_observer.py": "700cfeec56d2841cb2f73435641d8cc2b0c25c9dde0ee6284c0b296896f0fd80",
+    "ram-rescue-demo/tests/smoke.py": "ce897742347dc029659b79da9ec9792e4e729f03cc382ce9dbb49da91e2f7396",
+    "ram-rescue-demo/src/ramrescue.slice": "d2022cec349913a723cf381a6c9078d393d9fb798a64659a309d6a64cab92f67",
+    "ram-rescue-demo/src/ram-rescue-prepare.service": "757bc95927bfd96982d8f3ab16aa1e3f4a69fc73015e3da89f88828d39e72f95",
+    "ram-rescue-demo/src/ram-rescue-log.service": "f4034d93b7e6fb23988fe4fd70bb710ac20d867e53798c474d35982bdca5ba87",
+    "ram-rescue-demo/build.py": "b84ba2b2142b7bf73bddd8b496d9fad09c16b695130e0bf676ac125fcfc78d8f",
+    "ram-rescue-demo/session_payload.py": "b3eda5025cc00f746e860c00dc54497e6fc6f15be9ec96e2b98d79e0a7bd0d81",
+    "ram-rescue-demo/src/session.sh": "3b47898db8884b215e6456e9c0adf715b3ac079bce265849fc4dda3dd9940c32",
+    "ram-rescue-demo/src/supervisor.sh": "45de93ade73455631c25c1c21d1b80cc27416447fab0e257b2f2abb815a988f1",
+    "ram-rescue-demo/src/session.conf": "0cc3074ddc6c456c4c8e0248ca1988ec92dabe6d8eed0d2392775c8eb1164232",
+    "guard/admin_entry.py": "08111853bf811600270926f52e179a295e80bebf998141db85b0f4c4f9ae4998",
+    "guard/build.py": "51f6c4b29d99367a465c5c23344c034a90a918975754f5898e1f7b23d4fa043d",
+    "guard/data.py": "7e4b1dbbd88ae84551a910e8aa1e52a46b032aab5224d4e96c018d7cb72b40ad",
+    "guard/diagnostics.py": "28dec723fb42f50c10759e4ab05d9d02690475a4cc4395c0c87582b43873729e",
+    "guard/efi_mount.py": "8f89422897a3b1bb6379e5e035210f13a9923732adb3906659e94997d4a9cd26",
+    "guard/enroll.py": "4bac57b8041daf88ab8e73a43c3ea097579a1bf179776f61703a7eabcd3cb03a",
+    "guard/host_files.py": "16466bb5327e3f1a0ffdda7d0c97246f05e5d665606c640ea7d9880ab4693497",
+    "guard/install.py": "b637cbc73aea64fe6e9967d18e0c77c3ccb6bb31a0b2c0b4e876135ecf716a5f",
+    "guard/manage.py": "cc9aeaab7490bd7a7aeadde1164a038ac18c6e01e5ec24017d2479551bf3e642",
+    "guard/mounts.py": "fde1c55070af5194f312e77a942b9064bbc3b401b0c3b68333d0c85eaee93e74",
+    "guard/native_payload.py": "ad714ec5808f45aa684e6799a8538a47b1d45a9ef861cba5a7f519c6a465d445",
+    "guard/package.py": "39b136c6d42334d1dc073c63abc6b8a17f7c13a3789d643fc86a6fdd0a67379a",
+    "guard/ram_environment.py": "4f54ee52266a2cb18774528fe7eb98813be8abeda24159c7c9b9bac335fc0808",
+    "guard/security_policy.py": "0d72a1e90e2f959ed7da5d2cc3cd6d59d5c7c802881386875be5c1e2c5034518",
+    "guard/stage_inputs.py": "9c0787b27228630e8b652ca12907a061d0e69727a5b96d675daadad2652a8991",
+    "guard/trusted_paths.py": "59884cd6a77dd5c97b4cf0d5c63c45572533adf90d8697500d3a24126c772a23",
+    "guard/upgrade.py": "17908eff9c286b936b81f8ee9d7acbcbe2033c4725eb761841d981e7196eb035",
+    "guard/admin/__init__.py": "bf2ab088e7c59535cc5e0f7ffd567b9afba2e94dbe7a88bd54fec7647b86b64b",
+    "guard/admin/admission.py": "9943b00ef6a5a755ff4152bf40776ca6b3281fe840459c27721c1c2dfcbe8202",
+    "guard/admin/data.py": "1f5ce0e56df06464b749fb1165b07e9e0d49db35e743a2c960043c14e96cdc20",
+    "guard/admin/dm.py": "fc5e39e7c20f0332a6b12b4d162a8a654a2789a2f10e4ec691b1b4bee3a46399",
+    "guard/admin/identity.py": "2f36daebf703cda7a514d53c4236f3912050fc6fbed6ded51ca17e758260806f",
+    "guard/admin/linux_abi.py": "9d5f147bf54de04245ae1f5d5a8862fd91f72364f58d67f776ea79e1eda00868",
+    "guard/admin/registry.py": "6525285b9512c40ab62c3e952d0d5280e254cdf5614349a08df90b4e9280c965",
+    "guard/integration/58-ram-rescue-guard.rules": "433c883e46fc92216d81b41dd1fc2fc7e8df4380266092613efdbb2666e1be0c",
+    "guard/integration/boot-policy.conf": "05f5eb37d562addb998f847ef7da86cd06ef3c147da02375c9beceb8d9d1bbf4",
+    "guard/integration/init-bottom": "fe4b9d75f70f9c78bc54ecc5d6c7ae7e8085633bbc040dfc21523353e2346d4b",
+    "guard/integration/initramfs-hook": "fd46613aee31ea8532d3f74c34b0a24e0941ad98f749c83d835d315b815d1a73",
+    "guard/integration/local-top": "798c59d27252a50fe58739ddae85e0d3b1cb2ea43dde8bd9f41cad29a89dbbba",
+    "guard/integration/lvmlocal.conf": "ff4e3848b3c5033b9a8a79b5349701b676a1fd1b9e51941460ef2a2945cb7ded",
+    "guard/integration/manual-rescue-guard.conf": "0455e5a22543f595800df0a9caaf6b684f0363d3f2e05dbb1afb30f2f1bdfde0",
+    "guard/integration/prepare-shared-rescue": "9e18e3d302325eb1bfa26a43506fd431f121e9ad8b7e7939ec159c6eb53a48b6",
+    "guard/integration/ram-rescue-guard.service": "f7b0953ba5f57ccfbfd166a4d950b02ac21c532bbfa95b69488a69791a974f40"
+  },
+  "actual_namespaces": {
+    "ram-rescue-guard.service": {
+      "verified": true,
+      "mount_options": {
+        "/": [
+          [
+            "ro",
+            "nosuid",
+            "nodev",
+            "relatime"
+          ]
+        ],
+        "/run": [
+          [
+            "rw",
+            "nosuid",
+            "nodev",
+            "noexec",
+            "relatime"
+          ],
+          [
+            "rw",
+            "nosuid",
+            "nodev",
+            "noexec",
+            "relatime"
+          ]
+        ],
+        "/dev": [
+          [
+            "rw",
+            "nosuid",
+            "relatime"
+          ],
+          [
+            "rw",
+            "nosuid",
+            "relatime"
+          ]
+        ]
+      }
+    },
+    "ram-rescue-maintain@rr-data-vm-ext4.service": {
+      "verified": true,
+      "mount_options": {
+        "/": [
+          [
+            "ro",
+            "nosuid",
+            "nodev",
+            "relatime"
+          ]
+        ],
+        "/run": [
+          [
+            "rw",
+            "nosuid",
+            "nodev",
+            "noexec",
+            "relatime"
+          ]
+        ],
+        "/dev": [
+          [
+            "rw",
+            "nosuid",
+            "relatime"
+          ]
+        ]
+      }
+    },
+    "ram-rescue-maintain@rr-data-vm-vfat.service": {
+      "verified": true,
+      "mount_options": {
+        "/": [
+          [
+            "ro",
+            "nosuid",
+            "nodev",
+            "relatime"
+          ]
+        ],
+        "/run": [
+          [
+            "rw",
+            "nosuid",
+            "nodev",
+            "noexec",
+            "relatime"
+          ]
+        ],
+        "/dev": [
+          [
+            "rw",
+            "nosuid",
+            "relatime"
+          ]
+        ]
+      }
+    }
+  },
+  "filesystem_audit_exit_codes": {
+    "rr-data-vm-ext4": 0,
+    "rr-data-vm-vfat": 0
+  },
+  "limits": [
+    "QEMU evidence does not replace host activation or real device tests",
+    "Namespace observations cover the listed mounts, not a complete root compromise sandbox",
+    "Expected lower-device disconnect errors are distinct from application I/O errors"
+  ]
+}

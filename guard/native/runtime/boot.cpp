@@ -45,8 +45,7 @@ Json activate(const Json& enrollment) {
         throw std::runtime_error("Current kernel path probe interface is required");
     for (const auto& row : config.value.at("layout"))
         if (row.at("segtype") != "linear") throw std::runtime_error("Only the enrolled linear layout can boot here");
-    fs::create_directories(config.run);
-    fs::permissions(config.run, fs::perms::owner_all);
+    trusted_directory(config.run, true);
     const auto record = config.run / "boot.json";
     auto recovery = std::make_shared<Recovery>(identity);
     const double deadline = mono() + 30;

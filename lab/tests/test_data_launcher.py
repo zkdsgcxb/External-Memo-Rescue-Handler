@@ -141,7 +141,12 @@ class DataLauncherTests(unittest.TestCase):
         launcher.start(self.profile)
         before_rules = {path: path.read_bytes() for path in self.rules.iterdir()}
         self.commands.clear()
-        result = launcher.stop(self.name)
+        from trusted_paths import read_trusted_json
+        # Preserve owner, mode, link and bounded-read checks inside our
+        # ordinary-user temporary namespace instead of the host root tree.
+        with patch.object(launcher, 'read_trusted_json', side_effect=lambda path:
+                          read_trusted_json(path, uid=os.getuid(), anchor=self.root)):
+            result = launcher.stop(self.name)
         self.assertEqual(self.commands, [['systemctl', 'stop', launcher.service(self.name)]])
         self.assertTrue(result['map_retained'])
         self.assertTrue((self.state / self.name / 'config.json').is_file())

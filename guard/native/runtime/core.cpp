@@ -15,6 +15,7 @@
 #include <openssl/evp.h>
 #include <poll.h>
 #include <signal.h>
+#include <set>
 #include <spawn.h>
 #include <sstream>
 #include <stdexcept>
@@ -33,6 +34,47 @@ namespace rescue {
 namespace {
 [[noreturn]] void system_failure(const std::string& action, int error = errno) {
     throw std::system_error(error, std::generic_category(), action);
+}
+
+void check_storage(int fd, bool directory, uid_t owner) {
+    struct stat info{};
+    if (::fstat(fd, &info)) system_failure("stat trusted storage");
+    if (!storage_metadata_trusted(info, directory, owner))
+        throw std::runtime_error("Storage must be owned by its trusted UID, not writable by group/other, and not aliased");
+}
+
+std::string bounded_read(int fd, std::size_t limit) {
+    std::string output;
+    std::array<char, 4096> buffer{};
+    for (;;) {
+        const auto count = ::read(fd, buffer.data(), buffer.size());
+        if (count < 0) {
+            if (errno == EINTR) continue;
+            system_failure("read bounded input");
+        }
+        if (!count) return output;
+        if (static_cast<std::size_t>(count) > limit - output.size())
+            throw std::runtime_error("Input exceeds bounded read limit");
+        output.append(buffer.data(), static_cast<std::size_t>(count));
+    }
+}
+
+void check_existing(int directory, const std::string& name) {
+    struct stat info{};
+    if (::fstatat(directory, name.c_str(), &info, AT_SYMLINK_NOFOLLOW)) {
+        if (errno == ENOENT) return;
+        system_failure("stat state destination");
+    }
+    if (!S_ISREG(info.st_mode) || info.st_uid != ::geteuid() ||
+            (info.st_mode & 0022) || info.st_nlink != 1)
+        throw std::runtime_error("State destination is not a trusted regular file");
+}
+
+Fd state_directory(const fs::path& path) {
+    Fd directory(::open(path.c_str(), O_RDONLY | O_DIRECTORY | O_CLOEXEC | O_NOFOLLOW));
+    if (!directory) system_failure("open state directory");
+    check_storage(directory.get(), true, ::geteuid());
+    return directory;
 }
 
 void write_all(int fd, std::string_view text) {
@@ -181,19 +223,7 @@ double mono() {
 std::string read_text(const fs::path& path, std::size_t limit) {
     Fd fd(::open(path.c_str(), O_RDONLY | O_CLOEXEC));
     if (!fd) system_failure("open " + path.string());
-    std::string output;
-    std::array<char, 4096> buffer{};
-    for (;;) {
-        const auto count = ::read(fd.get(), buffer.data(), buffer.size());
-        if (count < 0) {
-            if (errno == EINTR) continue;
-            system_failure("read " + path.string());
-        }
-        if (!count) return output;
-        if (static_cast<std::size_t>(count) > limit - output.size())
-            throw std::runtime_error("File exceeds bounded read limit: " + path.string());
-        output.append(buffer.data(), static_cast<std::size_t>(count));
-    }
+    return bounded_read(fd.get(), limit);
 }
 
 std::string trim(std::string value) {
@@ -231,16 +261,76 @@ std::string digest(const Json& value) {
     return output;
 }
 
-Json load_json(const fs::path& path) { return Json::parse(read_text(path)); }
+Json parse_json_input(std::string_view text, std::size_t limit) {
+    if (text.size() > limit) throw std::invalid_argument("JSON exceeds bounded input limit");
+    // Reject nested/duplicate keys before policy lookup or recursive hashing.
+    std::vector<std::set<std::string>> keys;
+    return Json::parse(text, [&keys](int depth, Json::parse_event_t event, Json& value) {
+        if (depth > 64 || (depth >= 64 && (event == Json::parse_event_t::object_start ||
+                event == Json::parse_event_t::array_start)))
+            throw std::invalid_argument("JSON nesting exceeds 64 levels");
+        if (event == Json::parse_event_t::object_start) keys.emplace_back();
+        else if (event == Json::parse_event_t::object_end) keys.pop_back();
+        else if (event == Json::parse_event_t::key && !keys.back().insert(value.get<std::string>()).second)
+            throw std::invalid_argument("Duplicate JSON key");
+        return true;
+    });
+}
+
+Json load_json(const fs::path& path) { return parse_json_input(read_text(path)); }
+
+bool storage_metadata_trusted(const struct stat& info, bool directory, uid_t owner) {
+    return (directory ? S_ISDIR(info.st_mode) : S_ISREG(info.st_mode)) &&
+        info.st_uid == owner && !(info.st_mode & 0022) &&
+        (directory || info.st_nlink == 1);
+}
+
+Fd trusted_directory(const fs::path& path, bool create) {
+    if (!path.is_absolute() || path.native().find('\0') != std::string::npos)
+        throw std::runtime_error("Trusted storage path must be absolute");
+    Fd current(::open("/", O_RDONLY | O_DIRECTORY | O_CLOEXEC));
+    if (!current) system_failure("open root directory");
+    check_storage(current.get(), true, 0);
+    for (const auto& part : path.relative_path()) {
+        if (part.empty() || part == "." || part == "..")
+            throw std::runtime_error("Trusted storage path must not contain dot components");
+        if (create && ::mkdirat(current.get(), part.c_str(), 0700) && errno != EEXIST)
+            system_failure("create trusted directory");
+        Fd next(::openat(current.get(), part.c_str(), O_RDONLY | O_DIRECTORY | O_CLOEXEC | O_NOFOLLOW));
+        if (!next) system_failure("open trusted directory component");
+        check_storage(next.get(), true, 0);
+        current = std::move(next);
+    }
+    return current;
+}
+
+Json load_trusted_json(const fs::path& path) {
+    if (path.native().find('\0') != std::string::npos || path.filename().empty() ||
+            path.filename() == "." || path.filename() == "..")
+        throw std::runtime_error("Trusted input needs a filename");
+    auto parent = trusted_directory(path.parent_path());
+    Fd input(::openat(parent.get(), path.filename().c_str(), O_RDONLY | O_NONBLOCK | O_CLOEXEC | O_NOFOLLOW));
+    if (!input) system_failure("open trusted JSON input");
+    check_storage(input.get(), false, 0);
+    return parse_json_input(bounded_read(input.get(), log_limit));
+}
 
 void atomic_json(const fs::path& path, const Json& value) {
     const auto text = canonical_json(value);
     if (text.size() > log_limit) throw std::invalid_argument("RAM evidence record exceeds limit");
-    const auto temporary = fs::path(path.string() + ".tmp");
-    Fd output(::open(temporary.c_str(), O_WRONLY | O_CREAT | O_TRUNC | O_CLOEXEC | O_NOFOLLOW, 0600));
-    if (!output) system_failure("open " + temporary.string());
-    write_all(output.get(), text);
-    if (::rename(temporary.c_str(), path.c_str())) system_failure("rename RAM evidence");
+    auto directory = state_directory(path.parent_path());
+    const auto name = path.filename().string();
+    check_existing(directory.get(), name);
+    // Unique O_EXCL temporaries avoid following/truncating a planted file, even
+    // if a previous owner died before publishing its record.
+    const auto temporary = name + ".tmp-" + epoch();
+    Fd output(::openat(directory.get(), temporary.c_str(), O_WRONLY | O_CREAT | O_EXCL | O_CLOEXEC | O_NOFOLLOW, 0600));
+    if (!output) system_failure("create state temporary");
+    try {
+        write_all(output.get(), text);
+        if (::renameat(directory.get(), temporary.c_str(), directory.get(), name.c_str()))
+            system_failure("rename RAM evidence");
+    } catch (...) { ::unlinkat(directory.get(), temporary.c_str(), 0); throw; }
 }
 
 std::string table_digest(const Json& targets) {
@@ -290,6 +380,7 @@ Json describe(Json snapshot) {
 Owner::Owner(fs::path run_dir) : run(std::move(run_dir)),
     fd(::open((run / "path-owner.lock").c_str(), O_CREAT | O_RDWR | O_CLOEXEC | O_NOFOLLOW, 0600)) {
     if (!fd) system_failure("open owner lock");
+    check_storage(fd.get(), false, ::geteuid());
     if (::flock(fd.get(), LOCK_EX | LOCK_NB)) system_failure("acquire owner lock");
     epoch = rescue::epoch();
     boot_id = trim(read_text("/proc/sys/kernel/random/boot_id"));
@@ -313,15 +404,17 @@ void Journal::write(const std::string& phase, const Json& details) {
 void Evidence::event(const Json& entry) {
     const auto text = canonical_json(entry) + '\n';
     if (text.size() > log_limit) throw std::invalid_argument("Event exceeds RAM evidence limit");
-    const auto path = run / "path-events.jsonl";
-    std::error_code error;
-    const auto size = fs::file_size(path, error);
-    if (!error && size + text.size() > log_limit)
-        fs::rename(path, run / "path-events.previous.jsonl");
-    else if (error && error != std::errc::no_such_file_or_directory)
-        throw std::system_error(error, "stat evidence log");
-    Fd output(::open(path.c_str(), O_WRONLY | O_APPEND | O_CREAT | O_CLOEXEC | O_NOFOLLOW, 0600));
+        auto directory = state_directory(run);
+    check_existing(directory.get(), "path-events.jsonl");
+    check_existing(directory.get(), "path-events.previous.jsonl");
+    struct stat info{};
+    if (!::fstatat(directory.get(), "path-events.jsonl", &info, AT_SYMLINK_NOFOLLOW) &&
+            static_cast<std::uint64_t>(info.st_size) + text.size() > log_limit &&
+            ::renameat(directory.get(), "path-events.jsonl", directory.get(), "path-events.previous.jsonl"))
+        system_failure("rotate evidence log");
+    Fd output(::openat(directory.get(), "path-events.jsonl", O_WRONLY | O_APPEND | O_CREAT | O_CLOEXEC | O_NOFOLLOW, 0600));
     if (!output) system_failure("open evidence log");
+    check_storage(output.get(), false, ::geteuid());
     write_all(output.get(), text);
     atomic_json(run / "path-state.json", entry);
 }
@@ -360,14 +453,14 @@ Json Observations::sample(const Json& info, bool failed_path) {
 void fault_hook(const std::string& stage, const Journal& journal, bool enabled) {
     const auto run = journal.path.parent_path();
     if (!enabled || !fs::exists(run / "lab-fault-config.json")) return;
-    const auto setting = load_json(run / "lab-fault-config.json");
+    const auto setting = load_trusted_json(run / "lab-fault-config.json");
     if (setting.value("stage", "") != stage || setting.value("action", "") != "pause") return;
     const auto token = setting.value("token", Json());
     atomic_json(run / "lab-fault-reached.json", {{"stage", stage}, {"token", token},
         {"pid", ::getpid()}, {"monotonic", mono()}, {"transaction", journal.record}});
     for (;;) {
         if (fs::exists(run / "lab-fault-release.json") &&
-            load_json(run / "lab-fault-release.json").value("token", Json()) == token) return;
+            load_trusted_json(run / "lab-fault-release.json").value("token", Json()) == token) return;
         if (!journal.record.at("deadline").is_null() &&
             mono() >= journal.record.at("deadline").get<double>()) return;
         std::this_thread::sleep_for(std::chrono::milliseconds(50));

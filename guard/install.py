@@ -15,6 +15,24 @@ from host_files import atomic, sha256
 STATE=Path('/var/lib/ram-rescue-guard')
 HOOK=Path('/etc/grub.d/42_ram_rescue_guard')
 GRUB=Path('/boot/grub/grub.cfg')
+PROJECT=Path(__file__).resolve().parent.parent
+
+
+def optional_hash(path):
+    if path.is_symlink():
+        raise RuntimeError('Unexpected configuration symlink: ' + str(path))
+    return sha256(path) if path.exists() else None
+
+
+def verify_sources(build):
+    sources = build.get('source_sha256')
+    if not isinstance(sources, dict) or not sources:
+        raise RuntimeError('Candidate source manifest is missing')
+    for name, expected in sources.items():
+        path = PROJECT / name
+        if (Path(name).is_absolute() or '..' in Path(name).parts or path.is_symlink()
+                or not path.resolve().is_relative_to(PROJECT.resolve()) or sha256(path) != expected):
+            raise RuntimeError('Candidate differs from the installed administration release: ' + name)
 
 
 def menu(profile,image_name):
@@ -59,10 +77,18 @@ def first_entry(text):
     return entry
 
 
-def validate(build_dir,enrollment,vm_report):
-    profile=json.loads(enrollment.read_text())
-    build=json.loads((build_dir/'build.json').read_text())
-    vm=json.loads(vm_report.read_text())
+def validate(build_dir,enrollment,vm_report, *, trusted=False):
+    if trusted:
+        from trusted_paths import read_trusted_json, trusted_sha256
+        profile = read_trusted_json(enrollment)
+        build = read_trusted_json(build_dir / 'build.json', limit=1024**2)
+        vm = read_trusted_json(vm_report, limit=32 * 1024**2)
+        checksum = trusted_sha256
+    else:
+        profile=json.loads(enrollment.read_text())
+        build=json.loads((build_dir/'build.json').read_text())
+        vm=json.loads(vm_report.read_text())
+        checksum = sha256
     if vm.get('passed') is not True:
         raise RuntimeError('A passed normal-boot/reconnect VM report is required')
     tested=vm.get('build',{})
@@ -70,9 +96,9 @@ def validate(build_dir,enrollment,vm_report):
             tested.get('kernel_sha256')!=build['kernel_sha256'] or
             tested.get('base_rescue_payload_sha256')!=build['base_rescue_payload_sha256']):
         raise RuntimeError('VM did not validate these runtime/integration sources, kernel and base tools')
-    if build['enrollment_sha256']!=sha256(enrollment):
+    if build['enrollment_sha256']!=checksum(enrollment):
         raise RuntimeError('Build enrollment differs')
-    if build['initramfs_sha256']!=sha256(build_dir/'initrd.img'):
+    if build['initramfs_sha256']!=checksum(build_dir/'initrd.img'):
         raise RuntimeError('Candidate initrd checksum differs')
     if build['kernel_sha256']!=profile['baseline']['kernel_sha256']:
         raise RuntimeError('Candidate kernel differs from enrollment')
@@ -81,9 +107,12 @@ def validate(build_dir,enrollment,vm_report):
 
 
 def install(build_dir,enrollment,vm_report):
-    profile,build,image_name=validate(build_dir,enrollment,vm_report)
     if os.geteuid()!=0:
         raise RuntimeError('Installation requires local administrator authentication')
+    from trusted_paths import open_directory
+    os.close(open_directory(build_dir))
+    profile,build,image_name=validate(build_dir,enrollment,vm_report,trusted=True)
+    verify_sources(build)
     image=Path('/boot')/image_name
     if STATE.exists() or HOOK.exists() or image.exists():
         raise RuntimeError('Protection installation already exists; refusing to overwrite it')
@@ -96,7 +125,7 @@ def install(build_dir,enrollment,vm_report):
     baseline=profile['baseline']
     if sha256(Path('/boot')/('initrd.img-'+release))!=baseline['initrd_sha256']:
         raise RuntimeError('Normal initrd changed since enrollment')
-    if sha256(Path('/etc/lvm/lvmlocal.conf'))!=baseline['lvmlocal_sha256']:
+    if optional_hash(Path('/etc/lvm/lvmlocal.conf'))!=baseline['lvmlocal_sha256']:
         raise RuntimeError('Host LVM configuration changed since enrollment')
     if "set default=\"0\"" not in GRUB.read_text():
         raise RuntimeError('Review the current GRUB default before adding a new entry')

@@ -5,18 +5,57 @@ runtime is verified in place and never upgraded underneath a live controller.
 """
 import importlib.util
 import json
+import os
 from pathlib import Path
 import re
 import shutil
 import subprocess
 
 from host_files import sha256
+from trusted_paths import read_trusted_json, trusted_sha256
 
 BASE = Path(__file__).resolve().parent
 BINARY = Path('/opt/guard-runtime/guard-runtime')
 MANIFEST = Path('/opt/guard-runtime/runtime.json')
 ENTRYPOINT = Path('/opt/guard-runtime/maintain')
 ENTRYPOINT_SCRIPT = '#!/bin/sh\nexec /opt/guard-runtime/guard-runtime maintain "$@"\n'
+
+
+def dependency_packages(paths):
+    """Record local dpkg provenance at build time, without network access.
+
+    A locally built/unpackaged file stays explicitly unknown. Package names
+    and versions describe the build input; they are not publisher signatures.
+    """
+    paths = sorted({str(Path(path)) for path in paths})
+    aliases = {path: {path, str(Path(path).resolve())} for path in paths}
+    for names in aliases.values():
+        for name in list(names):
+            if name.startswith(('/lib/', '/lib64/', '/bin/', '/sbin/')):
+                names.add('/usr' + name)
+            elif name.startswith(('/usr/lib/', '/usr/lib64/', '/usr/bin/', '/usr/sbin/')):
+                names.add(name[4:])
+    query = subprocess.run(['dpkg-query', '-S', *sorted(set().union(*aliases.values()))],
+                           text=True, capture_output=True, timeout=15)
+    owners = {}
+    for line in query.stdout.splitlines():
+        if ': ' in line:
+            package, filename = line.split(': ', 1)
+            if re.fullmatch(r'[a-z0-9][a-z0-9+.-]*(?::[a-z0-9-]+)?', package):
+                owners[filename] = package
+    versions = {}
+    if owners:
+        result = subprocess.run(['dpkg-query', '-W', '-f', '${binary:Package}\t${Version}\t${Architecture}\n',
+                                 *sorted(set(owners.values()))],
+                                text=True, capture_output=True, timeout=15)
+        for line in result.stdout.splitlines():
+            fields = line.split('\t')
+            if len(fields) == 3:
+                versions[fields[0]] = {'package': fields[0], 'version': fields[1], 'architecture': fields[2]}
+    return {path: next((versions[owners[name]] for name in sorted(names)
+                        if name in owners and owners[name] in versions),
+                       {'package': None, 'version': None, 'architecture': None})
+            for path, names in aliases.items()}
 
 
 def build_runtime(work, *, tests=True):
@@ -78,10 +117,19 @@ def _destination(root, absolute):
     return target
 
 
+def reject_instrumented_runtime(closure):
+    """Sanitizer helpers belong only to offline tests, never the RAM payload."""
+    for name, source in closure.items():
+        if any(re.match(r'lib(?:asan|ubsan)(?:\.|$)', Path(path).name)
+               for path in (name, source)):
+            raise RuntimeError('Sanitizer runtime cannot be staged for production: ' + str(name))
+
+
 def stage_runtime(root, binary):
     """Copy an immutable executable and libraries into a new/offline image."""
     root, binary = Path(root), Path(binary)
     closure = binary_closure(binary)
+    reject_instrumented_runtime(closure)
     files = {str(BINARY): binary, **closure}
     for path, source in files.items():
         target = _destination(root, path)
@@ -96,6 +144,8 @@ def stage_runtime(root, binary):
                 'entrypoint_path': str(ENTRYPOINT), 'entrypoint_sha256': sha256(entrypoint),
                 'library_sha256': {path: sha256(source) for path, source in closure.items()},
                 'payload_file_bytes': sum(source.stat().st_size for source in files.values()) + entrypoint.stat().st_size}
+    provenance = dependency_packages(closure.values())
+    manifest['dependency_packages'] = {path: provenance[str(source)] for path, source in closure.items()}
     output = _destination(root, MANIFEST)
     output.write_text(json.dumps(manifest, indent=2, sort_keys=True) + '\n')
     output.chmod(0o444)
@@ -114,22 +164,26 @@ def verify_runtime(root):
         raise RuntimeError('Native runtime is partial or uses unexpected symlinks')
     if manifest_path.stat().st_size > 65536:
         raise RuntimeError('Oversized native runtime manifest')
-    manifest = json.loads(manifest_path.read_text())
+    # Offline builds are unprivileged. Runtime startup additionally requires
+    # every resolved file and parent to be root-owned and non-writable.
+    trusted = os.geteuid() == 0
+    checksum = trusted_sha256 if trusted else sha256
+    manifest = read_trusted_json(manifest_path) if trusted else json.loads(manifest_path.read_text())
     if (manifest.get('schema') != 1 or manifest.get('runtime') != 'cpp'
             or manifest.get('binary_path') != str(BINARY)
             or manifest.get('entrypoint_path') != str(ENTRYPOINT)
             or not isinstance(manifest.get('library_sha256'), dict)
             or not manifest['library_sha256']):
         raise RuntimeError('Unsupported native runtime manifest')
-    if sha256(binary) != manifest.get('binary_sha256'):
+    if checksum(binary) != manifest.get('binary_sha256'):
         raise RuntimeError('Native runtime executable checksum differs')
-    if sha256(entrypoint) != manifest.get('entrypoint_sha256') or not entrypoint.stat().st_mode & 0o111:
+    if checksum(entrypoint) != manifest.get('entrypoint_sha256') or not entrypoint.stat().st_mode & 0o111:
         raise RuntimeError('Native runtime entrypoint checksum or permission differs')
     for path, checksum in manifest['library_sha256'].items():
         if not isinstance(checksum, str) or not re.fullmatch(r'[0-9a-f]{64}', checksum):
             raise RuntimeError('Invalid native library checksum')
         target = _destination(root, path)
-        if not target.is_file() or sha256(target) != checksum:
+        if not target.is_file() or (trusted_sha256(target.resolve(strict=True)) if trusted else sha256(target)) != checksum:
             raise RuntimeError('Native runtime library checksum differs: ' + path)
     if not binary.stat().st_mode & 0o111:
         raise RuntimeError('Native runtime executable permission is absent')

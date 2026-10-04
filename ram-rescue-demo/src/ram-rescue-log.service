@@ -11,8 +11,23 @@ OOMScoreAdjust=-900
 RootDirectory=/run/ram-rescue-demo
 WorkingDirectory=/
 ExecStart=/usr/bin/python3 -I /sbin/rescue-kernel-log
+UMask=0077
+NoNewPrivileges=yes
+CapabilityBoundingSet=CAP_SYSLOG
+AmbientCapabilities=
+RestrictAddressFamilies=AF_UNIX
+SystemCallArchitectures=native
+SystemCallFilter=~@mount @module @reboot @swap @raw-io @debug @clock @obsolete @cpu-emulation
+SystemCallErrorNumber=EPERM
+RestrictNamespaces=yes
+RestrictSUIDSGID=yes
+LockPersonality=yes
+RestrictRealtime=yes
+MemoryDenyWriteExecute=yes
+ProtectSystem=strict
+ReadWritePaths=+/var/log
 StandardOutput=null
-StandardError=null
+StandardError=journal
 Restart=no
 
 [Install]

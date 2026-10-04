@@ -1,5 +1,6 @@
 """Boot-image upgrades and crash-safe rollback, entirely in a temp directory."""
 import copy
+from contextlib import contextmanager
 import hashlib
 import json
 import os
@@ -94,11 +95,24 @@ class GuardUpgradeTests(unittest.TestCase):
         self.vm.write_bytes(upgrade.encoded({'passed': True, 'build': self.build}))
         for key, value in {'STATE': self.state, 'HOOK': self.hook, 'GRUB': self.grub,
                            'BOOT': self.boot, 'LVM_CONFIG': self.local,
-                           'BASE_TOOLS': self.tools, 'PROJECT': self.project}.items():
+                           'PROJECT': self.project}.items():
             self.patch(key, value)
         self.collect = self.patch('collect', return_value={
             key: self.profile[key] for key in ('schema', 'identity', 'guard')})
         self.patch('os.geteuid', return_value=0)
+        # These tests exercise deployment transactions in an ordinary-user
+        # tree. Actual owner/mode/link enforcement is covered independently by
+        # test_stage_inputs.TrustedPathTests; retain real reads and digests here.
+        @contextmanager
+        def fixture_file(path, **_):
+            descriptor = os.open(path, os.O_RDONLY | os.O_NOFOLLOW)
+            try:
+                yield descriptor
+            finally:
+                os.close(descriptor)
+        paths = patch('trusted_paths.open_trusted', fixture_file)
+        paths.start()
+        self.addCleanup(paths.stop)
         self.patch('shutil.disk_usage', return_value=SimpleNamespace(free=2**40))
         self.original_image = self.image.read_bytes()
         self.untouched = {path: path.read_bytes() for path in
@@ -193,9 +207,8 @@ class GuardUpgradeTests(unittest.TestCase):
         with self.assertRaisesRegex(RuntimeError, 'receipt is incomplete or inconsistent'):
             self.perform()
 
-    def test_changed_current_kernel_normal_initrd_base_and_source_are_rejected(self):
+    def test_changed_current_kernel_normal_initrd_and_source_are_rejected(self):
         cases = [(self.kernel, 'kernel differs'), (self.normal, 'initrd changed'),
-                 (self.tools, 'base rescue tools differ'),
                  (self.project / next(iter(self.build['source_sha256'])), 'build source differs')]
         for path, message in cases:
             with self.subTest(path=path):
@@ -205,6 +218,31 @@ class GuardUpgradeTests(unittest.TestCase):
                     self.perform()
                 path.write_bytes(old)
         self.assertFalse((self.state / 'upgrades').exists())
+
+    def absent_local_config(self):
+        self.local.unlink()
+        self.untouched.pop(self.local)
+        self.profile['baseline']['lvmlocal_sha256'] = None
+        self.enrollment.write_bytes(upgrade.encoded(self.profile))
+        self.build['enrollment_sha256'] = upgrade.sha256(self.enrollment)
+        (self.build_dir/'build.json').write_bytes(upgrade.encoded(self.build))
+        self.vm.write_bytes(upgrade.encoded({'passed': True, 'build': self.build}))
+
+    def test_absent_local_config_and_no_installed_legacy_tools_are_supported(self):
+        self.absent_local_config()
+        self.tools.unlink()
+        self.assertTrue(self.perform(install=False)['validated'])
+        self.assertFalse(self.local.exists())
+
+    def test_previously_absent_local_config_appearing_is_rejected(self):
+        self.absent_local_config()
+        def appeared(identity):
+            self.local.write_text('new configuration during preflight')
+            return {key: self.profile[key] for key in ('schema', 'identity', 'guard')}
+        self.collect.side_effect = appeared
+        with self.assertRaisesRegex(RuntimeError, 'Previously absent upgrade input appeared'):
+            self.perform()
+        self.assertFalse((self.state/'upgrades').exists())
 
     def test_protected_entry_must_reference_exact_candidate_name(self):
         self.grub.write_text(self.grub.read_text().replace(self.image.name, 'other-protected-image'))

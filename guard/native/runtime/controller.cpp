@@ -285,7 +285,7 @@ public:
 };
 
 void reconcile(const Config& config, Owner& owner) {
-    auto record = load_json(owner.run / "path-transaction.json");
+    auto record = load_trusted_json(owner.run / "path-transaction.json");
     if (record.value("schema", 0) != 1 || record.value("boot_id", "") != owner.boot_id ||
         record.value("map_name", "") != config.name || record.value("map_uuid", "") != config.uuid ||
         record.value("config_digest", "") != digest(config.value))
@@ -390,7 +390,7 @@ void run_owned(const Config& config, Owner& owner, bool taking_over) {
     if (taking_over) { reconcile(config, owner); return; }
     if (fs::exists(owner.run / "path-transaction.json"))
         throw std::runtime_error("Existing transaction requires takeover, not owner restart");
-    auto recovery = std::make_shared<Recovery>(load_json(config.identity), [&owner](const auto& args, double timeout) {
+    auto recovery = std::make_shared<Recovery>(load_trusted_json(config.identity), [&owner](const auto& args, double timeout) {
         return readonly(args, timeout, owner.fd.get()); });
     if (config.profile == "host-data") validate_data_runtime(config.value, recovery);
     auto manager = std::make_shared<Guard>(config, recovery, owner);
@@ -429,6 +429,7 @@ void run_owned(const Config& config, Owner& owner, bool taking_over) {
 }
 void run(const Json& value, bool taking_over) {
     Config config(value); config.validate_environment();
+    trusted_directory(config.run);
     try {
         auto owner = acquire_owner(config, taking_over);
         run_owned(config, *owner, taking_over);
@@ -455,10 +456,7 @@ void maintain(const Json& record, bool taking_over) {
     const auto receipt_path = config.run / "manager-invocation.json";
     const auto journal_path = config.run / "path-transaction.json";
     if (!taking_over) {
-        for (const auto& location : {directory.parent_path(), directory, config.run}) {
-            if (fs::is_symlink(location)) throw std::runtime_error("Maintenance state directory must not be a symlink");
-            fs::create_directories(location); fs::permissions(location, fs::perms::owner_all);
-        }
+        trusted_directory(config.run, true);
         auto owner = acquire_owner(config, false);
         if (fs::exists(journal_path)) throw std::runtime_error("Existing transaction requires takeover, not owner restart");
         const auto profile = current_profile(record, [&owner](const auto& args, double timeout) {
@@ -472,18 +470,19 @@ void maintain(const Json& record, bool taking_over) {
         atomic_json(receipt_path, {{"schema", 1}, {"invocation_id", invocation}, {"owner_epoch", owner->epoch}, {"config_digest", digest(config.value)}});
         run_owned(config, *owner);
     } else {
+        trusted_directory(config.run);
         if (!fs::exists(receipt_path)) return;
-        const auto receipt = load_json(receipt_path);
+        const auto receipt = load_trusted_json(receipt_path);
         if (receipt.value("invocation_id", "") != invocation || !fs::exists(journal_path)) return;
         if (receipt.value("schema", 0) != 1) throw std::runtime_error("Untrusted maintenance invocation receipt");
-        if (load_json(journal_path).at("owner_epoch") != receipt.at("owner_epoch"))
+        if (load_trusted_json(journal_path).at("owner_epoch") != receipt.at("owner_epoch"))
             throw std::runtime_error("Transaction belongs to another maintenance owner");
         auto owner = acquire_owner(config, true);
-        if (load_json(receipt_path) != receipt) throw std::runtime_error("Maintenance invocation changed while waiting for its fence");
-        if (load_json(journal_path).at("owner_epoch") != receipt.at("owner_epoch"))
+        if (load_trusted_json(receipt_path) != receipt) throw std::runtime_error("Maintenance invocation changed while waiting for its fence");
+        if (load_trusted_json(journal_path).at("owner_epoch") != receipt.at("owner_epoch"))
             throw std::runtime_error("Transaction owner changed while waiting for its fence");
-        config = Config(load_json(directory / "config.json"));
-        Json profile{{"schema", 1}, {"identity", load_json(directory / "identity.json")}, {"guard", config.value}};
+        config = Config(load_trusted_json(directory / "config.json"));
+        Json profile{{"schema", 1}, {"identity", load_trusted_json(directory / "identity.json")}, {"guard", config.value}};
         if (record_from_profile(profile) != record || digest(config.value) != receipt.at("config_digest"))
             throw std::runtime_error("Maintenance runtime differs from its registered invocation");
         run_owned(config, *owner, true);

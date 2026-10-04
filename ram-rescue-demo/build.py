@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 """Create a self-contained rescue root from local installed binaries."""
+import argparse
 import hashlib
 import json
 import os
@@ -8,6 +9,7 @@ import re
 import shutil
 import subprocess
 import sys
+import sysconfig
 import tarfile
 
 from session_payload import stage_session
@@ -43,35 +45,64 @@ def write(path, data, mode=0o644):
     target.chmod(mode)
 
 
-def enroll():
-    info = subprocess.check_output(["udevadm", "info", "--query=property", "--name=/dev/sda"], text=True)
-    props = dict(line.split("=", 1) for line in info.splitlines() if "=" in line)
-    # Refuse silently enrolling a different disk when re-running the demo build.
-    if props.get("ID_USB_SERIAL_SHORT") != "ZTE51T0AL262251108":
-        raise RuntimeError("Expected disk is not /dev/sda. Review enrollment before building.")
-    lvs = {}
-    for node in Path("/sys/class/block").glob("dm-*"):
-        name = (node / "dm/name").read_text().strip()
-        if name in ("vgportable-ubuntu", "vgportable-shared"):
-            uuid = (node / "dm/uuid").read_text().strip()
-            lvs[name.split("-", 1)[1]] = {"dm_uuid": uuid}
-    if set(lvs) != {"ubuntu", "shared"}:
-        raise RuntimeError("Expected active LVs not found.")
-    partuuid = subprocess.check_output(["lsblk", "-dn", "-o", "PARTUUID", "/dev/sda3"], text=True).strip()
-    pvlinks = [p.name.removeprefix("lvm-pv-uuid-") for p in Path("/dev/disk/by-id").glob("lvm-pv-uuid-*")
-               if p.resolve() == Path("/dev/sda3")]
-    if len(pvlinks) != 1:
-        raise RuntimeError("Cannot enroll PV UUID.")
-    return {"vid": "21c4", "pid": "00c0", "usb_serial": props["ID_USB_SERIAL_SHORT"],
-            "sectors": int(Path("/sys/class/block/sda/size").read_text()),
-            "partition_number": 3, "partuuid": partuuid, "pv_uuid": pvlinks[0],
-            "vg_name": "vgportable", "vg_uuid": lvs["ubuntu"]["dm_uuid"][4:36], "lvs": lvs}
+def normalize_payload(root):
+    """Archive ownership is root; writable modes must not depend on host umask."""
+    root = Path(root)
+    root.chmod(0o755)
+    for path in root.rglob('*'):
+        if path.is_symlink():
+            continue
+        if path.is_dir():
+            path.chmod(0o1777 if path == root/'tmp' else 0o755)
+        else:
+            path.chmod(path.stat().st_mode & 0o755)
 
 
-def main():
-    if ROOT.exists():
-        shutil.rmtree(ROOT)
-    ROOT.mkdir(parents=True)
+def dependency_manifest(root):
+    """Account every frozen ELF tool/library; this is a cold build operation."""
+    sys.path.insert(0, str(BASE.parent / 'guard'))
+    try:
+        from native_payload import dependency_packages
+    finally:
+        sys.path.pop(0)
+    frozen = {}
+    for path in sorted(Path(root).rglob('*')):
+        if path.is_symlink() or not path.is_file():
+            continue
+        with path.open('rb') as stream:
+            header = stream.read(18)
+            if len(header) < 18 or header[:4] != b'\x7fELF' or header[5] not in (1, 2):
+                continue
+            # ET_REL build objects (for example Python's config/python.o) do
+            # not execute as tools or load as shared libraries at runtime.
+            if int.from_bytes(header[16:18], 'little' if header[5] == 1 else 'big') not in (2, 3):
+                continue
+        if len(frozen) >= 256:
+            raise ValueError('Frozen ELF dependency inventory exceeds 256 files')
+        frozen['/' + str(path.relative_to(root))] = hashlib.sha256(path.read_bytes()).hexdigest()
+    return {'schema': 1, 'kind': 'base-rescue-tools', 'file_sha256': frozen,
+            'dependency_packages': dependency_packages(frozen),
+            'scope': 'All frozen ELF tools and shared libraries, including Python extensions; '
+                     'Python stdlib source files are covered by package versions, not individual byte comparison.'}
+
+
+def build(output_dir, identity=None):
+    """Build generic tools from trusted installed binaries; never discover disks.
+
+    Enrollment is a separate, explicit read-only operation. An optional identity
+    JSON can be embedded for the manual rescue command; it is not inferred from
+    the current host or required by standalone data-map aftercare.
+    """
+    global ROOT
+    output_dir = Path(output_dir).resolve()
+    output_dir.mkdir(parents=True, exist_ok=True)
+    ROOT = output_dir / "rootfs"
+    if ROOT.exists() or any((output_dir / name).exists() for name in
+                           ("rescue-root.tar.gz", "manifest.json")):
+        raise ValueError("Use a new output directory; previous artifacts are preserved")
+    if identity is not None and (not isinstance(identity, dict) or not identity):
+        raise ValueError("identity must be a nonempty explicit JSON object")
+    ROOT.mkdir()
     with_libs("/usr/bin/busybox", "/bin/busybox")
     applets = subprocess.check_output(["busybox", "--list"], text=True).splitlines()
     for name in applets:
@@ -79,10 +110,12 @@ def main():
             (ROOT / "bin" / name).symlink_to("busybox")
     for name in ["lvm", "dmsetup", "e2fsck", "blkid", "blockdev"]:
         with_libs("/usr/sbin/" + name, "/sbin/" + name)
-    for name in ["lsblk", "findmnt", "python3.12"]:
+    for name in ["lsblk", "findmnt"]:
         with_libs("/usr/bin/" + name)
-    (ROOT / "usr/bin/python3").symlink_to("python3.12")
-    stdlib = Path("/usr/lib/python3.12")
+    interpreter = Path(sys.executable).resolve()
+    with_libs(interpreter, "/usr/bin/" + interpreter.name)
+    (ROOT / "usr/bin/python3").symlink_to(interpreter.name)
+    stdlib = Path(sysconfig.get_path("stdlib"))
     for base, dirs, files in os.walk(stdlib):
         dirs[:] = [d for d in dirs if d not in {"__pycache__", "test", "tests", "idlelib", "tkinter", "ensurepip"}]
         for name in files:
@@ -95,7 +128,7 @@ def main():
                 else:
                     copy_file(path)
     for name in ["libnss_files.so.2", "libnss_compat.so.2"]:
-        path = Path("/lib/x86_64-linux-gnu") / name
+        path = Path("/lib") / sysconfig.get_config_var("MULTIARCH") / name
         if path.exists():
             with_libs(path)
     copy_file("/usr/share/terminfo/l/linux")
@@ -108,7 +141,8 @@ def main():
     for p in ["sbin/rescue", "sbin/rescue-supervisor", "bin/rescue-session"]:
         (ROOT / p).chmod(0o755)
     copy_file(BASE / "src/lvm.conf", "/etc/lvm/lvm.conf")
-    write("/etc/rescue/identity.json", json.dumps(enroll(), indent=2) + "\n")
+    if identity is not None:
+        write("/etc/rescue/identity.json", json.dumps(identity, indent=2) + "\n", 0o600)
     write("/etc/passwd", "root:x:0:0:Disabled root:/root:/bin/sh\nrescue:x:0:0:RAM rescue:/root:/bin/rescue-session\n")
     write("/etc/group", "root:x:0:\n")
     write("/etc/shadow", "root:!:20000:0:99999:7:::\nrescue:!:20000:0:99999:7:::\n", 0o600)
@@ -117,11 +151,14 @@ def main():
     write("/etc/shells", "/bin/sh\n/bin/rescue-session\n")
     write("/etc/fstab", "# Deliberately empty: no automatic disk mounts.\n")
     write("/etc/issue", "\nRAM RESCUE DEMO | user: rescue | separate rescue password\nVT9 / VT10; disk-independent tools; shared host kernel.\n\n")
-    write("/etc/motd", "\nRAM rescue root shell. Start with: rescue status\nThen: rescue verify; rescue refresh ubuntu (MANUAL, not fsck).\nUse rescue help. Exit to lock this VT. Alt+F9/F10 switches rescue terminals.\nNEVER repair a mounted filesystem. Host root remains mounted.\n\n")
+    write("/etc/motd", "\nRAM rescue root shell. Start with: rescue status\nIf explicitly enrolled: rescue verify; rescue refresh <LV> (MANUAL, not fsck).\nUse rescue help. Exit to lock this VT. Alt+F9/F10 switches rescue terminals.\nNEVER repair a mounted filesystem. Host root remains mounted.\n\n")
     write("/var/log/lastlog", "")
     write("/var/log/wtmp", "")
     write("/run/utmp", "")
-    archive = BASE / "rescue-root.tar.gz"
+    dependencies = dependency_manifest(ROOT)
+    write("/etc/rescue/base-runtime.json", json.dumps(dependencies, indent=2, sort_keys=True) + "\n")
+    normalize_payload(ROOT)
+    archive = output_dir / "rescue-root.tar.gz"
     with tarfile.open(archive, "w:gz", compresslevel=3) as tar:
         for path in sorted(ROOT.rglob("*")):
             info = tar.gettarinfo(str(path), arcname=str(path.relative_to(ROOT)))
@@ -133,13 +170,25 @@ def main():
             else:
                 tar.addfile(info)
     digest = hashlib.sha256(archive.read_bytes()).hexdigest()
-    (BASE / "rescue-root.sha256").write_text(digest + "  rescue-root.tar.gz\n")
+    (output_dir / "rescue-root.sha256").write_text(digest + "  rescue-root.tar.gz\n")
     size = sum(p.stat().st_size for p in ROOT.rglob("*") if p.is_file() and not p.is_symlink())
     manifest = {"uncompressed_file_bytes": size, "archive_bytes": archive.stat().st_size,
                 "sha256": digest, "kernel_built_on": os.uname().release,
-                "identity": enroll(), "runtime_tmpfs_limit_mib": 256, "slice_memory_limit_mib": 768,
-                "rescue_session": session}
-    (BASE / "manifest.json").write_text(json.dumps(manifest, indent=2) + "\n")
+                "identity": identity, "runtime_tmpfs_limit_mib": 256, "slice_memory_limit_mib": 768,
+                "rescue_session": session, "dependencies": dependencies}
+    (output_dir / "manifest.json").write_text(json.dumps(manifest, indent=2) + "\n")
+    (output_dir / "manifest.json").chmod(0o600 if identity is not None else 0o644)
+    return manifest
+
+
+def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--output-dir", type=Path, default=BASE,
+                        help="New artifact directory; no disk enrollment is performed")
+    parser.add_argument("--identity", type=Path, help="Optional explicit identity JSON from read-only enrollment")
+    args = parser.parse_args()
+    identity = json.loads(args.identity.read_text()) if args.identity else None
+    manifest = build(args.output_dir, identity)
     print(json.dumps({k: v for k, v in manifest.items() if k != "identity"}, indent=2))
 
 

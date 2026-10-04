@@ -18,8 +18,11 @@ sys.path.insert(0, str(BASE.parent / 'ram-rescue-demo/src'))
 
 from host_files import atomic
 from native_payload import verify_runtime
+import ram_environment
+from security_policy import controller_restrictions
+from trusted_paths import read_trusted_json
 
-RAM = Path('/run/ram-rescue-demo')
+RAM = ram_environment.ALIAS
 STATE = Path('/run/ram-rescue-data')
 UNITS = Path('/run/systemd/system')
 RULES = Path('/run/udev/rules.d')
@@ -45,7 +48,7 @@ def read_enrollment(path):
     path = Path(path)
     if path.stat().st_size > 65536:
         raise ValueError('Oversized enrollment')
-    result = json.loads(path.read_text())
+    result = read_trusted_json(path) if os.geteuid() == 0 else json.loads(path.read_text())
     if result.get('schema') != 1 or not isinstance(result.get('identity'), dict):
         raise ValueError('Unsupported data enrollment')
     from admin.data import validate_config
@@ -60,29 +63,16 @@ def require_root():
 
 
 def require_ram():
-    """Use the existing protected boot runtime, including its shared /run."""
-    command_line = Path('/proc/cmdline').read_text().split()
-    if 'ram_rescue_guard=1' not in command_line or 'nompath' not in command_line:
-        raise RuntimeError('Data aftercare currently requires this protected boot with nompath')
-    mounts = json.loads(run(['findmnt', '-J', '-M', str(RAM), '-o', 'TARGET,FSTYPE,OPTIONS']))
-    entries = mounts.get('filesystems', [])
-    if (len(entries) != 1 or entries[0]['target'] != str(RAM)
-            or entries[0]['fstype'] != 'tmpfs'
-            or 'noswap' not in entries[0]['options'].split(',')):
-        raise RuntimeError('Protected rescue tmpfs,noswap is unavailable')
-    for name in ('run', 'dev', 'sys', 'proc'):
-        if not os.path.samefile(RAM / name, '/' + name):
-            raise RuntimeError('Rescue runtime does not share host /' + name)
-    for path in ('usr/bin/python3', 'sbin/dmsetup', 'sbin/blkid'):
-        if not os.access(RAM / path, os.X_OK):
-            raise RuntimeError('Required RAM tool is unavailable: ' + path)
-    if run(['systemctl', 'show', '--property=ActiveState', '--value',
-            'ram-rescue-guard.service']) != 'active':
-        raise RuntimeError('The existing root Guard must be active')
+    """Prepare or verify data tools independently of root protection."""
     for unit in ('multipathd.service', 'multipathd.socket'):
         state = run(['systemctl', 'show', '--property=ActiveState', '--value', unit])
         if state not in ('inactive', 'failed'):
             raise RuntimeError('A stock multipath controller may be active: ' + unit)
+    ram_environment.prepare()
+    ram_environment.verify_mount(RAM.resolve(strict=True))
+    for path in ('usr/bin/python3', 'sbin/dmsetup', 'sbin/blkid'):
+        if not os.access(RAM / path, os.X_OK):
+            raise RuntimeError('Required RAM tool is unavailable: ' + path)
 
 
 def udev_rules(profile, *, wanted_service=None):
@@ -129,19 +119,22 @@ def service_unit(name, runtime):
     return (f'[Unit]\nDescription=Temporary aftercare for {name}\n'
             'After=ram-rescue-guard.service systemd-udevd.service\n'
             'Before=shutdown.target\nConflicts=shutdown.target\n'
-            'ConditionKernelCommandLine=ram_rescue_guard=1\n\n'
+            '\n'
             f'[Service]\nType=notify\nNotifyAccess=main\nSlice={SLICE}\n'
-            f'RootDirectory={RAM}\nWorkingDirectory=/\n'
+            f'RootDirectory={ram_environment.PRIVATE}\nWorkingDirectory=/\n'
             f'ExecStart={start}\n'
             f'ExecStopPost={stop}\n'
             'Restart=no\nTimeoutStartSec=30\nTimeoutStopSec=15\n'
             'MemoryAccounting=yes\nMemoryMax=128M\nMemorySwapMax=0\n'
-            'StandardOutput=journal\nStandardError=journal\n')
+            'StandardOutput=journal\nStandardError=journal\n' + controller_restrictions())
 
 
 def stage_runtime():
-    """Reuse the verified native package already supplied by protected boot."""
-    return verify_runtime(RAM).parent
+    """Reuse the verified native package supplied by RAM preparation."""
+    verify_runtime(RAM)
+    # Preserve the logical root used by RootDirectory and relative links;
+    # verification resolves its trusted tools alias to the backing tmpfs.
+    return RAM / 'opt/guard-runtime'
 
 
 def enroll(name, partition, output):
@@ -213,7 +206,7 @@ def stop(name):
     directory = STATE / name
     if not (directory / 'config.json').is_file():
         raise RuntimeError('No temporary data aftercare exists for this map')
-    config = json.loads((directory / 'config.json').read_text())
+    config = read_trusted_json(directory / 'config.json')
     if config.get('map_name') != name or config.get('run_dir') != str(directory / 'state'):
         raise RuntimeError('Temporary state does not belong to this map')
     run(['systemctl', 'stop', service(name)])
@@ -229,7 +222,7 @@ def main():
     registration.add_argument('--map', required=True, type=map_name)
     registration.add_argument('--partition', required=True)
     registration.add_argument('--output', required=True, type=Path)
-    activation = commands.add_parser('start', help='Run its controller in the existing protected RAM runtime')
+    activation = commands.add_parser('start', help='Prepare RAM tools and run the enrolled controller')
     activation.add_argument('--enrollment', required=True, type=Path)
     deactivation = commands.add_parser('stop', help='End recovery; leave the map and exclusions intact')
     deactivation.add_argument('--map', required=True, type=map_name)

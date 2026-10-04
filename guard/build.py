@@ -25,15 +25,33 @@ def session_builder():
     return module
 
 
-def payload(profile,root,*,native_binary):
-    installed=Path('/usr/local/lib/ram-rescue-demo')
+def base_builder():
+    # Load only this checkout's generic tool builder. It never discovers disks.
+    import sys
+    directory = PROJECT / 'ram-rescue-demo'
+    sys.path.insert(0, str(directory))
+    try:
+        spec = importlib.util.spec_from_file_location('generic_rescue_build', directory / 'build.py')
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+        return module
+    finally:
+        sys.path.pop(0)
+
+
+def payload(profile,root,*,native_binary,base_rescue_dir=None):
+    installed=Path(base_rescue_dir) if base_rescue_dir else root.parent/'base-rescue'
+    if base_rescue_dir is None:
+        base_builder().build(installed)
     manifest=json.loads((installed/'manifest.json').read_text())
     archive=installed/'rescue-root.tar.gz'
     if sha256(archive)!=manifest['sha256']:
-        raise RuntimeError('Installed rescue payload checksum mismatch')
+        raise RuntimeError('Base rescue payload checksum mismatch')
     root.mkdir()
     with tarfile.open(archive,'r:gz') as source:
         source.extractall(root,filter='data')
+    (root/'etc/rescue/base-source.json').write_text(json.dumps(
+        {'schema':1,'sha256':manifest['sha256']})+'\n')
     modules=root/'opt/guard'
     modules.mkdir(parents=True)
     rescue=PROJECT/'ram-rescue-demo/src/rescue.py'
@@ -50,10 +68,11 @@ def payload(profile,root,*,native_binary):
     session=session_builder().stage_session(root)
     (root/'etc/rescue/session-build.json').write_text(json.dumps(session,indent=2)+'\n')
     stage_runtime(root,native_binary)
+    base_builder().normalize_payload(root)
     return manifest['sha256']
 
 
-def build(enrollment,work,kernel):
+def build(enrollment,work,kernel,*,base_rescue_dir=None):
     profile=json.loads(enrollment.read_text())
     config=profile['guard']
     release=config['kernel_release']
@@ -86,7 +105,7 @@ def build(enrollment,work,kernel):
         (conf/dest).chmod(0o755)
     payload_root=work/'payload'
     native_binary=build_runtime(work/'native-runtime')
-    base_payload=payload(profile,payload_root,native_binary=native_binary)
+    base_payload=payload(profile,payload_root,native_binary=native_binary,base_rescue_dir=base_rescue_dir)
     archive=conf/'ram-rescue-guard/tools.tar.gz'
     with tarfile.open(archive,'w:gz',compresslevel=3) as output:
         for path in sorted(payload_root.rglob('*')):
@@ -98,7 +117,7 @@ def build(enrollment,work,kernel):
                     output.addfile(item,data)
             else:
                 output.addfile(item)
-    sources=[BASE/'build.py',BASE/'host_files.py',BASE/'native_payload.py',PROJECT/'ram-rescue-demo/src/rescue.py',
+    sources=[PROJECT/'ram-rescue-demo/build.py',PROJECT/'ram-rescue-demo/src/lvm.conf',BASE/'build.py',BASE/'host_files.py',BASE/'native_payload.py',PROJECT/'ram-rescue-demo/src/rescue.py',
              *session_builder().SOURCES,*sorted(p for p in source_templates.iterdir() if p.is_file())]
     sources.extend(p for p in sorted((BASE/'native').rglob('*'))
                    if p.is_file() and '__pycache__' not in p.parts)
@@ -131,11 +150,14 @@ def main():
     parser.add_argument('--enrollment',required=True,type=Path)
     parser.add_argument('--kernel',type=Path)
     parser.add_argument('--work-dir',required=True,type=Path)
+    parser.add_argument('--base-rescue-dir',type=Path,
+                        help='Explicit generic rescue artifacts; default builds tools from this checkout')
     args=parser.parse_args()
     work=args.work_dir.resolve()
     if not work.is_relative_to(WORK.resolve()):
         parser.error('work-dir must be below lab/work')
-    build(args.enrollment.resolve(),work,(args.kernel or args.enrollment.parent/'vmlinuz').resolve())
+    build(args.enrollment.resolve(),work,(args.kernel or args.enrollment.parent/'vmlinuz').resolve(),
+          base_rescue_dir=args.base_rescue_dir.resolve() if args.base_rescue_dir else None)
 
 
 if __name__=='__main__':

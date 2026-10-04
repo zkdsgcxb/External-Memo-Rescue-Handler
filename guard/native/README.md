@@ -25,7 +25,16 @@ lab/work/cpp-runtime/guard-runtime --version
 
 需要 GCC 的 C++17 支持、OpenSSL 开发头文件、binutils、pthread、dl。JSON 解析器固定为仓库内附带 MIT 许可的 nlohmann/json 3.12.0；SHA-256 见 [vendor/README.md](vendor/README.md)。libdevmapper 使用发行版的公共 ABI。只支持经过 ABI 审查的 Linux 64 位小端平台；完整 C++ 内核故障测试为 x86_64；ARM64 和 RISC-V64 的交叉编译与实际用户态执行见 [架构报告](../../research/2026-10-02/CPP-ARCHITECTURES.md)。
 
-构建生成精简 ELF、独立调试符号及源码/二进制散列清单，并执行不接触真实块设备的单元测试。构建动作不会安装或替换本机 Guard。
+构建生成精简 ELF、独立调试符号及源码/二进制散列清单，并执行不接触真实块设备的单元测试。PIE、RELRO/NOW、非执行栈、栈保护与 FORTIFY 均显式启用，并对生成的 ELF 检查；不符合时构建失败。构建动作不会安装或替换本机 Guard。
+
+安全检查使用同一源码，可在开发机执行：
+
+```bash
+python3 guard/native/build_runtime.py --output lab/work/native-security --fuzz-cases 10000
+python3 guard/native/build_runtime.py --output lab/work/native-sanitizers --sanitizers --fuzz-cases 10000
+```
+
+第二条启用 ASan/UBSan；该产物仅用于测试，不能部署。输入语料覆盖 JSON、事件字段、DM 表、登记字段及 blkid/LVM 输出，使用固定随机种子便于复现。它不是穷尽性安全证明。信任路径、服务权限边界和验收见 [原生安全报告](../../research/2026-10-04/NATIVE-SECURITY.md)。
 
 运行入口：
 

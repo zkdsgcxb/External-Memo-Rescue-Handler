@@ -37,6 +37,8 @@ Guard 是用户空间服务。内核负责块 I/O、USB/SCSI 和文件系统处�
 - **有界恢复事务**：每张映射只有一个恢复执行者，保留事务记录、最终身份核验、截止时间及进程死亡后的接管。
 - **挂载连续性验证**：覆盖根卷、ext4/FAT 数据卷、嵌套挂载、bind 子挂载与已打开文件；挂载计划交由原生 systemd 管理。
 - **资源控制与救援入口**：使用事件合并、退避和 cgroup 配额控制开销，保留 RAM 工具及人工救援通道。
+- **独立数据盘与按需诊断**：普通 Ubuntu 启动可准备独立 RAM 工具；`doctor` / `export` 提供状态、事务与冻结依赖差异，默认本地脱敏保存。
+- **受控安装与安全检查**：使用固定的 root 管理入口、离线包、可信路径检查及服务权限限制；构建验证实际 ELF 防护，CI 包含 sanitizer 和异常输入测试。
 
 维护对象必须预先登记并建立稳定 DM 映射。项目不会自动接管任意插入的 U 盘，也不会将正在挂载使用的裸分区在线改接。接入方式见 [统一后台维护](guard/MANAGER.md)。
 
@@ -67,9 +69,16 @@ python3 -m unittest discover -s ram-rescue-demo/tests -v
 
 ### 虚拟机实验与实机接入
 
-从 [QEMU 实验室](lab/README.md) 准备内核、工具和虚拟磁盘，再按 [完整 Ubuntu 实验](lab/UBUNTU.md) 建立 systemd / LVM 根系统。当前完整 C++ 的实验命令与前置产物见 [迁移验收报告](research/2026-10-02/CPP-VM-VALIDATION.md)。实验支持 USB/UAS 断联、重新枚举、错误身份、连续恢复及恢复进程死亡等情形。
+当前版本可以从公开签名 Ubuntu 镜像生成一次性 USB/LVM 实验盘，不需要作者的登记文件、已安装救援包或私有 `lab/work/`：
 
-实机接入分别见 [根盘保护启动](guard/README.md)、[统一后台维护](guard/MANAGER.md) 和 [数据映射说明](guard/DATA.md)。早期登记与救援包构建仍包含原开发设备及工具布局约束，不能在其他机器上直接照搬。源码更新不等于已安装运行包升级。
+```bash
+# 明确启动 QEMU、生成种子并执行完整恢复和启动失败验收。
+python3 lab/reproduce.py --run
+```
+
+依赖、输入版本及分阶段命令见 [QEMU 实验室](lab/README.md)。不带 `--run` 只显示说明。实验不传入宿主块设备，保留原始日志与输入散列。
+
+实机接入先阅读 [可信安装与冷态升级](research/2026-10-04/INSTALLATION-AND-TRUST.md)，使用已审阅离线包安装固定管理入口。根盘专用镜像、普通数据映射与管理配置分别说明于 [根盘保护](guard/README.md)、[统一后台维护](guard/MANAGER.md) 和 [数据映射边界](guard/DATA.md)。源码、磁盘上的包和 RAM 中实际运行的版本必须分别核对。
 
 ## 性能与验证
 
@@ -105,7 +114,7 @@ Guard 不自动执行文件系统修复或强制读写重挂。EFI 有独立的 
 
 安全边界：设备身份核验用于防误接和实例确认，不是防克隆设备的认证；RAM/chroot 也不是 root 安全沙箱。启动失败控制台、救援认证、服务权限与安装信任边界见 [攻击面评估](research/2026-10-03/ATTACK-SURFACE.md)。本轮已实现保护启动失败停机、救援提示符超时退出和新设密码检查，通过 7 项失败启动与 36 项完整 Ubuntu 集成检查，见 [P0 实现与验收](research/2026-10-03/P0-BOOT-AND-RESCUE.md)。
 
-[下一版本目标](ROADMAP.md) 已统一纳入安全加固、按需诊断与脱敏导出、干净环境实验复现、数据盘独立接入和实机验收；除已单独记录的进展外，其余目标仍待实现。
+[ROADMAP](ROADMAP.md) 跟踪安全加固、按需诊断、干净环境复现、数据盘独立接入与实机验收。逐项实现与当前验证状态见 [本轮报告](research/2026-10-04/ROADMAP-IMPLEMENTATION.md)；QEMU 验收与实机启用分开记录。
 
 ## 项目结构
 
@@ -125,6 +134,13 @@ External-Memo-Rescue-Handler/
 │   ├── admin/                # Python 冷态登记、只读查询与校验
 │   ├── integration/          # initramfs、systemd 与 udev 配置模板
 │   ├── manage.py             # 统一登记、状态查看与维护入口
+│   ├── diagnostics.py        # 按需 doctor 与本地脱敏导出
+│   ├── package.py            # 无自动激活脚本的离线 Debian 包
+│   ├── admin_entry.py        # root 固定入口与代码完整性核验
+│   ├── stage_inputs.py       # 已审阅镜像输入的封存
+│   ├── ram_environment.py    # 根盘复用或独立数据盘 RAM 工具
+│   ├── trusted_paths.py      # 管理文件的 FD 路径与权限检查
+│   ├── security_policy.py    # 共用 systemd 权限限制
 │   ├── enroll.py             # 根盘身份登记
 │   ├── build.py              # 保护启动镜像与运行包构建
 │   ├── install.py            # 保护启动入口首次安装与回退
@@ -135,6 +151,9 @@ External-Memo-Rescue-Handler/
 │   └── work/                 # 本地构建与登记资料（生成，不提交）
 ├── lab/                      # QEMU 故障注入、验收与性能测量
 │   ├── guest/                # 虚拟机内的初始化、探针与工作负载
+│   ├── reproduce.py          # 从公开镜像生成种子并完整验收
+│   ├── standalone_data_probe.py # 普通 Ubuntu 的独立数据盘验收
+│   ├── roadmap_performance_probe.py # 本轮完整生产包资源对照
 │   ├── historical.py         # 从固定 Git 提交提取历史实验对照
 │   ├── tests/                # Guard、管理工具及实验工具的回归检查
 │   ├── results/              # 纳入版本管理的实验摘要、数据与图表
@@ -150,6 +169,7 @@ External-Memo-Rescue-Handler/
 | --- | --- |
 | 组件职责与实现方式 | [ARCHITECTURE.md](ARCHITECTURE.md) |
 | 下一版本与安全边界 | [下一版本目标](ROADMAP.md) · [攻击面评估](research/2026-10-03/ATTACK-SURFACE.md) |
+| 安装信任链与本轮实现 | [可信安装](research/2026-10-04/INSTALLATION-AND-TRUST.md) · [逐项落实报告](research/2026-10-04/ROADMAP-IMPLEMENTATION.md) |
 | 日常登记、状态查看与维护 | [统一后台维护](guard/MANAGER.md) |
 | 根盘构建、安装与回退 | [根盘保护启动](guard/README.md) |
 | 数据盘与挂载计划 | [数据映射](guard/DATA.md) · [挂载与子挂载](guard/MOUNTS.md) |

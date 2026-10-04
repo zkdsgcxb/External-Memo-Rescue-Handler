@@ -29,7 +29,6 @@ HOOK = installer.HOOK
 GRUB = installer.GRUB
 BOOT = Path('/boot')
 LVM_CONFIG = Path('/etc/lvm/lvmlocal.conf')
-BASE_TOOLS = Path('/usr/local/lib/ram-rescue-demo/rescue-root.tar.gz')
 
 
 def encoded(value):
@@ -39,6 +38,10 @@ def encoded(value):
 def regular(path):
     if path.is_symlink() or not stat.S_ISREG(path.stat().st_mode):
         raise RuntimeError('Expected an ordinary file: ' + str(path))
+    if os.geteuid() == 0:
+        from trusted_paths import open_trusted
+        with open_trusted(path):
+            pass
     return path
 
 
@@ -96,7 +99,7 @@ def preflight(build_dir, enrollment, vm_report):
     """Read every prerequisite; callers hold the directory deployment lock."""
     inputs = (enrollment, vm_report, build_dir / 'build.json')
     watched = {path: sha256(regular(path)) for path in inputs}
-    profile, build, image_name = installer.validate(build_dir, enrollment, vm_report)
+    profile, build, image_name = installer.validate(build_dir, enrollment, vm_report, trusted=os.geteuid() == 0)
     if build.get('runtime') != 'cpp':
         raise RuntimeError('Only the current C++ protection image may be upgraded')
     incomplete_upgrade()
@@ -108,8 +111,8 @@ def preflight(build_dir, enrollment, vm_report):
     kernel = BOOT / ('vmlinuz-' + release)
     normal = BOOT / ('initrd.img-' + release)
     watched.update({path: sha256(regular(path)) for path in
-                    (image, HOOK, GRUB, kernel, normal, LVM_CONFIG,
-                     STATE / 'grub.cfg.before', BASE_TOOLS)})
+                    (image, HOOK, GRUB, kernel, normal, STATE / 'grub.cfg.before')})
+    watched[LVM_CONFIG] = installer.optional_hash(LVM_CONFIG)
     watched[receipt_path] = hashlib.sha256(receipt_bytes).hexdigest()
     if (receipt.get('state') != 'installed' or receipt.get('kernel_release') != release
             or receipt.get('image') != str(image)
@@ -130,10 +133,8 @@ def preflight(build_dir, enrollment, vm_report):
         raise RuntimeError('Current installed kernel differs from the candidate')
     if sha256(normal) != baseline['initrd_sha256']:
         raise RuntimeError('Normal initrd changed since enrollment')
-    if sha256(regular(LVM_CONFIG)) != baseline['lvmlocal_sha256']:
+    if installer.optional_hash(LVM_CONFIG) != baseline['lvmlocal_sha256']:
         raise RuntimeError('Host LVM configuration changed since enrollment')
-    if sha256(regular(BASE_TOOLS)) != build['base_rescue_payload_sha256']:
-        raise RuntimeError('Installed base rescue tools differ from the tested candidate')
     if not build['source_sha256']:
         raise RuntimeError('Candidate build source manifest must not be empty')
     for relative, digest in build['source_sha256'].items():
@@ -162,6 +163,10 @@ def preflight(build_dir, enrollment, vm_report):
 def unchanged(context, *, written=()):
     for path, digest in context['watched_sha256'].items():
         if path in written:
+            continue
+        if digest is None:
+            if os.path.lexists(path):
+                raise RuntimeError('Previously absent upgrade input appeared: ' + str(path))
             continue
         if sha256(regular(path)) != digest:
             raise RuntimeError('Upgrade prerequisite changed during preparation: ' + str(path))

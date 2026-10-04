@@ -11,6 +11,10 @@ namespace rescue {
 using Runner = std::function<std::string(const std::vector<std::string>&, double)>;
 using Clock = std::function<double()>;
 
+// Shared bounded parsers; exposed separately for hostile-output corpus checks.
+Json parse_blkid_output(const std::string&);
+Json parse_lvm_rows(const std::string&, const std::string& key);
+
 std::string readonly(const std::vector<std::string>& args, double timeout = 3,
                      int owner_fd = -1);
 

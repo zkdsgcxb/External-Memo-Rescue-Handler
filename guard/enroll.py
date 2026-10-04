@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-"""Read the already enrolled host disk; write a private boot profile only."""
+"""Read an explicitly identified root disk; write a private boot profile only."""
 import argparse
 import hashlib
 import json
@@ -18,6 +18,7 @@ sys.path.insert(0, str(BASE.parent / 'ram-rescue-demo/src'))
 from admin.admission import Admission, layout, readonly
 from admin.identity import LVMIdentity
 from admin.dm import DeviceMapper, expected_table, table_digest
+from rescue import rows
 
 
 def root_backing(identity, recovery, node, sys_path, config):
@@ -97,9 +98,52 @@ def collect(identity):
     return {'schema':1,'identity':identity,'guard':config}
 
 
+def identify(partition, expected_serial):
+    """Discover only the explicitly selected USB PV, then let collect revalidate it."""
+    node = Path(partition).resolve(strict=True)
+    device = node.stat()
+    if not stat.S_ISBLK(device.st_mode):
+        raise ValueError('partition must be an explicitly selected block device')
+    entry = (Path('/sys/dev/block') / f'{os.major(device.st_rdev)}:{os.minor(device.st_rdev)}').resolve(strict=True)
+    if not (entry/'partition').is_file():
+        raise ValueError('Root enrollment requires one USB LVM partition')
+    disk = entry.parent
+    usb = next((p for p in disk.parents if (p/'idVendor').is_file()), None)
+    if usb is None or (usb/'serial').read_text().strip() != expected_serial:
+        raise ValueError('Selected partition does not match the explicit USB serial')
+    props = dict(line.split('=', 1) for line in
+                 readonly(['/sbin/blkid', '-p', '-o', 'export', str(node)]).splitlines() if '=' in line)
+    if props.get('TYPE') != 'LVM2_member':
+        raise ValueError('Selected partition is not a recognized LVM PV')
+    pvs = rows(readonly(['/sbin/lvm', 'pvs', '--readonly', '--devices', str(node),
+                         '--reportformat', 'json', '-o', 'pv_uuid,vg_uuid,vg_name']), 'pv')
+    if len(pvs) != 1 or pvs[0]['pv_uuid'].strip() != props['UUID']:
+        raise ValueError('The selected PV is not uniquely identified')
+    pv = pvs[0]
+    vg_uuid = pv['vg_uuid'].strip().replace('-', '')
+    lvs = {}
+    for item in layout(str(node)):
+        uuid = 'LVM-' + vg_uuid + item['lv_uuid'].replace('-', '')
+        lvs[item['lv_name']] = {'dm_uuid': uuid}
+    if not lvs:
+        raise ValueError('Selected PV has no supported logical volumes')
+    return {'vid': (usb/'idVendor').read_text().strip().lower(),
+            'pid': (usb/'idProduct').read_text().strip().lower(), 'usb_serial': expected_serial,
+            'sectors': int((disk/'size').read_text()),
+            'partition_number': int((entry/'partition').read_text()),
+            'partuuid': props['PART_ENTRY_UUID'], 'pv_uuid': props['UUID'],
+            'vg_name': pv['vg_name'].strip(), 'vg_uuid': vg_uuid, 'lvs': lvs}
+
+
 def main():
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--output',type=Path,required=True)
+    identity_source=parser.add_mutually_exclusive_group(required=True)
+    identity_source.add_argument('--identity',type=Path,help='Explicit USB/LVM identity JSON')
+    identity_source.add_argument('--partition',type=Path,help='Explicit root PV partition to identify read-only')
+    parser.add_argument('--usb-serial',help='Required expected USB serial with --partition')
+    identity_source.add_argument('--base-rescue-dir',type=Path,
+                                 help='Explicit older rescue bundle with a recorded identity')
     parser.add_argument('--uid',type=int,required=True)
     parser.add_argument('--gid',type=int,required=True)
     args=parser.parse_args()
@@ -109,8 +153,14 @@ def main():
     out=args.output.resolve()
     if not out.is_relative_to(work) or out.exists():
         parser.error('output must be a new directory under lab/work')
-    manifest=json.loads(Path('/usr/local/lib/ram-rescue-demo/manifest.json').read_text())
-    profile=collect(manifest['identity'])
+    if bool(args.partition) != bool(args.usb_serial):
+        parser.error('--partition and --usb-serial must be supplied together')
+    identity=(identify(args.partition,args.usb_serial) if args.partition else
+        json.loads(args.identity.read_text()) if args.identity else json.loads(
+        (args.base_rescue_dir/'manifest.json').read_text()).get('identity'))
+    if not isinstance(identity,dict) or not identity:
+        parser.error('Explicit root identity is required; generic tools do not enroll devices')
+    profile=collect(identity)
     out.mkdir(mode=0o700,parents=True)
     release=profile['guard']['kernel_release']
     for source,dest in [(Path('/boot')/('vmlinuz-'+release),'vmlinuz'),
@@ -119,7 +169,8 @@ def main():
     profile['baseline']={'kernel_sha256':sha256(out/'vmlinuz'),
         'initrd_sha256':sha256(out/'original-initrd.img'),
         'grub_default_path':'/boot/grub/grub.cfg',
-        'lvmlocal_sha256':sha256(Path('/etc/lvm/lvmlocal.conf'))}
+        'lvmlocal_sha256':(sha256(Path('/etc/lvm/lvmlocal.conf'))
+                           if Path('/etc/lvm/lvmlocal.conf').exists() else None)}
     (out/'enrollment.json').write_text(json.dumps(profile,indent=2)+'\n')
     for path in [out,*out.iterdir()]:
         os.chmod(path,0o700 if path.is_dir() else 0o600)

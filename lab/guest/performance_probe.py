@@ -28,7 +28,63 @@ def resource_summary(samples, members):
     }
 
 
-def sample_guard_groups(label, seconds, event_kind=None, period=.02):
+
+def process_counters(pid):
+    """Read CPU counters and sample live helpers; short helpers can be missed."""
+    folder = Path('/proc') / str(pid)
+    try:
+        fields = (folder / 'stat').read_text().rsplit(')', 1)[1].split()
+        children = set()
+        for thread in (folder / 'task').iterdir():
+            try:
+                children.update(int(child) for child in (thread / 'children').read_text().split())
+            except FileNotFoundError:
+                pass
+        helpers = []
+        for child in sorted(children):
+            try:
+                child_fields = (Path('/proc') / str(child) / 'stat').read_text().rsplit(')', 1)[1].split()
+                helpers.append({'pid': child, 'start_ticks': child_fields[19]})
+            except FileNotFoundError:
+                pass
+        return {'pid': pid, 'start_ticks': fields[19],
+                'self_cpu_ticks': int(fields[11]) + int(fields[12]),
+                'waited_child_cpu_ticks': int(fields[13]) + int(fields[14]),
+                'threads': int(fields[17]), 'sampled_helpers': helpers}
+    except (FileNotFoundError, ProcessLookupError):
+        return {'pid': pid, 'unavailable': True}
+
+
+def process_cost_summary(samples, names):
+    result = {}
+    for name in names:
+        rows = [sample['processes'][name] for sample in samples]
+        valid = [row for row in rows if not row.get('unavailable')]
+        stable = bool(valid) and len(valid) == len(rows) and len({row['start_ticks'] for row in valid}) == 1
+        helpers = {(child['pid'], child['start_ticks']) for row in valid for child in row['sampled_helpers']}
+        result[name] = {'stable_controller': stable,
+                       'self_cpu_ticks': valid[-1]['self_cpu_ticks'] - valid[0]['self_cpu_ticks'] if stable else None,
+                       'waited_child_cpu_ticks': valid[-1]['waited_child_cpu_ticks'] - valid[0]['waited_child_cpu_ticks'] if stable else None,
+                       'observed_helper_count_lower_bound': len(helpers),
+                       'observed_helper_instances': sorted(helpers),
+                       'sampled_max_helper_concurrency': max((len(row['sampled_helpers']) for row in valid), default=0),
+                       'sampled_max_threads': max((row['threads'] for row in valid), default=0)}
+    return result
+
+
+def pss_summary(samples):
+    result = {}
+    for name in ('root', 'data_slice', 'aggregate'):
+        members = ('root', 'data_slice') if name == 'aggregate' else (name,)
+        values = [sum(row['groups'][member]['process_totals_bytes']['Pss'] for member in members)
+                  for row in samples if all(row['groups'][member]['process_totals_bytes'].get('Pss') is not None
+                                            for member in members)]
+        result[name] = {'valid_samples': len(values), 'total_samples': len(samples),
+                       'mean_bytes': sum(values) / len(values) if values else None,
+                       'sampled_peak_bytes': max(values) if values else None}
+    return result
+
+def sample_guard_groups(label, seconds, event_kind=None, period=.02, *, process_samples=False, pss_period=None):
     from memory_helpers import cgroup_memory
     root = Path('/proc/1/root/sys/fs/cgroup')
     pids = {'root': int(Path('/run/ram-rescue-guard/state/path-guard.pid').read_text())}
@@ -49,7 +105,11 @@ def sample_guard_groups(label, seconds, event_kind=None, period=.02):
         if not event.exists():
             raise RuntimeError('VM event source missing')
     samples = []
+    pss_samples = []
     started = time.monotonic()
+    next_pss = started
+    if pss_period is not None and pss_period < period:
+        raise ValueError('PSS sampling must not be faster than accounting sampling')
     next_event = started
     emitted_events = 0
     while True:
@@ -59,7 +119,14 @@ def sample_guard_groups(label, seconds, event_kind=None, period=.02):
             cpu = {key: int(value) for key, value in
                    (line.split() for line in (group / 'cpu.stat').read_text().splitlines())}
             values[name] = {'cpu': cpu, 'memory_bytes': int((group / 'memory.current').read_text())}
-        samples.append({'time': now, 'groups': values})
+        sample = {'time': now, 'groups': values}
+        if process_samples:
+            sample['processes'] = {name: process_counters(pid) for name, pid in pids.items()}
+        samples.append(sample)
+        if pss_period is not None and now >= next_pss:
+            pss_samples.append({'time': time.monotonic(), 'groups': {
+                name: cgroup_memory(groups[name]) for name in ('root', 'data_slice')}})
+            next_pss = started + (int((now - started) / pss_period) + 1) * pss_period
         if now - started >= seconds:
             break
         if event is not None and now >= next_event:
@@ -85,6 +152,15 @@ def sample_guard_groups(label, seconds, event_kind=None, period=.02):
         # The parent slice includes both data services; never add it to its children.
         members = ['root', 'data_slice'] if name == 'aggregate' else [name]
         result['groups'][name] = resource_summary(samples, members)
+    if process_samples:
+        result['process_cost'] = process_cost_summary(samples, pids)
+        result['process_clock_ticks_per_second'] = os.sysconf('SC_CLK_TCK')
+        result['helper_count_scope'] = '20ms observed live helper instances, lower bound; waited-child CPU uses cumulative proc ticks'
+    if pss_period is not None:
+        result['pss_period_seconds'] = pss_period
+        result['pss_samples'] = pss_samples
+        result['pss'] = pss_summary(pss_samples)
+        result['memory_peak_scope'] = 'cgroup memory.peak is service-lifetime; memory_sampled_peak and PSS sampled peaks are phase-local'
     if label == 'recovery':
         files = {'root': Path('/run/ram-rescue-guard/state/path-events.jsonl')}
         files.update({name: Path('/run/ram-rescue-data') / name / 'state/path-events.jsonl'

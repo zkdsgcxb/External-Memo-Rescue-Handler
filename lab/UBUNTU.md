@@ -1,5 +1,7 @@
 # 完整 Ubuntu Server 实验
 
+当前版本从干净仓库复现使用 `python3 lab/reproduce.py --run`，详见 [当前构建流程](README.md#从干净仓库运行当前版本)。这一路径从公开签名 Ubuntu Server 24.04 根归档创建全新的 USB/LVM 种子，使用当前 Linux 7.0、当前 C++ 控制器和独立只读观察器；无需作者已安装救援包、私有登记或旧 Git 历史。`--prepare-only` 可先生成输入，分别验收完整集成和 P0 失败停机。新入口不执行下文固定版本的 Python 恢复实现。
+
 本文保留 2026-09-24 的 Ubuntu/Python 集成方法和实验数字。旧 `build.py`、`auto_run.py` 等入口现在转交 [固定 Git 版本](README.md#历史实验复现)，不能将下面的 Linux 6.8 记录理解为当前原生运行时的支持范围。当前 C++ / Linux 7 完整 Ubuntu 验收见 [迁移报告](../research/2026-10-02/CPP-VM-VALIDATION.md)。
 
 在原最小 guest 之外增加 Ubuntu Server 24.04 LTS 用户空间，PID 1 使用真正的 systemd，运行 journald、D-Bus 和由 systemd 管理的写入服务。根目录仍位于虚拟 USB → DM multipath → LVM → ext4 路径上。不是在健康 Ubuntu 中额外挂载一块故障数据盘。

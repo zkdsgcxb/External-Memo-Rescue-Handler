@@ -13,6 +13,7 @@
 #include <string_view>
 #include <utility>
 #include <vector>
+#include <sys/stat.h>
 
 namespace rescue {
 using Json = nlohmann::json;
@@ -42,7 +43,13 @@ std::string trim(std::string);
 std::vector<std::string> split_words(std::string_view);
 std::string canonical_json(const Json&);
 std::string digest(const Json&);
+Json parse_json_input(std::string_view, std::size_t limit = log_limit);
 Json load_json(const fs::path&);
+// Privileged inputs are opened through held, root-owned directory descriptors.
+// No symlink component or non-root writable parent is accepted.
+bool storage_metadata_trusted(const struct stat&, bool directory, uid_t owner);
+Fd trusted_directory(const fs::path&, bool create = false);
+Json load_trusted_json(const fs::path&);
 void atomic_json(const fs::path&, const Json&);
 std::string table_digest(const Json& targets);
 Json describe(Json snapshot);

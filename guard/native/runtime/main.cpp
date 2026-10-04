@@ -22,10 +22,10 @@ int main(int argc, char** argv) {
                 path = argv[++i];
             } else throw std::invalid_argument("Unknown or incomplete argument: " + arg);
         }
-        if (mode == "maintain" && !record.empty() && config.empty()) maintain(load_json(record), taking_over);
-        else if (!config.empty() && record.empty() && (mode == "run" || mode == "takeover")) run(load_json(config), taking_over);
+        if (mode == "maintain" && !record.empty() && config.empty()) maintain(load_trusted_json(record), taking_over);
+        else if (!config.empty() && record.empty() && (mode == "run" || mode == "takeover")) run(load_trusted_json(config), taking_over);
         else if (mode == "activate" && !config.empty() && record.empty()) {
-            activate(load_json(config));
+            activate(load_trusted_json(config));
             std::cout << "RAM rescue stable root mapping prepared\n";
         } else throw std::invalid_argument("Mode and input path do not match");
         return 0;

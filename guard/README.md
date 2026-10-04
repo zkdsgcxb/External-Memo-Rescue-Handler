@@ -2,11 +2,13 @@
 
 日常管理使用 [统一后台维护](MANAGER.md)。入口会识别当前根盘 owner，并自动管理登记的数据映射；本页说明内部的根盘启动准备流程。
 
-独立 USB 数据分区的实验扩展见 [DM 恢复配套工具](DATA.md)：复用本目录的恢复事务，只管理明确登记的已有数据映射。
+独立 USB 数据分区见 [DM 恢复配套工具](DATA.md)：复用本目录的恢复事务，只管理明确登记的已有数据映射。普通 Ubuntu 可安装离线包独立维护数据盘，无需先进入本页的根盘保护启动。
 
 目标是当前 Ubuntu 7.0、原 USB SSD、线性 LVM/ext4：在启动时先建立稳定的 DM 映射，再激活原有根卷与 shared 卷；运行中由 Guard 核验原盘并接回。这条启动路径不分区、不创建 PV/VG/LV、不格式化，也不在线改接已经挂载的根卷。
 
-2026-10-03 状态：重启后已确认本机实际运行 C++ Guard，根卷/shared 稳定映射、挂载和救援服务通过基础核验，见 [首次 C++ 保护启动](../research/2026-10-03/HOST-CPP-BOOT.md)。新增 P0 启动失败与救援会话策略已完成 QEMU 失败矩阵 7/7、完整集成 36/36；**候选已验证，实机激活待下次启动**，见 [P0 报告](../research/2026-10-03/P0-BOOT-AND-RESCUE.md)。本轮没有实机拔插、睡眠唤醒或人工救援登录验收，块层 WARNING 仍待处理。
+此前实机记录（2026-10-03）：重启后已确认本机实际运行 C++ Guard，根卷/shared 稳定映射、挂载和救援服务通过基础核验，见 [首次 C++ 保护启动](../research/2026-10-03/HOST-CPP-BOOT.md)。新增 P0 启动失败与救援会话策略已完成 QEMU 失败矩阵 7/7、完整集成 36/36；**候选已验证，实机激活待下次启动**，见 [P0 报告](../research/2026-10-03/P0-BOOT-AND-RESCUE.md)。本轮没有实机拔插、睡眠唤醒或人工救援登录验收，块层 WARNING 仍待处理。
+
+本轮新增权限限制、可信安装入口和普通数据盘独立运行的测试与部署边界见 [可信安装说明](../research/2026-10-04/INSTALLATION-AND-TRUST.md) 和 [普通 Ubuntu 数据盘验收](../research/2026-10-04/STANDALONE-DATA.md)。这些新构建不自动替换当前实机 RAM owner。
 
 此前实机根卷/shared 短断恢复与 EFI 处理记录见 [全面检查](../research/2026-09-30/HOST-POST-RECONNECT-AUDIT.md)、[接入记录](../research/2026-09-30/HOST-GUARD.md) 和 [EFI 处理报告](../research/2026-10-01/EFI-RECOVERY.md)；日常 EFI 维护见 [EFI 使用与维护](EFI.md)。
 
@@ -33,40 +35,43 @@
 
 ## 构建与安装
 
-构建器只打包 C++ 运行时及完整共享库闭包，不提供 Python 自动恢复选项。历史对照通过 [固定版本实验入口](../lab/README.md#历史实验复现) 提取。构建不升级当前会话。源码、私有登记、镜像和实验记录都留在项目工作区。下面路径是示例，已有目录不会被构建器覆盖。
+构建器只打包 C++ 运行时及完整共享库闭包，不提供 Python 自动恢复选项。源码、私有登记、镜像和实验记录留在工作区，构建不升级当前会话。特权管理代码须先按 [可信安装说明](../research/2026-10-04/INSTALLATION-AND-TRUST.md) 通过审阅后的离线包安装，再从 root 所有的 `/usr/bin/rescue-guard-admin` 执行，不直接提权运行用户可写工作区中的脚本。
 
 ```bash
-# 读取已安装救援包的登记，再以实际盘内元数据核验；只写私有构建资料。
-pkexec python3 guard/enroll.py --output "$PWD/lab/work/host-enrollment" --uid "$(id -u)" --gid "$(id -g)"
-python3 guard/build.py --enrollment lab/work/host-enrollment/enrollment.json --work-dir lab/work/host-build
-
-# 安装前必须提供实际通过且内核/源码哈希相同的标准 Ubuntu 启动与重接报告。
-python3 guard/install.py --build-dir lab/work/host-build --enrollment lab/work/host-enrollment/enrollment.json --vm-report lab/work/<vm-run>/report.json
-# 审阅生成的菜单后，通过本机系统认证增加可选入口。
-pkexec python3 guard/install.py --install --build-dir "$PWD/lab/work/host-build" --enrollment "$PWD/lab/work/host-enrollment/enrollment.json" --vm-report "$PWD/lab/work/<vm-run>/report.json"
+# 固定管理入口只读登记，私有输出交回当前操作者用于普通用户构建。
+sudo /usr/bin/rescue-guard-admin enroll-root \
+  --output "$PWD/lab/work/host-enrollment" --uid "$(id -u)" --gid "$(id -g)"
+python3 guard/build.py --enrollment lab/work/host-enrollment/enrollment.json \
+  --work-dir lab/work/host-build
 ```
 
-安装器重新核对当前磁盘布局、原内核/initrd/LVM 配置、候选镜像与测试源码。安装记录和原 GRUB 配置备份位于 `/var/lib/ram-rescue-guard`；生成新配置并检查语法后才替换 GRUB 配置。安装不会重启，也不使当前会话立即获得保护。
+先取得与候选内核、源码及基础工具相匹配的完整 Ubuntu VM 通过报告，再按可信安装说明生成 bundle、核对 SHA256 并封存到 `/var/lib/ram-rescue-candidates/<SHA256>/`。固定入口仅接受这些 root 私有、受核验的输入。下面是已封存候选的只读预检，路径占位符须替换为实际封存结果：
 
-如果安装后这些文件未被其他升级改动，可运行 `pkexec python3 guard/install.py --rollback` 撤除新增入口并恢复原菜单。若文件已有变化，回滚器拒绝覆盖，需按当前状态重新生成菜单。无论是否撤除文件，原普通启动项都作为现场退路保留。
+```bash
+sudo /usr/bin/rescue-guard-admin install-image \
+  --build-dir /var/lib/ram-rescue-candidates/已审阅SHA256 \
+  --enrollment /var/lib/ram-rescue-candidates/已审阅SHA256/enrollment.json \
+  --vm-report /var/lib/ram-rescue-candidates/已审阅SHA256/vm_report.json
+# 审阅预检后，对同一组参数加 --install 才写入可选启动项。
+```
+
+安装器重新核对当前磁盘布局、原内核/initrd/LVM 配置、候选镜像和测试源码。收据及原 GRUB 配置备份位于 `/var/lib/ram-rescue-guard`；生成新配置并检查语法后才替换 GRUB 配置。安装不重启，也不使当前会话立即获得保护。
+
+若安装后相关文件未被其他升级改动，可由固定入口执行 `sudo /usr/bin/rescue-guard-admin install-image --rollback` 撤除新增入口并恢复原菜单。文件已经变化时拒绝覆盖，需根据当前状态重新生成菜单。原普通启动项始终作为现场退路保留。
 
 ## 升级已有保护入口
 
-已有安装使用 `upgrade.py`，不重复运行首次安装器。先重新登记当前原盘、构建新镜像，并取得匹配本次源码、内核与基础工具包的通过报告。登记支持当前根卷已位于保留稳定映射之上的情况，只读检查映射与原盘身份，不在线改接根卷。
+已有安装使用固定入口的 `upgrade-image` 子命令，不重复运行首次安装器。先重新登记当前原盘、构建新镜像，并取得匹配本次源码、内核与基础工具包的通过报告。登记支持当前根卷已位于保留稳定映射之上的情况，只读检查映射与原盘身份，不在线改接根卷。
 
 ```bash
-# 只读预检；已有安装资料和设备查询需要本机管理员认证。
-pkexec python3 "$PWD/guard/upgrade.py" --build-dir "$PWD/lab/work/host-build" \
-  --enrollment "$PWD/lab/work/host-enrollment/enrollment.json" \
-  --vm-report "$PWD/lab/work/<vm-run>/report.json"
-
-# 写入前再次核验，备份旧镜像与收据，原子替换同名保护 initrd。
-pkexec python3 "$PWD/guard/upgrade.py" --install --build-dir "$PWD/lab/work/host-build" \
-  --enrollment "$PWD/lab/work/host-enrollment/enrollment.json" \
-  --vm-report "$PWD/lab/work/<vm-run>/report.json"
+sudo /usr/bin/rescue-guard-admin upgrade-image \
+  --build-dir /var/lib/ram-rescue-candidates/已审阅SHA256 \
+  --enrollment /var/lib/ram-rescue-candidates/已审阅SHA256/enrollment.json \
+  --vm-report /var/lib/ram-rescue-candidates/已审阅SHA256/vm_report.json
+# 审阅预检后，对同一组参数加 --install；不从工作区直接提供特权输入。
 ```
 
-升级证据和回退副本位于 `/var/lib/ram-rescue-guard/upgrades/`。升级器只更新保护镜像与安装收据，失败尝试恢复旧文件；未完成事务会阻止下一次升级。GRUB 菜单、普通 initrd、rEFInd 和当前 RAM owner 均保留。不要同时调用旧卸载入口。已经安装统一管理工具时，同时按 [管理包升级](MANAGER.md#升级管理包) 更新下一次启动使用的管理程序。
+升级证据和回退副本位于 `/var/lib/ram-rescue-guard/upgrades/`。升级器只更新保护镜像与安装收据，失败尝试恢复旧文件；未完成事务会阻止下一次升级。GRUB 菜单、普通 initrd、rEFInd 和当前 RAM owner 均保留。不要同时调用旧卸载入口。已经安装统一管理工具时，同时按 [管理包升级](MANAGER.md#升级管理包) 更新下一次启动使用的管理程序。该冷升级可以保留登记，但全部数据映射须已正常退出且控制器 inactive；当前 owner 和 RAM 不热替换。完整旧版本可经逐文件与运行包核验复用，支持 A→B→A 冷回退。
 
 **重启进入原保护项后，新 C++ 镜像才生效。** 当前协议不提供热升级交接：停止旧 owner 会关闭无路径排队并终结事务，新进程会拒绝沿用这个事务。不能通过删除日志、换锁路径或重启服务绕过它。
 

@@ -1,0 +1,111 @@
+{
+  "schema": 1,
+  "date": "2026-10-04",
+  "scope": "Unprivileged native tests; no block devices, QEMU, or live deployment",
+  "checks": {
+    "admission": 37,
+    "controller": 13,
+    "core": 60,
+    "storage_and_input_security": 33
+  },
+  "checks_total": 143,
+  "passed": true,
+  "release": {
+    "compiler": "g++ (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0",
+    "flags": [
+      "-std=c++17",
+      "-O2",
+      "-g",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-pedantic",
+      "-pthread",
+      "-fPIE",
+      "-fstack-protector-strong",
+      "-D_FORTIFY_SOURCE=3",
+      "-I",
+      "/workspace/Project/External-Memo-Rescue-Handler/guard/native/vendor"
+    ],
+    "link_flags": [
+      "-pie",
+      "-Wl,-z,relro,-z,now,-z,noexecstack"
+    ],
+    "hardening": {
+      "pie": true,
+      "relro": true,
+      "bind_now": true,
+      "non_executable_stack": true,
+      "stack_protector": true,
+      "fortified_calls": true
+    },
+    "binary_bytes": 806240,
+    "binary_sha256": "479c8ba7e2445ae3fbb99d58e1b79d836170c6fe463953ca636cde9857ee8718",
+    "sanitizers": false,
+    "fuzz_cases": 10000
+  },
+  "asan_ubsan": {
+    "compiler": "g++ (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0",
+    "flags": [
+      "-std=c++17",
+      "-O2",
+      "-g",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-pedantic",
+      "-pthread",
+      "-fPIE",
+      "-fstack-protector-strong",
+      "-D_FORTIFY_SOURCE=3",
+      "-I",
+      "/workspace/Project/External-Memo-Rescue-Handler/guard/native/vendor",
+      "-O1",
+      "-fsanitize=address,undefined",
+      "-fno-omit-frame-pointer",
+      "-Wno-error=maybe-uninitialized"
+    ],
+    "link_flags": [
+      "-pie",
+      "-Wl,-z,relro,-z,now,-z,noexecstack"
+    ],
+    "hardening": {
+      "pie": true,
+      "relro": true,
+      "bind_now": true,
+      "non_executable_stack": true,
+      "stack_protector": true,
+      "fortified_calls": true
+    },
+    "binary_bytes": 27257256,
+    "binary_sha256": "b06d1982e713a797501d5fa4e0bf0f2b449b7e53cf97e7d7076f013000def5cc",
+    "sanitizers": true,
+    "fuzz_cases": 10000
+  },
+  "production_sources": {
+    "guard/native/runtime/admission.cpp": "7018b3e51cba1cea28ce4678f753c5422e7ac43a320ea8c677c708386412e8d1",
+    "guard/native/runtime/admission.hpp": "d8f31f68a49c40dc4add300e47a39adc9a8ab129e4f6723473b9ce2c72fa8388",
+    "guard/native/runtime/admission_test.cpp": "ff0693e240c6b600e40bd1acd240925a72a069372fbab3ad16b89fd69b86953c",
+    "guard/native/runtime/boot.cpp": "50d46e70273622e202bfa00c420a93e12b56dcd1af60a76cd318809b568cc1ca",
+    "guard/native/runtime/controller.cpp": "91ca083677da9d080dd697774f70158e9a2f43fe33390c223875296b0e2dfc0e",
+    "guard/native/runtime/controller.hpp": "85a14171211e212d0f4edc1d838a273de4794638aa587b53bef9479467047122",
+    "guard/native/runtime/controller_test.cpp": "f6e65b6dd076bf69ee2667845c583d3f9d23b1c9ebf9a845c8add02200829d0c",
+    "guard/native/runtime/core.cpp": "d8bf96b8ae4c56118367a8aeae467002ed038536f91ba8d678dc26c3d7db2c26",
+    "guard/native/runtime/core.hpp": "e5a12beecf4a8df07aeb2166e1c5cd9ae34e46195059034a652d77fdf0b35099",
+    "guard/native/runtime/core_test.cpp": "9fa86673fe234a48e51125224a3559f5ef03bd7280b7b8aec20e6b19cb07b46d",
+    "guard/native/runtime/input_fuzz.cpp": "d2620d8fdea502d7780293fc493e3908035b57ee5e29eb15a8bb95c1afd96716",
+    "guard/native/runtime/main.cpp": "48234dcc77b8dd9a84197fc673ca81d2469309fa410e3fded012d5967792e919",
+    "guard/native/runtime/security_test.cpp": "2efde6baa4ca1c88a1a12319d8dd7ca5ea0d32409b075aa480735762f3ff9abd"
+  },
+  "raw_logs": [
+    "lab/work/roadmap-native-final.log",
+    "lab/work/roadmap-native-final-sanitizers.log"
+  ],
+  "limits": [
+    "Deterministic seeded mutation testing is not exhaustive coverage or a vulnerability proof.",
+    "Systemd restrictions require the separately recorded complete recovery and takeover VM matrix.",
+    "ASan/UBSan artifacts are test-only; no CPU or RAM performance result is inferred.",
+    "GCC13 libstdc++ regex maybe-uninitialized warnings are visible but not fatal only in sanitizer builds."
+  ],
+  "final_runtime_note": "Data startup admission reads the single host fstab supplied at /etc/rescue/host-fstab; no CAP_SYS_PTRACE."
+}

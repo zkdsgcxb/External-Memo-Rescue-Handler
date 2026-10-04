@@ -36,7 +36,62 @@ class ProductionIntegrationProbe(CppExperimentProbe):
     def activate(self):
         # Call the shipped manager install. The comparison observer's activate
         # method injects a command override and is intentionally bypassed here.
-        return ProductionUnifiedProbe.activate(self)
+        result = ProductionUnifiedProbe.activate(self)
+        result['rescue_logging'] = self.start_rescue_logging()
+        return result
+
+    def start_rescue_logging(self):
+        # The disposable Ubuntu seed has no manual rescue installation. Use
+        # the shipped units plus the real protected-boot prepare override;
+        # the VM credential stays locked (login tests have a separate fixture).
+        private = self.ROOT / 'etc/ram-rescue-demo'
+        private.mkdir(mode=0o700, exist_ok=True)
+        shadow = private / 'shadow'
+        shadow.write_text('root:!:20000:0:99999:7:::\nrescue:!:20000:0:99999:7:::\n')
+        shadow.chmod(0o600)
+        for name, digest in EXPERIMENT['rescue_unit_sha256'].items():
+            source = Path('/opt/vmprobe') / name
+            if hashlib.sha256(source.read_bytes()).hexdigest() != digest:
+                raise RuntimeError('Rescue unit fixture source differs')
+            target = self.ROOT / 'run/systemd/system' / name
+            target.write_bytes(source.read_bytes())
+            target.chmod(0o644)
+        self.host('/usr/bin/systemctl', 'daemon-reload')
+        self.host('/usr/bin/systemctl', 'start', 'ram-rescue-log.service')
+        deadline = time.monotonic() + 5
+        logfile = Path('/var/log/kernel-live.log')
+        while not logfile.exists():
+            if time.monotonic() > deadline:
+                raise RuntimeError('Restricted RAM logger failed to write initial snapshot')
+            time.sleep(.05)
+        return self.rescue_logging_integrity()
+
+    def rescue_logging_integrity(self):
+        state = self.host('/usr/bin/systemctl', 'show', 'ram-rescue-log.service',
+                          '-p', 'ActiveState', '-p', 'MainPID', '-p', 'CapabilityBoundingSet',
+                          '-p', 'NoNewPrivileges', '-p', 'ProtectSystem')['stdout']
+        fields = dict(line.split('=', 1) for line in state.splitlines() if '=' in line)
+        if (fields.get('ActiveState') != 'active' or fields.get('CapabilityBoundingSet') != 'cap_syslog'
+                or fields.get('NoNewPrivileges') != 'yes' or fields.get('ProtectSystem') != 'strict'):
+            raise RuntimeError('Restricted RAM logger is not active with the shipped policy: ' + state)
+        for name, digest in EXPERIMENT['rescue_unit_sha256'].items():
+            path = self.ROOT / 'run/systemd/system' / name
+            if hashlib.sha256(path.read_bytes()).hexdigest() != digest:
+                raise RuntimeError('Rescue logging unit changed in the guest')
+        return {'verified': True, 'service': fields,
+                'namespace': self.read_namespace_policy(int(fields['MainPID']), ['/var/log']),
+                'log_bytes': Path('/var/log/kernel-live.log').stat().st_size}
+
+    @staticmethod
+    def read_namespace_policy(pid, writable):
+        rows = [line.split() for line in Path('/proc/' + str(pid) + '/mountinfo').read_text().splitlines()]
+        selected = {path: [row[5].split(',') for row in rows if row[4] == path]
+                    for path in ['/', *writable]}
+        if not selected['/'] or any('ro' not in options for options in selected['/']):
+            raise RuntimeError('The actual controller/log root is not read-only')
+        if any(not selected[path] or any('rw' not in options for options in selected[path]) for path in writable):
+            raise RuntimeError('The actual service namespace lacks its required writable mounts')
+        return {'verified': True, 'mount_options': selected}
 
     def integration_integrity(self):
         import native_payload
@@ -58,12 +113,15 @@ class ProductionIntegrationProbe(CppExperimentProbe):
             units[name] = {'sha256': actual, 'text': path.read_text()}
         names = ['ram-rescue-guard.service'] + [
             'ram-rescue-maintain@' + item['name'] + '.service' for item in self.specs]
-        dropins = {}
+        dropins, namespaces = {}, {}
         for name in names:
             result = self.host('/usr/bin/systemctl', 'show', name, '-p', 'DropInPaths', '--value')
             if result['stdout'].strip():
                 raise RuntimeError('Unexpected command/unit override: ' + name)
             dropins[name] = result['stdout'].strip()
+            pid = int(self.host('/usr/bin/systemctl', 'show', name, '-p', 'MainPID', '--value')['stdout'])
+            if pid:
+                namespaces[name] = self.read_namespace_policy(pid, ['/run', '/dev'])
         if Path('/opt/manager').resolve() != Path('/opt/guard-runtime'):
             raise RuntimeError('Manager alias does not select the production runtime')
         entrypoint = Path('/opt/manager/maintain')
@@ -71,20 +129,32 @@ class ProductionIntegrationProbe(CppExperimentProbe):
             raise RuntimeError('Manager entrypoint is not the packaged exec wrapper')
         return {'verified': True, 'native_manifest': manifest, 'units': units,
                 'unit_dropins': dropins, 'manager_alias': str(Path('/opt/manager').resolve()),
+                'namespaces': namespaces,
                 'entrypoint': entrypoint.read_text(), 'actual_controllers': self.runtime_integrity(require_all=False)}
 
     def mount_registered(self):
         result = super().mount_registered()
         result['production_integration'] = self.integration_integrity()
+        result['rescue_logging'] = self.rescue_logging_integrity()
         import rescue_session_probe
         result['rescue_sessions'] = rescue_session_probe.run()
         return result
 
     def logs(self):
         result = super().logs()
-        result['production_integration'] = self.integration_integrity()
-        import rescue_session_probe
-        result['rescue_sessions'] = rescue_session_probe.run()
+        result['manager_journal'] = self.host('/usr/bin/journalctl', '-b', '--no-pager',
+            '-u', 'ram-rescue-manager.service', '-u', 'ram-rescue-maintain@*.service', check=False)
+        result['rescue_journal'] = self.host('/usr/bin/journalctl', '-b', '--no-pager',
+            '-u', 'ram-rescue-prepare.service', '-u', 'ram-rescue-log.service', check=False)
+        try:
+            result['production_integration'] = self.integration_integrity()
+            result['rescue_logging'] = self.rescue_logging_integrity()
+            import rescue_session_probe
+            result['rescue_sessions'] = rescue_session_probe.run()
+        except Exception as error:
+            # Preserve the original service failure before enforcing final
+            # integrity assertions; a broken install must remain diagnosable.
+            result['integration_error'] = str(error)
         return result
 
 UnifiedProbe = ProductionIntegrationProbe
@@ -148,21 +218,37 @@ def compare_payloads(folder, profile, native):
             'scope': 'image regular-file bytes; du describes the staging filesystem, not measured guest RAM; do not add to PSS/cgroup memory'}
 
 
-def create_initrd(folder, original, enrollment, binary):
+def create_initrd(folder, original, enrollment, binary, *, base_rescue_dir=None, historical_comparison=False):
     combined = folder / 'production-integration-guest.py'
     combined.write_text('\n'.join([
-        cpp.unified.GUEST.read_text(), 'ProductionUnifiedProbe = UnifiedProbe',
+        cpp.unified.GUEST.read_text().replace('from path_guard import table', 'from dm_observer import table'),
+        'ProductionUnifiedProbe = UnifiedProbe',
         (BASE / 'guest/mount_probe.py').read_text(), 'SelectedProbe = MountProbe',
         cpp.GUEST.read_text(), GUEST,
     ]) + '\n')
     # Observer-only authentication tests and the matching autofs module are
     # added here. Controller commands still use production unit templates.
     hook = ('\ncp /opt/cpp-experiment.json "$TOOLS/opt/vmprobe/cpp-experiment.json"\n'
-            'cp /opt/rescue-session-test/*.py "$TOOLS/opt/vmprobe/"\n'
+            'cp /opt/rescue-session-test/* "$TOOLS/opt/vmprobe/"\n'
             'insmod /opt/cpp-autofs.ko\n')
-    observer, observer_revision = cpp.frozen_python(folder)
-    with cpp.compose_sources(observer, combined, hook, manager=REPO):
-        image = cpp.unified.create_initrd(folder, original)
+    # The current acceptance path uses only the checkout's read-only observer.
+    # Historical releases remain available solely for explicit language A/B runs.
+    data_guest = folder / 'current-data-observer.py'
+    data_guest.write_text(cpp.data.GUEST.read_text().replace(
+        'from dm_monitor import DeviceMapper', 'from dm_observer import DeviceMapper').replace(
+        'from path_guard import table', 'from dm_observer import table'))
+    previous_guest, previous_root = cpp.data.GUEST, cpp.boot.GUEST
+    try:
+        cpp.data.GUEST = data_guest
+        cpp.boot.GUEST = cpp.boot.GUEST.replace('    import path_guard\n', '').replace(
+            'from dm_monitor import DeviceMapper', 'from dm_observer import DeviceMapper, checked_snapshot').replace(
+            '    path_guard.configure(config)\n', '').replace(
+            'path_guard.checked_snapshot(mapper)', 'checked_snapshot(mapper, config)')
+        with cpp.compose_sources(REPO, combined, hook, manager=REPO):
+            image = cpp.unified.create_initrd(folder, original)
+    finally:
+        cpp.data.GUEST, cpp.boot.GUEST = previous_guest, previous_root
+    observer_revision = 'current-checkout-read-only'
 
     overlay = folder / 'production-overlay'
     archive_directory = overlay / 'opt/ram-rescue-guard'
@@ -170,10 +256,14 @@ def create_initrd(folder, original, enrollment, binary):
     authentication = overlay / 'opt/rescue-session-test'
     authentication.mkdir()
     shutil.copyfile(BASE / 'guest/rescue_session_probe.py', authentication / 'rescue_session_probe.py')
+    shutil.copyfile(BASE / 'guest/dm_observer.py', authentication / 'dm_observer.py')
     shutil.copyfile(REPO / 'ram-rescue-demo/tests/smoke.py', authentication / 'rescue_session_smoke.py')
+    rescue_units = ['ramrescue.slice', 'ram-rescue-prepare.service', 'ram-rescue-log.service']
+    for name in rescue_units:
+        shutil.copyfile(REPO / 'ram-rescue-demo/src' / name, authentication / name)
     profile = json.loads(enrollment.read_text())
     payload = folder / 'production-payload'
-    base_checksum = production_build.payload(profile, payload, native_binary=binary)
+    base_checksum = production_build.payload(profile, payload, native_binary=binary, base_rescue_dir=base_rescue_dir)
     archive = archive_directory / 'tools.tar.gz'
     archive_payload(payload, archive)
     checksum = cpp.boot.sha256(archive)
@@ -207,9 +297,13 @@ def create_initrd(folder, original, enrollment, binary):
         'template_sha256': {path.name: cpp.boot.sha256(path) for path in sorted(templates.iterdir()) if path.is_file()},
         'unit_sha256': {'root': cpp.boot.sha256(templates / 'ram-rescue-guard.service'),
                        'manager': hashlib.sha256(manage.render_controller().encode()).hexdigest()},
+        'rescue_unit_sha256': {name: cpp.boot.sha256(authentication / name) for name in rescue_units},
         'native_boot_activation': True, 'command_overrides': False,
     }
-    (folder / 'payload-comparison.json').write_text(json.dumps(compare_payloads(folder, profile, payload), indent=2) + '\n')
+    inventory = compare_payloads(folder, profile, payload) if historical_comparison else {
+        'cpp_image': payload_inventory(payload)[0], 'historical_comparison': False,
+        'scope': 'current image file inventory; not process PSS or cgroup memory'}
+    (folder / 'payload-comparison.json').write_text(json.dumps(inventory, indent=2) + '\n')
     (overlay / 'opt/cpp-experiment.json').write_text(json.dumps(manifest, indent=2) + '\n')
     module = Path(subprocess.check_output(
         ['modinfo', '-k', profile['guard']['kernel_release'], '-F', 'filename', 'autofs4'], text=True).strip())
@@ -223,7 +317,10 @@ def source_hashes(binary):
     sources = cpp.source_hashes(binary, 'cpp')
     sources.update({str(path.relative_to(REPO)): cpp.boot.sha256(path) for path in [
         Path(__file__).resolve(), REPO / 'ram-rescue-demo/src/rescue.py',
-        BASE / 'guest/rescue_session_probe.py', REPO / 'ram-rescue-demo/tests/smoke.py',
+        BASE / 'guest/rescue_session_probe.py', BASE / 'guest/dm_observer.py',
+        REPO / 'ram-rescue-demo/tests/smoke.py',
+        *[REPO / 'ram-rescue-demo/src' / name for name in (
+            'ramrescue.slice', 'ram-rescue-prepare.service', 'ram-rescue-log.service')],
         REPO / 'ram-rescue-demo/build.py', *production_build.session_builder().SOURCES,
         *sorted((REPO / 'guard').glob('*.py')), *sorted((REPO / 'guard/admin').glob('*.py')),
         *sorted(path for path in (REPO / 'guard/integration').rglob('*') if path.is_file()),
@@ -237,6 +334,9 @@ def main():
     parser.add_argument('--build-dir', type=Path, default=cpp.WORK / 'hb-build-v4')
     parser.add_argument('--enrollment', type=Path, default=cpp.WORK / 'hb-enroll-0930/enrollment.json')
     parser.add_argument('--seed-report', type=Path, default=cpp.WORK / 'bootevo-0930-173036-39819/report.json')
+    parser.add_argument('--base-rescue-dir', type=Path, help='Explicit generic rescue bundle; otherwise rebuild from current checkout')
+    parser.add_argument('--historical-comparison', action='store_true',
+                        help='Optional old Python packaging inventory; requires full Git history and old installed bundle')
     args = parser.parse_args()
     if not args.binary.is_file():
         parser.error('Build the native runtime before integration testing')
@@ -253,7 +353,9 @@ def main():
     with (folder / 'qemu.log').open('w') as log, (folder / 'qmp.jsonl').open('w') as qlog:
         try:
             overlay = cpp.data.create_images(folder, seed)
-            image, manifest = create_initrd(folder, build_dir / 'initrd.img', args.enrollment, args.binary)
+            image, manifest = create_initrd(folder, build_dir / 'initrd.img', args.enrollment, args.binary,
+                                             base_rescue_dir=args.base_rescue_dir,
+                                             historical_comparison=args.historical_comparison)
             report['experiment_manifest'] = manifest
             report['payload_comparison'] = json.loads((folder / 'payload-comparison.json').read_text())
             report['runtime_payload_sha256'] = manifest['runtime_payload_sha256']
@@ -272,11 +374,14 @@ def main():
                 report['mounted']['production_integration']['actual_controllers']['controllers']) == 3
             report['checks']['no_controller_command_overrides'] = not any(
                 report['mounted']['production_integration']['unit_dropins'].values())
+            report['checks']['three_actual_controller_namespaces_restricted'] = len(
+                report['mounted']['production_integration']['namespaces']) == 3
             for stage, value in [('before_recovery', report['mounted']),
                                  ('after_recovery', report['logs'])]:
                 auth = value['rescue_sessions']
                 report['checks']['rescue_sessions_' + stage] = auth['passed']
                 report['checks']['rescue_session_fixture_removed_' + stage] = auth['temporary_root_removed']
+                report['checks']['restricted_rescue_logging_' + stage] = value['rescue_logging']['verified']
             report['passed'] = all(report['checks'].values())
         except BaseException:
             report['error'] = traceback.format_exc()

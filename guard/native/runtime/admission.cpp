@@ -57,19 +57,26 @@ bool matches(const std::string& value, const char* pattern) {
 std::string device_number(dev_t device) {
     return std::to_string(major(device)) + ":" + std::to_string(minor(device));
 }
-Json properties(const std::string& output) {
+} // namespace
+
+Json parse_blkid_output(const std::string& output) {
+    if (output.size() > 1024 * 1024 || output.find('\0') != std::string::npos)
+        refuse("Invalid or oversized blkid output");
     Json result = Json::object();
     std::istringstream input(output);
     for (std::string line; std::getline(input, line);) {
         if (!line.empty() && line.back() == '\r') line.pop_back();
         auto separator = line.find('=');
-        if (separator != std::string::npos)
-            result[line.substr(0, separator)] = line.substr(separator + 1);
+        if (separator != std::string::npos) {
+            const auto key = line.substr(0, separator);
+            if (key.empty() || result.contains(key)) refuse("Empty or duplicate blkid property");
+            result[key] = line.substr(separator + 1);
+        }
     }
     return result;
 }
-Json rows(const std::string& output, const std::string& key) {
-    auto document = Json::parse(output);
+Json parse_lvm_rows(const std::string& output, const std::string& key) {
+    auto document = parse_json_input(output, 1024 * 1024);
     Json result = Json::array();
     for (const auto& report : document.at("report")) {
         if (report.contains(key)) {
@@ -79,6 +86,7 @@ Json rows(const std::string& output, const std::string& key) {
     }
     return result;
 }
+namespace {
 void require_properties(const Json& actual, const Json& expected) {
     for (const auto& [key, value] : expected.items())
         if (!actual.contains(key) || actual.at(key) != value)
@@ -176,13 +184,13 @@ std::string Recovery::candidate_node() const {
 
 Json Recovery::admission_layout(const std::string& node) const {
     if (filesystem()) {
-        auto props = properties(run({"/sbin/blkid", "-p", "-o", "export", node}, 3));
+        auto props = parse_blkid_output(run({"/sbin/blkid", "-p", "-o", "export", node}, 3));
         require_properties(props, {{"TYPE", identity.at("fs_type")}, {"UUID", identity.at("fs_uuid")},
                                    {"PART_ENTRY_UUID", identity.at("partuuid")}});
         return {{"kind", "filesystem"}, {"fs_type", props.at("TYPE")},
                 {"fs_uuid", props.at("UUID")}, {"partuuid", props.at("PART_ENTRY_UUID")}};
     }
-    auto report = rows(run({"/sbin/lvm", "lvs", "--readonly", "--devices", node,
+    auto report = parse_lvm_rows(run({"/sbin/lvm", "lvs", "--readonly", "--devices", node,
         "--segments", "--reportformat", "json", "--units", "s", "--nosuffix", "-o",
         "lv_name,lv_uuid,vg_uuid,segtype,seg_start,seg_size,seg_pe_ranges"}, 3), "seg");
     Json normalized = Json::array();
@@ -211,10 +219,10 @@ std::string Recovery::verify() const {
         admission_layout(node);
         return node;
     }
-    auto props = properties(run({"/sbin/blkid", "-p", "-o", "export", node}, 3));
+    auto props = parse_blkid_output(run({"/sbin/blkid", "-p", "-o", "export", node}, 3));
     require_properties(props, {{"TYPE", "LVM2_member"}, {"UUID", identity.at("pv_uuid")},
                                {"PART_ENTRY_UUID", identity.at("partuuid")}});
-    auto pvs = rows(run({"/sbin/lvm", "pvs", "--readonly", "--devices", node,
+    auto pvs = parse_lvm_rows(run({"/sbin/lvm", "pvs", "--readonly", "--devices", node,
                         "--reportformat", "json", "-o", "pv_uuid,vg_uuid,vg_name"}, 3), "pv");
     if (pvs.size() != 1) refuse("Unexpected PV count.");
     const auto& pv = pvs.front();
@@ -599,7 +607,9 @@ void check_isolation(const std::string& node, const fs::path& path, const fs::pa
     const std::set<std::string> raw{node, "UUID=" + uuid, "PARTUUID=" + partuuid,
         "/dev/disk/by-uuid/" + uuid, "/dev/disk/by-partuuid/" + partuuid};
     std::optional<Json> labels;
-    std::istringstream fstab(read_text("/proc/1/root/etc/fstab", 4 * 1024 * 1024));
+    // The data service exposes this one host file read-only at admission.
+    // Dereferencing PID 1's root would require broad CAP_SYS_PTRACE rights.
+    std::istringstream fstab(read_text("/etc/rescue/host-fstab", 4 * 1024 * 1024));
     while (std::getline(fstab, line)) {
         auto fields = split_words(line);
         if (fields.empty() || fields[0][0] == '#') continue;
@@ -617,7 +627,7 @@ void check_isolation(const std::string& node, const fs::path& path, const fs::pa
                 std::transform(wanted.begin(), wanted.end(), wanted.begin(), ::tolower);
                 if (value == wanted) refuse("fstab selects the filesystem through its ambiguous UUID");
             } else {
-                if (!labels) labels = properties(runner({"/sbin/blkid", "-p", "-o", "export", node}, 3));
+                if (!labels) labels = parse_blkid_output(runner({"/sbin/blkid", "-p", "-o", "export", node}, 3));
                 const auto key = tag == "LABEL" ? "LABEL" : "PART_ENTRY_NAME";
                 if (labels->contains(key) && string_field(*labels, key) == value)
                     refuse("fstab selects the filesystem through its ambiguous label");

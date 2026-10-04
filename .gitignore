@@ -1,5 +1,6 @@
 # Local build payloads and enrolled device metadata
 /ram-rescue-demo/work/
+/ram-rescue-demo/rootfs/
 /ram-rescue-demo/rescue-root.tar.gz
 /ram-rescue-demo/rescue-root.sha256
 /ram-rescue-demo/manifest.json
