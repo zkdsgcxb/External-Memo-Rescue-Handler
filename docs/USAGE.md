@@ -8,7 +8,7 @@
 
 ```sh
 sha256sum --ignore-missing -c SHA256SUMS
-sudo apt install ./ram-rescue-handler_0.0.1~beta+*.deb ./ram-rescue-handler-support_0.0.1~beta+*.deb
+sudo apt install ./ram-rescue-handler_*_amd64.deb ./ram-rescue-handler-support_*_all.deb
 rescue-guard-admin --version
 sudo rescue-guard-admin device --help
 ```
