@@ -7,7 +7,7 @@
 从同一 GitHub Release 下载程序 `.deb`、支持材料、`SHA256SUMS` 和验收报告。SHA-256 校验的是内容一致性；来源必须是你信任的发布页面。
 
 ```sh
-sha256sum -c SHA256SUMS
+sha256sum --ignore-missing -c SHA256SUMS
 sudo apt install ./ram-rescue-handler_0.0.1~beta+*.deb ./ram-rescue-handler-support_0.0.1~beta+*.deb
 rescue-guard-admin --version
 sudo rescue-guard-admin device --help
