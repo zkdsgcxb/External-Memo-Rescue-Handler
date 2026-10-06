@@ -5,6 +5,7 @@ Otherwise a separate tmpfs is prepared at boot. This module never starts a
 controller, mounts a filesystem from a disk, or changes a DM mapping.
 """
 import json
+import hashlib
 import os
 from pathlib import Path
 import subprocess
@@ -57,12 +58,21 @@ def active_root():
                 '-p', 'ActiveState', '--value') == 'active')
 
 
-def package_manifest(payload):
+def package_manifest(payload, *, archive_fd=None):
     manifest = read_trusted_json(payload / 'manifest.json')
     if (manifest.get('schema') != 1 or manifest.get('kind') != 'data-runtime'
             or manifest.get('kernel_release') != os.uname().release):
         raise RuntimeError('Installed data tools do not match the current kernel')
-    if trusted_sha256(payload / 'tools.tar.gz') != manifest.get('archive_sha256'):
+    if archive_fd is None:
+        archive_hash = trusted_sha256(payload / 'tools.tar.gz')
+    else:
+        # A cold reader may already hold a trusted, bounded archive. Verify that
+        # same inode before streaming it, without reopening a replaceable path.
+        with os.fdopen(os.dup(archive_fd), 'rb') as stream:
+            stream.seek(0)
+            archive_hash = hashlib.file_digest(stream, 'sha256').hexdigest()
+        os.lseek(archive_fd, 0, os.SEEK_SET)
+    if archive_hash != manifest.get('archive_sha256'):
         raise RuntimeError('Installed data tools archive checksum differs')
     return manifest
 

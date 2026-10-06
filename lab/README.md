@@ -41,7 +41,7 @@ python3 lab/reproduce.py --run --prepare-only --work-dir lab/work/my-reproductio
 - PID 1 通过 `switch_root` 真正运行在 USB/LVM 根卷上，不只是把测试盘挂到一个健康系统旁边。
 - 独立工具副本位于 `tmpfs,noswap`，一个串口运行 JSON 控制程序和心跳，另一个串口提供独立 RAM shell。
 - QMP 执行 `device_del`/`device_add`。加入一块空白占位盘促进重新枚举；验收还会检查设备名称确实改变、旧 LV 的直接读取确实失败。
-- 身份信息全部在虚拟机内生成。恢复直接调用项目的 `Recovery` 实现；测试框架只为虚拟机内指定的 LV 自动提供确认文本。
+- 身份信息全部在虚拟机内生成。此处的 `Recovery` 人工刷新实现仅来自固定历史 Git 快照，测试框架只为虚拟机内指定的 LV 自动提供确认文本；当前 `lab/run.py` CLI 已委托该历史入口，不调用当前只读 `RescueDiagnostics`。
 - 每次结束都停止 QEMU，保留磁盘和记录供检查；再次运行使用新盘，不复用故障状态。
 
 默认最小 guest 不覆盖完整 Ubuntu/systemd；现已增加 [Ubuntu Server 模式](UBUNTU.md)，运行真正的 systemd 和常规服务，并支持真实 Git 克隆工作负载。两种模式均不覆盖完整桌面、宿主 F9/F10 安装认证或真实 Hub/供电问题。[后台自动恢复实验](AUTOMATIC.md) 验证非预知断联时的 I/O 排队和同一工作进程继续运行，不等于完整桌面无感运行。
@@ -197,3 +197,17 @@ python3 lab/historical.py lab/run.py --scenario queued-write --gap 0.2
 3. 继续扩大“短暂断联时原工作负载存活”的覆盖：需要在 I/O 错误到达 ext4/应用前实现有界等待/重试和稳定块设备身份。仅在错误之后 `lvchange --refresh` 无法撤销失败写入。[自动恢复原型](AUTOMATIC.md) 已实现单 USB 路径的 dm-multipath 排队、身份核验、重接与超时，后续真实根盘启动集成及首次实盘拔插已经验证；任意故障竞态、应用自身超时和长期压力仍未完全覆盖。
 
 机制参考：[QEMU USB 热插拔文档](https://www.qemu.org/docs/master/system/devices/usb.html)、[Linux ext4 错误行为](https://www.kernel.org/doc/html/latest/admin-guide/ext4.html)。实测结果见 [VALIDATION.md](VALIDATION.md)。
+
+## v0.0.1-beta 四次启动验收
+
+`release_probe.py` 使用普通 Ubuntu seed、真实程序包、认证内核参考和一次性数据盘文件，执行首次接入、短断恢复、忙设备拒绝、停用重启、启用重启及卸载重装。它不安装宿主服务。
+
+```sh
+python3 lab/release_probe.py --reproduction-dir lab/work/<reproduction> \
+  --package-dir lab/work/<sealed-package> --reference-dir lab/work/<kernel-reference> \
+  --output lab/work/<new-run>
+```
+
+第一次工程验收显式标注 `qualification_fixture=true`，只在隔离 guest 写入测试资格；其报告不能被描述成正式资格验收。工程验收通过并封存结果后，使用引用该结果的外置正式资格再次运行 `--acceptance <release-acceptance.json>`，要求 `qualification_fixture=false`，且包和 subject 完全匹配。
+
+实验 cloud seed 的 `copymods` 使用临时模块目录，观察器每次启动前重新提供已认证的模块参考文件。此实验环境行为必须与真实安装内核的机器区分。

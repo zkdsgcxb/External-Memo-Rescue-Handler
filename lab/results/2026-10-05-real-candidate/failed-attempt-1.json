@@ -1,0 +1,578 @@
+{
+  "schema": 1,
+  "passed": false,
+  "scope": "inert_candidate_fixed_cli_on_ordinary_ubuntu",
+  "package": {
+    "schema": 1,
+    "package": "ram-rescue-handler_804960e40b523e4ddf736101_amd64.deb",
+    "sha256": "e5be90f03d3ecd68d8b416ad8d5a68e38954ee0b2ca77f69a025856ed4d1fe9b",
+    "administration_version": "804960e40b523e4ddf736101",
+    "runtime": {
+      "schema": 1,
+      "kind": "data-runtime",
+      "kernel_release": "7.0.0-34-generic",
+      "archive_sha256": "6adb0b16338fe3d3e27e2f2222dea0d8529f13abec296636d0f2dd98f156d7f4",
+      "binary_sha256": "479c8ba7e2445ae3fbb99d58e1b79d836170c6fe463953ca636cde9857ee8718",
+      "native_runtime": {
+        "schema": 1,
+        "runtime": "cpp",
+        "binary_path": "/opt/guard-runtime/guard-runtime",
+        "binary_sha256": "479c8ba7e2445ae3fbb99d58e1b79d836170c6fe463953ca636cde9857ee8718",
+        "entrypoint_path": "/opt/guard-runtime/maintain",
+        "entrypoint_sha256": "e2cd3b560621354d5110908b715095dc470bea369071708740ec3ab47b4d7b3c",
+        "library_sha256": {
+          "/lib/x86_64-linux-gnu/libc.so.6": "3a15d66867d83762c7f2f1e37359cb8f6c5743edb369c65285cb0b1c4f7498bf",
+          "/lib/x86_64-linux-gnu/libcap.so.2": "6ac6abc86ac891c6e13486470e26f1d939f47fda9e6b5d5508a7f5ec881adc84",
+          "/lib/x86_64-linux-gnu/libcrypto.so.3": "6866ed711dab8927e1bf82bf1cd30e828bdfc34f3cc1e83b1c9eb01ce6c37d9a",
+          "/lib/x86_64-linux-gnu/libdevmapper.so.1.02.1": "0b33f9e9780b2e22bd40170f4cfe358b0cf525974d01896b3bb2b02d6e4e2582",
+          "/lib/x86_64-linux-gnu/libgcc_s.so.1": "d93224d2b0dab4247598be683adca02f5cf00586f99c187579cd7e92058fb7cb",
+          "/lib/x86_64-linux-gnu/libm.so.6": "fce00b6f25f459cf4ae0b7fae4257909a1a8a86f9149e7c029a5d617baf1ccd0",
+          "/lib/x86_64-linux-gnu/libpcre2-8.so.0": "e00576d71d81d3ba0cfa4903c835a44a8723aac96f72f79ff75200b4cff9071b",
+          "/lib/x86_64-linux-gnu/libselinux.so.1": "0ec0843463f90e227b0e138e1f379774f50b5514bd7f5dbd4c8a87aca0aa6670",
+          "/lib/x86_64-linux-gnu/libstdc++.so.6": "1fd75fe70354a416d75aef22bcae68c47bd25d20e2d0568c30b1a9838cf62f11",
+          "/lib/x86_64-linux-gnu/libudev.so.1": "4298228175fa62a36af88b1afd4406cdd8b1bf166621f957d0dbbde45a698fe5",
+          "/lib64/ld-linux-x86-64.so.2": "c20a2dc8917c755f02b94049356320fe1f62ac7d9f8994731f807d9df39302da"
+        },
+        "payload_file_bytes": 13706974,
+        "dependency_packages": {
+          "/lib/x86_64-linux-gnu/libc.so.6": {
+            "package": "libc6:amd64",
+            "version": "2.39-0ubuntu8.9",
+            "architecture": "amd64"
+          },
+          "/lib/x86_64-linux-gnu/libcap.so.2": {
+            "package": "libcap2:amd64",
+            "version": "1:2.66-5ubuntu2.4",
+            "architecture": "amd64"
+          },
+          "/lib/x86_64-linux-gnu/libcrypto.so.3": {
+            "package": "libssl3t64:amd64",
+            "version": "3.0.13-0ubuntu3.16",
+            "architecture": "amd64"
+          },
+          "/lib/x86_64-linux-gnu/libdevmapper.so.1.02.1": {
+            "package": "libdevmapper1.02.1:amd64",
+            "version": "2:1.02.185-3ubuntu3.2",
+            "architecture": "amd64"
+          },
+          "/lib/x86_64-linux-gnu/libgcc_s.so.1": {
+            "package": "libgcc-s1:amd64",
+            "version": "14.2.0-4ubuntu2~24.04.1",
+            "architecture": "amd64"
+          },
+          "/lib/x86_64-linux-gnu/libm.so.6": {
+            "package": "libc6:amd64",
+            "version": "2.39-0ubuntu8.9",
+            "architecture": "amd64"
+          },
+          "/lib/x86_64-linux-gnu/libpcre2-8.so.0": {
+            "package": "libpcre2-8-0:amd64",
+            "version": "10.42-4ubuntu2.1",
+            "architecture": "amd64"
+          },
+          "/lib/x86_64-linux-gnu/libselinux.so.1": {
+            "package": "libselinux1:amd64",
+            "version": "3.5-2ubuntu2.1",
+            "architecture": "amd64"
+          },
+          "/lib/x86_64-linux-gnu/libstdc++.so.6": {
+            "package": "libstdc++6:amd64",
+            "version": "14.2.0-4ubuntu2~24.04.1",
+            "architecture": "amd64"
+          },
+          "/lib/x86_64-linux-gnu/libudev.so.1": {
+            "package": "libudev1:amd64",
+            "version": "255.4-1ubuntu8.17",
+            "architecture": "amd64"
+          },
+          "/lib64/ld-linux-x86-64.so.2": {
+            "package": "libc6:amd64",
+            "version": "2.39-0ubuntu8.9",
+            "architecture": "amd64"
+          }
+        }
+      },
+      "base_sha256": "152c6d2720ff01b232941e917b651fdca638627f2dcb547893ae17dc3237c3b0"
+    },
+    "source_commit": "af7448bd9efe5b20dff28ecedc105000eb3e95af",
+    "installed": false,
+    "maintainer_scripts": false
+  },
+  "reference_sha256": "74db4c43440c0635d93bae4cff913816a61936012646efa5347a071122b8448b",
+  "source_sha256": {
+    "lab/candidate_probe.py": "10c990571d6b24502d1d3fd8913192d1d3999cb7c2659c0257cc6b03ebbf7ab9",
+    "lab/guest/candidate_probe.py": "1092c941851946cec7d78f1da11c3483fbacab5f6a022238673e56a373752090",
+    "lab/kernel_reference.py": "d947c4193d952d286c9ddc9e267ff0fae2905e2cdde1af7061d77f8b34b30fac",
+    "lab/tests/test_current_support.py": "c11246beca4e58567d02f6512315ed33863d0976d346336bea8ff6b4f1f5f73b"
+  },
+  "input_sha256": {
+    "kernel": "73d9c6e40b210deb638070d6af591a68bb6d7ff0280d0ec34c9ccf705a4f47ac",
+    "initrd": "4de63cacb1dfa01cc1bce5361ff6929d03fc66703fd7d2a89c50d60fff49799a",
+    "package": "e5be90f03d3ecd68d8b416ad8d5a68e38954ee0b2ca77f69a025856ed4d1fe9b"
+  },
+  "seed_sha256": "7565aae2d5866f905e2e9c523d28a4bcb7eda0b2bfce1576424303574de579b7",
+  "resource_limits": {
+    "vcpus": 2,
+    "ram_mib": 3072,
+    "additional_disk_max_bytes": 8589934592,
+    "concurrent_vms": 1
+  },
+  "reused_native_binary_and_libraries": {
+    "binary_sha256": true,
+    "library_sha256": true,
+    "entrypoint_sha256": true
+  },
+  "regular_block_inputs": [
+    "/workspace/Project/External-Memo-Rescue-Handler/lab/work/cq-1005/vm1/usb.qcow2",
+    "/workspace/Project/External-Memo-Rescue-Handler/lab/work/rp-1004c/seed/s0/usb.raw",
+    "/workspace/Project/External-Memo-Rescue-Handler/lab/work/cq-1005/vm1/decoy.raw",
+    "/workspace/Project/External-Memo-Rescue-Handler/lab/work/cq-1005/vm1/rr-data-vm-ext4.raw",
+    "/workspace/Project/External-Memo-Rescue-Handler/lab/work/cq-1005/vm1/rr-data-vm-vfat.raw",
+    "/workspace/Project/External-Memo-Rescue-Handler/lab/work/cq-1005/vm1/wrong-vfat.raw"
+  ],
+  "command": [
+    "qemu-system-x86_64",
+    "-machine",
+    "q35",
+    "-accel",
+    "kvm",
+    "-m",
+    "3072",
+    "-smp",
+    "2",
+    "-display",
+    "none",
+    "-nodefaults",
+    "-no-reboot",
+    "-nic",
+    "none",
+    "-smbios",
+    "type=1,product=RAMRescueLab",
+    "-kernel",
+    "/workspace/Project/External-Memo-Rescue-Handler/lab/work/rp-1004c/vmlinuz",
+    "-initrd",
+    "/workspace/Project/External-Memo-Rescue-Handler/lab/work/cq-1005/vm1/initrd.img",
+    "-append",
+    "console=ttyS0 ram_rescue_lab=1 root=/dev/mapper/labrescue-ubuntu ro systemd.mask=lab-agent.service systemd.mask=lab-guard.service systemd.mask=lab-shell.service systemd.mask=lab-ready.service systemd.mask=lab-workload.service ram_rescue_candidate_test=1 dm_multipath.queue_if_no_path_timeout_secs=10",
+    "-serial",
+    "file:/workspace/Project/External-Memo-Rescue-Handler/lab/work/cq-1005/vm1/console.log",
+    "-serial",
+    "unix:/workspace/Project/External-Memo-Rescue-Handler/lab/work/cq-1005/vm1/agent.sock,server=on,wait=off",
+    "-serial",
+    "unix:/workspace/Project/External-Memo-Rescue-Handler/lab/work/cq-1005/vm1/rescue.sock,server=on,wait=off",
+    "-qmp",
+    "unix:/workspace/Project/External-Memo-Rescue-Handler/lab/work/cq-1005/vm1/qmp.sock,server=on,wait=off",
+    "-device",
+    "qemu-xhci,id=xhci",
+    "-blockdev",
+    "{\"driver\": \"qcow2\", \"node-name\": \"usbdisk\", \"file\": {\"driver\": \"file\", \"filename\": \"/workspace/Project/External-Memo-Rescue-Handler/lab/work/cq-1005/vm1/usb.qcow2\"}, \"backing\": {\"driver\": \"raw\", \"read-only\": true, \"file\": {\"driver\": \"file\", \"filename\": \"/workspace/Project/External-Memo-Rescue-Handler/lab/work/rp-1004c/seed/s0/usb.raw\"}}}",
+    "-blockdev",
+    "{\"driver\": \"raw\", \"node-name\": \"decoydisk\", \"file\": {\"driver\": \"file\", \"filename\": \"/workspace/Project/External-Memo-Rescue-Handler/lab/work/cq-1005/vm1/decoy.raw\"}}",
+    "-device",
+    "usb-uas,bus=xhci.0,id=stick,serial=RAMRESCUE-LAB-001,port=1",
+    "-device",
+    "scsi-hd,bus=stick.0,id=lun,drive=usbdisk",
+    "-blockdev",
+    "{\"driver\": \"raw\", \"node-name\": \"rr-data-vm-ext4\", \"file\": {\"driver\": \"file\", \"filename\": \"/workspace/Project/External-Memo-Rescue-Handler/lab/work/cq-1005/vm1/rr-data-vm-ext4.raw\"}}",
+    "-device",
+    "usb-storage,bus=xhci.0,port=2,id=rr-data-vm-ext4,drive=rr-data-vm-ext4,serial=DATA-VM-EXT4",
+    "-blockdev",
+    "{\"driver\": \"raw\", \"node-name\": \"rr-data-vm-vfat\", \"file\": {\"driver\": \"file\", \"filename\": \"/workspace/Project/External-Memo-Rescue-Handler/lab/work/cq-1005/vm1/rr-data-vm-vfat.raw\"}}",
+    "-device",
+    "usb-storage,bus=xhci.0,port=3,id=rr-data-vm-vfat,drive=rr-data-vm-vfat,serial=DATA-VM-VFAT",
+    "-blockdev",
+    "{\"driver\": \"raw\", \"node-name\": \"wrong-vfat\", \"file\": {\"driver\": \"file\", \"filename\": \"/workspace/Project/External-Memo-Rescue-Handler/lab/work/cq-1005/vm1/wrong-vfat.raw\"}}"
+  ],
+  "initrd_sha256": "f23535356d180acb35684cfdeb7c547cc30fa73829886f88685c17ed788a321a",
+  "allocated_before_vm": 1219903488,
+  "prepare": {
+    "package_install": "Selecting previously unselected package ram-rescue-handler.\n(Reading database ... 37575 files and directories currently installed.)\nPreparing to unpack /run/candidate/handler.deb ...\nUnpacking ram-rescue-handler (0.3.0+804960e40b523e4ddf736101) ...\nSetting up ram-rescue-handler (0.3.0+804960e40b523e4ddf736101) ...\n",
+    "boot_id": "74abe350-4566-4bc3-9c10-da6305ce3aa5",
+    "kernel_release": "7.0.0-34-generic",
+    "entry_sha256": "a35895af1d598b2fd920622373190ee6d2d4862e093155ed89b6fb2a73449d9b",
+    "baseline": {
+      "files": {
+        "/boot/vmlinuz-7.0.0-34-generic": "73d9c6e40b210deb638070d6af591a68bb6d7ff0280d0ec34c9ccf705a4f47ac"
+      },
+      "maps": {
+        "labrescue-shared": {
+          "uuid": "LVM-nl7fEQFPfDN20b0DTD8XGZeW6kuxLmqM7Itd901hk7qiNRNOol1hKb3DcquWNe8f",
+          "slaves": [
+            "sda1"
+          ]
+        },
+        "rr-data-vm-ext4": {
+          "uuid": "RAMRESCUE-DATA-VM-EXT4",
+          "slaves": [
+            "sdb1"
+          ]
+        },
+        "labrescue-ubuntu": {
+          "uuid": "LVM-nl7fEQFPfDN20b0DTD8XGZeW6kuxLmqM6dzbTzkhbSdfFc2IHea32MUEUJppDd5M",
+          "slaves": [
+            "sda1"
+          ]
+        }
+      },
+      "mounts": [
+        "0:14 / /sys/kernel/tracing rw,nosuid,nodev,noexec,relatime shared:17 - tracefs tracefs rw",
+        "0:20 / /sys/kernel/config rw,nosuid,nodev,noexec,relatime shared:19 - configfs configfs rw",
+        "0:22 / /dev/mqueue rw,nosuid,nodev,noexec,relatime shared:15 - mqueue mqueue rw",
+        "0:23 / /sys rw,nosuid,nodev,noexec,relatime shared:8 - sysfs sysfs rw",
+        "0:24 / /proc rw,nosuid,nodev,noexec,relatime shared:13 - proc proc rw",
+        "0:25 / /dev/pts rw,nosuid,noexec,relatime shared:3 - devpts devpts rw,gid=5,mode=620,ptmxmode=000",
+        "0:26 / /run rw,nosuid,nodev,noexec,relatime shared:6 - tmpfs tmpfs rw,size=297324k,mode=755,inode64",
+        "0:27 / /usr/lib/modules rw,relatime shared:5 - tmpfs copymods rw,inode64",
+        "0:28 / /dev/shm rw,nosuid,nodev shared:4 - tmpfs tmpfs rw,inode64",
+        "0:29 / /run/lock rw,nosuid,nodev,noexec,relatime shared:7 - tmpfs tmpfs rw,size=5120k,inode64",
+        "0:30 / /sys/fs/cgroup rw,nosuid,nodev,noexec,relatime shared:10 - cgroup2 cgroup2 rw,nsdelegate,memory_recursiveprot",
+        "0:31 / /sys/fs/pstore rw,nosuid,nodev,noexec,relatime shared:11 - pstore none rw",
+        "0:32 / /sys/fs/bpf rw,nosuid,nodev,noexec,relatime shared:12 - bpf bpf rw,mode=700",
+        "0:33 / /dev/hugepages rw,nosuid,nodev,relatime shared:14 - hugetlbfs hugetlbfs rw,pagesize=2M",
+        "0:34 / /sys/fs/fuse/connections rw,nosuid,nodev,noexec,relatime shared:18 - fusectl fusectl rw",
+        "0:7 / /dev rw,nosuid,relatime shared:2 - devtmpfs udev rw,size=846656k,nr_inodes=211664,mode=755,inode64",
+        "0:8 / /sys/kernel/security rw,nosuid,nodev,noexec,relatime shared:9 - securityfs securityfs rw",
+        "0:9 / /sys/kernel/debug rw,nosuid,nodev,noexec,relatime shared:16 - debugfs debugfs rw",
+        "252:0 / / rw,relatime shared:1 - ext4 /dev/mapper/labrescue-ubuntu rw,errors=remount-ro",
+        "252:1 / /shared rw,relatime shared:30 - ext4 /dev/mapper/labrescue-shared rw"
+      ],
+      "services": "MainPID=0\nId=ram-rescue-manager.service\nLoadState=not-found\nActiveState=inactive\n\nMainPID=0\nId=ram-rescue-guard.service\nLoadState=not-found\nActiveState=inactive\n\nMainPID=0\nId=ram-rescue-maintain@rr-data-vm-ext4.service\nLoadState=not-found\nActiveState=inactive\n",
+      "runtime_present": false
+    }
+  },
+  "prerequisites": {
+    "passed": false,
+    "plan": {
+      "command": [
+        "/usr/bin/rescue-guard-admin",
+        "manager",
+        "plan",
+        "--device",
+        "/dev/mapper/rr-data-vm-ext4",
+        "--json"
+      ],
+      "returncode": 0,
+      "stderr": "\u8ba1\u5212\u6838\u9a8c\u53ef\u80fd\u8bfb\u53d6\u9009\u4e2d\u5206\u533a\u7684\u6587\u4ef6\u7cfb\u7edf\u4e0e\u5206\u533a\u8eab\u4efd\u5143\u6570\u636e\u3002\u8eab\u4efd\u6838\u9a8c\u5916\u90e8\u547d\u4ee4\u8bbe\u7f6e 3 \u79d2\u5c1d\u8bd5\u8d85\u65f6\uff0c\u672b\u6bb5\u51c6\u5165\u4f7f\u7528 15 \u79d2\u534f\u4f5c\u9884\u7b97\uff1b\u4e0b\u5c42\u963b\u585e\u3001\u540c\u6b65 ioctl \u548c\u8fdb\u7a0b\u56de\u6536\u6ca1\u6709\u786c\u6027\u603b\u65f6\u9650\u3002\u6b64\u547d\u4ee4\u53ea\u8f93\u51fa\u8ba1\u5212\uff0c\u4e0d\u4fdd\u5b58\u6216\u542f\u7528\u914d\u7f6e\u3002\n",
+      "value": {
+        "schema": 1,
+        "operation": "plan",
+        "status": "blocked",
+        "plan_digest": "c80043a767a82d7ed06b77451a5c946e6804bd324be895067e3b76dc92f069ed",
+        "confirmation": {
+          "schema": 1,
+          "support_policy": {
+            "product_target": {
+              "distribution": "Ubuntu",
+              "version": "24.04",
+              "architecture": "amd64",
+              "kernel_route": "official_hwe",
+              "acceptance": "per_combination"
+            },
+            "target_state": "decided",
+            "combination": {
+              "state": "unvalidated",
+              "subject": null,
+              "subject_sha256": null,
+              "current_bindings": {
+                "executing_management": "pass",
+                "running_kernel": "unknown",
+                "loaded_modules": "unknown",
+                "official_kernel_origin": "unknown",
+                "runtime_artifacts": "pass",
+                "host_dependencies": "pass"
+              },
+              "qualification": {
+                "state": "not_checked",
+                "sha256": null,
+                "record": null
+              },
+              "reasons": [
+                "current_loaded_modules_unknown",
+                "current_official_kernel_origin_unknown",
+                "current_running_kernel_unknown",
+                "qualification_not_checked",
+                "static_subject_incomplete"
+              ],
+              "authorization": null,
+              "publisher_authentication": "not_established_by_local_ownership",
+              "release_acceptance": "not_evaluated",
+              "recovery_acceptance": "not_evaluated"
+            }
+          },
+          "selected_object": {
+            "map_name": "rr-data-vm-ext4",
+            "map_uuid": "RAMRESCUE-DATA-VM-EXT4"
+          },
+          "scope": {
+            "members": [
+              "rr-data-vm-ext4",
+              "sdb1"
+            ],
+            "mounts": [],
+            "role": "data",
+            "physical_disk_coverage": "selected_volume_only"
+          },
+          "effects": {
+            "action": "save_candidate_only",
+            "destination_class": "/var/lib/ram-rescue-plans/operations/<generated-id>",
+            "candidate_files": [
+              "plan.json",
+              "candidate.json",
+              "manifest.json",
+              "operation.json"
+            ],
+            "activation": "none",
+            "reboot_activates": false,
+            "candidate_record": {
+              "schema": 1,
+              "identity": {
+                "kind": "filesystem",
+                "vid": "46f4",
+                "pid": "0001",
+                "usb_serial": "DATA-VM-EXT4",
+                "sectors": 163840,
+                "partition_number": 1,
+                "partuuid": "4dba02a2-e343-4e9b-855e-af41b9500268",
+                "fs_type": "ext4",
+                "fs_uuid": "ec994cec-166b-4d1e-8577-d2c3cc88a8c3"
+              },
+              "guard": {
+                "schema": 1,
+                "profile": "host-data",
+                "map_name": "rr-data-vm-ext4",
+                "map_uuid": "RAMRESCUE-DATA-VM-EXT4",
+                "kernel_release": "7.0.0-34-generic",
+                "queue_seconds": 8,
+                "run_dir": "/run/ram-rescue-data/rr-data-vm-ext4/state",
+                "identity_path": "/run/ram-rescue-data/rr-data-vm-ext4/identity.json",
+                "partition_sectors": 131072,
+                "partition_start": 2048,
+                "logical_block_size": 512,
+                "layout": {
+                  "kind": "filesystem",
+                  "fs_type": "ext4",
+                  "fs_uuid": "ec994cec-166b-4d1e-8577-d2c3cc88a8c3",
+                  "partuuid": "4dba02a2-e343-4e9b-855e-af41b9500268"
+                }
+              }
+            }
+          },
+          "inputs": {
+            "discovery_before_sha256": "de96b392598e8523edc6ce136560451c9e6a665d5664020a32be215b93cf86a2",
+            "discovery_after_sha256": "de96b392598e8523edc6ce136560451c9e6a665d5664020a32be215b93cf86a2",
+            "support_before_sha256": "bf647b76d7b1576089cee00a0a94aa6b3f5f385c6ec0c4cbd67a3ed4b19a7c9d",
+            "support_after_sha256": "bf647b76d7b1576089cee00a0a94aa6b3f5f385c6ec0c4cbd67a3ed4b19a7c9d",
+            "configuration": [
+              {
+                "scope": "manager",
+                "source": "/var/lib/ram-rescue-manager/install.json",
+                "state": "absent",
+                "sha256": null
+              },
+              {
+                "scope": "package",
+                "source": "command_package_manifest",
+                "state": "present",
+                "sha256": "9a8bf1d3713d5e08abf281320cb9760212f623ea6056c9994ebf9d783c96ce81"
+              },
+              {
+                "scope": "relationships",
+                "source": "/run/ram-rescue-guard/config.json",
+                "state": "absent",
+                "sha256": null
+              },
+              {
+                "scope": "relationships",
+                "source": "registration_list",
+                "state": "absent",
+                "sha256": null
+              },
+              {
+                "scope": "root",
+                "source": "/var/lib/ram-rescue-guard/install.json",
+                "state": "absent",
+                "sha256": null
+              }
+            ],
+            "boot_id": "74abe350-4566-4bc3-9c10-da6305ce3aa5",
+            "kernel_release": "7.0.0-34-generic",
+            "instance": {
+              "initial_diskseq": 12,
+              "initial_node": "/dev/sdb1",
+              "initial_sys_path": "/sys/devices/pci0000:00/0000:00:01.0/usb2/2-2/2-2:1.0/host4/target4:0:0/4:0:0:0/block/sdb/sdb1"
+            },
+            "context_before": {
+              "files": {
+                "/proc/1/mountinfo": "63b1603b010e26b3ce5b466ce883998f6109e103cee1fb63470b663855e1fe13",
+                "/proc/swaps": "a9699a032d193fb103232c3b043353503282ab82b08d18341fb78c18f33e80c1",
+                "/proc/1/root/etc/fstab": "0bb302827bb42802141ac489f944be26f49e953d605a60ac108b4a0c8a7ecfe9",
+                "/sys/class/block/sdb1/start": "bfa0ec8bdf2946547879d50a68687ea32e2fa628db187357415858b633d194d9",
+                "/sys/class/block/sdb1/partition": "6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b",
+                "/sys/class/block/sdb/queue/logical_block_size": "94f8607915dff25f013e45fc0642fb9830b0fb25ab0ab46d477eaf1061def379",
+                "/usr/lib/ram-rescue-handler/804960e40b523e4ddf736101/administration.json": "f159bfe7a88fb3cfc5ddfa7bfcc791bbda9acc0f9637cee1df4c8ce9d829c102"
+              },
+              "partition_holders": [
+                "dm-2"
+              ],
+              "map_holders": []
+            },
+            "context_after": {
+              "files": {
+                "/proc/1/mountinfo": "63b1603b010e26b3ce5b466ce883998f6109e103cee1fb63470b663855e1fe13",
+                "/proc/swaps": "a9699a032d193fb103232c3b043353503282ab82b08d18341fb78c18f33e80c1",
+                "/proc/1/root/etc/fstab": "0bb302827bb42802141ac489f944be26f49e953d605a60ac108b4a0c8a7ecfe9",
+                "/sys/class/block/sdb1/start": "bfa0ec8bdf2946547879d50a68687ea32e2fa628db187357415858b633d194d9",
+                "/sys/class/block/sdb1/partition": "6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b",
+                "/sys/class/block/sdb/queue/logical_block_size": "94f8607915dff25f013e45fc0642fb9830b0fb25ab0ab46d477eaf1061def379",
+                "/usr/lib/ram-rescue-handler/804960e40b523e4ddf736101/administration.json": "f159bfe7a88fb3cfc5ddfa7bfcc791bbda9acc0f9637cee1df4c8ce9d829c102"
+              },
+              "partition_holders": [
+                "dm-2"
+              ],
+              "map_holders": []
+            },
+            "map_before": {
+              "uuid": "RAMRESCUE-DATA-VM-EXT4",
+              "active": [
+                [
+                  0,
+                  131072,
+                  "multipath",
+                  "3 queue_if_no_path queue_mode bio 0 1 1 round-robin 0 1 1 8:17 1 "
+                ]
+              ],
+              "inactive": [],
+              "flags": {
+                "suspended": 0,
+                "internal_suspend": 0,
+                "deferred_remove": 0,
+                "read_only": 0,
+                "live_table": 1,
+                "major": 252,
+                "minor": 2
+              }
+            },
+            "map_after": {
+              "uuid": "RAMRESCUE-DATA-VM-EXT4",
+              "active": [
+                [
+                  0,
+                  131072,
+                  "multipath",
+                  "3 queue_if_no_path queue_mode bio 0 1 1 round-robin 0 1 1 8:17 1 "
+                ]
+              ],
+              "inactive": [],
+              "flags": {
+                "suspended": 0,
+                "internal_suspend": 0,
+                "deferred_remove": 0,
+                "read_only": 0,
+                "live_table": 1,
+                "major": 252,
+                "minor": 2
+              }
+            },
+            "environment_recheck": "passed"
+          },
+          "blockers": [
+            "combination_unvalidated"
+          ]
+        },
+        "observation": {
+          "selected": {
+            "number": 2,
+            "device": "/dev/sdb1",
+            "model": "QEMU HARDDISK",
+            "capacity_bytes": 67108864,
+            "role": "data",
+            "members": [
+              "rr-data-vm-ext4",
+              "sdb1"
+            ],
+            "mounts": [],
+            "filesystem": {
+              "type": "ext4",
+              "source": "udev_cache",
+              "identity": "not_checked"
+            },
+            "groups": [],
+            "checks": [
+              {
+                "code": "multipath_interface",
+                "result": "pass",
+                "source": "loaded_dm_target"
+              },
+              {
+                "code": "queue_timeout",
+                "result": "pass",
+                "source": "module_parameter"
+              },
+              {
+                "code": "multipathd_units",
+                "result": "pass",
+                "source": "systemd_units_only"
+              },
+              {
+                "code": "manual_multipathd_processes",
+                "result": "not_checked",
+                "source": "none"
+              },
+              {
+                "code": "package_kernel",
+                "result": "pass",
+                "source": "package_manifest_uname"
+              },
+              {
+                "code": "media_identity",
+                "result": "not_checked",
+                "source": "none"
+              },
+              {
+                "code": "mount_policy",
+                "result": "not_checked",
+                "source": "none"
+              },
+              {
+                "code": "unmanaged_upper_layers",
+                "result": "fail",
+                "source": "sysfs"
+              },
+              {
+                "code": "swap_in_use",
+                "result": "pass",
+                "source": "proc_swaps_mountinfo"
+              }
+            ],
+            "assessment": "blocked"
+          },
+          "snapshot_id": "id-d5f7caaa26eb5a9c0bb7c753",
+          "captured_at_unix": 1791200099
+        },
+        "io": {
+          "media": "admission_passed",
+          "successful_admission_blkid_calls": [
+            6,
+            7
+          ],
+          "identity_command_timeout_seconds": 3,
+          "mount_resolution_timeout_seconds": 45,
+          "systemd_query_timeout_seconds": 4,
+          "final_admission_budget_seconds": 15,
+          "hard_total_deadline": false
+        },
+        "current_effects": {
+          "persistent_writes": [],
+          "activation": "none"
+        },
+        "report_scope": "local_not_redacted"
+      }
+    }
+  },
+  "error": "Traceback (most recent call last):\n  File \"/workspace/Project/External-Memo-Rescue-Handler/lab/candidate_probe.py\", line 190, in run\n    raise RuntimeError('Actual CLI prerequisite checks did not pass; raw plan preserved')\nRuntimeError: Actual CLI prerequisite checks did not pass; raw plan preserved\n",
+  "diagnostics_error": "Traceback (most recent call last):\n  File \"/workspace/Project/External-Memo-Rescue-Handler/lab/candidate_probe.py\", line 190, in run\n    raise RuntimeError('Actual CLI prerequisite checks did not pass; raw plan preserved')\nRuntimeError: Actual CLI prerequisite checks did not pass; raw plan preserved\n\nDuring handling of the above exception, another exception occurred:\n\nTraceback (most recent call last):\n  File \"/workspace/Project/External-Memo-Rescue-Handler/lab/candidate_probe.py\", line 203, in run\n    report['failure_diagnostics'] = standalone.call(channel, 'diagnostics', timeout=240)\n                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/workspace/Project/External-Memo-Rescue-Handler/lab/standalone_data_probe.py\", line 152, in call\n    value = channel.call(action, timeout=timeout)\n            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/workspace/Project/External-Memo-Rescue-Handler/lab/run.py\", line 89, in call\n    raise ConnectionError('VM control channel closed')\nConnectionError: VM control channel closed\n",
+  "seed_readonly_backing_stat_unchanged": true,
+  "allocated_after_vm": 1267597312,
+  "host_deployed": false,
+  "active_protection_enabled": false
+}

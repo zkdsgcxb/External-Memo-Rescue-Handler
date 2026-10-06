@@ -1,0 +1,7 @@
+
+RAM rescue root shell. Start with: rescue help
+If explicitly enrolled: rescue status; rescue verify (read-only).
+Use rescue log for kernel messages. Automatic recovery belongs to the Guard.
+Exit to lock this VT. Alt+F9/F10 switches rescue terminals.
+NEVER repair a mounted filesystem. Host root remains mounted.
+

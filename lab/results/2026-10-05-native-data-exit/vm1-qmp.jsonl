@@ -1,0 +1,3 @@
+{"host_time": 13792.311126603, "message": {"QMP": {"version": {"qemu": {"micro": 2, "minor": 2, "major": 8}, "package": "Debian 1:8.2.2+ds-0ubuntu1.18"}, "capabilities": ["oob"]}}}
+{"host_time": 13792.311610922, "message": {"return": {}, "id": 1}}
+{"host_time": 13820.401485102, "message": {"timestamp": {"seconds": 1791204456, "microseconds": 972891}, "event": "SHUTDOWN", "data": {"guest": false, "reason": "host-signal"}}}

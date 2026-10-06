@@ -1,0 +1,74 @@
+[
+  {
+    "command": [
+      "python3",
+      "-B",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "lab/tests",
+      "-p",
+      "test_current_support.py",
+      "-q"
+    ],
+    "returncode": 0,
+    "seconds": 0.5346551050006383,
+    "stdout": "",
+    "stderr": "----------------------------------------------------------------------\nRan 17 tests in 0.239s\n\nOK\n"
+  },
+  {
+    "command": [
+      "python3",
+      "-B",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "lab/tests",
+      "-p",
+      "test_support.py",
+      "-q"
+    ],
+    "returncode": 0,
+    "seconds": 0.4942936440002086,
+    "stdout": "",
+    "stderr": "----------------------------------------------------------------------\nRan 24 tests in 0.185s\n\nOK\n"
+  },
+  {
+    "command": [
+      "python3",
+      "-B",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "lab/tests",
+      "-p",
+      "test_planning.py",
+      "-q"
+    ],
+    "returncode": 0,
+    "seconds": 2.2016758890003985,
+    "stdout": "",
+    "stderr": "----------------------------------------------------------------------\nRan 33 tests in 1.827s\n\nOK\n"
+  },
+  {
+    "command": [
+      "python3",
+      "-B",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "lab/tests",
+      "-p",
+      "test_candidates.py",
+      "-q"
+    ],
+    "returncode": 0,
+    "seconds": 6.627058007999949,
+    "stdout": "",
+    "stderr": "----------------------------------------------------------------------\nRan 32 tests in 6.205s\n\nOK\n"
+  }
+]

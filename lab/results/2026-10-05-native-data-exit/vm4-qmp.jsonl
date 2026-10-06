@@ -1,0 +1,7 @@
+{"host_time": 15427.995301269, "message": {"QMP": {"version": {"qemu": {"micro": 2, "minor": 2, "major": 8}, "package": "Debian 1:8.2.2+ds-0ubuntu1.18"}, "capabilities": ["oob"]}}}
+{"host_time": 15428.049193953, "message": {"return": {}, "id": 1}}
+{"host_time": 15469.677128307, "message": {"return": {}, "id": 2}}
+{"host_time": 15469.727818802, "message": {"timestamp": {"seconds": 1791206106, "microseconds": 299200}, "event": "DEVICE_DELETED", "data": {"path": "/machine/peripheral/rr-data-vm-ext4/rr-data-vm-ext4.0/legacy[0]"}}}
+{"host_time": 15469.72869781, "message": {"timestamp": {"seconds": 1791206106, "microseconds": 299357}, "event": "DEVICE_DELETED", "data": {"device": "rr-data-vm-ext4", "path": "/machine/peripheral/rr-data-vm-ext4"}}}
+{"host_time": 15470.618882105, "message": {"return": {}, "id": 3}}
+{"host_time": 15486.970670614, "message": {"timestamp": {"seconds": 1791206123, "microseconds": 541622}, "event": "SHUTDOWN", "data": {"guest": true, "reason": "guest-shutdown"}}}

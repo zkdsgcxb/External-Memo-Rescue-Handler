@@ -1,0 +1,87 @@
+{
+  "schema": 1,
+  "captured_at": "2026-10-04T20:45:10.645424+00:00",
+  "scope": "trusted_configuration_recheck_revision",
+  "base_revision": "af7448bd9efe5b20dff28ecedc105000eb3e95af",
+  "working_tree_dirty": true,
+  "source_sha256": {
+    "guard/discovery.py": "a0f2b2910d4e0468d1361d3c8df64d5f2c1f8692bd9ca1d6196584f4bb7af6ca",
+    "lab/tests/test_discovery.py": "8b5c0cbbb3ca2e66e23e84259c818a069fb7b05271ba45c5a3ebe754c8b7b77d",
+    "guard/MANAGER.md": "95b481b76c01dbb1fc8210dd4c688093ee1359f40139e48ca8f19a5b23ccfb83",
+    "research/2026-10-05/READONLY-DISCOVERY.md": "2f5daea66c77a0f1646d7e34129fbb662d98573f08beee3d4c597be4348162f6",
+    "research/2026-10-05/CANDIDATE-LIFECYCLE-DESIGN.md": "690c7a64ddb5972b03b1add8adce24645d09120566c4decc5a58dbc436368266"
+  },
+  "tests": [
+    {
+      "command": [
+        "python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "lab/tests",
+        "-p",
+        "test_discovery.py"
+      ],
+      "passed": 46,
+      "returncode": 0,
+      "observed_output": "Ran 46 tests in 0.201s\nOK",
+      "new_test_methods": 13
+    },
+    {
+      "command": [
+        "python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "lab/tests",
+        "-p",
+        "test_diagnostics.py"
+      ],
+      "passed": 38,
+      "returncode": 0,
+      "observed_output": "Ran 38 tests in 0.166s\nOK"
+    }
+  ],
+  "total_distinct_tests_passed_this_revision": 84,
+  "prior_evidence": "lab/results/2026-10-05-readonly-discovery.json",
+  "prior_evidence_source_hashes_apply_to": "pre_recheck_revision_only",
+  "configuration_recheck": {
+    "max_tracked_sources": 70,
+    "samples_per_source": 2,
+    "full_json": [
+      "root_config",
+      "used_registrations",
+      "root_receipt",
+      "manager_receipt",
+      "command_runtime_manifest"
+    ],
+    "lists": [
+      "registry_members"
+    ],
+    "candidate_projection": [
+      "selected_manager_program_sha256",
+      "manager_candidate_native_runtime",
+      "base_archive_binary_sha256"
+    ],
+    "missing_distinct_from_unreadable": true,
+    "atomic_snapshot": false,
+    "detects_change_and_revert": false,
+    "full_candidate_image_or_archive_integrity": false
+  },
+  "native_core_diff_empty": true,
+  "host_smoke_repeated": false,
+  "host_mutated": false,
+  "qemu_run": false,
+  "installed": false,
+  "real_release_package_built": false,
+  "lifecycle_design_only": true,
+  "public_support_policy": "not_selected",
+  "cross_kernel_validation": false,
+  "committed": false,
+  "pushed": false,
+  "published": false
+}

@@ -1,0 +1,250 @@
+{
+  "schema": 1,
+  "captured_at": "2026-10-05T10:56:41.045775+00:00",
+  "scope": "static_candidate_prerequisite_qualification_and_local_confirmation_fixtures",
+  "base_revision": "af7448bd9efe5b20dff28ecedc105000eb3e95af",
+  "working_tree_dirty": true,
+  "source_sha256": {
+    "guard/support.py": "daecfa0ccbdb89aa619c3f09f89e225d4562240417a9f0e66045a0b8074a4596",
+    "guard/planning.py": "8f45fde489fc0e7a8e5cb0e113b2cb400c6f5665d25c02c45675dc8d0248c473",
+    "guard/candidates.py": "a7aae09244d86e8342dc0f8de7afaac197766f16b0f0fbb570ec93200b673a8f",
+    "guard/candidate_ui.py": "e69e2c79d94bd1f832513fbb2201e57ded7297d31d9ecc89e287b8051e11171f",
+    "guard/discovery.py": "f67cd61bef19e170278a0b44c7bee167a9e2214b39cab9388f155d78c94c4cfa",
+    "guard/manage.py": "5a0c6bbaa7694c906ca97f6df092c235d002252baf95ac5422454d4c16fce4a0",
+    "guard/diagnostics.py": "c362d8f2f1a007776e0d8b2a39ab8d4f3447aa18d20738b871267a4e4668ca36",
+    "guard/trusted_paths.py": "ac8a61bb4e7cfd944fdde0b0e9facdc6173b647ddb60937dfe87ae606ae7cb67",
+    "guard/host_files.py": "16466bb5327e3f1a0ffdda7d0c97246f05e5d665606c640ea7d9880ab4693497",
+    "guard/admin/admission.py": "9943b00ef6a5a755ff4152bf40776ca6b3281fe840459c27721c1c2dfcbe8202",
+    "guard/admin/data.py": "1f5ce0e56df06464b749fb1165b07e9e0d49db35e743a2c960043c14e96cdc20",
+    "guard/admin/dm.py": "c8cf09cdab4c8a864f982fd2870e505ec02df851009efe504f063569a42cb6d4",
+    "guard/admin/identity.py": "8f8cd2440d57eaaa12cba2264a498b588d997abc078e8072e1edc6a4e0de2c60",
+    "guard/admin/registry.py": "6525285b9512c40ab62c3e952d0d5280e254cdf5614349a08df90b4e9280c965",
+    "lab/tests/support_fixtures.py": "f551b8dad83bc97958c5636f5be9ae250c22d87d76929cf47ee87e4b21b3fc00",
+    "lab/tests/test_support.py": "2dc2c8a9470560f573bc646ccaa3e47a6b50b8adcb398183c3da5d2ea06769b3",
+    "lab/tests/test_planning.py": "12f9860431422102db1fdfcc1661462fcc6b7ebeec713288be9ca6593f444173",
+    "lab/tests/test_candidates.py": "ffe68dac8defcbbfff3ad0fd4af377901bb596171aa03f23ebe3c67e2d1e3848",
+    "lab/tests/test_discovery.py": "d7e6cfe9e6309818be2b62e697f9b553a7b768e64e67f2c2c06d4400521cdd22",
+    "lab/tests/test_manager.py": "6cd3ed1cd6c63bcfad90d7f50bc43a3d20465516f399c08a5b234a78a67a4777",
+    "lab/tests/test_trusted_paths.py": "88761be063390d19b01263c2efa79cc6676e4a077e1d4492891529c654db15e8",
+    "README.md": "4f04c3cdce6df67578972834b2fc674899ccc80a0ed03ea8a3cd6815f72d2fd9",
+    "guard/MANAGER.md": "1ef421ac528a0e530788d4cd90ba6f4ec5b64f9914e99dda476244b83eb1d487",
+    "research/2026-10-05/STATIC-QUALIFICATION.md": "a1c84786c17184e28f0c84d52aa0d5fc602de6dc5f8123b2d2f37f68aa7a7ad2",
+    "research/2026-10-05/CANDIDATE-LIFECYCLE.md": "395efbc01c4d955cdc461831275afef7e57469580c3d8911cd9a31d202ee95bc"
+  },
+  "tests": [
+    {
+      "command": [
+        "python3",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "lab/tests",
+        "-p",
+        "test_support.py",
+        "-q"
+      ],
+      "environment": {
+        "PYTHONDONTWRITEBYTECODE": "1"
+      },
+      "returncode": 0,
+      "passed": 24,
+      "observed_output": "----------------------------------------------------------------------\nRan 24 tests in 0.110s\n\nOK\n"
+    },
+    {
+      "command": [
+        "python3",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "lab/tests",
+        "-p",
+        "test_planning.py",
+        "-q"
+      ],
+      "environment": {
+        "PYTHONDONTWRITEBYTECODE": "1"
+      },
+      "returncode": 0,
+      "passed": 33,
+      "observed_output": "----------------------------------------------------------------------\nRan 33 tests in 1.014s\n\nOK\n"
+    },
+    {
+      "command": [
+        "python3",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "lab/tests",
+        "-p",
+        "test_candidates.py",
+        "-q"
+      ],
+      "environment": {
+        "PYTHONDONTWRITEBYTECODE": "1"
+      },
+      "returncode": 0,
+      "passed": 32,
+      "observed_output": "----------------------------------------------------------------------\nRan 32 tests in 3.301s\n\nOK\n"
+    },
+    {
+      "command": [
+        "python3",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "lab/tests",
+        "-p",
+        "test_manager.py",
+        "-q"
+      ],
+      "environment": {
+        "PYTHONDONTWRITEBYTECODE": "1"
+      },
+      "returncode": 0,
+      "passed": 27,
+      "observed_output": "----------------------------------------------------------------------\nRan 27 tests in 1.590s\n\nOK\n"
+    },
+    {
+      "command": [
+        "python3",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "lab/tests",
+        "-p",
+        "test_trusted_paths.py",
+        "-q"
+      ],
+      "environment": {
+        "PYTHONDONTWRITEBYTECODE": "1"
+      },
+      "returncode": 0,
+      "passed": 7,
+      "observed_output": "----------------------------------------------------------------------\nRan 7 tests in 0.014s\n\nOK\n"
+    }
+  ],
+  "total_distinct_tests_passed": 123,
+  "initial_test_issue": "Fixture parent directories inherited group-write permissions from umask; trusted loader correctly rejected them. Fixture permissions corrected; production checks unchanged.",
+  "support": {
+    "product_target": {
+      "distribution": "Ubuntu",
+      "version": "24.04",
+      "architecture": "amd64",
+      "kernel_route": "official_hwe",
+      "acceptance": "per_combination"
+    },
+    "qualification_loader_implemented": true,
+    "qualification_path": "/usr/share/ram-rescue-handler/qualifications/<subject_sha256>.json",
+    "qualification_limit_bytes": 16384,
+    "qualification_purpose": "candidate_preparation_prerequisites",
+    "eligibility_state": "eligible_for_candidate_preparation",
+    "authorization": "save_candidate_only",
+    "current_running_binding_collector_complete": false,
+    "production_default_current_subject": null,
+    "production_default_current_bindings": "all_unknown",
+    "production_accepted_combinations_created": 0,
+    "cli_override": false,
+    "successful_current_and_qualification_evidence": "independent_internal_fixtures_only",
+    "publisher_authentication": "not_established_by_root_ownership",
+    "release_acceptance": "not_evaluated",
+    "recovery_acceptance": "not_evaluated"
+  },
+  "confirmation": {
+    "static_subject_excludes_dynamic_local_inputs": true,
+    "qualification_raw_bytes_sha256_bound": true,
+    "current_evidence_before_after_bound": true,
+    "kernel_release_and_raw_admin_manifest_cross_checked": true,
+    "changed_qualification_after_materialization": "failed_needs_review",
+    "cancel_after_qualification_revocation": "permitted_if_existing_ownership_and_active_checks_pass",
+    "atomic_snapshot": false,
+    "detects_change_then_full_reversion": false
+  },
+  "original_evidence_correction": {
+    "prior_wrong_statement": "reproduction.json missing",
+    "actual_resolution_root": "/workspace/Project/rr-check-1004",
+    "summary": "lab/results/2026-10-04-clean-reproduction.json",
+    "summary_sha256": "82130a3b69830918a12034518eccd5d1d9c34b47beb91ae70f8a1520dc95dab3",
+    "raw_reports": [
+      {
+        "path": "lab/work/r1/reproduction.json",
+        "sha256": "58ee0a6f3a2d9bb7e14370c952bcb72216df10c5647296a2f76fd8dd770db0e9",
+        "matches_summary": true
+      },
+      {
+        "path": "lab/work/r1/seed/report.json",
+        "sha256": "9005bb79468fb5fb291c7e1508bf1e57e74177d0d9de1a47301e66511624de7e",
+        "matches_summary": true
+      },
+      {
+        "path": "lab/work/cpp-int-1005-000431-760334/report.json",
+        "sha256": "3cb9a764e300158a51b0c56e415dfccb8068bba9135aed157cb77212922cf43b",
+        "matches_summary": true
+      },
+      {
+        "path": "lab/work/bf-1005-000624-779347/native/report.json",
+        "sha256": "52925d06a9c386fa94393fc4dcd6006a261986221a32f61bffbda0c2f20d55b8",
+        "matches_summary": true
+      },
+      {
+        "path": "lab/work/bf-1005-000624-779347/p0v0/report.json",
+        "sha256": "cc34be567796472730520e2e33cd03f3e1cca765947a99eeca17c9db6ed0e353",
+        "matches_summary": true
+      },
+      {
+        "path": "lab/work/bf-1005-000624-779347/p0v1/report.json",
+        "sha256": "712eb66496db6928d2fa06bc98a2609fcb00adcc3d3af44cfb27e32dfbb76d9e",
+        "matches_summary": true
+      },
+      {
+        "path": "lab/work/bf-1005-000624-779347/p0v2/report.json",
+        "sha256": "9eb3f332bf00895d9d0829189ac94dea0d8d3a2a8fe03a5eeb90ce328fbfb131",
+        "matches_summary": true
+      },
+      {
+        "path": "lab/work/bf-1005-000624-779347/p1v0/report.json",
+        "sha256": "40d339654962276809223593a3a8c966315be1f1aa8ffb47f63fedf69e60db34",
+        "matches_summary": true
+      },
+      {
+        "path": "lab/work/bf-1005-000624-779347/p1v1/report.json",
+        "sha256": "20edc7c2e4d2de0ca12d82b25ecb0e0c79ef5076165ab5c3ba774d6a9fc8e3e0",
+        "matches_summary": true
+      },
+      {
+        "path": "lab/work/bf-1005-000624-779347/p1v2/report.json",
+        "sha256": "737ba5318dbe3bb8a5ab691802d5ce6c8bc45c0fca5f83ad4def254b81b505f7",
+        "matches_summary": true
+      },
+      {
+        "path": "lab/work/bf-1005-000624-779347/report.json",
+        "sha256": "02998d2a63d2eb2d0f35f34a0378256ac44a8d0b6c047f34ffc62992c670244a",
+        "matches_summary": true
+      }
+    ],
+    "matched": 11,
+    "original_json_modified": false,
+    "prior_candidate_result_retained_sha256": "11be28cc752d8c06dd5ca8390393c25b7b79e2ba15a3963ee2df365fccccba44",
+    "prior_candidate_result_document_hash": "historical_before_correction"
+  },
+  "checks": {
+    "git_diff_check": "passed",
+    "changed_python_ast_parse_count": 7,
+    "native_core_diff_empty": true
+  },
+  "host_stage_or_cancel_executed": false,
+  "deployed": false,
+  "rebooted_or_unplugged": false,
+  "large_downloads": false,
+  "real_installation_candidate_built": false,
+  "qemu_or_long_tests": false,
+  "cross_kernel_validation": false,
+  "committed": false,
+  "pushed": false,
+  "published": false,
+  "validation_level": "working_tree_source_and_fixtures_only"
+}

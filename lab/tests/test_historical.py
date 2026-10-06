@@ -51,6 +51,14 @@ class HistoricalSnapshotTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, 'experiment path'):
             historical.run_legacy('lab/../../guard/build.py', [])
 
+    def test_manual_scenario_entrypoint_uses_the_complete_pinned_release(self):
+        result = subprocess.run([sys.executable, '-B',
+            str(historical.REPO / 'lab/run.py'), '--help'],
+            text=True, capture_output=True, check=True)
+        self.assertIn('Historical Python experiment: ' + historical.PYTHON_REVISION,
+                      result.stderr)
+        self.assertIn('queued-write', result.stdout)
+
 
 if __name__ == '__main__':
     unittest.main()

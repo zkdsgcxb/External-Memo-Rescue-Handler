@@ -1,4 +1,4 @@
-#include "controller.hpp"
+#include "data_lifecycle.hpp"
 
 #include <algorithm>
 #include <atomic>
@@ -22,7 +22,7 @@
 namespace rescue {
 namespace {
 using CandidatePtr = std::shared_ptr<Candidate>;
-const std::set<std::string> terminal{"expired", "failed", "interrupted", "blocked"};
+const std::set<std::string> terminal{"expired", "failed", "interrupted", "blocked", "safe_stopped"};
 
 bool has_word(const std::string& text, const std::string& word) {
     const auto words = split_words(text);
@@ -63,6 +63,8 @@ void notify_ready() {
 class Guard : public std::enable_shared_from_this<Guard> {
     Config config_;
     std::string epoch_;
+    int owner_fence_;
+    std::string identity_digest_;
     Journal journal_;
     Evidence evidence_;
     Observations observations_;
@@ -201,11 +203,11 @@ public:
     std::optional<double> deadline;
     std::string state = "ready";
 
-    Guard(Config config, const std::shared_ptr<Recovery>& recovery, Owner& owner)
-        : config_(std::move(config)), epoch_(owner.epoch), journal_(owner, config_.name, config_.uuid),
-          evidence_(owner.run), current_(config_.value.at("initial_node")),
-          current_sys_(config_.value.at("initial_sys_path")), current_dev_(node_device(current_)),
-          current_diskseq_(config_.value.at("initial_diskseq")), operation(owner.fd.get()) {
+    Guard(Config config, const std::shared_ptr<Recovery>& recovery, Owner& owner, const Json& initial = Json())
+        : config_(std::move(config)), epoch_(owner.epoch), owner_fence_(owner.fd.get()), identity_digest_(digest(recovery->identity)), journal_(owner, config_.name, config_.uuid),
+          evidence_(owner.run), current_(initial.is_null() ? config_.value.at("initial_node") : initial.at("node")),
+          current_sys_(initial.is_null() ? config_.value.at("initial_sys_path") : initial.at("sys_path")), current_dev_(node_device(current_)),
+          current_diskseq_(initial.is_null() ? config_.value.at("initial_diskseq") : initial.at("diskseq")), operation(owner.fd.get()) {
         version_ = mapper.target_version("multipath");
         if (version_ < std::array<unsigned, 3>{1, 15, 0})
             throw std::runtime_error("DM_MPATH_PROBE_PATHS requires multipath target >= 1.15.0");
@@ -239,6 +241,38 @@ public:
     }
     bool current_active(const std::string& status) const {
         return std::regex_search(status, std::regex("\\b" + dev_number(current_dev_) + R"( A \d+\b)"));
+    }
+    Json safe_stop(const Json& request) {
+        const auto identity = load_trusted_json(config_.identity);
+        const auto record = record_from_profile({{"schema", 1}, {"guard", config_.value}, {"identity", identity}});
+        const Json expected{{"action", "safe-stop"}, {"boot_id", journal_.record.at("boot_id")},
+            {"owner_epoch", epoch_}, {"config_digest", digest(config_.value)}, {"record_digest", digest(record)}};
+        if (config_.profile != "host-data" || digest(identity) != identity_digest_ || request != expected ||
+                load_trusted_json(config_.identity.parent_path() / "config.json") != config_.value)
+            throw std::runtime_error("Stale or mismatched safe-stop request");
+        if (state != "ready" || deadline || !pending_kind_.empty() || operation.busy() || candidate_)
+            throw std::runtime_error("Data owner is recovering or has an unfinished helper");
+        const Json instance{{"node", current_}, {"dev", dev_number(current_dev_)},
+            {"sys_path", current_sys_}, {"diskseq", current_diskseq_}};
+        const auto cgroup = own_cgroup();
+        auto check = [&](bool queue) {
+            check_cgroup(cgroup, ::getpid());
+            return idle_data_snapshot(config_, instance, mapper, queue);
+        };
+        check(true); // Refusal before intent keeps the live owner unchanged.
+        try {
+            finish_safe_stop(journal_, {{"stopped_instance", instance}, {"owner_cgroup", cgroup},
+                {"raw_open_descriptors", "not_observable"}}, identity,
+                [&](const auto& name, const auto& value) { atomic_json(config_.run / name, value); },
+                [&](bool queue) { dm({"message", config_.name, "0", queue ? "queue_if_no_path" : "fail_if_no_path"}, owner_fence_); }, check);
+            event("safe_stopped", {{"outcome", "safe_data_owner_exit"}});
+            return {{"state", "stopping"}, {"owner_epoch", epoch_}};
+        } catch (const StopRefused& error) {
+            return {{"state", "blocked"}, {"reason", error.what()}, {"owner_preserved", true}};
+        } catch (const std::exception& error) {
+            event("failed", {{"reason", error.what()}, {"outcome", "safe_stop_incomplete"}});
+            return {{"state", "incomplete"}, {"reason", error.what()}, {"resources_retained", true}};
+        }
     }
     void shutdown() {
         if (stopping_.exchange(true)) return;
@@ -292,6 +326,15 @@ void reconcile(const Config& config, Owner& owner) {
         throw std::runtime_error("Untrusted transaction journal; manual diagnosis required");
     DeviceMapper mapper;
     auto snapshot = checked_snapshot(mapper, config);
+    if (config.profile == "host-data" && record.value("phase", "") == "safe_stopped" &&
+            fs::exists(owner.run / "safe-stop.json")) {
+        validate_stopped(config, load_trusted_json(config.identity), owner.boot_id, record,
+            load_trusted_json(owner.run / "safe-stop.json"));
+        validate_idle_table(config, record.at("stopped_instance"), snapshot, false);
+        atomic_json(owner.run / "path-supervisor.json", {{"state", "safe_stopped"},
+            {"outcome", "explicit_safe_stop_preserved"}, {"owner_epoch", record.at("owner_epoch")}});
+        return;
+    }
     std::set<Json> known{record.value("previous", Json::object()).value("active_digest", Json()),
         record.value("snapshot", Json::object()).value("active_digest", Json())};
     const auto phase = record.at("phase") == "expired" ? record.value("phase_at_expiry", record.at("phase")) : record.at("phase");
@@ -386,15 +429,34 @@ std::unique_ptr<Owner> acquire_owner(const Config& config, bool taking_over) {
         }
     }
 }
-void run_owned(const Config& config, Owner& owner, bool taking_over) {
+void run_owned(const Config& config, Owner& owner, bool taking_over, bool data_control, const Json& rearm_instance, bool first_enable) {
     if (taking_over) { reconcile(config, owner); return; }
-    if (fs::exists(owner.run / "path-transaction.json"))
-        throw std::runtime_error("Existing transaction requires takeover, not owner restart");
+    if (fs::exists(owner.run / "path-transaction.json")) {
+        const auto journal = load_trusted_json(owner.run / "path-transaction.json");
+        if (!data_control || rearm_instance.is_null() || journal.value("phase", "") != "rearm_intent" ||
+                journal.at("owner_epoch") != owner.epoch || journal.at("boot_id") != owner.boot_id ||
+                journal.at("config_digest") != digest(config.value))
+            throw std::runtime_error("Existing transaction requires takeover, not owner restart");
+    }
     auto recovery = std::make_shared<Recovery>(load_trusted_json(config.identity), [&owner](const auto& args, double timeout) {
         return readonly(args, timeout, owner.fd.get()); });
-    if (config.profile == "host-data") validate_data_runtime(config.value, recovery);
-    auto manager = std::make_shared<Guard>(config, recovery, owner);
+    if (config.profile == "host-data") validate_data_runtime(
+        rearm_instance.is_null() ? config.value : observed_config(config, rearm_instance), recovery,
+        first_enable ? queue_enabled(checked_snapshot(*(std::make_unique<DeviceMapper>()), config)) : true);
+    auto manager = std::make_shared<Guard>(config, recovery, owner, rearm_instance);
+    std::unique_ptr<DataControl> control;
+    if (data_control) control = std::make_unique<DataControl>(config);
     try {
+        if (first_enable) {
+            DeviceMapper mapper;
+            const auto instance = path_instance(config.value.at("initial_node"));
+            const bool queued = queue_enabled(checked_snapshot(mapper, config));
+            idle_data_snapshot(config, instance, mapper, queued);
+            // Guard has persisted the owner journal and invocation before the
+            // first queue-on. ExecStopPost can reconcile an interrupted start.
+            dm({"message", config.name, "0", "queue_if_no_path"}, owner.fd.get());
+            idle_data_snapshot(config, instance, mapper, true);
+        }
         const auto status = manager->check_map();
         if (!manager->current_present() || !manager->current_active(status))
             throw std::runtime_error("Initial enrolled path is absent or not active");
@@ -421,7 +483,8 @@ void run_owned(const Config& config, Owner& owner, bool taking_over) {
             double wake = schedule.next_check;
             if (pending) wake = std::min(wake, schedule.event_after);
             if (manager->deadline) wake = std::min(wake, *manager->deadline);
-            pending = events.wait(wake - mono(), manager->operation.fileno(), pending && mono() < schedule.event_after) || pending;
+            pending = events.wait(wake - mono(), manager->operation.fileno(), pending && mono() < schedule.event_after, control ? control->fd() : -1) || pending;
+            if (events.control_ready) control->serve([&](const auto& request) { return manager->safe_stop(request); });
             completed = events.operation_ready;
         }
     } catch (...) { manager->shutdown(); throw; }
@@ -429,6 +492,13 @@ void run_owned(const Config& config, Owner& owner, bool taking_over) {
 }
 void run(const Json& value, bool taking_over) {
     Config config(value); config.validate_environment();
+    if (config.profile == "host-data") {
+        // The old temporary service is an alias to the same data owner. Root
+        // and lab keep their established boot/transaction behavior.
+        maintain(record_from_profile({{"schema", 1}, {"guard", value},
+            {"identity", load_trusted_json(config.identity)}}), taking_over);
+        return;
+    }
     trusted_directory(config.run);
     try {
         auto owner = acquire_owner(config, taking_over);
@@ -443,7 +513,9 @@ void run(const Json& value, bool taking_over) {
         throw;
     }
 }
-void maintain(const Json& record, bool taking_over) {
+void maintain(const Json& record, bool taking_over, bool rearm, bool first_enable) {
+    if (first_enable && (rearm || taking_over)) throw std::runtime_error("First enable is not rearm or takeover");
+    if (taking_over && rearm) throw std::runtime_error("Rearm is not takeover");
     validate_record(record);
     if (record.at("guard").at("profile") != "host-data")
         throw std::runtime_error("The enrolled root map is already maintained by its boot service");
@@ -458,9 +530,43 @@ void maintain(const Json& record, bool taking_over) {
     if (!taking_over) {
         trusted_directory(config.run, true);
         auto owner = acquire_owner(config, false);
+        if (rearm) {
+            // Original policy stays pinned. Only current instance observations
+            // may differ after a successful recovery, and they come from the
+            // explicit stop journal, never from automatic identity learning.
+            config = Config(load_trusted_json(directory / "config.json"));
+            const auto identity = load_trusted_json(config.identity);
+            if (record_from_profile({{"schema", 1}, {"identity", identity}, {"guard", config.value}}) != record)
+                throw std::runtime_error("Stopped policy differs from the selected record");
+            const auto old_journal = load_trusted_json(journal_path);
+            const auto stopped = load_trusted_json(config.run / "safe-stop.json");
+            validate_stopped(config, identity, owner->boot_id, old_journal, stopped);
+            const auto instance = old_journal.at("stopped_instance");
+            check_cgroup(old_journal.at("owner_cgroup"), ::getpid());
+            DeviceMapper mapper;
+            idle_data_snapshot(config, instance, mapper, false);
+            const auto fresh = current_profile(record, [&owner](const auto& args, double timeout) {
+                return readonly(args, timeout, owner->fd.get()); }, false);
+            if (record_from_profile(fresh) != record || fresh.at("guard") != observed_config(config, instance))
+                throw std::runtime_error("Safe rearm refuses a changed device instance or policy");
+            const auto previous_invocation = load_trusted_json(receipt_path);
+            if (previous_invocation.value("owner_epoch", "") != old_journal.at("owner_epoch") ||
+                    previous_invocation.value("config_digest", "") != digest(config.value))
+                throw std::runtime_error("Stopped invocation does not match its owner");
+            Journal next(*owner, config.name, config.uuid);
+            begin_rearm(next, old_journal, stopped, previous_invocation,
+                {{"schema", 1}, {"invocation_id", invocation}, {"owner_epoch", owner->epoch}, {"config_digest", digest(config.value)}},
+                [&](const auto& name, const auto& value) { atomic_json(config.run / name, value); },
+                [&](bool queue) { dm({"message", config.name, "0", queue ? "queue_if_no_path" : "fail_if_no_path"}, owner->fd.get()); },
+                [&](bool queue) { check_cgroup(own_cgroup(), ::getpid()); return idle_data_snapshot(config, instance, mapper, queue); });
+            run_owned(config, *owner, false, true, instance);
+            return;
+        }
         if (fs::exists(journal_path)) throw std::runtime_error("Existing transaction requires takeover, not owner restart");
+        DeviceMapper initial_mapper;
+        const bool initial_queue = first_enable ? queue_enabled(checked_snapshot(initial_mapper, config)) : true;
         const auto profile = current_profile(record, [&owner](const auto& args, double timeout) {
-            return readonly(args, timeout, owner->fd.get()); });
+            return readonly(args, timeout, owner->fd.get()); }, initial_queue);
         if (record_from_profile(profile) != record) throw std::runtime_error("Fresh device observations changed the registered policy");
         config = Config(profile.at("guard"));
         for (const auto& location : {directory / "identity.json", directory / "config.json", receipt_path})
@@ -468,7 +574,7 @@ void maintain(const Json& record, bool taking_over) {
         atomic_json(directory / "identity.json", profile.at("identity"));
         atomic_json(directory / "config.json", config.value);
         atomic_json(receipt_path, {{"schema", 1}, {"invocation_id", invocation}, {"owner_epoch", owner->epoch}, {"config_digest", digest(config.value)}});
-        run_owned(config, *owner);
+        run_owned(config, *owner, false, true, Json(), first_enable);
     } else {
         trusted_directory(config.run);
         if (!fs::exists(receipt_path)) return;

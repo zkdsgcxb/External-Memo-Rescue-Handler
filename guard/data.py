@@ -3,7 +3,7 @@
 
 This launcher never creates, mounts, reformats or removes a block device. Its
 runtime units and automount exclusions last for this boot only. Stopping a
-controller ends admission and leaves both the map and exclusions in place.
+controller requires a healthy, idle native owner and leaves the map and exclusions in place.
 """
 import argparse
 import json
@@ -30,7 +30,13 @@ SLICE = 'ramrescuedata.slice'
 
 
 def run(args):
-    return subprocess.check_output(args, text=True, stderr=subprocess.STDOUT,
+    commands = {'systemctl': '/usr/bin/systemctl', 'udevadm': '/usr/bin/udevadm',
+                'findmnt': '/usr/bin/findmnt', 'dmsetup': '/usr/sbin/dmsetup'}
+    command = [commands.get(args[0], args[0]), *args[1:]]
+    if not command[0].startswith('/'):
+        raise ValueError('Management helper must use a fixed executable path')
+    return subprocess.check_output(command, text=True, stderr=subprocess.STDOUT,
+                                   env={'PATH': '/usr/sbin:/usr/bin:/sbin:/bin', 'LC_ALL': 'C'},
                                    timeout=45).strip()
 
 
@@ -209,10 +215,21 @@ def stop(name):
     config = read_trusted_json(directory / 'config.json')
     if config.get('map_name') != name or config.get('run_dir') != str(directory / 'state'):
         raise RuntimeError('Temporary state does not belong to this map')
-    run(['systemctl', 'stop', service(name)])
-    return {'map': name, 'state': 'stopped', 'map_retained': True,
-            'automount_exclusions': 'retained_until_reboot',
-            'note': 'No new recovery is admitted; this does not unmount or remove the map.'}
+    runtime = stage_runtime()
+    # Native owner decides busy/recovery state under its existing fence. Older
+    # run-only owners without the control endpoint fail closed; never SIGTERM
+    # them as a fallback or report an unconfirmed D-state exit as stopped.
+    result = subprocess.run(['/usr/sbin/chroot', str(ram_environment.PRIVATE),
+        '/opt/guard-runtime/guard-runtime', 'safe-stop', '--config', str(directory / 'config.json')],
+        text=True, capture_output=True, timeout=40)
+    try:
+        outcome = json.loads(result.stdout or result.stderr)
+    except ValueError as error:
+        raise RuntimeError('Native safe-stop did not return an outcome; resources retained') from error
+    if not isinstance(outcome, dict) or outcome.get('state') not in ('stopped', 'blocked', 'incomplete'):
+        raise RuntimeError('Unrecognized native safe-stop outcome; resources retained')
+    return {'map': name, **outcome, 'runtime': str(runtime),
+            'automount_exclusions': 'retained_until_reboot'}
 
 
 def main():
@@ -224,7 +241,7 @@ def main():
     registration.add_argument('--output', required=True, type=Path)
     activation = commands.add_parser('start', help='Prepare RAM tools and run the enrolled controller')
     activation.add_argument('--enrollment', required=True, type=Path)
-    deactivation = commands.add_parser('stop', help='End recovery; leave the map and exclusions intact')
+    deactivation = commands.add_parser('stop', help='Ask an idle native owner to exit safely; retain map and exclusions')
     deactivation.add_argument('--map', required=True, type=map_name)
     args = parser.parse_args()
     if args.command == 'enroll':
@@ -234,6 +251,8 @@ def main():
     else:
         result = stop(args.map)
     print(json.dumps(result, ensure_ascii=False, indent=2))
+    if args.command == 'stop' and result.get('state') != 'stopped':
+        raise SystemExit(2 if result.get('state') == 'incomplete' else 1)
 
 
 if __name__ == '__main__':

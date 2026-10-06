@@ -539,7 +539,7 @@ void check_environment(const Json& config) {
         }
     }
 }
-std::pair<fs::path, fs::path> check_map(const Json& config, const std::string& node, DeviceMapper& mapper) {
+std::pair<fs::path, fs::path> check_map(const Json& config, const std::string& node, DeviceMapper& mapper, bool queue_required = true) {
     auto snapshot = mapper.snapshot(config.at("map_name"));
     const auto& info = snapshot.at("info");
     struct stat held{};
@@ -554,9 +554,10 @@ std::pair<fs::path, fs::path> check_map(const Json& config, const std::string& n
         refuse("Existing map is not the exclusive ready single-path data table");
     const auto words = split_words(snapshot.at("active").at(0).at(3).get<std::string>());
     const auto count = std::stoull(words.at(0));
-    if (count >= words.size() || std::find(words.begin() + 1, words.begin() + 1 + count,
-            "queue_if_no_path") == words.begin() + 1 + count)
-        refuse("Data map must already enable queue_if_no_path");
+    if (count >= words.size()) refuse("Invalid data map feature count");
+    const bool queued = std::find(words.begin() + 1, words.begin() + 1 + count,
+            "queue_if_no_path") != words.begin() + 1 + count;
+    if (queued != queue_required) refuse("Data map queue policy differs from required state");
     const auto map = fs::canonical(fs::path("/sys/dev/block") /
         (std::to_string(info.at("major").get<unsigned>()) + ":" + std::to_string(info.at("minor").get<unsigned>())));
     const auto path = fs::canonical(fs::path("/sys/class/block") / fs::path(node).filename());
@@ -639,7 +640,7 @@ void check_isolation(const std::string& node, const fs::path& path, const fs::pa
 }
 } // namespace
 
-Json current_profile(const Json& record, Runner runner) {
+Json current_profile(const Json& record, Runner runner, bool queue_required) {
     validate_record(record);
     if (record.at("identity").value("kind", "lvm") != "filesystem")
         refuse("Root protection is already owned by the protected boot");
@@ -651,25 +652,25 @@ Json current_profile(const Json& record, Runner runner) {
     if (mapper.target_version("multipath") < std::array<unsigned, 3>{1, 15, 0})
         refuse("DM_MPATH_PROBE_PATHS requires multipath target >= 1.15.0");
     auto node = recovery->candidate_node();
-    auto [path, map] = check_map(config, node, mapper);
+    auto [path, map] = check_map(config, node, mapper, queue_required);
     check_isolation(node, path, map, recovery->identity, recovery->run);
     auto policy = std::make_shared<Admission>(config, recovery);
     auto candidate = policy->verify(mono() + 15, "registered-start");
     candidate->revalidate("registered-start");
-    check_map(config, candidate->node(), mapper);
+    check_map(config, candidate->node(), mapper, queue_required);
     config["initial_node"] = candidate->node();
     config["initial_sys_path"] = candidate->sys_path();
     config["initial_diskseq"] = candidate->diskseq();
     return profile;
 }
 
-void validate_data_runtime(const Json& config, const std::shared_ptr<Recovery>& recovery) {
+void validate_data_runtime(const Json& config, const std::shared_ptr<Recovery>& recovery, bool queue_required) {
     validate_data_config(config);
     if (!recovery->filesystem()) refuse("Data mode requires an enrolled filesystem identity");
     check_environment(config);
     auto node = recovery->candidate_node();
     DeviceMapper mapper;
-    auto [path, map] = check_map(config, node, mapper);
+    auto [path, map] = check_map(config, node, mapper, queue_required);
     if (node != string_field(config, "initial_node") || path.string() != string_field(config, "initial_sys_path") ||
             number_file(path.parent_path() / "diskseq") != config.at("initial_diskseq"))
         refuse("Initial data path changed since enrollment; enroll again before starting");

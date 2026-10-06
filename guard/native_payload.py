@@ -77,14 +77,13 @@ def _elf_identity(path):
 
 
 def _linked_libraries(binary):
-    result = subprocess.run(['ldd', str(binary)], text=True, stdout=subprocess.PIPE,
-                            stderr=subprocess.STDOUT, check=False)
-    if 'not found' in result.stdout:
-        raise RuntimeError('Native dependency is absent: ' + result.stdout)
-    if result.returncode and not any(text in result.stdout for text in
-                                    ('not a dynamic executable', 'statically linked')):
-        raise RuntimeError('Cannot resolve native dependencies: ' + result.stdout)
-    paths = re.findall(r'(?:=>\s+|^\s*)(/[^\s]+)', result.stdout, re.M)
+    from diagnostics import bounded_output
+    output = bounded_output(['/usr/bin/ldd', str(binary)], allowed_returncodes=(0, 1))
+    if 'not found' in output:
+        raise RuntimeError('Native dependency is absent: ' + output)
+    paths = re.findall(r'(?:=>\s+|^\s*)(/[^\s]+)', output, re.M)
+    if not paths and not any(text in output for text in ('not a dynamic executable', 'statically linked')):
+        raise RuntimeError('Cannot resolve native dependencies: ' + output)
     return {str(Path(path)): Path(path).resolve(strict=True) for path in paths}
 
 

@@ -96,10 +96,10 @@ def activate_existing_root(setting):
     if not identity or not config:
         raise RuntimeError('Required enrollment or Guard configuration is missing')
     from admission import Admission, readonly
-    from rescue import Recovery
+    from rescue import RescueDiagnostics
     from path_guard import dm, table, DEVICE, NAME, UUID
     deadline = time.monotonic() + 20
-    recovery = Recovery(identity, runner=readonly)
+    recovery = RescueDiagnostics(identity, runner=readonly)
     while True:
         try:
             recovery.candidate_node()

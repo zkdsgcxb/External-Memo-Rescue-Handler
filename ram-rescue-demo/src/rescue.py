@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-"""Small, manual recovery assistant. Never edits PV metadata or runs fsck."""
+"""Read-only storage diagnostics for the authenticated RAM rescue terminal."""
 import argparse
 import json
 import os
@@ -36,7 +36,7 @@ def rows(output, key):
     return [row for report in json.loads(output)["report"] for row in report.get(key, [])]
 
 
-class Recovery:
+class RescueDiagnostics:
     def __init__(self, config, sysroot=Path("/sys"), devroot=Path("/dev"), runner=command):
         self.c = config
         self.sys = Path(sysroot)
@@ -102,48 +102,8 @@ class Recovery:
         matches = [p for p in (self.sys / "class/block").glob("dm-*")
                    if (p / "dm/uuid").exists() and read(p / "dm/uuid") == wanted]
         if len(matches) != 1:
-            raise Refuse("Enrolled LV is not uniquely active. This demo only refreshes active LVs.")
+            raise Refuse("Expected one active LV matching the enrolled DM UUID.")
         return matches[0]
-
-    def refresh(self, target, confirm=input):
-        if target not in self.c["lvs"]:
-            raise Refuse("Unknown target.")
-        if "ram_rescue_guard=1" in read("/proc/cmdline").split():
-            raise Refuse("Protected boot owns the stable mapping. Direct LV refresh would bypass it; inspect the Guard state instead.")
-        node = self.verify()
-        mapping = self.mapping(target)
-        slaves = [p.name for p in (mapping / "slaves").iterdir()]
-        if slaves == [Path(node).name]:
-            print("This LV already points to the verified device. No refresh performed.")
-            return False
-        lvpath = self.c["vg_name"] + "/" + target
-        segments = rows(self.run(["/sbin/lvm", "lvs", "--readonly", "--devices", node,
-                                  "--reportformat", "json", "--segments", "-o",
-                                  "lv_uuid,vg_uuid,segtype", lvpath]), "seg")
-        expected = self.c["lvs"][target]["dm_uuid"][4:]
-        if not segments or any(s["segtype"].strip() != "linear" or
-                               (s["vg_uuid"].strip() + s["lv_uuid"].strip()).replace("-", "") != expected
-                               for s in segments):
-            raise Refuse("Only the enrolled linear LV is supported. No changes made.")
-        print(f"Verified device: {node}; existing dependency: {slaves}")
-        print("This attempts an LVM mapping refresh, NOT filesystem repair.")
-        print("It can block on kernel I/O. It cannot undo earlier failed writes.")
-        phrase = "REFRESH " + lvpath
-        if confirm("Type '" + phrase + "' to attempt: ") != phrase:
-            raise Refuse("Cancelled. No changes made.")
-        # Revalidate after the human prompt; device names may have changed again.
-        again = self.verify()
-        if again != node or self.mapping(target) != mapping:
-            raise Refuse("Device changed while awaiting confirmation. Retry diagnosis.")
-        print(self.run(["/sbin/lvm", "lvchange", "--refresh", "--noudevsync",
-                        "--devices", node, lvpath], timeout=30))
-        current = [p.name for p in (mapping / "slaves").iterdir()]
-        print("Dependency after command:", current)
-        if current != [Path(node).name]:
-            raise Refuse("The expected new dependency was not observed. Do not assume recovery.")
-        print("Mapping now points to the verified device. Check kernel/filesystem/application state.")
-        print("No filesystem repair or remount was performed.")
-        return True
 
     def status(self):
         print("RAM RESCUE DEMO - read-only status (no disk scan)")
@@ -162,15 +122,15 @@ class Recovery:
                     print(line)
         except OSError as exc:
             print(exc)
-        print("\nCommands: rescue verify | rescue refresh ubuntu | rescue refresh shared")
-        print("          rescue log | rescue help")
+        print("\nCommands: rescue status | rescue verify | rescue log | rescue help")
 
 
 HELP = """RAM rescue uses a separate root in RAM. This shell is root after authentication.
 Alt+F9 and Alt+F10 are independent rescue terminals (Ctrl+Alt+Fn from desktop).
 status: inspect sysfs only; verify: probe ONLY the enrolled disk and PV.
-refresh ubuntu/shared: manually refresh one enrolled active linear LV.
-No automatic refresh, fsck, remount, USB reset, poweroff or reboot occurs.
+log: show kernel messages; help: show this guide. Neither requires enrollment.
+These commands only inspect storage; automatic recovery belongs to the Guard.
+No mapping changes, fsck, remount, USB reset, poweroff or reboot occurs.
 Do NOT run e2fsck repair on a mounted filesystem, including the host root.
 The host root can still be mounted even though this shell has a different root.
 Use /proc/1/mountinfo to check host mounts; do not mount its LV a second time.
@@ -181,30 +141,28 @@ This cannot recover a deadlocked/panicked kernel or undo failed filesystem write
 """
 
 
-def main():
+def main(argv=None):
     parser = argparse.ArgumentParser(description=HELP)
-    parser.add_argument("action", choices=["status", "verify", "refresh", "log", "help"], nargs="?", default="status")
-    parser.add_argument("target", nargs="?", default="ubuntu")
-    args = parser.parse_args()
-    recovery = Recovery(json.loads(read("/etc/rescue/identity.json")))
+    parser.add_argument("action", choices=["status", "verify", "log", "help"], nargs="?", default="status")
+    args = parser.parse_args(argv)
     try:
-        if args.action == "status":
-            recovery.status()
-        elif args.action == "verify":
-            print("Verified:", recovery.verify())
-        elif args.action == "refresh":
-            recovery.refresh(args.target)
+        if args.action == "help":
+            print(HELP)
         elif args.action == "log":
             os.execv("/bin/busybox", ["busybox", "dmesg"])
         else:
-            print(HELP)
+            diagnostics = RescueDiagnostics(json.loads(read("/etc/rescue/identity.json")))
+            if args.action == "status":
+                diagnostics.status()
+            else:
+                print("Verified:", diagnostics.verify())
     except (Refuse, OSError, ValueError, KeyError) as exc:
         print("STOP:", exc, file=sys.stderr)
         return 1
     finally:
         try:
             with open("/var/log/rescue-actions.log", "a") as log:
-                log.write(f"{time.time():.0f} action={args.action} target={args.target}\n")
+                log.write(f"{time.time():.0f} action={args.action}\n")
         except OSError:
             pass
     return 0

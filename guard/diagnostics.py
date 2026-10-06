@@ -139,7 +139,7 @@ class Reader:
         try:
             return read_trusted(self.root / path.relative_to('/'), limit=limit, uid=self.uid, anchor=self.root)
         except (RuntimeError, ValueError) as error:
-            raise InputError('oversized_untrusted_or_changed_input') from error
+            raise InputError('oversized_untrusted_or_changed_input: ' + str(path) + ': ' + str(error)) from error
 
     def json(self, path):
         value = json.loads(self.read(path))

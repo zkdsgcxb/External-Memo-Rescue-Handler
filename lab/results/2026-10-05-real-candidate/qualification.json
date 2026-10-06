@@ -1,0 +1,19 @@
+{
+  "evidence": {
+    "origin_report_sha256": "74db4c43440c0635d93bae4cff913816a61936012646efa5347a071122b8448b",
+    "package_sha256": "c7390f352d0c3dbca476f3618842a5a95f5a4a7e8659e7f0d81f2b145fd5a56c",
+    "prerequisite_report_sha256": "35e349251e49055389c171243aa74afb7d131181c6a3833797e3203226758515",
+    "test_source_sha256": "53bffdd0e9967c6551d1269811b7576493e79db30841ce602b630bc436bbbe89"
+  },
+  "purpose": "candidate_preparation_prerequisites",
+  "result": "passed",
+  "schema": 1,
+  "scope": {
+    "filesystems": [
+      "ext4"
+    ],
+    "profile": "host-data",
+    "topology": "existing_single_path_dm"
+  },
+  "subject_sha256": "3d2c493cc6ab6162406ef09999fda5164d683b748e049c43d5ade42dd9cc6987"
+}

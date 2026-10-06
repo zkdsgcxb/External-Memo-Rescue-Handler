@@ -121,8 +121,8 @@ def run_case(args, stage):
                 return s if hook.get('token') == token and hook.get('stage') == stage else None
             report['at_hook'] = wait_for(hook_ready,args.queue_seconds+5,'phase hook')
             report['cache_preparation'] = ram_action(folder,'02-clean-cache',
-                'import sys\nsys.path.insert(0,"/opt/lab")\nfrom rescue import Recovery\n'
-                'recovery = Recovery(json.loads(Path("/etc/rescue/identity.json").read_text()))\n'
+                'import sys\nsys.path.insert(0,"/opt/lab")\nfrom rescue import RescueDiagnostics\n'
+                'recovery = RescueDiagnostics(json.loads(Path("/etc/rescue/identity.json").read_text()))\n'
                 'deadline = time.monotonic()+6\n'
                 'while True:\n'
                 ' try:\n'

@@ -1,8 +1,11 @@
 # 部件、实现来源与替换边界
 
+> v0.0.1-beta 新增 `guard/lifecycle.py` 作为显式数据盘管理入口，`guard/release_support.py` 消费独立发布资格。原生首次启用在 owner fence 内写事务后开启排队；候选资格仍仅授权保存。当前用户流程见 [使用指南](docs/USAGE.md)。
+
+
 完整 Ubuntu Server 与 Git 克隆集成见 [lab/UBUNTU.md](lab/UBUNTU.md)。
 
-本文区分手动 RAM 救援与自动保护：`ram-rescue-demo/` 提供手动工具；`guard/native/runtime/` 是唯一 C++ 自动恢复核心，`guard/admin/` 是 Python 管理工具的冷态登记与只读查询模块；`lab/` 负责构建虚拟机、注入故障和独立验收。根盘保护入口已实际启动，2026-09-30 首次实机短断测试通过，内核 WARNING 仍待定位。2026-10-01 增加独立 USB 数据分区实验入口，复用相同控制器，见 [数据映射接入](guard/DATA.md)。源码更新不等于更新已安装包。
+本文区分手动 RAM 救援与自动保护：`ram-rescue-demo/` 提供完整 root shell、系统工具与 `RescueDiagnostics` 只读诊断，不再封装人工 LV 刷新；`guard/native/runtime/` 是唯一 C++ 自动恢复核心，`guard/admin/` 是 Python 管理工具的冷态登记与只读查询模块；`lab/` 负责构建虚拟机、注入故障和独立验收。根盘保护入口已实际启动，2026-09-30 首次实机短断测试通过，内核 WARNING 仍待定位。2026-10-01 增加独立 USB 数据分区实验入口，复用相同控制器，见 [数据映射接入](guard/DATA.md)。源码更新不等于更新已安装包。
 
 当前只维护 Linux **7.0.0-34-generic / x86_64** 基线，要求 multipath target ≥ `1.15.0`。实机入口额外要求 `ram_rescue_guard=1` 启动标记与登记的内核 release 完全相符；没有旧内核兼容或无探测降级分支。
 
@@ -23,7 +26,7 @@
 5. **切换后端并确认路径。** 持有候选设备描述符，通过 `load → 再次核验 → 单次 resume --noflush --nolockfs` 替换稳定设备的后端。内核在一次 resume 内完成必要的暂停、换表与恢复；没有单独的用户态 suspend 步骤。随后执行原生 `DM_MPATH_PROBE_PATHS`，再次确认实例、活动路径、表和原期限，才记录 ready。业务 I/O 在路径恢复后即可继续，探测不是业务写入屏障；上层 LV、挂载与尚存活进程不重建。
 6. **失败分支。** 到期时主循环先记录 `expired`、停止准入、拒绝迟到结果。关闭无路径排队交给取得所有权锁后的接管者：旧 helper 或探测未结束时等待，不并行发送 `fail_if_no_path`。内核另有无路径超时作为补充退路，但二者都不能取消任意下层在途请求。错误可能继续传播到文件系统和应用，此后保留 RAM 救援，而不宣称完整恢复。
 
-已安装的手动版只具备第 1 步的环境和人工核验/刷新流程，不具备第 2 步预置的排队层。它调用 `lvchange --refresh` 修正旧 LV 依赖，不能补救此前已经返回的 EIO。自动版的核心工作就是在错误扩散之前，预先把可等待、可切换的内核设备放到请求路径中。
+单独运行 RAM 救援环境只具备第 1 步的工具与只读诊断，不具备第 2 步预置的排队层。早期通过 `lvchange --refresh` 修正旧 LV 依赖的人工封装已从当前源码清退；它本来也不能补救此前已经返回的 EIO。自动版的核心工作就是在错误扩散之前，预先把可等待、可切换的内核设备放到请求路径中。
 
 ## 1. 整体结构
 
@@ -46,7 +49,7 @@ flowchart TD
 
 持有候选 fd 减少用户态检查期间的设备变化风险，但 DM 的后端查找仍按设备号进行，不能直接接收该 fd 或 diskseq。新实例若复用了当前 active 后端的 dev_t，当前实现拒绝自动切换，避免把未证明的内核对象绑定当成成功。
 
-旧手动方案没有这个预置层：LV 直接依赖原 USB 分区，断联后可能先出现 EIO，再由人工调用 `rescue refresh` 更新 LV 映射。映射恢复不能撤销已发生的文件系统或应用错误。
+已退役的旧手动方案没有这个预置层：LV 直接依赖原 USB 分区，断联后可能先出现 EIO，再由人工命令更新 LV 映射。相关历史实验保留用于对照，当前 `rescue` 只有 `status`、`verify`、`log`、`help`。映射恢复不能撤销已发生的文件系统或应用错误。
 
 ## 2. 各部件由谁完成了什么
 
@@ -60,7 +63,7 @@ flowchart TD
 | 阻塞操作与所有权 | 串行执行故障期操作，保留锁引用，清理迟到结果 | C++ 线程、Linux flock、eventfd、进程 fd 继承 | `OwnedOperation`、有界 RAM journal 与状态；`guard/native/runtime/core.cpp` |
 | 设备身份核验 | 避免只因新盘符或序列号相同就接入 | Linux sysfs/块设备 ioctl、util-linux blkid、LVM 元数据解析工具 | `guard/native/runtime/admission.cpp` 保留原 Python 身份链及带期限凭证、实例与布局核验，不另写 PV 元数据解析器 |
 | 数据分区接入 | 登记已有单路径 DM 映射，排除原分区自动挂载冲突，运行独立实例 | 同一 DM、blkid、systemd、udev | `admission.cpp` 提供文件系统身份策略和运行时接入核验；`guard/admin/data.py` 负责冷态登记；`guard/data.py` 配置临时 RAM 服务和合计配额；没有第二套恢复状态机 |
-| LVM 卷管理 | PV/VG/LV 管理、LV 到物理范围的映射 | LVM2 用户态工具、Linux DM linear | 手动恢复的限制、确认流程、再次核验及结果检查；`Recovery.refresh()`；修正真实 lvs JSON 的 seg 键解析 |
+| LVM 卷管理 | PV/VG/LV 管理、LV 到物理范围的映射 | LVM2 用户态工具、Linux DM linear | 启动阶段核验并激活已有 LV；`RescueDiagnostics` 只读查询身份和当前 LV 依赖；人工 LV 刷新封装已清退 |
 | 文件系统 | 文件、目录、journal、fsync、错误处理 | Linux ext4/JBD2；e2fsprogs 提供 mkfs/e2fsck | 检查可读、可写和 journal 状态；未修改 ext4，也未实现或自动运行修复算法 |
 | RAM 救援工具环境 | 根盘断联时仍能启动工具和诊断 | Linux tmpfs、chroot、挂载、cgroup；现成二进制与库 | 依赖打包、noswap、挂载安排、RAM 锁目录共用、资源限制与就绪检查；`ram-rescue-demo/build.py`、`src/prepare.sh`、`src/check.py` |
 | 登录与终端 | F9/F10 文本入口和密码认证 | Linux VT、BusyBox login/sh、systemd | 独立 rescue 账号/密码配置、双终端、会话循环和服务配置；`install.py`、`src/supervisor.sh`、`src/session.sh`、`src/*.service` |
@@ -75,7 +78,7 @@ LVM 是管理和构造卷映射的工具；运行中的每次块 I/O 由内核 D
 ## 3. 我们实际完成的工作
 
 1. **保住救援入口。** 把必要程序、动态库、认证和日志放到 RAM 中，组织独立终端、启动服务和资源限制。tmpfs、登录认证、shell 和调度机制来自上游。
-2. **把恢复操作约束到登记设备。** 实现身份链检查、重复候选拒绝、人工确认后的再次核验，限定已激活的登记线性 LV；实测发现并修正 LVM 段报告解析错误。
+2. **把恢复操作约束到登记设备。** Guard 实现身份链检查、重复候选拒绝和切换前的最终核验；人工 `RescueDiagnostics` 只读检查登记设备，旧人工刷新及确认流程已清退。实测发现并修正的 LVM 段报告解析继续用于布局核验。
 3. **将现成排队机制用于单 USB 根盘。** 在 PV 下预先建立稳定 DM 设备，编写路径恢复状态机和超时策略，避免依赖故障后的人工刷新。内核如何保存、重试请求仍由 dm-multipath 实现。
 4. **建立可复现的证据链。** 在实际从 USB/LVM/ext4 启动的最小 guest 上做故障注入，对比未保护、预暂停和突发断联自动恢复；检查失败分支而不只检查成功分支。
 5. **复用核心接入已有系统启动。** `guard/build.py` 只打包完整 C++ 运行时；当前工作树不再维护第二套 Python 自动恢复逻辑。历史性能与行为对照由 `lab/historical.py` 提取固定提交。实机入口检查内核、root 参数、旧事务、已有目标 VG 与 LV 依赖关系；systemd 在初始路径核验后发送 `READY=1`。已安装 Python 版本有首次实机短断证据；新 C++ 构建尚未部署到本机。

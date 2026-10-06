@@ -98,7 +98,7 @@ private:
 void validate_data_config(const Json& config);
 void validate_record(const Json& record);
 Json record_from_profile(const Json& profile);
-Json current_profile(const Json& record, Runner runner = {});
-void validate_data_runtime(const Json& config, const std::shared_ptr<Recovery>& recovery);
+Json current_profile(const Json& record, Runner runner = {}, bool queue_required = true);
+void validate_data_runtime(const Json& config, const std::shared_ptr<Recovery>& recovery, bool queue_required = true);
 
 } // namespace rescue

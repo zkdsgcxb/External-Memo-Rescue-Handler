@@ -1,0 +1,96 @@
+{
+  "schema": 1,
+  "package": "ram-rescue-handler_bbaf25c0389f37b23f6971b0_amd64.deb",
+  "sha256": "17c026bd7c5b3af6b746e00adb0504fe2ec29963298c3df3012fe310876b03a5",
+  "administration_version": "bbaf25c0389f37b23f6971b0",
+  "runtime": {
+    "schema": 1,
+    "kind": "data-runtime",
+    "kernel_release": "7.0.0-34-generic",
+    "archive_sha256": "7277ebee46e61061c200b03e8293d006898d3536c13854b0bc320cfb4e3b44e8",
+    "binary_sha256": "53893fefeb21b31a896c03e1ae20dc222d3691164ad431ff618715226df50324",
+    "native_runtime": {
+      "schema": 1,
+      "runtime": "cpp",
+      "binary_path": "/opt/guard-runtime/guard-runtime",
+      "binary_sha256": "53893fefeb21b31a896c03e1ae20dc222d3691164ad431ff618715226df50324",
+      "entrypoint_path": "/opt/guard-runtime/maintain",
+      "entrypoint_sha256": "e2cd3b560621354d5110908b715095dc470bea369071708740ec3ab47b4d7b3c",
+      "library_sha256": {
+        "/lib/x86_64-linux-gnu/libc.so.6": "3a15d66867d83762c7f2f1e37359cb8f6c5743edb369c65285cb0b1c4f7498bf",
+        "/lib/x86_64-linux-gnu/libcap.so.2": "6ac6abc86ac891c6e13486470e26f1d939f47fda9e6b5d5508a7f5ec881adc84",
+        "/lib/x86_64-linux-gnu/libcrypto.so.3": "6866ed711dab8927e1bf82bf1cd30e828bdfc34f3cc1e83b1c9eb01ce6c37d9a",
+        "/lib/x86_64-linux-gnu/libdevmapper.so.1.02.1": "0b33f9e9780b2e22bd40170f4cfe358b0cf525974d01896b3bb2b02d6e4e2582",
+        "/lib/x86_64-linux-gnu/libgcc_s.so.1": "d93224d2b0dab4247598be683adca02f5cf00586f99c187579cd7e92058fb7cb",
+        "/lib/x86_64-linux-gnu/libm.so.6": "fce00b6f25f459cf4ae0b7fae4257909a1a8a86f9149e7c029a5d617baf1ccd0",
+        "/lib/x86_64-linux-gnu/libpcre2-8.so.0": "e00576d71d81d3ba0cfa4903c835a44a8723aac96f72f79ff75200b4cff9071b",
+        "/lib/x86_64-linux-gnu/libselinux.so.1": "0ec0843463f90e227b0e138e1f379774f50b5514bd7f5dbd4c8a87aca0aa6670",
+        "/lib/x86_64-linux-gnu/libstdc++.so.6": "1fd75fe70354a416d75aef22bcae68c47bd25d20e2d0568c30b1a9838cf62f11",
+        "/lib/x86_64-linux-gnu/libudev.so.1": "4298228175fa62a36af88b1afd4406cdd8b1bf166621f957d0dbbde45a698fe5",
+        "/lib64/ld-linux-x86-64.so.2": "c20a2dc8917c755f02b94049356320fe1f62ac7d9f8994731f807d9df39302da"
+      },
+      "payload_file_bytes": 13829862,
+      "dependency_packages": {
+        "/lib/x86_64-linux-gnu/libc.so.6": {
+          "package": "libc6:amd64",
+          "version": "2.39-0ubuntu8.9",
+          "architecture": "amd64"
+        },
+        "/lib/x86_64-linux-gnu/libcap.so.2": {
+          "package": "libcap2:amd64",
+          "version": "1:2.66-5ubuntu2.4",
+          "architecture": "amd64"
+        },
+        "/lib/x86_64-linux-gnu/libcrypto.so.3": {
+          "package": "libssl3t64:amd64",
+          "version": "3.0.13-0ubuntu3.16",
+          "architecture": "amd64"
+        },
+        "/lib/x86_64-linux-gnu/libdevmapper.so.1.02.1": {
+          "package": "libdevmapper1.02.1:amd64",
+          "version": "2:1.02.185-3ubuntu3.2",
+          "architecture": "amd64"
+        },
+        "/lib/x86_64-linux-gnu/libgcc_s.so.1": {
+          "package": "libgcc-s1:amd64",
+          "version": "14.2.0-4ubuntu2~24.04.1",
+          "architecture": "amd64"
+        },
+        "/lib/x86_64-linux-gnu/libm.so.6": {
+          "package": "libc6:amd64",
+          "version": "2.39-0ubuntu8.9",
+          "architecture": "amd64"
+        },
+        "/lib/x86_64-linux-gnu/libpcre2-8.so.0": {
+          "package": "libpcre2-8-0:amd64",
+          "version": "10.42-4ubuntu2.1",
+          "architecture": "amd64"
+        },
+        "/lib/x86_64-linux-gnu/libselinux.so.1": {
+          "package": "libselinux1:amd64",
+          "version": "3.5-2ubuntu2.1",
+          "architecture": "amd64"
+        },
+        "/lib/x86_64-linux-gnu/libstdc++.so.6": {
+          "package": "libstdc++6:amd64",
+          "version": "14.2.0-4ubuntu2~24.04.1",
+          "architecture": "amd64"
+        },
+        "/lib/x86_64-linux-gnu/libudev.so.1": {
+          "package": "libudev1:amd64",
+          "version": "255.4-1ubuntu8.17",
+          "architecture": "amd64"
+        },
+        "/lib64/ld-linux-x86-64.so.2": {
+          "package": "libc6:amd64",
+          "version": "2.39-0ubuntu8.9",
+          "architecture": "amd64"
+        }
+      }
+    },
+    "base_sha256": "152c6d2720ff01b232941e917b651fdca638627f2dcb547893ae17dc3237c3b0"
+  },
+  "source_commit": "af7448bd9efe5b20dff28ecedc105000eb3e95af",
+  "installed": false,
+  "maintainer_scripts": false
+}

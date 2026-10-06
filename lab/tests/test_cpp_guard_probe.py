@@ -3,6 +3,7 @@ from pathlib import Path
 import hashlib
 import json
 import stat
+import subprocess
 import sys
 import tempfile
 import unittest
@@ -59,6 +60,21 @@ class RuntimeFixtureTests(unittest.TestCase):
             self.assertIn('guard-runtime run --config', init)
             self.assertIn('guard-runtime takeover --config', init)
             self.assertNotIn('python3 /opt/lab/path_guard.py', init)
+            # Execute the generated import against the actual pinned helper.
+            # Current observer names must not break its frozen dependency.
+            lab = output / 'overlay/opt/lab'
+            imported = subprocess.check_output([sys.executable, '-B', '-c',
+                'import ast; from pathlib import Path; '
+                'tree=ast.parse(Path("agent.py").read_text()); '
+                'node=next(n for n in ast.walk(tree) '
+                'if isinstance(n, ast.ImportFrom) and n.module == "rescue" '
+                'and any(alias.asname == "RescueDiagnostics" for alias in n.names)); '
+                'exec(compile(ast.Module(body=[node], type_ignores=[]), "<observer-import>", "exec")); '
+                'import rescue; print(Path(rescue.__file__).resolve()); '
+                'assert all(callable(getattr(RescueDiagnostics, name)) '
+                'for name in ("verify", "candidates", "mapping"))'],
+                cwd=lab, text=True).strip()
+            self.assertEqual(imported, str(lab / 'rescue.py'))
 
     def test_native_transaction_runner_cannot_dispatch_back_to_python(self):
         source = transactions.adapt_runner('a' * 64)

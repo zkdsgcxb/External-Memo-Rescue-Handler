@@ -136,6 +136,10 @@ def build_fixture(folder, original, binary):
     service = transaction_service()
     (lab / 'production-guard.service').write_text(service)
     agent = (lab / 'agent.py').read_text().replace("b'/opt/lab/path_guard.py'", repr(NATIVE.encode()))
+    # This observer deliberately uses the pinned release's read-only methods.
+    # Its historical class name is adapted only inside this disposable fixture.
+    agent = replace_once(agent, 'from rescue import RescueDiagnostics, command',
+                         'from rescue import Recovery as RescueDiagnostics, command')
     (lab / 'agent.py').write_text(agent)
     target = staging / NATIVE.lstrip('/')
     target.parent.mkdir(parents=True)

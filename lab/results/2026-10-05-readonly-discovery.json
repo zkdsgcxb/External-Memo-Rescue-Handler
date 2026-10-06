@@ -1,0 +1,159 @@
+{
+  "schema": 1,
+  "captured_at": "2026-10-04T20:22:10.115960+00:00",
+  "scope": "read_only_discovery_source_slice",
+  "base_revision": "af7448bd9efe5b20dff28ecedc105000eb3e95af",
+  "working_tree_dirty": true,
+  "source_sha256": {
+    "guard/discovery.py": "8d6c6b67c9b2fa1bb6aa62c9adb48fd721f3efd05ed63a37b5c6c46a5d7bc98a",
+    "guard/manage.py": "3bdfc9951072ad562d2dedea7008bf07d78ecff5bf01f19d71aa2a6428f38183",
+    "guard/admin_entry.py": "f2251189adaad46c3bb2f254fd4f5e09be1974a5cc2dee48257af89b3c9d3498",
+    "guard/admin/dm.py": "c8cf09cdab4c8a864f982fd2870e505ec02df851009efe504f063569a42cb6d4",
+    "lab/tests/test_discovery.py": "347a86d340cfd994e038c3360addbde939fb3d04c6ec5ad3425fe97fa86fb213",
+    "guard/MANAGER.md": "225644431685ae3e19e41c71638445ab6c527bde5315c2b197621710e9d59583",
+    "README.md": "54dab1e5e34d5dd36ed500699712727012c35c0985b96a8a0a11753707ed5595",
+    "research/2026-10-05/READONLY-DISCOVERY.md": "f5ac8c187d4a4940972e8c9cb508550d9333c84c59bbb85da9d7213b82c6cb01"
+  },
+  "discovery_tests": {
+    "command": [
+      "python3",
+      "-B",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "lab/tests",
+      "-p",
+      "test_discovery.py"
+    ],
+    "passed": 33,
+    "returncode": 0,
+    "output": ".................................\n----------------------------------------------------------------------\nRan 33 tests in 0.087s\n\nOK\n"
+  },
+  "related_regressions": [
+    {
+      "command": [
+        "python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "lab/tests",
+        "-p",
+        "test_diagnostics.py"
+      ],
+      "passed": 38,
+      "returncode": 0,
+      "evidence": "executed_in_this_review_before_final_documentation"
+    },
+    {
+      "command": [
+        "python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "lab/tests",
+        "-p",
+        "test_manager.py"
+      ],
+      "passed": 27,
+      "returncode": 0,
+      "evidence": "executed_in_this_review_before_final_documentation"
+    },
+    {
+      "command": [
+        "python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "lab/tests",
+        "-p",
+        "test_registry.py"
+      ],
+      "passed": 6,
+      "returncode": 0,
+      "evidence": "executed_in_this_review_before_final_documentation"
+    },
+    {
+      "command": [
+        "python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "lab/tests",
+        "-p",
+        "test_root_enrollment*.py"
+      ],
+      "passed": 20,
+      "returncode": 0,
+      "evidence": "executed_in_this_review_before_final_documentation"
+    },
+    {
+      "command": [
+        "python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "lab/tests",
+        "-p",
+        "test_package.py"
+      ],
+      "passed": 6,
+      "returncode": 0,
+      "evidence": "executed_in_this_review_before_final_documentation"
+    },
+    {
+      "command": [
+        "python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "lab/tests",
+        "-p",
+        "test_admission.py"
+      ],
+      "passed": 23,
+      "returncode": 0,
+      "evidence": "executed_in_this_review_before_final_documentation"
+    }
+  ],
+  "total_distinct_tests_passed": 153,
+  "unprivileged_source_smoke": {
+    "command": [
+      "python3",
+      "-B",
+      "guard/manage.py",
+      "discover",
+      "--json"
+    ],
+    "returncode": 0,
+    "volumes": 3,
+    "registered_groups": 0,
+    "snapshot_stable": true,
+    "unavailable_or_untrusted_issues": 5,
+    "scope": "metadata_and_permission_degradation_only",
+    "raw_report_saved": false
+  },
+  "native_core_diff_empty": true,
+  "real_release_package_built": false,
+  "fixture_package_tests_only": true,
+  "installed": false,
+  "host_mutated": false,
+  "qemu_run": false,
+  "recovery_experiment": "not_evaluated",
+  "committed": false,
+  "pushed": false,
+  "published": false,
+  "public_support_policy": "not_selected"
+}

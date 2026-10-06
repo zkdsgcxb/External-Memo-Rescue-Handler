@@ -7,7 +7,7 @@ import subprocess
 
 BASE = Path(__file__).resolve().parent
 SOURCES = (BASE / 'session_payload.py', BASE / 'src/session.sh',
-           BASE / 'src/supervisor.sh', BASE / 'src/session.conf')
+           BASE / 'src/supervisor.sh', BASE / 'src/session.conf', BASE / 'src/motd')
 
 
 def stage_session(root):
@@ -26,7 +26,8 @@ def stage_session(root):
     files = {str(binary): binary, **{path: Path(path).resolve(strict=True) for path in libraries}}
     files.update({'/bin/rescue-session': BASE / 'src/session.sh',
                   '/sbin/rescue-supervisor': BASE / 'src/supervisor.sh',
-                  '/etc/rescue/session.conf': BASE / 'src/session.conf'})
+                  '/etc/rescue/session.conf': BASE / 'src/session.conf',
+                  '/etc/motd': BASE / 'src/motd'})
     added_bytes = replaced_bytes = 0
     for absolute, source in files.items():
         target = root / absolute.lstrip('/')
@@ -39,7 +40,7 @@ def stage_session(root):
         added_bytes += source.stat().st_size
         target.parent.mkdir(parents=True, exist_ok=True)
         shutil.copyfile(source, target)
-        target.chmod(0o644 if absolute.endswith('.conf') else 0o755)
+        target.chmod(0o644 if absolute.startswith('/etc/') else 0o755)
     return {'file_sha256': {path: hashlib.sha256(source.read_bytes()).hexdigest()
                             for path, source in sorted(files.items())},
             'staged_file_bytes': added_bytes, 'replaced_file_bytes': replaced_bytes,

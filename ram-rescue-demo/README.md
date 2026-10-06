@@ -1,6 +1,6 @@
 # RAM 救援终端 demo
 
-这是运行时救援工具：Ubuntu 已经正常启动、随后 USB 根盘掉线时，尝试保留一个可认证、可诊断、可手动恢复 LVM 映射的文本入口。与正常系统共用内核；无法兜底 kernel panic、全局死锁或启动阶段尚未运行本服务的故障。
+这是运行时救援工具：Ubuntu 已经正常启动、随后 USB 根盘掉线时，尝试保留一个可认证、可诊断的完整 root 文本入口和救援工具。自动恢复由 C++ Guard 负责，`rescue` 命令只提供只读诊断，不再封装人工 LV 刷新。与正常系统共用内核；无法兜底 kernel panic、全局死锁或启动阶段尚未运行本服务的故障。
 
 ## 文件位置与当前状态
 
@@ -63,38 +63,18 @@ sudo python3 /usr/local/lib/ram-rescue-demo/check.py
 rescue status
 rescue log
 rescue verify
+rescue help
 ```
 
 - `status` 列出匹配 USB 序列号的磁盘、登记 LV 当前依赖、原系统 ext4 挂载状态；不扫描所有磁盘。
 - `log` 显示当前内核环形日志。
 - `verify` 对 USB VID/PID/序列号、容量、分区 UUID、PV UUID、VG UUID/名称逐项核对。
+- `help` 显示可用命令。
 - 找不到盘、出现重复序列号、身份不符时会停止；不会根据新的盘符盲目修改映射。
 
-当盘重新出现、`verify` 成功，而原 LV 仍引用旧设备时：
+保护启动和普通回退启动均不再提供旧的 `rescue refresh` 命令；普通回退启动也不会因此获得自动根盘保护。`verify` 成功只表示本次身份核验通过，不表示映射、文件系统或应用已经恢复。查看状态和日志，再判断是否导出现场信息、抢救数据或重启。
 
-```text
-rescue refresh ubuntu
-```
-
-屏幕会说明计划操作，并要求手动输入：
-
-```text
-REFRESH vgportable/ubuntu
-```
-
-需要恢复 shared 卷时，单独运行：
-
-```text
-rescue refresh shared
-```
-
-确认文本为 `REFRESH vgportable/shared`。每次只尝试刷新一个登记的、已经激活的线性 LV；不自动激活未知卷，不修改 PV 元数据，不执行 fsck，不重挂载，不重置 USB，不关机。
-
-如果已正确依赖当前设备，命令直接报告无需刷新。确认后会再次核验设备身份，防止等待输入期间盘符发生变化。刷新使用系统自带 LVM，并禁用对 udev、D-Bus、监控守护进程的等待；与宿主共用 `/run/lock/lvm` 的 RAM 锁目录，避免两个相互隔离的 LVM 锁空间。
-
-LVM 刷新可能等待内核 I/O；用户空间超时不能保证打断 D-state。如果一个终端卡住，尝试另一个终端。内核整体不可调度时两个终端也可能不可用。
-
-刷新成功只表示映射重新指向已核验设备，不代表 ext4、应用或先前失败的写入已修复。查看 `rescue log`，再判断是否抢救数据或重启。
+F9/F10 仍提供完整 root shell 和系统工具，并非受限命令菜单。人工诊断可能等待内核 I/O，用户空间超时不能保证打断 D-state；如果一个终端卡住，可尝试另一个终端。内核整体不可调度时两个终端也可能不可用。
 
 ## 文件系统检查与数据转移
 
@@ -106,7 +86,7 @@ LVM 刷新可能等待内核 I/O；用户空间超时不能保证打断 D-state�
 cat /proc/1/mountinfo
 ```
 
-离线修复通常应在 Live 系统中、明确卸载目标卷之后进行。本 demo 优先提供访问恢复与诊断，不自动进行文件系统修复。
+离线修复通常应在 Live 系统中、明确卸载目标卷之后进行。本 demo 提供保留在 RAM 中的诊断与处置入口，不自动进行文件系统修复。
 
 救援环境里的 `/mnt` 可用于人工挂载确认过的另一块接收盘。正常系统 root 可从 `/proc/1/root` 访问，但故障时访问它同样可能失败或阻塞；不要在救援终端启动时自动进入这个目录。
 
@@ -146,8 +126,8 @@ python3 tests/smoke.py
 - [systemd debug-shell](https://github.com/systemd/systemd/blob/main/units/debug-shell.service.in)：提供预运行文本终端的现成机制。原始调试服务没有本 demo 的独立 RAM 工具环境与密码登录设计。
 - [SystemRescue](https://www.system-rescue.org/manual/Booting_SystemRescue/)：成熟的独立救援系统，可加载进 RAM；通常需要另行启动。
 - [zramroot](https://github.com/Neol00/zramroot)：把完整正常系统放入 RAM，适合另一种内存预算。
-- 本 demo 的自写部分主要是本机打包/部署、日志轮转、设备身份核验与人工确认后调用现成 LVM；没有修改内核或实现文件系统修复算法。
+- 本 demo 的自写部分主要是本机打包/部署、日志轮转和只读设备身份核验；没有修改内核或实现文件系统修复算法。
 
 ## 验证结果
 
-制作验证详情见同目录 `VALIDATION.md`。管理员安装器会再执行需要真实 root 权限的完整登录测试和实际服务检查。未完成管理员安装和现场故障验证前，不应把 demo 当作已经证明可承受掉盘的方案。
+本次清退的回归、完整 Ubuntu 和离线包验收见 [清退报告](../research/2026-10-05/MANUAL-DIAGNOSTICS.md)。早期制作验证见同目录 `VALIDATION.md`，其中人工刷新记录属于旧版历史行为。当前源码的精简不会自动修改已安装的运行包或 RAM 环境，需要重新构建、验收和部署。管理员安装器会再执行需要真实 root 权限的完整登录测试和实际服务检查。未完成管理员安装和现场故障验证前，不应把 demo 当作已经证明可承受掉盘的方案。

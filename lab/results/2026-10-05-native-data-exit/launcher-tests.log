@@ -1,0 +1,18 @@
+test_changed_device_during_rule_installation_prevents_start (lab.tests.test_data_launcher.DataLauncherTests.test_changed_device_during_rule_installation_prevents_start) ... ok
+test_changed_map_is_refused_before_staging_any_rules_or_unit (lab.tests.test_data_launcher.DataLauncherTests.test_changed_map_is_refused_before_staging_any_rules_or_unit) ... ok
+test_enrollment_refuses_to_replace_existing_record (lab.tests.test_data_launcher.DataLauncherTests.test_enrollment_refuses_to_replace_existing_record) ... ok
+test_existing_state_is_never_replaced_for_automatic_restart (lab.tests.test_data_launcher.DataLauncherTests.test_existing_state_is_never_replaced_for_automatic_restart) ... ok
+test_failed_exclusion_prevents_start_and_retains_precaution (lab.tests.test_data_launcher.DataLauncherTests.test_failed_exclusion_prevents_start_and_retains_precaution) ... ok
+test_modified_native_runtime_is_rejected_before_creating_start_state (lab.tests.test_data_launcher.DataLauncherTests.test_modified_native_runtime_is_rejected_before_creating_start_state) ... ok
+test_native_boot_runtime_is_verified_and_reused_without_python_copy (lab.tests.test_data_launcher.DataLauncherTests.test_native_boot_runtime_is_verified_and_reused_without_python_copy) ... ok
+test_old_python_boot_cannot_silently_create_another_runtime (lab.tests.test_data_launcher.DataLauncherTests.test_old_python_boot_cannot_silently_create_another_runtime) ... ok
+test_start_confirms_exclusion_and_revalidates_before_starting_service (lab.tests.test_data_launcher.DataLauncherTests.test_start_confirms_exclusion_and_revalidates_before_starting_service) ... ok
+test_stop_cli_does_not_report_success_for_blocked_or_incomplete (lab.tests.test_data_launcher.DataLauncherTests.test_stop_cli_does_not_report_success_for_blocked_or_incomplete) ... ok
+test_stop_delegates_to_native_owner_without_service_signal_or_cleanup (lab.tests.test_data_launcher.DataLauncherTests.test_stop_delegates_to_native_owner_without_service_signal_or_cleanup) ... ok
+test_udev_identity_metacharacters_cannot_match_other_disks (lab.tests.test_data_launcher.DataLauncherTests.test_udev_identity_metacharacters_cannot_match_other_disks) ... ok
+test_unsafe_map_names_are_never_interpreted_as_unit_or_path (lab.tests.test_data_launcher.DataLauncherTests.test_unsafe_map_names_are_never_interpreted_as_unit_or_path) ... ok
+
+----------------------------------------------------------------------
+Ran 13 tests in 2.373s
+
+OK

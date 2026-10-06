@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build an offline Debian package without installation or maintainer scripts.
+"""Build an inert Debian package with a removal-only maintainer guard.
 
 The operator must establish the source/package's authenticity before dpkg
 installation. The root-owned entry subsequently enforces local integrity;
@@ -17,6 +17,7 @@ import tarfile
 
 from host_files import sha256
 from native_payload import stage_runtime
+from version import VERSION, DEBIAN_VERSION
 
 REPO = Path(__file__).resolve().parent.parent
 
@@ -38,6 +39,15 @@ def runtime_package(base, binary, destination):
     root.mkdir()
     with tarfile.open(base / 'rescue-root.tar.gz', 'r:gz') as archive:
         archive.extractall(root, filter='data')
+    # Reusing a tool archive must not reintroduce the retired manual refresh.
+    for source, relative, mode in (
+        ('rescue.py', 'sbin/rescue', 0o755),
+        ('motd', 'etc/motd', 0o644),
+    ):
+        target = root / relative
+        target.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copyfile(REPO / 'ram-rescue-demo/src' / source, target)
+        target.chmod(mode)
     (root / 'etc/rescue/base-source.json').write_text(json.dumps(
         {'schema': 1, 'sha256': details['sha256']}) + '\n')
     # Data maintenance does not start a rescue login or carry a disk identity.
@@ -74,7 +84,7 @@ def runtime_package(base, binary, destination):
     return manifest
 
 
-def build(output, *, base_rescue_dir, native_binary):
+def build(output, *, base_rescue_dir, native_binary, notices_dir=None):
     output = Path(output).resolve()
     output.mkdir(mode=0o700, parents=True, exist_ok=False)
     content = {str(p.relative_to(REPO)): p.read_bytes() for p in source_files()}
@@ -93,6 +103,22 @@ def build(output, *, base_rescue_dir, native_binary):
     (package_root / 'administration.json').write_text(json.dumps(manifest, indent=2) + '\n')
     runtime = runtime_package(base_rescue_dir, native_binary, package_root / 'runtime')
     digest.update(runtime['archive_sha256'].encode())
+    if notices_dir is not None:
+        notices = Path(notices_dir)
+        documentation = staging / 'usr/share/doc/ram-rescue-handler'
+        documentation.mkdir(parents=True)
+        for relative in ('packages.json', 'copyright', 'common-licenses'):
+            source = notices / relative
+            if source.is_dir():
+                shutil.copytree(source, documentation / relative)
+            else:
+                shutil.copyfile(source, documentation / relative)
+        for source, name in ((REPO / 'LICENSE', 'copyright-project'),
+                             (REPO / 'guard/native/vendor/LICENSE.nlohmann-json', 'copyright-nlohmann-json')):
+            shutil.copyfile(source, documentation / name)
+        for path in sorted(documentation.rglob('*')):
+            if path.is_file():
+                digest.update(str(path.relative_to(documentation)).encode() + b'\0' + path.read_bytes())
     version = digest.hexdigest()[:24]
     completed = package_root.with_name(version)
     package_root.rename(completed)
@@ -106,23 +132,28 @@ def build(output, *, base_rescue_dir, native_binary):
     control.mkdir()
     architecture = subprocess.check_output(['dpkg', '--print-architecture'], text=True).strip()
     (control / 'control').write_text(
-        f'Package: ram-rescue-handler\nVersion: 0.3.0+{version}\nArchitecture: {architecture}\n'
+        f'Package: ram-rescue-handler\nVersion: {DEBIAN_VERSION}+{version}\nArchitecture: {architecture}\n'
         'Maintainer: External-Memo-Rescue-Handler contributors\n'
-        'Depends: python3 (>= 3.12), systemd, udev, lvm2, dmsetup, util-linux\n'
+        'Depends: python3 (>= 3.12), systemd, udev, lvm2, dmsetup, util-linux, gpgv, ubuntu-keyring, kmod\n'
         'Section: admin\nPriority: optional\n'
         'Description: Offline administration and RAM tools for enrolled USB DM mappings\n'
-        ' No maintainer scripts, automatic activation or disk enrollment.\n')
+        ' Explicit data-device activation; installation never starts protection.\n')
+    prerm = control / 'prerm'
+    prerm.write_text('#!/bin/sh\nset -eu\ncase "${1:-}" in\n'
+        '  remove|deconfigure) /usr/bin/rescue-guard-admin device package-remove ;;\n'
+        '  upgrade|failed-upgrade) ;;\n  *) ;;\nesac\n')
+    prerm.chmod(0o755)
     for path in [staging, *staging.rglob('*')]:
         if not path.is_symlink():
-            path.chmod(0o755 if path.is_dir() or path == entry else 0o644)
-    package = output / ('ram-rescue-handler_' + version + '_' + architecture + '.deb')
+            path.chmod(0o755 if path.is_dir() or path in (entry, prerm) else 0o644)
+    package = output / ('ram-rescue-handler_' + DEBIAN_VERSION + '+' + version + '_' + architecture + '.deb')
     epoch = subprocess.check_output(['git', 'show', '-s', '--format=%ct', 'HEAD'], cwd=REPO, text=True).strip()
     subprocess.run(['dpkg-deb', '--root-owner-group', '--build', str(staging), str(package)],
                    env={**os.environ, 'SOURCE_DATE_EPOCH': epoch}, check=True)
     record = {'schema': 1, 'package': package.name, 'sha256': sha256(package),
               'administration_version': version, 'runtime': runtime,
               'source_commit': subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=REPO, text=True).strip(),
-              'installed': False, 'maintainer_scripts': False}
+              'installed': False, 'maintainer_scripts': ['prerm'], 'automatic_activation': False, 'version': VERSION}
     (output / 'package.json').write_text(json.dumps(record, indent=2) + '\n')
     print(json.dumps({'package': str(package), 'sha256': record['sha256'], 'installed': False}))
     return record
@@ -133,5 +164,7 @@ if __name__ == '__main__':
     parser.add_argument('--output', type=Path, required=True)
     parser.add_argument('--base-rescue-dir', type=Path, required=True)
     parser.add_argument('--native-binary', type=Path, required=True)
+    parser.add_argument('--notices-dir', type=Path, help='Release copyright and package inventory directory')
     args = parser.parse_args()
-    build(args.output, base_rescue_dir=args.base_rescue_dir, native_binary=args.native_binary)
+    build(args.output, base_rescue_dir=args.base_rescue_dir, native_binary=args.native_binary,
+          notices_dir=args.notices_dir)

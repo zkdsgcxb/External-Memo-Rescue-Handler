@@ -1,0 +1,144 @@
+{
+  "schema": 1,
+  "captured_at": "2026-10-04T21:15:21.931327+00:00",
+  "scope": "read_only_manager_plan",
+  "base_revision": "af7448bd9efe5b20dff28ecedc105000eb3e95af",
+  "working_tree_dirty": true,
+  "source_sha256": {
+    "guard/planning.py": "694106a93b00bf412aa50030e56141d013e54a8e85cdb2f90f2986d6f9bb0131",
+    "guard/discovery.py": "0a21d01fa607903e06aefb7331689b208a6b3dcae9f0c00b756383efdb25a5ca",
+    "guard/manage.py": "e08dcff15a5ca59340b167542308e21fe27875dd1f8e10edbabbb6afb25aa33b",
+    "lab/tests/test_planning.py": "b2f96415a805c99af6f69b9631423eaa0156e868cfda2b61feef74397a283f09",
+    "README.md": "abfb7b4bd63810bd4cbd8b3d23c66bfaefd90e806df8e97c2f77696d8df3b7c2",
+    "guard/MANAGER.md": "c7bd937072d45b5dac0c4135ccfa004fbd6295f9bb258292900c38e5711bf4cd",
+    "research/2026-10-05/READONLY-PLAN.md": "ca79cba855d2824d28be03c27f2a67c76d35c0b431d29b14788ec13734c4037f",
+    "research/2026-10-05/CANDIDATE-LIFECYCLE-DESIGN.md": "e28150392c6227d573e38fcde45af6a7c891c77cfa08686f76d1dddecbdda278",
+    "lab/results/2026-10-05-plan-preview.txt": "b135217a79fe10f091ece82fccbe14bba019112e70b320014f7f4b648fd115b6"
+  },
+  "tests": [
+    {
+      "command": [
+        "python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "lab/tests",
+        "-p",
+        "test_planning.py"
+      ],
+      "passed": 24,
+      "returncode": 0,
+      "observed_output": "Ran 24 tests in 0.337s\nOK"
+    },
+    {
+      "command": [
+        "python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "lab/tests",
+        "-p",
+        "test_discovery.py"
+      ],
+      "passed": 46,
+      "returncode": 0,
+      "observed_output": "Ran 46 tests in 0.229s\nOK"
+    },
+    {
+      "command": [
+        "python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "lab/tests",
+        "-p",
+        "test_admission.py"
+      ],
+      "passed": 23,
+      "returncode": 0,
+      "observed_output": "Ran 23 tests in 0.082s\nOK"
+    },
+    {
+      "command": [
+        "python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "lab/tests",
+        "-p",
+        "test_data_*.py"
+      ],
+      "passed": 39,
+      "returncode": 0,
+      "observed_output": "Ran 39 tests in 1.879s\nOK"
+    },
+    {
+      "command": [
+        "python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "lab/tests",
+        "-p",
+        "test_manager.py"
+      ],
+      "passed": 27,
+      "returncode": 0,
+      "observed_output": "Ran 27 tests in 0.377s\nOK"
+    }
+  ],
+  "total_distinct_tests_passed": 159,
+  "validation_scope": "fixtures_and_source_inspection_no_real_media_probe",
+  "cli_help": {
+    "command": [
+      "python3",
+      "-B",
+      "guard/manage.py",
+      "plan",
+      "--help"
+    ],
+    "returncode": 0
+  },
+  "preview": {
+    "path": "lab/results/2026-10-05-plan-preview.txt",
+    "kind": "fixture_not_host_plan"
+  },
+  "io_audit": {
+    "successful_admission_blkid_calls": [
+      6,
+      7
+    ],
+    "identity_command_timeout_seconds": 3,
+    "mount_resolution_timeout_seconds": 45,
+    "systemd_query_timeout_seconds": 4,
+    "final_admission_budget_seconds": 15,
+    "hard_total_deadline": false,
+    "method": "project_and_local_python_subprocess_source_read_only_review"
+  },
+  "support_policy": "not_selected_always_blocker",
+  "new_persistent_state": false,
+  "stage_cancel_implemented": false,
+  "native_core_diff_empty": true,
+  "real_package_built": false,
+  "host_plan_executed": false,
+  "deployed": false,
+  "qemu_or_long_tests": false,
+  "cross_kernel_validation": false,
+  "committed": false,
+  "pushed": false,
+  "published": false,
+  "prior_evidence_retained": [
+    "lab/results/2026-10-05-readonly-discovery.json",
+    "lab/results/2026-10-05-discovery-configuration-recheck.json"
+  ]
+}

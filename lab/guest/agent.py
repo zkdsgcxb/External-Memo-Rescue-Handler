@@ -107,7 +107,7 @@ def setup():
 
 
 def serve():
-    from rescue import Recovery, command
+    from rescue import RescueDiagnostics, command
     import termios
     import tty
     serial = os.open('/dev/ttyS1', os.O_RDWR | os.O_NOCTTY)
@@ -136,7 +136,7 @@ def serve():
     protected=Path('/etc/rescue/path-guard.json').exists()
     if protected:
         from admission import readonly
-    recovery = Recovery(json.loads(Path('/etc/rescue/identity.json').read_text()), runner=readonly if protected else traced_command)
+    recovery = RescueDiagnostics(json.loads(Path('/etc/rescue/identity.json').read_text()), runner=readonly if protected else traced_command)
     worker = None
     def snapshot():
         return {'guest_time':time.monotonic(), 'pid1_mounts': Path('/proc/1/mountinfo').read_text(),
@@ -191,11 +191,6 @@ def serve():
                     result = status()
                 elif action == 'verify':
                     result = recovery.verify()
-                elif action == 'refresh':
-                    if protected:
-                        raise ValueError('Stable path experiment must not refresh upper LVs')
-                    # Explicit host experiment request authorizes only this disposable LV.
-                    result = recovery.refresh(request.get('target','ubuntu'), confirm=lambda _: 'REFRESH labrescue/'+request.get('target','ubuntu'))
                 elif action == 'workload':
                     if worker is None or worker.poll() is not None:
                         from ubuntu import enabled, systemctl, ServiceWorker

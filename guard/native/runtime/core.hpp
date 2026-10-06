@@ -107,11 +107,11 @@ class Events {
     Fd socket_;
     std::vector<std::string> paths_;
 public:
-    bool operation_ready = false;
+    bool operation_ready = false, control_ready = false;
     Events();
     void watch(const std::vector<std::string>& paths = {});
     bool relevant(std::string_view data) const;
-    bool wait(double seconds, int completion_fd = -1, bool defer_events = false);
+    bool wait(double seconds, int completion_fd = -1, bool defer_events = false, int control_fd = -1);
     void close() noexcept { socket_.reset(); }
 };
 

@@ -48,7 +48,7 @@ def build(output, compiler='g++', tests=True, sanitizers=False, fuzz_cases=0):
     sources = BASE / 'runtime'
     libraries = ['-ldl', '-lcrypto', '-pthread']
     objects = []
-    for name in ('core', 'admission', 'controller', 'boot'):
+    for name in ('core', 'admission', 'data_lifecycle', 'controller', 'boot'):
         obj = output / (name + '.o')
         subprocess.run([*flags, '-c', str(sources / (name + '.cpp')), '-o', str(obj)], check=True)
         objects.append(str(obj))

@@ -3,7 +3,7 @@ import re
 
 from pathlib import Path
 
-from rescue import Recovery, Refuse
+from rescue import RescueDiagnostics, Refuse
 from .admission import readonly
 
 
@@ -14,7 +14,7 @@ class LVMIdentity:
     """Expose only the existing manual tool's read-only discovery operations."""
 
     def __init__(self, config, sysroot=Path('/sys'), devroot=Path('/dev'), runner=readonly):
-        self._source = Recovery(config, sysroot, devroot, runner)
+        self._source = RescueDiagnostics(config, sysroot, devroot, runner)
         self.c = config
         self.sys = self._source.sys
         self.dev = self._source.dev

@@ -62,7 +62,7 @@ def inside_namespace(parent_namespace):
             if not source.is_absolute() or '..' in source.parts or len(source.parts) < 2:
                 raise RuntimeError('Unexpected session payload path')
             allowed = (absolute in ('/bin/rescue-session', '/sbin/rescue-supervisor',
-                                   '/usr/bin/bash', '/etc/rescue/session.conf') or
+                                   '/usr/bin/bash', '/etc/rescue/session.conf', '/etc/motd') or
                        source.parts[1] in ('lib', 'lib64'))
             if not allowed or source.is_symlink() or not source.is_file():
                 raise RuntimeError('Unexpected session payload path')

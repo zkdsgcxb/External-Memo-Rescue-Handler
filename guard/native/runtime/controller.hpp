@@ -20,9 +20,9 @@ Json table_targets(const std::string& text);
 Json checked_snapshot(DeviceMapper&, const Config&);
 std::string dm(const std::vector<std::string>& args, int fence);
 std::unique_ptr<Owner> acquire_owner(const Config&, bool takeover);
-void run_owned(const Config&, Owner&, bool takeover = false);
+void run_owned(const Config&, Owner&, bool takeover = false, bool data_control = false, const Json& rearm_instance = Json(), bool first_enable = false);
 void run(const Json& config, bool takeover);
-void maintain(const Json& record, bool takeover);
+void maintain(const Json& record, bool takeover, bool rearm = false, bool first_enable = false);
 Json activate(const Json& enrollment);
 
 } // namespace rescue

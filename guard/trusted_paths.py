@@ -57,20 +57,25 @@ def open_trusted(path, *, uid=0, anchor=Path('/')):
 
 def read_trusted(path, *, limit=65536, uid=0, anchor=Path('/')):
     with open_trusted(path, uid=uid, anchor=anchor) as fd:
-        before = os.fstat(fd)
-        if before.st_size > limit:
-            raise ValueError('Oversized trusted record')
-        data = bytearray()
-        while len(data) <= limit:
-            chunk = os.read(fd, min(65536, limit + 1 - len(data)))
-            if not chunk:
-                break
-            data.extend(chunk)
-        after = os.fstat(fd)
-        if len(data) > limit or (before.st_size, before.st_mtime_ns, before.st_ctime_ns) != (
-                after.st_size, after.st_mtime_ns, after.st_ctime_ns):
-            raise RuntimeError('Trusted record changed or exceeded its size limit')
-        return bytes(data)
+        return read_descriptor(fd, limit=limit)
+
+
+def read_descriptor(fd, *, limit=65536):
+    """Bounded, change-detecting read of an already verified regular descriptor."""
+    before = os.fstat(fd)
+    if before.st_size > limit:
+        raise ValueError('Oversized trusted record')
+    data = bytearray()
+    while len(data) <= limit:
+        chunk = os.read(fd, min(65536, limit + 1 - len(data)))
+        if not chunk:
+            break
+        data.extend(chunk)
+    after = os.fstat(fd)
+    if len(data) > limit or (before.st_size, before.st_mtime_ns, before.st_ctime_ns) != (
+            after.st_size, after.st_mtime_ns, after.st_ctime_ns):
+        raise RuntimeError('Trusted record changed or exceeded its size limit')
+    return bytes(data)
 
 
 def read_trusted_json(path, **kwargs):

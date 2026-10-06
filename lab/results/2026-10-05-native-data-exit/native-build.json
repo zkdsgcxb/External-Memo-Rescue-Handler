@@ -1,0 +1,61 @@
+{
+  "schema": 1,
+  "compiler": "g++ (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0",
+  "flags": [
+    "-std=c++17",
+    "-O2",
+    "-g",
+    "-Wall",
+    "-Wextra",
+    "-Werror",
+    "-pedantic",
+    "-pthread",
+    "-fPIE",
+    "-fstack-protector-strong",
+    "-D_FORTIFY_SOURCE=3",
+    "-I",
+    "/workspace/Project/External-Memo-Rescue-Handler/guard/native/vendor"
+  ],
+  "link_flags": [
+    "-pie",
+    "-Wl,-z,relro,-z,now,-z,noexecstack"
+  ],
+  "hardening": {
+    "pie": true,
+    "relro": true,
+    "bind_now": true,
+    "non_executable_stack": true,
+    "stack_protector": true,
+    "fortified_calls": true
+  },
+  "sanitizers": false,
+  "fuzz_cases": 0,
+  "sources": {
+    "guard/native/OBSERVER.md": "555100d97ae581fb1b8b0a92ae14c17065051f17a1e096de3d953c5e305c52f3",
+    "guard/native/README.md": "a4bf1100e329740a731ad9ec48712de4999afa97e568f7321e289c5d7af8b56a",
+    "guard/native/build_runtime.py": "a689cb877007fefd76c34e8de63c10316f8b192121adab95da4182534bc674cb",
+    "guard/native/runtime/admission.cpp": "5a332b1517ce4c8bf0f637ebf5a9d074b83e3a42f26224e9215b5ad6d9bec7c6",
+    "guard/native/runtime/admission.hpp": "1fe6ef4bff2bdf8f7905c511cb898e29ec74fd63286085f2ed780053b7930b48",
+    "guard/native/runtime/admission_test.cpp": "ff0693e240c6b600e40bd1acd240925a72a069372fbab3ad16b89fd69b86953c",
+    "guard/native/runtime/boot.cpp": "50d46e70273622e202bfa00c420a93e12b56dcd1af60a76cd318809b568cc1ca",
+    "guard/native/runtime/controller.cpp": "8ed79c83e04ece8f51d50f5979fa7e3af0f6b16c47934075b697544a5a826adf",
+    "guard/native/runtime/controller.hpp": "df13c53a3c5d9f50417e9767236e4fa5ae192e8c6d1afd6031ff675a62e80210",
+    "guard/native/runtime/controller_test.cpp": "f6e65b6dd076bf69ee2667845c583d3f9d23b1c9ebf9a845c8add02200829d0c",
+    "guard/native/runtime/core.cpp": "b8c6702ada9e800e4f53788f24b04fa1b5c3ddc3fdbc8da78e35bf100ba0556f",
+    "guard/native/runtime/core.hpp": "3f3521382006a3806650f5979f60e719f999e2dd1cd19b871c4f1c38823facbd",
+    "guard/native/runtime/core_test.cpp": "9fa86673fe234a48e51125224a3559f5ef03bd7280b7b8aec20e6b19cb07b46d",
+    "guard/native/runtime/data_lifecycle.cpp": "ba39432cde692b5e817776b9f7234fcedd911ef19ff3e03f898688fed55abc3a",
+    "guard/native/runtime/data_lifecycle.hpp": "af6b59205d4bebcbff254ccac1f68ade00408a3c9db2a688d651077b3fe2a197",
+    "guard/native/runtime/data_lifecycle_test.cpp": "07ea3c8567f0b281fa4ac71ee8fe0a53473c392a025251e834dbab175bf4ea93",
+    "guard/native/runtime/input_fuzz.cpp": "d2620d8fdea502d7780293fc493e3908035b57ee5e29eb15a8bb95c1afd96716",
+    "guard/native/runtime/main.cpp": "557763eab9ce891a44b710711be1678e4f398f40758f611f5e336e37ece6c02d",
+    "guard/native/runtime/security_test.cpp": "2efde6baa4ca1c88a1a12319d8dd7ca5ea0d32409b075aa480735762f3ff9abd",
+    "guard/native/vendor/LICENSE.nlohmann-json": "46a65cffd1ea955132d95a8dd921640714a8d6b537d2e4e482d31145ae95b603",
+    "guard/native/vendor/README.md": "57df1ddf02af023ce35bce4968c4f8187cec450a5a0737086e0f7fb1a932ace4",
+    "guard/native/vendor/nlohmann/json.hpp": "aaf127c04cb31c406e5b04a63f1ae89369fccde6d8fa7cdda1ed4f32dfc5de63"
+  },
+  "binary_sha256": "53893fefeb21b31a896c03e1ae20dc222d3691164ad431ff618715226df50324",
+  "binary_bytes": 929128,
+  "runtime": "cpp",
+  "installed": false
+}

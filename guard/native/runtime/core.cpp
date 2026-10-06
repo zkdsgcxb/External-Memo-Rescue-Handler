@@ -634,12 +634,13 @@ bool Events::relevant(std::string_view data) const {
     return false;
 }
 
-bool Events::wait(double seconds, int completion_fd, bool defer_events) {
-    std::array<pollfd, 2> descriptors{};
+bool Events::wait(double seconds, int completion_fd, bool defer_events, int control_fd) {
+    std::array<pollfd, 3> descriptors{};
     nfds_t count = 0;
     if (!defer_events) descriptors[count++] = {socket_.get(), POLLIN, 0};
     if (completion_fd >= 0) descriptors[count++] = {completion_fd, POLLIN, 0};
-    operation_ready = false;
+    if (control_fd >= 0) descriptors[count++] = {control_fd, POLLIN, 0};
+    operation_ready = control_ready = false;
     const int ready = ::poll(descriptors.data(), count, milliseconds(seconds));
     if (ready < 0) {
         if (errno == EINTR) return false;
@@ -651,6 +652,7 @@ bool Events::wait(double seconds, int completion_fd, bool defer_events) {
         if (descriptors[index].revents & POLLNVAL) throw std::runtime_error("Invalid event descriptor");
         if (!descriptors[index].revents) continue;
         if (descriptors[index].fd == completion_fd) operation_ready = true;
+        if (descriptors[index].fd == control_fd) control_ready = true;
         if (descriptors[index].fd == socket_.get()) socket_ready = true;
     }
     if (!socket_ready) return false;

@@ -1,0 +1,147 @@
+{
+  "schema": 1,
+  "date": "2026-10-05",
+  "passed": true,
+  "acceptance_level": "native_host_data_safe_exit_and_same_boot_rearm_engineering_vm_only",
+  "scope": {
+    "profile": "host-data",
+    "topology": "existing_single_path_dm",
+    "filesystem": "ext4",
+    "kernel_release": "7.0.0-34-generic",
+    "root_changed": false,
+    "first_enable_B": false,
+    "boot_mount_C": false,
+    "offline_distribution_D": false,
+    "qualification_consumed": false
+  },
+  "native": {
+    "binary_sha256": "53893fefeb21b31a896c03e1ae20dc222d3691164ad431ff618715226df50324",
+    "binary_bytes": 929128,
+    "unit_checks": {
+      "admission": 37,
+      "controller": 13,
+      "core": 60,
+      "data_lifecycle": 100,
+      "security": 33
+    },
+    "total_checks": 243,
+    "hardening": {
+      "pie": true,
+      "relro": true,
+      "bind_now": true,
+      "non_executable_stack": true,
+      "stack_protector": true,
+      "fortified_calls": true
+    },
+    "source_mismatches": []
+  },
+  "launcher_tests": {
+    "run": 13,
+    "passed": 13
+  },
+  "package": {
+    "path": "lab/work/a-exit-1005/package-r4/ram-rescue-handler_bbaf25c0389f37b23f6971b0_amd64.deb",
+    "sha256": "17c026bd7c5b3af6b746e00adb0504fe2ec29963298c3df3012fe310876b03a5",
+    "administration_version": "bbaf25c0389f37b23f6971b0",
+    "production_release": false,
+    "source_mismatches": []
+  },
+  "vm": {
+    "raw_report": "lab/results/2026-10-05-native-data-exit/vm4-report.json",
+    "passed": true,
+    "resource_limits": {
+      "vcpus": 2,
+      "ram_mib": 3072,
+      "additional_disk_max_bytes": 8589934592,
+      "concurrent_vms": 1
+    },
+    "allocated_after_vm": 3140214784,
+    "resource_monitor_errors": [],
+    "seed_sha256": "7565aae2d5866f905e2e9c523d28a4bcb7eda0b2bfce1576424303574de579b7",
+    "seed_backing_stat_unchanged": true,
+    "qmp_remove_attach_command_seconds": 0.9442201809997641,
+    "workload_pid": 1311,
+    "ack_records": 9,
+    "file_verified": true,
+    "max_io_seconds": 3.3922063470000055,
+    "lock_inode": 1607,
+    "actual_D_state_injected": false,
+    "first_enable_cli_tested": false
+  },
+  "corrections": [
+    {
+      "attempt": "vm1",
+      "outcome": "refused_safe_stop",
+      "reason": "RAM sysfs bind did not expose cgroup2 submount; added bounded cold proc membership fallback; rebuilt ELF"
+    },
+    {
+      "attempt": "vm2",
+      "outcome": "safe_stop_passed_harness_failed",
+      "reason": "reset-failed on garbage-collected inactive unit was treated as fatal; fixed observer and reused same sealed ELF/package"
+    },
+    {
+      "attempt": "vm3",
+      "outcome": "passed"
+    },
+    {
+      "attempt": "vm4",
+      "outcome": "passed",
+      "reason": "Narrowed fixture exception handling so assertion failures cannot masquerade as injected crashes; rebuilt same ELF bytes, sealed updated source package, reran bounded acceptance"
+    }
+  ],
+  "limits": [
+    "No physical host deployment or USB experiment",
+    "No root-profile VM rerun or expanded recovery coverage",
+    "Raw backing ordinary file descriptors are not observable by this check",
+    "No actual permanent D-state injection",
+    "Real SIGKILL exercised READY owner; rearm instruction boundaries covered by persistence fixtures, not instruction-level VM kill",
+    "After rearm_intent replaces stopped journal, later failures require diagnosis rather than arbitrary terminal rearm",
+    "No zero-time guarantee between SIGKILL and systemd takeover; journal/invocation and existing kernel timeout preserve recovery path"
+  ],
+  "source_sha256": {
+    "guard/data.py": "e23f43c1bea5d5d68c01d78142b2656f670de6274552998556e117dd6ce1cb0b",
+    "guard/native/build_runtime.py": "a689cb877007fefd76c34e8de63c10316f8b192121adab95da4182534bc674cb",
+    "guard/native/runtime/admission.cpp": "5a332b1517ce4c8bf0f637ebf5a9d074b83e3a42f26224e9215b5ad6d9bec7c6",
+    "guard/native/runtime/admission.hpp": "1fe6ef4bff2bdf8f7905c511cb898e29ec74fd63286085f2ed780053b7930b48",
+    "guard/native/runtime/controller.cpp": "8ed79c83e04ece8f51d50f5979fa7e3af0f6b16c47934075b697544a5a826adf",
+    "guard/native/runtime/controller.hpp": "df13c53a3c5d9f50417e9767236e4fa5ae192e8c6d1afd6031ff675a62e80210",
+    "guard/native/runtime/core.cpp": "b8c6702ada9e800e4f53788f24b04fa1b5c3ddc3fdbc8da78e35bf100ba0556f",
+    "guard/native/runtime/core.hpp": "3f3521382006a3806650f5979f60e719f999e2dd1cd19b871c4f1c38823facbd",
+    "guard/native/runtime/main.cpp": "557763eab9ce891a44b710711be1678e4f398f40758f611f5e336e37ece6c02d",
+    "guard/native/runtime/data_lifecycle.cpp": "ba39432cde692b5e817776b9f7234fcedd911ef19ff3e03f898688fed55abc3a",
+    "guard/native/runtime/data_lifecycle.hpp": "af6b59205d4bebcbff254ccac1f68ade00408a3c9db2a688d651077b3fe2a197",
+    "guard/native/runtime/data_lifecycle_test.cpp": "07ea3c8567f0b281fa4ac71ee8fe0a53473c392a025251e834dbab175bf4ea93",
+    "lab/data_lifecycle_probe.py": "0a485adcb88fea3e32ac35bde16bfca149ef98d2d8be83411e47a756f3decc72",
+    "lab/guest/data_lifecycle_probe.py": "bd2d77680dcd618c1ffa5b12226c930b5b015c2426e7c48f647c7271f7be386a",
+    "lab/tests/test_data_launcher.py": "2b3b91ba89d8fcfb94c41c90cbcabb9c0bea742b5339d7e2a3156c8dc4c784ef"
+  },
+  "artifacts_sha256": {
+    "lab/results/2026-10-05-native-data-exit/launcher-tests.log": "eb4d694c6cc672502a06ba7514f22bc18e25247936fb511a97b09a3a433dd321",
+    "lab/results/2026-10-05-native-data-exit/native-build-r3.json": "c36ad44de581fa2e7fd680c950d0bc0d62e8d65bc73f9b0e21c7ec67af194272",
+    "lab/results/2026-10-05-native-data-exit/native-build.json": "ca3bbb8fdfb779a482e36690f2bb4daefed607f8c49d94df573a3c8c6bd9c0e1",
+    "lab/results/2026-10-05-native-data-exit/native-tests-r3.log": "659404c13adae570c4f0ada7335a808ca4e5a33da8286ab45ef2013dc8697151",
+    "lab/results/2026-10-05-native-data-exit/native-tests.log": "6152d7254bb44764ba7454c717f4fb6c1b91db73e3a649a1fa8810675bb58266",
+    "lab/results/2026-10-05-native-data-exit/package-r3.json": "6eab0b9b43ca4be9c0346bfdd31c3c4d3171b81bab740d8cee9f498f51f796fc",
+    "lab/results/2026-10-05-native-data-exit/package.json": "70bafe701b6e8532b295a2992b1ec87a03eba882727836b52bf7411cab7c6f84",
+    "lab/results/2026-10-05-native-data-exit/vm1-actions.jsonl": "b1023bb2e52ef04f9f1399c807f53b8c1dd1cfce1e3b5dc85cd6c6cb9b6763c2",
+    "lab/results/2026-10-05-native-data-exit/vm1-qemu.log": "9d3526cbca1be9f09ed09723f7152d77d77c3edfa537b49d5a17a044b7b99c97",
+    "lab/results/2026-10-05-native-data-exit/vm1-qmp.jsonl": "ca175214060a712359a79b6ab8dd7aa6b6ed945fa3bd2661e17817e185de11b2",
+    "lab/results/2026-10-05-native-data-exit/vm1-report.json": "fa8906aea5b3ab38110b99e406faf010d48f28ea7dd07c9687815f31bbf24904",
+    "lab/results/2026-10-05-native-data-exit/vm2-actions.jsonl": "5471b0541b3e9a73bec1fe6dd04fc4f205df0c75f66260315a073b5c1f45a275",
+    "lab/results/2026-10-05-native-data-exit/vm2-qemu.log": "49404e7ab45d8c2943863bb8fc5ad20329d11769655c2c444d3c11267281669e",
+    "lab/results/2026-10-05-native-data-exit/vm2-qmp.jsonl": "1d0423c7bc2282799afffc04405442283722e4d60900f40c83ac386b862fa2eb",
+    "lab/results/2026-10-05-native-data-exit/vm2-report.json": "bb3a7b67fb07408f51bd840eacc81060df375fd7fee1cb1f6134130157ed25b3",
+    "lab/results/2026-10-05-native-data-exit/vm3-actions.jsonl": "36683b1ec83525e848c9d97a9c35e86b90c73a4cb03ec702072178adc1831474",
+    "lab/results/2026-10-05-native-data-exit/vm3-qemu.log": "bd6f58aaaa8f619404e54ef5b9ec685c695247cc29df958783055a4aa511b6b6",
+    "lab/results/2026-10-05-native-data-exit/vm3-qmp.jsonl": "32331e12091ad9b154573a15e0659a2c9d05afd887543309650151f80f884752",
+    "lab/results/2026-10-05-native-data-exit/vm3-report.json": "224dcfd57bc10ec834d7f3354c124119f86742e1e1f87a58e5a082aa72703a57",
+    "lab/results/2026-10-05-native-data-exit/vm4-actions.jsonl": "929222713842d1bfc4a1d3e1bfb267ae1f63b39eba8b7baf3969316d7e250f0d",
+    "lab/results/2026-10-05-native-data-exit/vm4-qemu.log": "bd6f58aaaa8f619404e54ef5b9ec685c695247cc29df958783055a4aa511b6b6",
+    "lab/results/2026-10-05-native-data-exit/vm4-qmp.jsonl": "35afd8e07e1609fd4175cb643d8379059b82cd2224c7380cffeace018a557ec6",
+    "lab/results/2026-10-05-native-data-exit/vm4-report.json": "6b8a04bbcd68cbb5cc405a5b2a55578479025dc2bfb3f0d95c0f05f7e50c63e7"
+  },
+  "host_deployed": false,
+  "committed": false,
+  "pushed": false,
+  "published": false
+}

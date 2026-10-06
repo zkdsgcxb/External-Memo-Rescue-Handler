@@ -151,7 +151,6 @@ def build(output_dir, identity=None):
     write("/etc/shells", "/bin/sh\n/bin/rescue-session\n")
     write("/etc/fstab", "# Deliberately empty: no automatic disk mounts.\n")
     write("/etc/issue", "\nRAM RESCUE DEMO | user: rescue | separate rescue password\nVT9 / VT10; disk-independent tools; shared host kernel.\n\n")
-    write("/etc/motd", "\nRAM rescue root shell. Start with: rescue status\nIf explicitly enrolled: rescue verify; rescue refresh <LV> (MANUAL, not fsck).\nUse rescue help. Exit to lock this VT. Alt+F9/F10 switches rescue terminals.\nNEVER repair a mounted filesystem. Host root remains mounted.\n\n")
     write("/var/log/lastlog", "")
     write("/var/log/wtmp", "")
     write("/run/utmp", "")

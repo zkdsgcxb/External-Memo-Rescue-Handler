@@ -1,0 +1,561 @@
+{
+  "activation_acceptance": "not_evaluated",
+  "full_admission": "passed",
+  "original_plan": {
+    "command": [
+      "/usr/bin/rescue-guard-admin",
+      "manager",
+      "plan",
+      "--device",
+      "/dev/mapper/rr-data-vm-ext4",
+      "--json"
+    ],
+    "returncode": 0,
+    "stderr": "\u8ba1\u5212\u6838\u9a8c\u53ef\u80fd\u8bfb\u53d6\u9009\u4e2d\u5206\u533a\u7684\u6587\u4ef6\u7cfb\u7edf\u4e0e\u5206\u533a\u8eab\u4efd\u5143\u6570\u636e\u3002\u8eab\u4efd\u6838\u9a8c\u5916\u90e8\u547d\u4ee4\u8bbe\u7f6e 3 \u79d2\u5c1d\u8bd5\u8d85\u65f6\uff0c\u672b\u6bb5\u51c6\u5165\u4f7f\u7528 15 \u79d2\u534f\u4f5c\u9884\u7b97\uff1b\u4e0b\u5c42\u963b\u585e\u3001\u540c\u6b65 ioctl \u548c\u8fdb\u7a0b\u56de\u6536\u6ca1\u6709\u786c\u6027\u603b\u65f6\u9650\u3002\u6b64\u547d\u4ee4\u53ea\u8f93\u51fa\u8ba1\u5212\uff0c\u4e0d\u4fdd\u5b58\u6216\u542f\u7528\u914d\u7f6e\u3002\n",
+    "value": {
+      "confirmation": {
+        "blockers": [
+          "combination_unvalidated"
+        ],
+        "effects": {
+          "action": "save_candidate_only",
+          "activation": "none",
+          "candidate_files": [
+            "plan.json",
+            "candidate.json",
+            "manifest.json",
+            "operation.json"
+          ],
+          "candidate_record": {
+            "guard": {
+              "identity_path": "/run/ram-rescue-data/rr-data-vm-ext4/identity.json",
+              "kernel_release": "7.0.0-34-generic",
+              "layout": {
+                "fs_type": "ext4",
+                "fs_uuid": "ec994cec-166b-4d1e-8577-d2c3cc88a8c3",
+                "kind": "filesystem",
+                "partuuid": "4dba02a2-e343-4e9b-855e-af41b9500268"
+              },
+              "logical_block_size": 512,
+              "map_name": "rr-data-vm-ext4",
+              "map_uuid": "RAMRESCUE-DATA-VM-EXT4",
+              "partition_sectors": 131072,
+              "partition_start": 2048,
+              "profile": "host-data",
+              "queue_seconds": 8,
+              "run_dir": "/run/ram-rescue-data/rr-data-vm-ext4/state",
+              "schema": 1
+            },
+            "identity": {
+              "fs_type": "ext4",
+              "fs_uuid": "ec994cec-166b-4d1e-8577-d2c3cc88a8c3",
+              "kind": "filesystem",
+              "partition_number": 1,
+              "partuuid": "4dba02a2-e343-4e9b-855e-af41b9500268",
+              "pid": "0001",
+              "sectors": 163840,
+              "usb_serial": "DATA-VM-EXT4",
+              "vid": "46f4"
+            },
+            "schema": 1
+          },
+          "destination_class": "/var/lib/ram-rescue-plans/operations/<generated-id>",
+          "reboot_activates": false
+        },
+        "inputs": {
+          "boot_id": "c8409f39-6af1-4d46-a8b1-a6427e2dc023",
+          "configuration": [
+            {
+              "scope": "manager",
+              "sha256": null,
+              "source": "/var/lib/ram-rescue-manager/install.json",
+              "state": "absent"
+            },
+            {
+              "scope": "package",
+              "sha256": "9a8bf1d3713d5e08abf281320cb9760212f623ea6056c9994ebf9d783c96ce81",
+              "source": "command_package_manifest",
+              "state": "present"
+            },
+            {
+              "scope": "relationships",
+              "sha256": null,
+              "source": "/run/ram-rescue-guard/config.json",
+              "state": "absent"
+            },
+            {
+              "scope": "relationships",
+              "sha256": null,
+              "source": "registration_list",
+              "state": "absent"
+            },
+            {
+              "scope": "root",
+              "sha256": null,
+              "source": "/var/lib/ram-rescue-guard/install.json",
+              "state": "absent"
+            }
+          ],
+          "context_after": {
+            "files": {
+              "/proc/1/mountinfo": "63b1603b010e26b3ce5b466ce883998f6109e103cee1fb63470b663855e1fe13",
+              "/proc/1/root/etc/fstab": "0bb302827bb42802141ac489f944be26f49e953d605a60ac108b4a0c8a7ecfe9",
+              "/proc/swaps": "a9699a032d193fb103232c3b043353503282ab82b08d18341fb78c18f33e80c1",
+              "/sys/class/block/sdc/queue/logical_block_size": "94f8607915dff25f013e45fc0642fb9830b0fb25ab0ab46d477eaf1061def379",
+              "/sys/class/block/sdc1/partition": "6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b",
+              "/sys/class/block/sdc1/start": "bfa0ec8bdf2946547879d50a68687ea32e2fa628db187357415858b633d194d9",
+              "/usr/lib/ram-rescue-handler/27ab19e4da8c6aaab8dfeee0/administration.json": "341cc010f0d969e35bd495b7513f2808750150fe66ad730647b280f94e81cc70"
+            },
+            "map_holders": [],
+            "partition_holders": [
+              "dm-2"
+            ]
+          },
+          "context_before": {
+            "files": {
+              "/proc/1/mountinfo": "63b1603b010e26b3ce5b466ce883998f6109e103cee1fb63470b663855e1fe13",
+              "/proc/1/root/etc/fstab": "0bb302827bb42802141ac489f944be26f49e953d605a60ac108b4a0c8a7ecfe9",
+              "/proc/swaps": "a9699a032d193fb103232c3b043353503282ab82b08d18341fb78c18f33e80c1",
+              "/sys/class/block/sdc/queue/logical_block_size": "94f8607915dff25f013e45fc0642fb9830b0fb25ab0ab46d477eaf1061def379",
+              "/sys/class/block/sdc1/partition": "6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b",
+              "/sys/class/block/sdc1/start": "bfa0ec8bdf2946547879d50a68687ea32e2fa628db187357415858b633d194d9",
+              "/usr/lib/ram-rescue-handler/27ab19e4da8c6aaab8dfeee0/administration.json": "341cc010f0d969e35bd495b7513f2808750150fe66ad730647b280f94e81cc70"
+            },
+            "map_holders": [],
+            "partition_holders": [
+              "dm-2"
+            ]
+          },
+          "discovery_after_sha256": "2ea1a9670bd16217d682b0432cb3405abe919889490b95f167a732d4e87d8f5c",
+          "discovery_before_sha256": "2ea1a9670bd16217d682b0432cb3405abe919889490b95f167a732d4e87d8f5c",
+          "environment_recheck": "passed",
+          "instance": {
+            "initial_diskseq": 13,
+            "initial_node": "/dev/sdc1",
+            "initial_sys_path": "/sys/devices/pci0000:00/0000:00:01.0/usb2/2-2/2-2:1.0/host0/target0:0:0/0:0:0:0/block/sdc/sdc1"
+          },
+          "kernel_release": "7.0.0-34-generic",
+          "map_after": {
+            "active": [
+              [
+                0,
+                131072,
+                "multipath",
+                "3 queue_if_no_path queue_mode bio 0 1 1 round-robin 0 1 1 8:33 1 "
+              ]
+            ],
+            "flags": {
+              "deferred_remove": 0,
+              "internal_suspend": 0,
+              "live_table": 1,
+              "major": 252,
+              "minor": 2,
+              "read_only": 0,
+              "suspended": 0
+            },
+            "inactive": [],
+            "uuid": "RAMRESCUE-DATA-VM-EXT4"
+          },
+          "map_before": {
+            "active": [
+              [
+                0,
+                131072,
+                "multipath",
+                "3 queue_if_no_path queue_mode bio 0 1 1 round-robin 0 1 1 8:33 1 "
+              ]
+            ],
+            "flags": {
+              "deferred_remove": 0,
+              "internal_suspend": 0,
+              "live_table": 1,
+              "major": 252,
+              "minor": 2,
+              "read_only": 0,
+              "suspended": 0
+            },
+            "inactive": [],
+            "uuid": "RAMRESCUE-DATA-VM-EXT4"
+          },
+          "support_after_sha256": "37e8f894f617f25d23bd008cb33bedfde4f1cace712b901dd71bd44f12274303",
+          "support_before_sha256": "37e8f894f617f25d23bd008cb33bedfde4f1cace712b901dd71bd44f12274303"
+        },
+        "schema": 1,
+        "scope": {
+          "members": [
+            "rr-data-vm-ext4",
+            "sdc1"
+          ],
+          "mounts": [],
+          "physical_disk_coverage": "selected_volume_only",
+          "role": "data"
+        },
+        "selected_object": {
+          "map_name": "rr-data-vm-ext4",
+          "map_uuid": "RAMRESCUE-DATA-VM-EXT4"
+        },
+        "support_policy": {
+          "combination": {
+            "authorization": null,
+            "current_bindings": {
+              "executing_management": "pass",
+              "host_dependencies": "pass",
+              "loaded_modules": "pass",
+              "official_kernel_origin": "pass",
+              "running_kernel": "pass",
+              "runtime_artifacts": "pass"
+            },
+            "current_observations": {
+              "dependencies": {
+                "file_count": 33,
+                "packages": {
+                  "gpgv": {
+                    "architecture": "amd64",
+                    "package": "gpgv",
+                    "version": "2.4.4-2ubuntu17.6"
+                  },
+                  "libassuan0:amd64": {
+                    "architecture": "amd64",
+                    "package": "libassuan0:amd64",
+                    "version": "2.5.6-1build1"
+                  },
+                  "libblkid1:amd64": {
+                    "architecture": "amd64",
+                    "package": "libblkid1:amd64",
+                    "version": "2.39.3-9ubuntu6.6"
+                  },
+                  "libbz2-1.0:amd64": {
+                    "architecture": "amd64",
+                    "package": "libbz2-1.0:amd64",
+                    "version": "1.0.8-5.1ubuntu0.1"
+                  },
+                  "libc6:amd64": {
+                    "architecture": "amd64",
+                    "package": "libc6:amd64",
+                    "version": "2.39-0ubuntu8.9"
+                  },
+                  "libcap2:amd64": {
+                    "architecture": "amd64",
+                    "package": "libcap2:amd64",
+                    "version": "1:2.66-5ubuntu2.4"
+                  },
+                  "libdevmapper1.02.1:amd64": {
+                    "architecture": "amd64",
+                    "package": "libdevmapper1.02.1:amd64",
+                    "version": "2:1.02.185-3ubuntu3.2"
+                  },
+                  "libexpat1:amd64": {
+                    "architecture": "amd64",
+                    "package": "libexpat1:amd64",
+                    "version": "2.6.1-2ubuntu0.4"
+                  },
+                  "libffi8:amd64": {
+                    "architecture": "amd64",
+                    "package": "libffi8:amd64",
+                    "version": "3.4.6-1build1"
+                  },
+                  "libgcrypt20:amd64": {
+                    "architecture": "amd64",
+                    "package": "libgcrypt20:amd64",
+                    "version": "1.10.3-2ubuntu0.2"
+                  },
+                  "libgpg-error0:amd64": {
+                    "architecture": "amd64",
+                    "package": "libgpg-error0:amd64",
+                    "version": "1.47-3build2.1"
+                  },
+                  "liblz4-1:amd64": {
+                    "architecture": "amd64",
+                    "package": "liblz4-1:amd64",
+                    "version": "1.9.4-1build1.1"
+                  },
+                  "liblzma5:amd64": {
+                    "architecture": "amd64",
+                    "package": "liblzma5:amd64",
+                    "version": "5.6.1+really5.4.5-1ubuntu0.3"
+                  },
+                  "libmount1:amd64": {
+                    "architecture": "amd64",
+                    "package": "libmount1:amd64",
+                    "version": "2.39.3-9ubuntu6.6"
+                  },
+                  "libnpth0t64:amd64": {
+                    "architecture": "amd64",
+                    "package": "libnpth0t64:amd64",
+                    "version": "1.6-3.1build1"
+                  },
+                  "libpcre2-8-0:amd64": {
+                    "architecture": "amd64",
+                    "package": "libpcre2-8-0:amd64",
+                    "version": "10.42-4ubuntu2.1"
+                  },
+                  "libpython3.12-minimal:amd64": {
+                    "architecture": "amd64",
+                    "package": "libpython3.12-minimal:amd64",
+                    "version": "3.12.3-1ubuntu0.17"
+                  },
+                  "libpython3.12-stdlib:amd64": {
+                    "architecture": "amd64",
+                    "package": "libpython3.12-stdlib:amd64",
+                    "version": "3.12.3-1ubuntu0.17"
+                  },
+                  "libselinux1:amd64": {
+                    "architecture": "amd64",
+                    "package": "libselinux1:amd64",
+                    "version": "3.5-2ubuntu2.1"
+                  },
+                  "libsmartcols1:amd64": {
+                    "architecture": "amd64",
+                    "package": "libsmartcols1:amd64",
+                    "version": "2.39.3-9ubuntu6.6"
+                  },
+                  "libssl3t64:amd64": {
+                    "architecture": "amd64",
+                    "package": "libssl3t64:amd64",
+                    "version": "3.0.13-0ubuntu3.15"
+                  },
+                  "libudev1:amd64": {
+                    "architecture": "amd64",
+                    "package": "libudev1:amd64",
+                    "version": "255.4-1ubuntu8.17"
+                  },
+                  "libzstd1:amd64": {
+                    "architecture": "amd64",
+                    "package": "libzstd1:amd64",
+                    "version": "1.5.5+dfsg2-2build1.1"
+                  },
+                  "python3.12-minimal": {
+                    "architecture": "amd64",
+                    "package": "python3.12-minimal",
+                    "version": "3.12.3-1ubuntu0.17"
+                  },
+                  "systemd": {
+                    "architecture": "amd64",
+                    "package": "systemd",
+                    "version": "255.4-1ubuntu8.17"
+                  },
+                  "util-linux": {
+                    "architecture": "amd64",
+                    "package": "util-linux",
+                    "version": "2.39.3-9ubuntu6.6"
+                  },
+                  "zlib1g:amd64": {
+                    "architecture": "amd64",
+                    "package": "zlib1g:amd64",
+                    "version": "1:1.3.dfsg-3.1ubuntu2.2"
+                  }
+                },
+                "python_stdlib_scope": "trusted_distribution_package_versions"
+              },
+              "kernel": {
+                "association": "trusted_reference_extraction_and_runtime_build_ids",
+                "modules": {
+                  "dm_mod": "builtin_in_verified_image",
+                  "dm_multipath": "loaded_identity_matches",
+                  "dm_round_robin": "loaded_identity_matches",
+                  "exfat": "not_loaded",
+                  "ext4": "builtin_in_verified_image",
+                  "fat": "builtin_in_verified_image",
+                  "jbd2": "builtin_in_verified_image",
+                  "mbcache": "builtin_in_verified_image",
+                  "nls_base": "builtin_in_verified_image",
+                  "nls_cp437": "builtin_in_verified_image",
+                  "nls_iso8859_1": "not_loaded",
+                  "scsi_common": "builtin_in_verified_image",
+                  "scsi_mod": "builtin_in_verified_image",
+                  "sd_mod": "builtin_in_verified_image",
+                  "uas": "loaded_identity_matches",
+                  "usb_storage": "loaded_identity_matches",
+                  "usbcore": "builtin_in_verified_image",
+                  "vfat": "builtin_in_verified_image",
+                  "xhci_hcd": "builtin_in_verified_image",
+                  "xhci_pci": "builtin_in_verified_image"
+                },
+                "origin": {
+                  "inrelease_sha256": "21bcb1b5331f49cd85ee4f37a59fac1fb4c1961776a7e03fc5bb388fd3584f26",
+                  "keyring_sha256": "80a36b0a6de2f69f49d2df75ef473ccde121e9e190b9ea01d20a4f63778d5c31",
+                  "packages_sha256": "a98c372adbdebe134c1105b82dcea5ba89e562fb4618de2553197b1f6be4e1e9"
+                },
+                "running_build_id": "b39508a189f60b8b1c173fa3d73c8a8a9c8b25ed",
+                "source_sha256": "74db4c43440c0635d93bae4cff913816a61936012646efa5347a071122b8448b"
+              },
+              "limitations": "trusted_root_and_kernel_build_identity_not_memory_attestation"
+            },
+            "publisher_authentication": "not_established_by_local_ownership",
+            "qualification": {
+              "record": null,
+              "sha256": null,
+              "state": "absent"
+            },
+            "reasons": [
+              "qualification_absent"
+            ],
+            "recovery_acceptance": "not_evaluated",
+            "release_acceptance": "not_evaluated",
+            "state": "unvalidated",
+            "subject": {
+              "administration": {
+                "entrypoint_sha256": "95046552ced57dbd870bb911cea2693e5d67ca24a4a7af5cf2f8f7ed7d19b4ee",
+                "manifest_sha256": "341cc010f0d969e35bd495b7513f2808750150fe66ad730647b280f94e81cc70"
+              },
+              "host_dependencies": {
+                "manifest_sha256": "649b549a3d4b74aee32448484b9dbba6977085df396c924d73716da867c21bbd"
+              },
+              "kernel": {
+                "image_sha256": "73d9c6e40b210deb638070d6af591a68bb6d7ff0280d0ec34c9ccf705a4f47ac",
+                "modules_manifest_sha256": "46a6c18a8987f156ac11137109a0a8e6cbef02df3986817f765b33895bc97f6d",
+                "release": "7.0.0-34-generic"
+              },
+              "platform": {
+                "architecture": "amd64",
+                "id": "ubuntu",
+                "version_id": "24.04"
+              },
+              "runtime": {
+                "archive_sha256": "6adb0b16338fe3d3e27e2f2222dea0d8529f13abec296636d0f2dd98f156d7f4",
+                "binary_sha256": "479c8ba7e2445ae3fbb99d58e1b79d836170c6fe463953ca636cde9857ee8718",
+                "libraries_manifest_sha256": "51054cbc9537dc47d837d742da58ba8654073885b40988ea2ddf535ccdf29491",
+                "manifest_sha256": "9a8bf1d3713d5e08abf281320cb9760212f623ea6056c9994ebf9d783c96ce81"
+              },
+              "schema": 1
+            },
+            "subject_sha256": "3d2c493cc6ab6162406ef09999fda5164d683b748e049c43d5ade42dd9cc6987"
+          },
+          "product_target": {
+            "acceptance": "per_combination",
+            "architecture": "amd64",
+            "distribution": "Ubuntu",
+            "kernel_route": "official_hwe",
+            "version": "24.04"
+          },
+          "target_state": "decided"
+        }
+      },
+      "current_effects": {
+        "activation": "none",
+        "persistent_writes": []
+      },
+      "io": {
+        "final_admission_budget_seconds": 15,
+        "hard_total_deadline": false,
+        "identity_command_timeout_seconds": 3,
+        "media": "admission_passed",
+        "mount_resolution_timeout_seconds": 45,
+        "successful_admission_blkid_calls": [
+          6,
+          7
+        ],
+        "systemd_query_timeout_seconds": 4
+      },
+      "observation": {
+        "captured_at_unix": 1791200914,
+        "selected": {
+          "assessment": "blocked",
+          "capacity_bytes": 67108864,
+          "checks": [
+            {
+              "code": "multipath_interface",
+              "result": "pass",
+              "source": "loaded_dm_target"
+            },
+            {
+              "code": "queue_timeout",
+              "result": "pass",
+              "source": "module_parameter"
+            },
+            {
+              "code": "multipathd_units",
+              "result": "pass",
+              "source": "systemd_units_only"
+            },
+            {
+              "code": "manual_multipathd_processes",
+              "result": "not_checked",
+              "source": "none"
+            },
+            {
+              "code": "package_kernel",
+              "result": "pass",
+              "source": "package_manifest_uname"
+            },
+            {
+              "code": "media_identity",
+              "result": "not_checked",
+              "source": "none"
+            },
+            {
+              "code": "mount_policy",
+              "result": "not_checked",
+              "source": "none"
+            },
+            {
+              "code": "unmanaged_upper_layers",
+              "result": "fail",
+              "source": "sysfs"
+            },
+            {
+              "code": "swap_in_use",
+              "result": "pass",
+              "source": "proc_swaps_mountinfo"
+            }
+          ],
+          "device": "/dev/sdc1",
+          "filesystem": {
+            "identity": "not_checked",
+            "source": "udev_cache",
+            "type": "ext4"
+          },
+          "groups": [],
+          "members": [
+            "rr-data-vm-ext4",
+            "sdc1"
+          ],
+          "model": "QEMU HARDDISK",
+          "mounts": [],
+          "number": 3,
+          "role": "data"
+        },
+        "snapshot_id": "id-0a3eec5d43394e20e4790089"
+      },
+      "operation": "plan",
+      "plan_digest": "a6f4aae9f43ac615ff7324ca4c323852bde3556f5ee9805efe32550ed54e89b3",
+      "report_scope": "local_not_redacted",
+      "schema": 1,
+      "status": "blocked"
+    }
+  },
+  "package_sha256": "c7390f352d0c3dbca476f3618842a5a95f5a4a7e8659e7f0d81f2b145fd5a56c",
+  "passed": true,
+  "recovery_acceptance": "not_evaluated",
+  "schema": 1,
+  "scope": "candidate_preparation_prerequisites",
+  "source_reference_sha256": "74db4c43440c0635d93bae4cff913816a61936012646efa5347a071122b8448b",
+  "subject": {
+    "administration": {
+      "entrypoint_sha256": "95046552ced57dbd870bb911cea2693e5d67ca24a4a7af5cf2f8f7ed7d19b4ee",
+      "manifest_sha256": "341cc010f0d969e35bd495b7513f2808750150fe66ad730647b280f94e81cc70"
+    },
+    "host_dependencies": {
+      "manifest_sha256": "649b549a3d4b74aee32448484b9dbba6977085df396c924d73716da867c21bbd"
+    },
+    "kernel": {
+      "image_sha256": "73d9c6e40b210deb638070d6af591a68bb6d7ff0280d0ec34c9ccf705a4f47ac",
+      "modules_manifest_sha256": "46a6c18a8987f156ac11137109a0a8e6cbef02df3986817f765b33895bc97f6d",
+      "release": "7.0.0-34-generic"
+    },
+    "platform": {
+      "architecture": "amd64",
+      "id": "ubuntu",
+      "version_id": "24.04"
+    },
+    "runtime": {
+      "archive_sha256": "6adb0b16338fe3d3e27e2f2222dea0d8529f13abec296636d0f2dd98f156d7f4",
+      "binary_sha256": "479c8ba7e2445ae3fbb99d58e1b79d836170c6fe463953ca636cde9857ee8718",
+      "libraries_manifest_sha256": "51054cbc9537dc47d837d742da58ba8654073885b40988ea2ddf535ccdf29491",
+      "manifest_sha256": "9a8bf1d3713d5e08abf281320cb9760212f623ea6056c9994ebf9d783c96ce81"
+    },
+    "schema": 1
+  },
+  "subject_sha256": "3d2c493cc6ab6162406ef09999fda5164d683b748e049c43d5ade42dd9cc6987",
+  "test_source_sha256": "53bffdd0e9967c6551d1269811b7576493e79db30841ce602b630bc436bbbe89"
+}

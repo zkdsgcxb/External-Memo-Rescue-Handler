@@ -12,7 +12,9 @@ class DeviceMapper:
             'dm_task_create':(C.c_void_p,[C.c_int]),
             'dm_task_destroy':(None,[C.c_void_p]),
             'dm_task_set_name':(C.c_int,[C.c_void_p,C.c_char_p]),
+            'dm_task_set_uuid':(C.c_int,[C.c_void_p,C.c_char_p]),
             'dm_task_run':(C.c_int,[C.c_void_p]),
+            'dm_task_get_name':(C.c_char_p,[C.c_void_p]),
             'dm_task_get_uuid':(C.c_char_p,[C.c_void_p]),
             'dm_task_get_info':(C.c_int,[C.c_void_p,C.POINTER(DMInfo)]),
             'dm_task_query_inactive_table':(C.c_int,[C.c_void_p]),
@@ -46,29 +48,41 @@ class DeviceMapper:
             self.lib.dm_task_destroy(task)
 
     def snapshot(self,name):
-        active=self._read(name,11)  # DM_DEVICE_TABLE
-        inactive=self._read(name,11,inactive=True)
+        return self._snapshot(name)
+
+    def snapshot_by_uuid(self, name, uuid):
+        """Do not read a foreign table if an enrolled map name was reused."""
+        return self._snapshot(name, uuid)
+
+    def _snapshot(self, name, uuid=None):
+        active=self._read(name,11,uuid=uuid)  # DM_DEVICE_TABLE
+        inactive=self._read(name,11,inactive=True,uuid=uuid)
         if active['uuid']!=inactive['uuid']:
             raise RuntimeError('DM identity changed while reading tables')
         return {'uuid':active['uuid'],'info':active['info'],
                 'active':active['targets'],'inactive':inactive['targets']}
 
-    def _read(self,name,operation,inactive=False):
+    def _read(self,name,operation,inactive=False,uuid=None):
         # Tasks own all returned strings; copy them before destroying the task.
         task=self.lib.dm_task_create(operation)
         if not task:
             raise RuntimeError('Cannot allocate DM status task')
         try:
-            if not self.lib.dm_task_set_name(task,name.encode()):
-                raise RuntimeError('Cannot name DM task')
+            selector = self.lib.dm_task_set_uuid if uuid is not None else self.lib.dm_task_set_name
+            if not selector(task,(uuid if uuid is not None else name).encode()):
+                raise RuntimeError('Cannot select DM task')
             if inactive and not self.lib.dm_task_query_inactive_table(task):
                 raise RuntimeError('Cannot select inactive DM table')
             if not self.lib.dm_task_run(task):
                 raise RuntimeError('Cannot query DM map '+name)
+            if uuid is not None and self.lib.dm_task_get_name(task) != name.encode():
+                raise RuntimeError('DM name changed for the enrolled UUID')
             info=DMInfo()
             if not self.lib.dm_task_get_info(task,C.byref(info)) or not info.exists:
                 raise RuntimeError('DM map does not exist: '+name)
-            uuid=self.lib.dm_task_get_uuid(task)
+            actual_uuid=self.lib.dm_task_get_uuid(task)
+            if uuid is not None and actual_uuid != uuid.encode():
+                raise RuntimeError('DM UUID changed during the enrolled query')
             targets=[];cursor=None
             while True:
                 start=C.c_uint64();size=C.c_uint64();kind=C.c_char_p();params=C.c_char_p()
@@ -77,7 +91,7 @@ class DeviceMapper:
                     targets.append([start.value,size.value,kind.value.decode(),(params.value or b'').decode()])
                 if not cursor:
                     break
-            return {'uuid':(uuid or b'').decode(),'targets':targets,
+            return {'uuid':(actual_uuid or b'').decode(),'targets':targets,
                     'info':{key:getattr(info,key) for key,_ in DMInfo._fields_}}
         finally:
             self.lib.dm_task_destroy(task)

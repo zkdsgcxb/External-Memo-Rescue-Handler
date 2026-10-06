@@ -30,12 +30,13 @@ class PackageTests(unittest.TestCase):
         (self.source/'guard/admin_entry.py').write_text((REPO/'guard/admin_entry.py').read_text())
         (self.source/'guard/manage.py').write_text('# test administration\n')
         (self.source/'ram-rescue-demo/src/rescue.py').write_text('# test manual tools\n')
+        (self.source/'ram-rescue-demo/src/motd').write_text('Current read-only diagnostics\n')
         for name in ('build.py', 'session_payload.py', 'install.py'):
             (self.source/'ram-rescue-demo'/name).write_text('# source fixture\n')
         self.base = self.directory/'base'
         self.base.mkdir()
         with tarfile.open(self.base/'rescue-root.tar.gz', 'w:gz') as archive:
-            for name in ('etc', 'etc/rescue', 'opt', 'tmp'):
+            for name in ('etc', 'etc/rescue', 'opt', 'sbin', 'tmp'):
                 entry = tarfile.TarInfo(name)
                 entry.type = tarfile.DIRTYPE
                 entry.mode = 0o1777 if name == 'tmp' else 0o755
@@ -44,6 +45,14 @@ class PackageTests(unittest.TestCase):
                 value = b'fixture identity or locked account\n'
                 entry = tarfile.TarInfo(name)
                 entry.mode = 0o600
+                entry.size = len(value)
+                archive.addfile(entry, io.BytesIO(value))
+            for name, value, mode in (
+                ('sbin/rescue', b'def refresh(): pass\n', 0o755),
+                ('etc/motd', b'Use rescue refresh ubuntu\n', 0o644),
+            ):
+                entry = tarfile.TarInfo(name)
+                entry.mode = mode
                 entry.size = len(value)
                 archive.addfile(entry, io.BytesIO(value))
         (self.base/'manifest.json').write_text(json.dumps({'sha256': package.sha256(self.base/'rescue-root.tar.gz')}))
@@ -76,7 +85,7 @@ class PackageTests(unittest.TestCase):
                                  native_binary=self.directory/'native-binary')
 
     @unittest.skipUnless(shutil.which('dpkg-deb'), 'requires dpkg-deb, no root')
-    def test_deb_has_no_maintainer_scripts_and_protected_ownership_modes(self):
+    def test_deb_only_has_removal_guard_and_protected_ownership_modes(self):
         previous = os.umask(0o002)
         try:
             result = self.build('first')
@@ -85,7 +94,11 @@ class PackageTests(unittest.TestCase):
         deb = self.directory/'first'/result['package']
         control = subprocess.check_output(['dpkg-deb', '--ctrl-tarfile', str(deb)])
         with tarfile.open(fileobj=io.BytesIO(control)) as archive:
-            self.assertEqual({p.name.removeprefix('./') for p in archive if p.isfile()}, {'control'})
+            self.assertEqual({p.name.removeprefix('./') for p in archive if p.isfile()}, {'control', 'prerm'})
+            script = archive.extractfile('./prerm').read().decode()
+            self.assertIn('device package-remove', script)
+            self.assertIn('upgrade|failed-upgrade) ;;', script)
+            self.assertNotIn('systemctl', script)
         data = subprocess.check_output(['dpkg-deb', '--fsys-tarfile', str(deb)])
         with tarfile.open(fileobj=io.BytesIO(data)) as archive:
             entries = list(archive)
@@ -99,6 +112,13 @@ class PackageTests(unittest.TestCase):
             self.assertNotIn('etc/rescue/enrollment.json', {p.name for p in entries})
             self.assertTrue(all(p.uid == 0 and p.gid == 0 for p in entries))
             self.assertEqual([p.name for p in entries if p.name != 'tmp' and not p.issym() and p.mode & 0o022], [])
+            for relative, source, mode in (
+                ('sbin/rescue', 'rescue.py', 0o755),
+                ('etc/motd', 'motd', 0o644),
+            ):
+                self.assertEqual(archive.extractfile(relative).read(),
+                                 (self.source/'ram-rescue-demo/src'/source).read_bytes())
+                self.assertEqual(archive.getmember(relative).mode, mode)
 
     @unittest.skipUnless(shutil.which('dpkg-deb'), 'requires dpkg-deb, no root')
     def test_version_tracks_content_not_gzip_wall_clock_and_changes_with_library(self):

@@ -1,0 +1,209 @@
+{
+  "generator_sha256": {
+    "/usr/src/linux-hwe-7.0-headers-7.0.0-34/scripts/extract-vmlinux": "aacb6bb09af227a6cf508f5283458f001722a39abd9c4cfb026bc97c31624910",
+    "guard/current_support.py": "9435dc99eee0c6253b06beb9eb8343d5145bc8813e3b3aacc9a4a56717fd91d5",
+    "lab/kernel_reference.py": "d947c4193d952d286c9ddc9e267ff0fae2905e2cdde1af7061d77f8b34b30fac",
+    "staged_extract_vmlinux": "ad3b74e95dbd09c78e1746196f178e3b07a3b4acabc0138b66fbf33be6c32300"
+  },
+  "image": {
+    "build_id": "b39508a189f60b8b1c173fa3d73c8a8a9c8b25ed",
+    "sha256": "73d9c6e40b210deb638070d6af591a68bb6d7ff0280d0ec34c9ccf705a4f47ac"
+  },
+  "metadata": {
+    "modules.builtin": "ef55d7bc5528d2c01f38fc0d8f6473c75e14ec62349898f6529be9bbac871366",
+    "modules.builtin.modinfo": "f173376892f5d1a020884e4c6062b51e7cf26718928e1225be5e4fb507c34d0c"
+  },
+  "modules": {
+    "dm_mod": {
+      "build_id": null,
+      "builtin": true,
+      "depends": [],
+      "path": null,
+      "sha256": null,
+      "srcversion": null
+    },
+    "dm_multipath": {
+      "build_id": "f1b593c9745ba93c8d9ce31456fafe9768beac94",
+      "builtin": false,
+      "depends": [],
+      "path": "/usr/lib/modules/7.0.0-34-generic/kernel/drivers/md/dm-multipath.ko.zst",
+      "sha256": "98605a1ebd6c61a061773239f004e31fbf83a8a8af7d3fa600a89f94aaa16297",
+      "srcversion": "E12C71E3D811221382A4E93"
+    },
+    "dm_round_robin": {
+      "build_id": "bed0720a324fc3ce525abb9828e42024f7e0e12e",
+      "builtin": false,
+      "depends": [
+        "dm_multipath"
+      ],
+      "path": "/usr/lib/modules/7.0.0-34-generic/kernel/drivers/md/dm-round-robin.ko.zst",
+      "sha256": "b06e9cb231de9815866ebe0781ab735fd15c2c57fb16cc9f85936e4470cb3701",
+      "srcversion": "DE71F75A75F12FCBB2C9C1F"
+    },
+    "exfat": {
+      "build_id": "2351883f975358a02222465ccb5a9a1b6bd368ca",
+      "builtin": false,
+      "depends": [],
+      "path": "/usr/lib/modules/7.0.0-34-generic/kernel/fs/exfat/exfat.ko.zst",
+      "sha256": "246b4529e58ae4e29806ed57abbe29e344b0c8c4f92df1c5e973ef928bc1797c",
+      "srcversion": "63A9FD9DDCB0C5B8073ACDC"
+    },
+    "ext4": {
+      "build_id": null,
+      "builtin": true,
+      "depends": [],
+      "path": null,
+      "sha256": null,
+      "srcversion": null
+    },
+    "fat": {
+      "build_id": null,
+      "builtin": true,
+      "depends": [],
+      "path": null,
+      "sha256": null,
+      "srcversion": null
+    },
+    "jbd2": {
+      "build_id": null,
+      "builtin": true,
+      "depends": [],
+      "path": null,
+      "sha256": null,
+      "srcversion": null
+    },
+    "mbcache": {
+      "build_id": null,
+      "builtin": true,
+      "depends": [],
+      "path": null,
+      "sha256": null,
+      "srcversion": null
+    },
+    "nls_base": {
+      "build_id": null,
+      "builtin": true,
+      "depends": [],
+      "path": null,
+      "sha256": null,
+      "srcversion": null
+    },
+    "nls_cp437": {
+      "build_id": null,
+      "builtin": true,
+      "depends": [],
+      "path": null,
+      "sha256": null,
+      "srcversion": null
+    },
+    "nls_iso8859_1": {
+      "build_id": "89de664bd99e4e3a04a1c063a84d411906c59503",
+      "builtin": false,
+      "depends": [],
+      "path": "/usr/lib/modules/7.0.0-34-generic/kernel/fs/nls/nls_iso8859-1.ko.zst",
+      "sha256": "e25cabef443302247acd6f5159de5e4e92dd66a6df3e41af9e4221fc23b0af3d",
+      "srcversion": "4CA9F060106C865F971F31C"
+    },
+    "scsi_common": {
+      "build_id": null,
+      "builtin": true,
+      "depends": [],
+      "path": null,
+      "sha256": null,
+      "srcversion": null
+    },
+    "scsi_mod": {
+      "build_id": null,
+      "builtin": true,
+      "depends": [],
+      "path": null,
+      "sha256": null,
+      "srcversion": null
+    },
+    "sd_mod": {
+      "build_id": null,
+      "builtin": true,
+      "depends": [],
+      "path": null,
+      "sha256": null,
+      "srcversion": null
+    },
+    "uas": {
+      "build_id": "9b42625b6446731ec31bf86610715e48a5f62b40",
+      "builtin": false,
+      "depends": [
+        "usb_storage"
+      ],
+      "path": "/usr/lib/modules/7.0.0-34-generic/kernel/drivers/usb/storage/uas.ko.zst",
+      "sha256": "dd6f02a46e3dee582cf494b244ceb2906a266c6a837081f29cb6fd13a5a33237",
+      "srcversion": "B11359935FC34B28D9D675B"
+    },
+    "usb_storage": {
+      "build_id": "ff18bd1fcba98ac63cf59c4e22a4f0b7cc434f76",
+      "builtin": false,
+      "depends": [],
+      "path": "/usr/lib/modules/7.0.0-34-generic/kernel/drivers/usb/storage/usb-storage.ko.zst",
+      "sha256": "9e2bd25195f26a46265babeff85ed488fee43939696d58d12f81404f19a72f4f",
+      "srcversion": "2EBA31D49133C86E8E05C6D"
+    },
+    "usbcore": {
+      "build_id": null,
+      "builtin": true,
+      "depends": [],
+      "path": null,
+      "sha256": null,
+      "srcversion": null
+    },
+    "vfat": {
+      "build_id": null,
+      "builtin": true,
+      "depends": [],
+      "path": null,
+      "sha256": null,
+      "srcversion": null
+    },
+    "xhci_hcd": {
+      "build_id": null,
+      "builtin": true,
+      "depends": [],
+      "path": null,
+      "sha256": null,
+      "srcversion": null
+    },
+    "xhci_pci": {
+      "build_id": null,
+      "builtin": true,
+      "depends": [],
+      "path": null,
+      "sha256": null,
+      "srcversion": null
+    }
+  },
+  "origin": {
+    "inrelease_sha256": "21bcb1b5331f49cd85ee4f37a59fac1fb4c1961776a7e03fc5bb388fd3584f26",
+    "keyring_sha256": "80a36b0a6de2f69f49d2df75ef473ccde121e9e190b9ea01d20a4f63778d5c31",
+    "packages_sha256": "a98c372adbdebe134c1105b82dcea5ba89e562fb4618de2553197b1f6be4e1e9"
+  },
+  "packages": {
+    "linux-image-7.0.0-34-generic": {
+      "Architecture": "amd64",
+      "Filename": "pool/main/l/linux-signed-hwe-7.0/linux-image-7.0.0-34-generic_7.0.0-34.34~24.04.1_amd64.deb",
+      "Package": "linux-image-7.0.0-34-generic",
+      "SHA256": "2bd0e1fa6fd72b00041f4523b97b730c94a9c14198a8f07231d24d49d334bd37",
+      "Size": "16723096",
+      "Source": "linux-signed-hwe-7.0",
+      "Version": "7.0.0-34.34~24.04.1"
+    },
+    "linux-modules-7.0.0-34-generic": {
+      "Architecture": "amd64",
+      "Filename": "pool/main/l/linux-hwe-7.0/linux-modules-7.0.0-34-generic_7.0.0-34.34~24.04.1_amd64.deb",
+      "Package": "linux-modules-7.0.0-34-generic",
+      "SHA256": "e81f48d95ef2ee583b342836491cc77c7fe3fbe62735b3283bc43aec5d1c7e8c",
+      "Size": "168222912",
+      "Source": "linux-hwe-7.0",
+      "Version": "7.0.0-34.34~24.04.1"
+    }
+  },
+  "release": "7.0.0-34-generic",
+  "schema": 1
+}

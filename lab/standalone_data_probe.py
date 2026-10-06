@@ -81,7 +81,8 @@ def validate_inputs(folder, package_dir):
         raise ValueError('Seed digest changed')
     package = json.loads(regular_lab_file(Path(package_dir) / 'package.json').read_text())
     inputs['package'] = regular_lab_file(Path(package_dir) / package['package'])
-    if sha256(inputs['package']) != package['sha256'] or package.get('maintainer_scripts') is not False:
+    if sha256(inputs['package']) != package['sha256'] or not (package.get('maintainer_scripts') is False or
+            package.get('maintainer_scripts') == ['prerm'] and package.get('automatic_activation') is False):
         raise ValueError('Expected an unchanged package without automatic maintainer scripts')
     return inputs, package
 

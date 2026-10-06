@@ -1,0 +1,22 @@
+{
+  "schema": 1,
+  "passed": true,
+  "scope": "authenticated_package_extraction_only",
+  "archive_inputs": {
+    "linux-image-7.0.0-34-generic": {
+      "path": "/var/cache/apt/archives/linux-image-7.0.0-34-generic_7.0.0-34.34~24.04.1_amd64.deb",
+      "sha256": "2bd0e1fa6fd72b00041f4523b97b730c94a9c14198a8f07231d24d49d334bd37",
+      "size": 16723096
+    },
+    "linux-modules-7.0.0-34-generic": {
+      "path": "/var/cache/apt/archives/linux-modules-7.0.0-34-generic_7.0.0-34.34~24.04.1_amd64.deb",
+      "sha256": "e81f48d95ef2ee583b342836491cc77c7fe3fbe62735b3283bc43aec5d1c7e8c",
+      "size": 168222912
+    }
+  },
+  "reference_sha256": "74db4c43440c0635d93bae4cff913816a61936012646efa5347a071122b8448b",
+  "module_root": "/workspace/Project/External-Memo-Rescue-Handler/lab/work/cq-1005/kernel-v3/extracted/lib/modules/7.0.0-34-generic",
+  "image": "/workspace/Project/External-Memo-Rescue-Handler/lab/work/cq-1005/kernel-v3/extracted/boot/vmlinuz-7.0.0-34-generic",
+  "candidate_qualification": false,
+  "running_kernel_verified": false
+}

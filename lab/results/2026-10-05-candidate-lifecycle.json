@@ -1,0 +1,204 @@
+{
+  "schema": 1,
+  "captured_at": "2026-10-04T21:51:06.832125+00:00",
+  "scope": "existing_data_dm_candidate_lifecycle_fixtures",
+  "base_revision": "af7448bd9efe5b20dff28ecedc105000eb3e95af",
+  "working_tree_dirty": true,
+  "source_sha256": {
+    "guard/candidates.py": "04a07863a5c74b78b266c410c4735ab4482920b14a4515633388f9ffb8c4f53b",
+    "guard/candidate_ui.py": "e69e2c79d94bd1f832513fbb2201e57ded7297d31d9ecc89e287b8051e11171f",
+    "guard/support.py": "fdab87cbdb33fea5487d9da5a4288585aa9f62350a7120ad0551dcd4195fa4a4",
+    "guard/planning.py": "59c381f4d3bb9f7677b28dec85407aa841022d6ea9f4fd04b1b2b1c0a6d626f0",
+    "guard/discovery.py": "f67cd61bef19e170278a0b44c7bee167a9e2214b39cab9388f155d78c94c4cfa",
+    "guard/manage.py": "5a0c6bbaa7694c906ca97f6df092c235d002252baf95ac5422454d4c16fce4a0",
+    "guard/trusted_paths.py": "ac8a61bb4e7cfd944fdde0b0e9facdc6173b647ddb60937dfe87ae606ae7cb67",
+    "guard/host_files.py": "16466bb5327e3f1a0ffdda7d0c97246f05e5d665606c640ea7d9880ab4693497",
+    "lab/tests/test_candidates.py": "2550460ff411d0ca5c21035948b0a6189c460b0a81032e0ea4de90afab89099c",
+    "lab/tests/test_planning.py": "d4209df4d7e7d6f723b66b412b8d99c7e908fbed4985080d1b646ca15cc9d1dc",
+    "lab/tests/test_discovery.py": "d7e6cfe9e6309818be2b62e697f9b553a7b768e64e67f2c2c06d4400521cdd22",
+    "README.md": "b43fd27b2a99db7d2ecb562e6b2e57b236ebca8dc95b0be59d402d0dd01e133a",
+    "guard/MANAGER.md": "0b0510fd9e223eb73554966e1e81b1593198d36eac9237f1a62e653707dc8d50",
+    "research/2026-10-05/CANDIDATE-LIFECYCLE.md": "b6a4b2f309ff63bb498ca71e76ff6b402e32f526fe09be86afb12e45ebfbf749"
+  },
+  "tests": [
+    {
+      "command": [
+        "python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "lab/tests",
+        "-p",
+        "test_candidates.py"
+      ],
+      "returncode": 0,
+      "passed": 30,
+      "observed_output": "..............................\n----------------------------------------------------------------------\nRan 30 tests in 1.448s\n\nOK\n"
+    },
+    {
+      "command": [
+        "python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "lab/tests",
+        "-p",
+        "test_planning.py"
+      ],
+      "returncode": 0,
+      "passed": 26,
+      "observed_output": "..........................\n----------------------------------------------------------------------\nRan 26 tests in 0.431s\n\nOK\n"
+    },
+    {
+      "command": [
+        "python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "lab/tests",
+        "-p",
+        "test_discovery.py"
+      ],
+      "returncode": 0,
+      "passed": 46,
+      "observed_output": "..............................................\n----------------------------------------------------------------------\nRan 46 tests in 0.236s\n\nOK\n"
+    },
+    {
+      "command": [
+        "python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "lab/tests",
+        "-p",
+        "test_manager.py"
+      ],
+      "returncode": 0,
+      "passed": 27,
+      "observed_output": "...........................\n----------------------------------------------------------------------\nRan 27 tests in 0.465s\n\nOK\n"
+    },
+    {
+      "command": [
+        "python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "lab/tests",
+        "-p",
+        "test_trusted_paths.py"
+      ],
+      "returncode": 0,
+      "passed": 7,
+      "observed_output": ".......\n----------------------------------------------------------------------\nRan 7 tests in 0.005s\n\nOK\n"
+    },
+    {
+      "command": [
+        "python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "lab/tests",
+        "-p",
+        "test_package.py"
+      ],
+      "returncode": 0,
+      "passed": 6,
+      "observed_output": "....dpkg-deb: building package 'ram-rescue-handler' in '/workspace/Project/External-Memo-Rescue-Handler/lab/work/tmpuhr32p2a/first/ram-rescue-handler_0101d87eb7619d56abb55142_amd64.deb'.\n.dpkg-deb: building package 'ram-rescue-handler' in '/workspace/Project/External-Memo-Rescue-Handler/lab/work/tmp_gp8wr4z/first/ram-rescue-handler_0101d87eb7619d56abb55142_amd64.deb'.\ndpkg-deb: building package 'ram-rescue-handler' in '/workspace/Project/External-Memo-Rescue-Handler/lab/work/tmp_gp8wr4z/second/ram-rescue-handler_0101d87eb7619d56abb55142_amd64.deb'.\ndpkg-deb: building package 'ram-rescue-handler' in '/workspace/Project/External-Memo-Rescue-Handler/lab/work/tmp_gp8wr4z/third/ram-rescue-handler_154b518c51ca50b1aa313bef_amd64.deb'.\n.\n----------------------------------------------------------------------\nRan 6 tests in 0.116s\n\nOK\n"
+    },
+    {
+      "command": [
+        "python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "lab/tests",
+        "-p",
+        "test_admission.py"
+      ],
+      "returncode": 0,
+      "passed": 23,
+      "observed_output": ".......................\n----------------------------------------------------------------------\nRan 23 tests in 0.087s\n\nOK\n"
+    },
+    {
+      "command": [
+        "python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "lab/tests",
+        "-p",
+        "test_data_*.py"
+      ],
+      "returncode": 0,
+      "passed": 39,
+      "observed_output": ".......................................\n----------------------------------------------------------------------\nRan 39 tests in 1.863s\n\nOK\n"
+    }
+  ],
+  "total_distinct_tests_passed": 204,
+  "support": {
+    "product_target": {
+      "os": "Ubuntu 24.04",
+      "architecture": "x86_64",
+      "kernel_route": "official_hwe"
+    },
+    "acceptance": "per_kernel_and_software_combination",
+    "production_accepted_combinations": 0,
+    "internal_fixture_acceptance_only": true,
+    "production_evidence_loader_implemented": false
+  },
+  "candidate_store": {
+    "persistent_mutations": "temporary_fixture_trees_only",
+    "max_operation_bytes": 1048576,
+    "max_active_operations": 16,
+    "max_total_operations_with_history_reservation": 256,
+    "activation": "none",
+    "reboot_activates": false
+  },
+  "crash_validation": "injected_BaseException_before_after_atomic_and_unlink_not_power_loss",
+  "lock_validation": "existing_flock_conflict_via_independent_descriptors_not_stress",
+  "io": {
+    "stage_initial_success_full_plan_rebuilds": 3,
+    "blkid_probes_per_successful_plan": [
+      6,
+      7
+    ],
+    "hard_total_deadline": false,
+    "cancel_media_probe": false
+  },
+  "native_core_diff_empty": true,
+  "host_stage_or_cancel_executed": false,
+  "cli_help_only": [
+    "stage --help",
+    "cancel --help"
+  ],
+  "package_fixture_built_and_cleaned": true,
+  "real_installation_candidate_built": false,
+  "deployed": false,
+  "qemu_or_long_tests": false,
+  "cross_kernel_validation": false,
+  "committed": false,
+  "pushed": false,
+  "published": false,
+  "validation_level": "working_tree_source_and_fixtures_only",
+  "prior_evidence_retained": [
+    "lab/results/2026-10-05-readonly-plan.json",
+    "lab/results/2026-10-05-readonly-discovery.json",
+    "lab/results/2026-10-05-discovery-configuration-recheck.json"
+  ]
+}

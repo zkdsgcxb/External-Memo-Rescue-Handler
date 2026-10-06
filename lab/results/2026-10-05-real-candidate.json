@@ -1,0 +1,267 @@
+{
+  "schema": 1,
+  "date": "2026-10-05",
+  "passed": true,
+  "acceptance_level": "real_sealed_package_in_isolated_ubuntu_vm_candidate_lifecycle_only",
+  "product_target": {
+    "distribution": "Ubuntu",
+    "version": "24.04",
+    "architecture": "amd64",
+    "kernel_route": "official_hwe",
+    "acceptance": "per_combination"
+  },
+  "accepted_scope": {
+    "kernel_release": "7.0.0-34-generic",
+    "profile": "host-data",
+    "topology": "existing_single_path_dm",
+    "filesystems": [
+      "ext4"
+    ],
+    "authorization": "save_candidate_only"
+  },
+  "package": {
+    "schema": 1,
+    "package": "ram-rescue-handler_27ab19e4da8c6aaab8dfeee0_amd64.deb",
+    "sha256": "c7390f352d0c3dbca476f3618842a5a95f5a4a7e8659e7f0d81f2b145fd5a56c",
+    "administration_version": "27ab19e4da8c6aaab8dfeee0",
+    "runtime": {
+      "schema": 1,
+      "kind": "data-runtime",
+      "kernel_release": "7.0.0-34-generic",
+      "archive_sha256": "6adb0b16338fe3d3e27e2f2222dea0d8529f13abec296636d0f2dd98f156d7f4",
+      "binary_sha256": "479c8ba7e2445ae3fbb99d58e1b79d836170c6fe463953ca636cde9857ee8718",
+      "native_runtime": {
+        "schema": 1,
+        "runtime": "cpp",
+        "binary_path": "/opt/guard-runtime/guard-runtime",
+        "binary_sha256": "479c8ba7e2445ae3fbb99d58e1b79d836170c6fe463953ca636cde9857ee8718",
+        "entrypoint_path": "/opt/guard-runtime/maintain",
+        "entrypoint_sha256": "e2cd3b560621354d5110908b715095dc470bea369071708740ec3ab47b4d7b3c",
+        "library_sha256": {
+          "/lib/x86_64-linux-gnu/libc.so.6": "3a15d66867d83762c7f2f1e37359cb8f6c5743edb369c65285cb0b1c4f7498bf",
+          "/lib/x86_64-linux-gnu/libcap.so.2": "6ac6abc86ac891c6e13486470e26f1d939f47fda9e6b5d5508a7f5ec881adc84",
+          "/lib/x86_64-linux-gnu/libcrypto.so.3": "6866ed711dab8927e1bf82bf1cd30e828bdfc34f3cc1e83b1c9eb01ce6c37d9a",
+          "/lib/x86_64-linux-gnu/libdevmapper.so.1.02.1": "0b33f9e9780b2e22bd40170f4cfe358b0cf525974d01896b3bb2b02d6e4e2582",
+          "/lib/x86_64-linux-gnu/libgcc_s.so.1": "d93224d2b0dab4247598be683adca02f5cf00586f99c187579cd7e92058fb7cb",
+          "/lib/x86_64-linux-gnu/libm.so.6": "fce00b6f25f459cf4ae0b7fae4257909a1a8a86f9149e7c029a5d617baf1ccd0",
+          "/lib/x86_64-linux-gnu/libpcre2-8.so.0": "e00576d71d81d3ba0cfa4903c835a44a8723aac96f72f79ff75200b4cff9071b",
+          "/lib/x86_64-linux-gnu/libselinux.so.1": "0ec0843463f90e227b0e138e1f379774f50b5514bd7f5dbd4c8a87aca0aa6670",
+          "/lib/x86_64-linux-gnu/libstdc++.so.6": "1fd75fe70354a416d75aef22bcae68c47bd25d20e2d0568c30b1a9838cf62f11",
+          "/lib/x86_64-linux-gnu/libudev.so.1": "4298228175fa62a36af88b1afd4406cdd8b1bf166621f957d0dbbde45a698fe5",
+          "/lib64/ld-linux-x86-64.so.2": "c20a2dc8917c755f02b94049356320fe1f62ac7d9f8994731f807d9df39302da"
+        },
+        "payload_file_bytes": 13706974,
+        "dependency_packages": {
+          "/lib/x86_64-linux-gnu/libc.so.6": {
+            "package": "libc6:amd64",
+            "version": "2.39-0ubuntu8.9",
+            "architecture": "amd64"
+          },
+          "/lib/x86_64-linux-gnu/libcap.so.2": {
+            "package": "libcap2:amd64",
+            "version": "1:2.66-5ubuntu2.4",
+            "architecture": "amd64"
+          },
+          "/lib/x86_64-linux-gnu/libcrypto.so.3": {
+            "package": "libssl3t64:amd64",
+            "version": "3.0.13-0ubuntu3.16",
+            "architecture": "amd64"
+          },
+          "/lib/x86_64-linux-gnu/libdevmapper.so.1.02.1": {
+            "package": "libdevmapper1.02.1:amd64",
+            "version": "2:1.02.185-3ubuntu3.2",
+            "architecture": "amd64"
+          },
+          "/lib/x86_64-linux-gnu/libgcc_s.so.1": {
+            "package": "libgcc-s1:amd64",
+            "version": "14.2.0-4ubuntu2~24.04.1",
+            "architecture": "amd64"
+          },
+          "/lib/x86_64-linux-gnu/libm.so.6": {
+            "package": "libc6:amd64",
+            "version": "2.39-0ubuntu8.9",
+            "architecture": "amd64"
+          },
+          "/lib/x86_64-linux-gnu/libpcre2-8.so.0": {
+            "package": "libpcre2-8-0:amd64",
+            "version": "10.42-4ubuntu2.1",
+            "architecture": "amd64"
+          },
+          "/lib/x86_64-linux-gnu/libselinux.so.1": {
+            "package": "libselinux1:amd64",
+            "version": "3.5-2ubuntu2.1",
+            "architecture": "amd64"
+          },
+          "/lib/x86_64-linux-gnu/libstdc++.so.6": {
+            "package": "libstdc++6:amd64",
+            "version": "14.2.0-4ubuntu2~24.04.1",
+            "architecture": "amd64"
+          },
+          "/lib/x86_64-linux-gnu/libudev.so.1": {
+            "package": "libudev1:amd64",
+            "version": "255.4-1ubuntu8.17",
+            "architecture": "amd64"
+          },
+          "/lib64/ld-linux-x86-64.so.2": {
+            "package": "libc6:amd64",
+            "version": "2.39-0ubuntu8.9",
+            "architecture": "amd64"
+          }
+        }
+      },
+      "base_sha256": "152c6d2720ff01b232941e917b651fdca638627f2dcb547893ae17dc3237c3b0"
+    },
+    "source_commit": "af7448bd9efe5b20dff28ecedc105000eb3e95af",
+    "installed": false,
+    "maintainer_scripts": false
+  },
+  "static_subject": {
+    "schema": 1,
+    "platform": {
+      "id": "ubuntu",
+      "version_id": "24.04",
+      "architecture": "amd64"
+    },
+    "kernel": {
+      "release": "7.0.0-34-generic",
+      "image_sha256": "73d9c6e40b210deb638070d6af591a68bb6d7ff0280d0ec34c9ccf705a4f47ac",
+      "modules_manifest_sha256": "46a6c18a8987f156ac11137109a0a8e6cbef02df3986817f765b33895bc97f6d"
+    },
+    "administration": {
+      "manifest_sha256": "341cc010f0d969e35bd495b7513f2808750150fe66ad730647b280f94e81cc70",
+      "entrypoint_sha256": "95046552ced57dbd870bb911cea2693e5d67ca24a4a7af5cf2f8f7ed7d19b4ee"
+    },
+    "runtime": {
+      "manifest_sha256": "9a8bf1d3713d5e08abf281320cb9760212f623ea6056c9994ebf9d783c96ce81",
+      "archive_sha256": "6adb0b16338fe3d3e27e2f2222dea0d8529f13abec296636d0f2dd98f156d7f4",
+      "binary_sha256": "479c8ba7e2445ae3fbb99d58e1b79d836170c6fe463953ca636cde9857ee8718",
+      "libraries_manifest_sha256": "51054cbc9537dc47d837d742da58ba8654073885b40988ea2ddf535ccdf29491"
+    },
+    "host_dependencies": {
+      "manifest_sha256": "649b549a3d4b74aee32448484b9dbba6977085df396c924d73716da867c21bbd"
+    }
+  },
+  "subject_sha256": "3d2c493cc6ab6162406ef09999fda5164d683b748e049c43d5ade42dd9cc6987",
+  "bindings": {
+    "executing_management": "pass",
+    "running_kernel": "pass",
+    "loaded_modules": "pass",
+    "official_kernel_origin": "pass",
+    "runtime_artifacts": "pass",
+    "host_dependencies": "pass"
+  },
+  "source_sha256": {
+    "guard/admin_entry.py": "c84fd1dc5f216ffce6baf36f126868e2cae7c7ed1a80928217f92d0aafc0d0fb",
+    "guard/current_support.py": "22de60b5c8b9cd30925690af5d9ff15b101fe2ef974ff5f508a592afb681f72f",
+    "guard/support.py": "6aa321b5e79ae03d9eccbdb95d498d2a4b3c0224e176ac66f55f031fffe93c91",
+    "guard/native_payload.py": "f9cdbc74affe35840bc99e260c2f8c8d922a3f64f8939917ad16ac841163003f",
+    "guard/ram_environment.py": "3fc4ac0b1f3d72c637d9961b25e1f72040ac2532320e07e8ea40c8b7105ba86b",
+    "guard/candidates.py": "a7aae09244d86e8342dc0f8de7afaac197766f16b0f0fbb570ec93200b673a8f",
+    "guard/candidate_ui.py": "e69e2c79d94bd1f832513fbb2201e57ded7297d31d9ecc89e287b8051e11171f",
+    "guard/planning.py": "8f45fde489fc0e7a8e5cb0e113b2cb400c6f5665d25c02c45675dc8d0248c473",
+    "guard/manage.py": "5a0c6bbaa7694c906ca97f6df092c235d002252baf95ac5422454d4c16fce4a0",
+    "lab/kernel_reference.py": "d947c4193d952d286c9ddc9e267ff0fae2905e2cdde1af7061d77f8b34b30fac",
+    "lab/candidate_probe.py": "68b0eee2e8188f223e6e54d230b0c023bb90402e6188f70de2e40ae95fa4460a",
+    "lab/guest/candidate_probe.py": "dfe24f78fdd1e68c375d0cfb29e7662ff2b5a3da3f7277d0929c62c442adbb15",
+    "lab/tests/test_current_support.py": "b0959793c64dddf4c807cff03369075dc928896834b30cbed22e211de6923d72",
+    "lab/tests/test_support.py": "e3e8884ee2dd7c4e25b803bd50738024cb8bdc29141108402a76b1cdbf4b71d4",
+    "lab/tests/test_planning.py": "12f9860431422102db1fdfcc1661462fcc6b7ebeec713288be9ca6593f444173",
+    "lab/tests/test_candidates.py": "ffe68dac8defcbbfff3ad0fd4af377901bb596171aa03f23ebe3c67e2d1e3848",
+    "README.md": "2333d08be0468f1a100cb49db10b20c893b7e0f9feb00003d206f3813a298591",
+    "guard/MANAGER.md": "b34e270faae235b665b9524ceabcc4c084643b5f9184eb8a32d530b62e6d75d0",
+    "research/2026-10-05/REAL-CANDIDATE-VALIDATION.md": "623f4bc1db27c08682259c48f07cee31c13b985f8035f26b76dff622a7ff44a1",
+    "research/2026-10-05/STATIC-QUALIFICATION.md": "a09debc482f6e44b78c80101e0e9ce113aab1bd772f5096a3b8af2b8b9e189b2",
+    "research/2026-10-05/CANDIDATE-LIFECYCLE.md": "d0a166fd1a20044f05ace3c501c04782baa7abd39a9e5f058e29ce228ac4934f"
+  },
+  "sealed_package_comparison": {
+    "administration_members": 81,
+    "current_members_identical": 80,
+    "all_executable_code_identical": true,
+    "documentation_updated_after_sealing": {
+      "guard/MANAGER.md": {
+        "sealed": "9ea65e3ad42b7209744ea7d9b1b875f4762dba37888dc27841cc7daf94baab99",
+        "current": "b34e270faae235b665b9524ceabcc4c084643b5f9184eb8a32d530b62e6d75d0"
+      }
+    }
+  },
+  "executed_source_sha256": {
+    "lab/candidate_probe.py": "80d696f903a2be78f4ca78060eac18a08748ec81a7dfb919323565b49b029874",
+    "lab/guest/candidate_probe.py": "dfe24f78fdd1e68c375d0cfb29e7662ff2b5a3da3f7277d0929c62c442adbb15",
+    "lab/kernel_reference.py": "d947c4193d952d286c9ddc9e267ff0fae2905e2cdde1af7061d77f8b34b30fac",
+    "lab/tests/test_current_support.py": "b0959793c64dddf4c807cff03369075dc928896834b30cbed22e211de6923d72"
+  },
+  "post_acceptance_changes": {
+    "guard/MANAGER.md": "Documentation now links this actual acceptance; the sealed package is not rebuilt or requalified.",
+    "lab/candidate_probe.py": "Failure-only report field active_protection_enabled becomes null unless passed. Executed runner saved unchanged; revised runner not rerun in VM."
+  },
+  "tests": {
+    "final_targeted_count": 106,
+    "commands_and_output": "lab/results/2026-10-05-real-candidate/targeted-tests.json",
+    "earlier_component_checks": {
+      "package": 6,
+      "native_payload": 11,
+      "ram_environment": 9
+    },
+    "earlier_component_evidence": "Successful command outputs in this execution session; unchanged components not rerun at close."
+  },
+  "vm": {
+    "report": "lab/results/2026-10-05-real-candidate/vm-report.json",
+    "resource_limits": {
+      "vcpus": 2,
+      "ram_mib": 3072,
+      "additional_disk_max_bytes": 8589934592,
+      "concurrent_vms": 1
+    },
+    "allocated_after_vm": 2560917504,
+    "seed_readonly_backing_stat_unchanged": true,
+    "new_large_download_bytes": 0,
+    "six_current_bindings": "pass",
+    "full_admission": "pass",
+    "initial_qualification": "absent",
+    "qualification_created_only_after_real_prerequisites": true,
+    "stage_cancel_idempotence": "pass",
+    "real_sigkill_complete_preparing_reentry": "pass",
+    "dynamic_fstab_same_subject_changed_plan": "pass",
+    "reboot_inert": "pass",
+    "cancel_after_reboot_and_qualification_revocation": "pass",
+    "active_state_observations_unchanged_except_explicit_test_fstab": "pass",
+    "fixture_current_or_lookup_injection": false
+  },
+  "scope_exclusions": [
+    "activation",
+    "root_boot_integration",
+    "production_bare_partition_provisioning",
+    "new_package_recovery_acceptance",
+    "real_hardware_acceptance",
+    "all_hwe_support",
+    "new_performance_or_long_soak_claims"
+  ],
+  "host_deployed": false,
+  "committed": false,
+  "pushed": false,
+  "published": false,
+  "historical_report_resolution_root": "/workspace/Project/rr-check-1004",
+  "historical_native_components_reused": {
+    "binary_sha256": true,
+    "library_sha256": true,
+    "entrypoint_sha256": true
+  },
+  "historical_runtime_archive_unchanged": false,
+  "artifacts": {
+    "lab/results/2026-10-05-real-candidate/actions-1.jsonl": "63386ce2eba76e63b131c097862fe1069187907f33a56d86acf0ee57f55475ff",
+    "lab/results/2026-10-05-real-candidate/actions-2.jsonl": "412d2dd60e86629e5233c94d4753a54bbb7e5e2caefe27f707e41696ba4ec745",
+    "lab/results/2026-10-05-real-candidate/administration.json": "341cc010f0d969e35bd495b7513f2808750150fe66ad730647b280f94e81cc70",
+    "lab/results/2026-10-05-real-candidate/executed-observer.py": "dfe24f78fdd1e68c375d0cfb29e7662ff2b5a3da3f7277d0929c62c442adbb15",
+    "lab/results/2026-10-05-real-candidate/executed-runner.py": "80d696f903a2be78f4ca78060eac18a08748ec81a7dfb919323565b49b029874",
+    "lab/results/2026-10-05-real-candidate/failed-attempt-1.json": "a0054975d668f20c0eb82b965c8d5dc078a38b5fb112eb7b292f733e83f49570",
+    "lab/results/2026-10-05-real-candidate/failed-attempt-2.json": "36151fb0d620f10713487d8cf84efd299b1b1890709d2e7b1f3ad85db9aed3af",
+    "lab/results/2026-10-05-real-candidate/kernel-extraction.json": "b39dc8897c7cc7ff4532f9cbd3e26617f955391b942c7312d0aced6be639f652",
+    "lab/results/2026-10-05-real-candidate/kernel-source.json": "74db4c43440c0635d93bae4cff913816a61936012646efa5347a071122b8448b",
+    "lab/results/2026-10-05-real-candidate/package.json": "8277b54d6f26cfd407a493dca0220bcd6f1deab04ce1671244558c31c84d40d0",
+    "lab/results/2026-10-05-real-candidate/prerequisite.json": "35e349251e49055389c171243aa74afb7d131181c6a3833797e3203226758515",
+    "lab/results/2026-10-05-real-candidate/qualification.json": "c8f0c4b7cbea87f012b0015047b90f325accba7b4c6a66bed939513e8047c041",
+    "lab/results/2026-10-05-real-candidate/runtime-manifest.json": "9a8bf1d3713d5e08abf281320cb9760212f623ea6056c9994ebf9d783c96ce81",
+    "lab/results/2026-10-05-real-candidate/targeted-tests.json": "cd2c16e210329a4c46e6d56bc22b8c7a0bdf9617871a07c03254c9c963d08244",
+    "lab/results/2026-10-05-real-candidate/vm-report.json": "f7cee58ef72516ab8955ecaeb5d60c5308d3356ed34b72a8d19ee6eac7b89930"
+  }
+}

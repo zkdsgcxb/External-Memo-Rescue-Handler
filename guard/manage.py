@@ -16,6 +16,8 @@ import sys
 import tempfile
 import shutil
 
+sys.dont_write_bytecode = True
+
 BASE = Path(__file__).resolve().parent
 sys.path.insert(0, str(BASE))
 sys.path.insert(0, str(BASE.parent / 'ram-rescue-demo/src'))
@@ -469,6 +471,49 @@ def upgrade():
             'runtime_prepared': False, 'services_started': []}
 
 
+@exclusive_control
+def stage_candidate(device, expected):
+    import candidates
+    import planning
+    return candidates.Store().stage(device, expected, build=planning.build)
+
+
+def candidate_not_active(selected, *, reader=None):
+    """Bounded trusted configuration recheck; cancellation never probes media."""
+    import candidates
+    import discovery
+    import diagnostics as doctor
+    reader = reader or doctor.Reader()
+    # Unlike doctor, mutation preconditions propagate unreadability as a refusal.
+    snapshot = discovery.ConfigurationSnapshot(lambda label, function, **kwargs: function())
+    observe = snapshot.observe
+    names = observe('active', 'registration_list', lambda: reader.names(str(REGISTRY)), missing=[])
+    configs = []
+    for name in names:
+        candidates.require(name.startswith('rr-data-') and name.endswith('.json'), 'registry_needs_review')
+        path = str(REGISTRY / name)
+        entry = observe('active', path, lambda path=path: reader.json(path), required=True)
+        validate_record(entry)
+        candidates.require(entry['guard']['profile'] == 'host-data'
+                           and name == entry['guard']['map_name'] + '.json', 'registry_needs_review')
+        configs.append(entry['guard'])
+    root = observe('active', str(ROOT_CONFIG), lambda: reader.json(str(ROOT_CONFIG)))
+    if root is not None:
+        candidates.require(root.get('profile') == 'host' and root.get('map_name') == 'ram-rescue-path'
+                           and isinstance(root.get('map_uuid'), str), 'root_config_needs_review')
+        configs.append(root)
+    candidates.require(not snapshot.recheck(), 'active_configuration_changed')
+    for config in configs:
+        candidates.require(config['map_name'] != selected['map_name']
+                           and config['map_uuid'] != selected['map_uuid'], 'candidate_has_active_registration')
+
+
+@exclusive_control
+def cancel_candidate(operation, expected, snapshot):
+    import candidates
+    return candidates.Store().cancel(operation, expected, snapshot=snapshot, active_check=candidate_not_active)
+
+
 def status():
     services.require_root()
     result = []
@@ -496,8 +541,10 @@ def status():
                        'state': state, 'last_state': previous,
                        'recoveries': event.get('recoveries', 0), 'map_present': present,
                        'reason': event.get('reason')})
+    import candidates
     return {'devices': result, 'root_boot_prepared': root is not None,
-            'manager_installed': (INSTALL / 'install.json').exists()}
+            'manager_installed': (INSTALL / 'install.json').exists(),
+            'candidate_operations': candidates.Store().list()}
 
 
 @exclusive_control
@@ -527,6 +574,18 @@ def uninstall():
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     commands = parser.add_subparsers(dest='command', required=True)
+    discovery = commands.add_parser('discover', help='只读发现卷、保护范围与接入阻碍')
+    discovery.add_argument('--json', action='store_true', help='输出本地结构化快照，不提示选择')
+    planning = commands.add_parser('plan', help='只读生成所选对象的候选计划；可能读取介质')
+    planning.add_argument('--device', required=True, help='已有 DM 映射、其底层分区或挂载位置')
+    planning.add_argument('--json', action='store_true', help='输出本地未脱敏计划及确定性摘要')
+    staging = commands.add_parser('stage', help='确认后仅保存数据 DM 候选；尚未启用')
+    staging.add_argument('--device', help='已有数据 DM；省略时在终端编号选择')
+    cancelling = commands.add_parser('cancel', help='撤销私有候选，保留小收据')
+    cancelling.add_argument('--operation', required=True, help='候选操作 ID')
+    for command in (staging, cancelling):
+        command.add_argument('--expect-plan', help='自动化确认的完整计划 SHA256；没有强制绕过')
+        command.add_argument('--json', action='store_true', help='结构化输出；不交互询问')
     registration = commands.add_parser('register', help='Enroll a protected device or recognize its existing owner')
     registration.add_argument('--device', required=True)
     for command in ('install', 'upgrade', 'status', 'uninstall', 'doctor'):
@@ -535,6 +594,15 @@ def main():
     export.add_argument('--output', type=Path)
     commands.add_parser('prepare', help=argparse.SUPPRESS)
     args = parser.parse_args()
+    if args.command == 'discover':
+        import discovery
+        return discovery.show(json_output=args.json)
+    if args.command == 'plan':
+        import planning
+        return planning.show(args.device, json_output=args.json)
+    if args.command in ('stage', 'cancel'):
+        import candidate_ui
+        return candidate_ui.show(args)
     actions = {'install': install, 'upgrade': upgrade, 'status': status,
                'uninstall': uninstall, 'prepare': prepare}
     if args.command in ('doctor', 'export'):

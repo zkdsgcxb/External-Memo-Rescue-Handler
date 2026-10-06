@@ -137,20 +137,33 @@ class DataLauncherTests(unittest.TestCase):
         self.assertEqual(journal.read_text(), 'keep old owner evidence')
         self.assertEqual(self.commands, [])
 
-    def test_stop_only_stops_controller_and_keeps_map_exclusions_and_evidence(self):
+    def test_stop_delegates_to_native_owner_without_service_signal_or_cleanup(self):
         launcher.start(self.profile)
         before_rules = {path: path.read_bytes() for path in self.rules.iterdir()}
         self.commands.clear()
         from trusted_paths import read_trusted_json
         # Preserve owner, mode, link and bounded-read checks inside our
         # ordinary-user temporary namespace instead of the host root tree.
-        with patch.object(launcher, 'read_trusted_json', side_effect=lambda path:
-                          read_trusted_json(path, uid=os.getuid(), anchor=self.root)):
-            result = launcher.stop(self.name)
-        self.assertEqual(self.commands, [['systemctl', 'stop', launcher.service(self.name)]])
-        self.assertTrue(result['map_retained'])
+        for state, code in [('stopped', 0), ('blocked', 1), ('incomplete', 2)]:
+            response = Mock(returncode=code, stdout=json.dumps({'state': state}), stderr='')
+            with patch.object(launcher, 'read_trusted_json', side_effect=lambda path:
+                              read_trusted_json(path, uid=os.getuid(), anchor=self.root)), \
+                    patch.object(launcher.subprocess, 'run', return_value=response) as native:
+                result = launcher.stop(self.name)
+            self.assertEqual(result['state'], state)
+            self.assertIn('safe-stop', native.call_args.args[0])
+            self.assertNotIn('systemctl', native.call_args.args[0])
+            self.assertEqual(self.commands, [])
         self.assertTrue((self.state / self.name / 'config.json').is_file())
         self.assertEqual(before_rules, {path: path.read_bytes() for path in self.rules.iterdir()})
+
+    def test_stop_cli_does_not_report_success_for_blocked_or_incomplete(self):
+        for state, status in [('blocked', 1), ('incomplete', 2)]:
+            with patch.object(sys, 'argv', ['data', 'stop', '--map', self.name]), \
+                    patch.object(launcher, 'stop', return_value={'state': state}), \
+                    patch('builtins.print'), self.assertRaises(SystemExit) as error:
+                launcher.main()
+            self.assertEqual(error.exception.code, status)
 
     def test_native_boot_runtime_is_verified_and_reused_without_python_copy(self):
         runtime = launcher.stage_runtime()

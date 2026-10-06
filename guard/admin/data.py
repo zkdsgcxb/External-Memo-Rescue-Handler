@@ -73,11 +73,11 @@ def check_isolation(node, sys_path, map_sys, identity, runner=readonly):
         if entry[4] in CRITICAL_MOUNTS and (Path('/sys/dev/block') / entry[2]).exists():
             if sys_path.parent in physical_disks(entry[2]):
                 raise RuntimeError('Data mode refuses a disk backing a system mount')
-    if {path.resolve() for path in (sys_path / 'holders').iterdir()} != {map_sys}:
+    if {path.resolve() for path in (sys_path / 'holders').iterdir()} != ({map_sys} if map_sys else set()):
         raise RuntimeError('Partition must be held exclusively by the selected data map')
-    if any((map_sys / 'holders').iterdir()):
+    if map_sys and any((map_sys / 'holders').iterdir()):
         raise RuntimeError('Data mode accepts a filesystem directly on the map, without upper DM layers')
-    map_dev = (map_sys / 'dev').read_text().strip()
+    map_dev = (map_sys / 'dev').read_text().strip() if map_sys else dev
     for line in Path('/proc/swaps').read_text().splitlines()[1:]:
         fields = line.split()
         swap = unescape(fields[0])
