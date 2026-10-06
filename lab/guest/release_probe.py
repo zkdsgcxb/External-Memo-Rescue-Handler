@@ -399,7 +399,8 @@ def prepare():
     assert baseline['exe_sha256'] == FIXTURE['package']['runtime']['binary_sha256']
     return {'installed': result, 'subject': subject, 'plan': plan, 'enabled': enabled,
             'missing_qualification_refused': refused, 'stale_plan_refused': bad,
-            'qualification_fixture': 'acceptance' not in FIXTURE, 'snapshot': baseline}
+            'qualification_fixture': 'acceptance' not in FIXTURE, 'snapshot': baseline,
+            'installed_packages': host('/usr/bin/dpkg-query', '-W', '-f=${binary:Package}\t${Version}\n')}
 
 
 def lifecycle_checks():
