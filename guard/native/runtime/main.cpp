@@ -9,7 +9,7 @@ int main(int argc, char** argv) {
             std::cout << "guard-runtime 0.0.1-beta (native C++17, DM multipath >=1.15, LP64 Linux)\n";
             return 0;
         }
-        if (argc < 2) throw std::invalid_argument("Usage: guard-runtime run|takeover|activate --config PATH; maintain --record PATH [--takeover|--rearm]; safe-stop --record PATH");
+        if (argc < 2) throw std::invalid_argument("Usage: guard-runtime run|takeover|activate --config PATH; maintain --record PATH [--takeover|--rearm|--first-enable]; safe-stop --record PATH");
         const std::string mode = argv[1];
         bool taking_over = mode == "takeover", rearm = false, first_enable = false;
         fs::path config, record;

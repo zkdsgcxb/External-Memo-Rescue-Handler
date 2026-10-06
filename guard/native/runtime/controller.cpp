@@ -440,9 +440,11 @@ void run_owned(const Config& config, Owner& owner, bool taking_over, bool data_c
     }
     auto recovery = std::make_shared<Recovery>(load_trusted_json(config.identity), [&owner](const auto& args, double timeout) {
         return readonly(args, timeout, owner.fd.get()); });
-    if (config.profile == "host-data") validate_data_runtime(
-        rearm_instance.is_null() ? config.value : observed_config(config, rearm_instance), recovery,
-        first_enable ? queue_enabled(checked_snapshot(*(std::make_unique<DeviceMapper>()), config)) : true);
+    if (config.profile == "host-data") {
+        DeviceMapper initial_mapper;
+        validate_data_runtime(rearm_instance.is_null() ? config.value : observed_config(config, rearm_instance),
+            recovery, !first_enable || queue_enabled(checked_snapshot(initial_mapper, config)));
+    }
     auto manager = std::make_shared<Guard>(config, recovery, owner, rearm_instance);
     std::unique_ptr<DataControl> control;
     if (data_control) control = std::make_unique<DataControl>(config);
