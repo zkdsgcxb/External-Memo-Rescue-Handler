@@ -1,0 +1,3378 @@
+{
+  "schema": 1,
+  "passed": true,
+  "scope": "public_data_lifecycle_four_boot_vm",
+  "qualification_fixture": true,
+  "package": {
+    "schema": 1,
+    "package": "ram-rescue-handler_0.0.1~beta+0802c9bc69e4f9e8bbb5dcee_amd64.deb",
+    "sha256": "79b2c0e8955af2b242b396781393c28ff9de26128111eb362cefd63c44a3985c",
+    "administration_version": "0802c9bc69e4f9e8bbb5dcee",
+    "runtime": {
+      "schema": 1,
+      "kind": "data-runtime",
+      "kernel_release": "7.0.0-34-generic",
+      "archive_sha256": "52810d5beb0ad0dcdbdeab08249841b4cb2c14042c8be0c2574423d52849dd35",
+      "binary_sha256": "34e1c96717f92d125c0b5b51e097a906dd3e8dfddb013c8c024ef7e6d5935890",
+      "native_runtime": {
+        "schema": 1,
+        "runtime": "cpp",
+        "binary_path": "/opt/guard-runtime/guard-runtime",
+        "binary_sha256": "34e1c96717f92d125c0b5b51e097a906dd3e8dfddb013c8c024ef7e6d5935890",
+        "entrypoint_path": "/opt/guard-runtime/maintain",
+        "entrypoint_sha256": "e2cd3b560621354d5110908b715095dc470bea369071708740ec3ab47b4d7b3c",
+        "library_sha256": {
+          "/lib/x86_64-linux-gnu/libc.so.6": "3a15d66867d83762c7f2f1e37359cb8f6c5743edb369c65285cb0b1c4f7498bf",
+          "/lib/x86_64-linux-gnu/libcap.so.2": "6ac6abc86ac891c6e13486470e26f1d939f47fda9e6b5d5508a7f5ec881adc84",
+          "/lib/x86_64-linux-gnu/libcrypto.so.3": "6866ed711dab8927e1bf82bf1cd30e828bdfc34f3cc1e83b1c9eb01ce6c37d9a",
+          "/lib/x86_64-linux-gnu/libdevmapper.so.1.02.1": "0b33f9e9780b2e22bd40170f4cfe358b0cf525974d01896b3bb2b02d6e4e2582",
+          "/lib/x86_64-linux-gnu/libgcc_s.so.1": "d93224d2b0dab4247598be683adca02f5cf00586f99c187579cd7e92058fb7cb",
+          "/lib/x86_64-linux-gnu/libm.so.6": "fce00b6f25f459cf4ae0b7fae4257909a1a8a86f9149e7c029a5d617baf1ccd0",
+          "/lib/x86_64-linux-gnu/libpcre2-8.so.0": "e00576d71d81d3ba0cfa4903c835a44a8723aac96f72f79ff75200b4cff9071b",
+          "/lib/x86_64-linux-gnu/libselinux.so.1": "0ec0843463f90e227b0e138e1f379774f50b5514bd7f5dbd4c8a87aca0aa6670",
+          "/lib/x86_64-linux-gnu/libstdc++.so.6": "1fd75fe70354a416d75aef22bcae68c47bd25d20e2d0568c30b1a9838cf62f11",
+          "/lib/x86_64-linux-gnu/libudev.so.1": "4298228175fa62a36af88b1afd4406cdd8b1bf166621f957d0dbbde45a698fe5",
+          "/lib64/ld-linux-x86-64.so.2": "c20a2dc8917c755f02b94049356320fe1f62ac7d9f8994731f807d9df39302da"
+        },
+        "payload_file_bytes": 13833958,
+        "dependency_packages": {
+          "/lib/x86_64-linux-gnu/libc.so.6": {
+            "package": "libc6:amd64",
+            "version": "2.39-0ubuntu8.9",
+            "architecture": "amd64"
+          },
+          "/lib/x86_64-linux-gnu/libcap.so.2": {
+            "package": "libcap2:amd64",
+            "version": "1:2.66-5ubuntu2.4",
+            "architecture": "amd64"
+          },
+          "/lib/x86_64-linux-gnu/libcrypto.so.3": {
+            "package": "libssl3t64:amd64",
+            "version": "3.0.13-0ubuntu3.16",
+            "architecture": "amd64"
+          },
+          "/lib/x86_64-linux-gnu/libdevmapper.so.1.02.1": {
+            "package": "libdevmapper1.02.1:amd64",
+            "version": "2:1.02.185-3ubuntu3.2",
+            "architecture": "amd64"
+          },
+          "/lib/x86_64-linux-gnu/libgcc_s.so.1": {
+            "package": "libgcc-s1:amd64",
+            "version": "14.2.0-4ubuntu2~24.04.1",
+            "architecture": "amd64"
+          },
+          "/lib/x86_64-linux-gnu/libm.so.6": {
+            "package": "libc6:amd64",
+            "version": "2.39-0ubuntu8.9",
+            "architecture": "amd64"
+          },
+          "/lib/x86_64-linux-gnu/libpcre2-8.so.0": {
+            "package": "libpcre2-8-0:amd64",
+            "version": "10.42-4ubuntu2.1",
+            "architecture": "amd64"
+          },
+          "/lib/x86_64-linux-gnu/libselinux.so.1": {
+            "package": "libselinux1:amd64",
+            "version": "3.5-2ubuntu2.1",
+            "architecture": "amd64"
+          },
+          "/lib/x86_64-linux-gnu/libstdc++.so.6": {
+            "package": "libstdc++6:amd64",
+            "version": "14.2.0-4ubuntu2~24.04.1",
+            "architecture": "amd64"
+          },
+          "/lib/x86_64-linux-gnu/libudev.so.1": {
+            "package": "libudev1:amd64",
+            "version": "255.4-1ubuntu8.17",
+            "architecture": "amd64"
+          },
+          "/lib64/ld-linux-x86-64.so.2": {
+            "package": "libc6:amd64",
+            "version": "2.39-0ubuntu8.9",
+            "architecture": "amd64"
+          }
+        }
+      },
+      "base_sha256": "152c6d2720ff01b232941e917b651fdca638627f2dcb547893ae17dc3237c3b0"
+    },
+    "source_commit": "b876cef58a969166968c7f264fb86d6e262bda95",
+    "installed": false,
+    "maintainer_scripts": [
+      "prerm"
+    ],
+    "automatic_activation": false,
+    "version": "0.0.1-beta"
+  },
+  "host_deployed": false,
+  "actions": [
+    {
+      "action": "prepare",
+      "value": {
+        "installed": {
+          "args": [
+            "/usr/bin/dpkg",
+            "-i",
+            "/run/candidate/handler.deb"
+          ],
+          "returncode": 0,
+          "stdout": "Selecting previously unselected package ram-rescue-handler.\n(Reading database ... 37575 files and directories currently installed.)\nPreparing to unpack /run/candidate/handler.deb ...\nUnpacking ram-rescue-handler (0.0.1~beta+0802c9bc69e4f9e8bbb5dcee) ...\nSetting up ram-rescue-handler (0.0.1~beta+0802c9bc69e4f9e8bbb5dcee) ...\n",
+          "stderr": ""
+        },
+        "subject": {
+          "schema": 1,
+          "platform": {
+            "id": "ubuntu",
+            "version_id": "24.04",
+            "architecture": "amd64"
+          },
+          "kernel": {
+            "release": "7.0.0-34-generic",
+            "image_sha256": "73d9c6e40b210deb638070d6af591a68bb6d7ff0280d0ec34c9ccf705a4f47ac",
+            "modules_manifest_sha256": "46a6c18a8987f156ac11137109a0a8e6cbef02df3986817f765b33895bc97f6d"
+          },
+          "administration": {
+            "manifest_sha256": "3c7cef99c3add0f02d7438ce99f88f3e7f4e65c308932344690ab22fbd10857d",
+            "entrypoint_sha256": "b985cdf84aaadbde543e210a970c1607c1551458e1368bb175f8bde171f08a31"
+          },
+          "runtime": {
+            "manifest_sha256": "b2f4994d6b3db190b97ca046f16e19fa2ad4a24f090b2b95d4286f8e90f78d23",
+            "archive_sha256": "52810d5beb0ad0dcdbdeab08249841b4cb2c14042c8be0c2574423d52849dd35",
+            "binary_sha256": "34e1c96717f92d125c0b5b51e097a906dd3e8dfddb013c8c024ef7e6d5935890",
+            "libraries_manifest_sha256": "51054cbc9537dc47d837d742da58ba8654073885b40988ea2ddf535ccdf29491"
+          },
+          "host_dependencies": {
+            "manifest_sha256": "649b549a3d4b74aee32448484b9dbba6977085df396c924d73716da867c21bbd"
+          }
+        },
+        "plan": {
+          "schema": 1,
+          "record": {
+            "schema": 1,
+            "identity": {
+              "kind": "filesystem",
+              "vid": "46f4",
+              "pid": "0001",
+              "usb_serial": "DATA-VM-EXT4",
+              "sectors": 163840,
+              "partition_number": 1,
+              "partuuid": "4dba02a2-e343-4e9b-855e-af41b9500268",
+              "fs_type": "ext4",
+              "fs_uuid": "ec994cec-166b-4d1e-8577-d2c3cc88a8c3"
+            },
+            "guard": {
+              "schema": 1,
+              "profile": "host-data",
+              "map_name": "rr-data-vm-ext4",
+              "map_uuid": "RAMRESCUE-DATA-vm-ext4",
+              "kernel_release": "7.0.0-34-generic",
+              "queue_seconds": 8,
+              "run_dir": "/run/ram-rescue-data/rr-data-vm-ext4/state",
+              "identity_path": "/run/ram-rescue-data/rr-data-vm-ext4/identity.json",
+              "partition_sectors": 131072,
+              "partition_start": 2048,
+              "logical_block_size": 512,
+              "layout": {
+                "kind": "filesystem",
+                "fs_type": "ext4",
+                "fs_uuid": "ec994cec-166b-4d1e-8577-d2c3cc88a8c3",
+                "partuuid": "4dba02a2-e343-4e9b-855e-af41b9500268"
+              }
+            }
+          },
+          "instance": {
+            "node": "/dev/sdc1",
+            "sys_path": "/sys/devices/pci0000:00/0000:00:01.0/usb2/2-2/2-2:1.0/host6/target6:0:0/6:0:0:0/block/sdc/sdc1",
+            "diskseq": "13"
+          },
+          "boot_id": "f511b355-41f3-41a7-a50d-15dbf63c40c3",
+          "release_subject": "d622840407c14a4418cb035789df73749f01337e94398cf52c9cc1fadac98f5c",
+          "existing_map": false,
+          "effects": [
+            "save_disabled_configuration"
+          ],
+          "enabled": false,
+          "plan_sha256": "8359347855bad30042ee4c1b016ceb0be5fd90e850e11aa82a47180eadd38a35"
+        },
+        "enabled": {
+          "map": "rr-data-vm-ext4",
+          "state": "active",
+          "device": "/dev/mapper/rr-data-vm-ext4"
+        },
+        "missing_qualification_refused": {
+          "args": [
+            "/usr/bin/rescue-guard-admin",
+            "device",
+            "plan",
+            "--device",
+            "/dev/sdc1",
+            "--name",
+            "rr-data-vm-ext4"
+          ],
+          "returncode": 1,
+          "stdout": "",
+          "stderr": "{\"state\": \"blocked\", \"reason\": \"[Errno 2] No such file or directory: 'ram-rescue-handler'\"}\n"
+        },
+        "stale_plan_refused": {
+          "args": [
+            "/usr/bin/rescue-guard-admin",
+            "device",
+            "enroll",
+            "--device",
+            "/dev/sdc1",
+            "--name",
+            "rr-data-vm-ext4",
+            "--expect-plan",
+            "0000000000000000000000000000000000000000000000000000000000000000"
+          ],
+          "returncode": 1,
+          "stdout": "",
+          "stderr": "{\"state\": \"blocked\", \"reason\": \"Plan changed or confirmation does not match; review it again\"}\n"
+        },
+        "qualification_fixture": true,
+        "snapshot": {
+          "pid": 1260,
+          "start_ticks": "978",
+          "exe_sha256": "34e1c96717f92d125c0b5b51e097a906dd3e8dfddb013c8c024ef7e6d5935890",
+          "service": "active",
+          "cgroup": "/ramrescuedata.slice/ram-rescue-data-rr-data-vm-ext4.service",
+          "cgroup_procs": "1260\n",
+          "journal": {
+            "boot_id": "f511b355-41f3-41a7-a50d-15dbf63c40c3",
+            "candidate": null,
+            "config_digest": "4539b88856108aff1a56c9d959e705b05351f50f209a986973ae645f9ede9fb6",
+            "deadline": null,
+            "map_name": "rr-data-vm-ext4",
+            "map_uuid": "RAMRESCUE-DATA-vm-ext4",
+            "owner_epoch": "fb7a1729847b45b5a4553d4e7a338de3",
+            "owner_pid": 1260,
+            "phase": "idle",
+            "recoveries": 0,
+            "schema": 1,
+            "snapshot": {
+              "active": [
+                [
+                  0,
+                  131072,
+                  "multipath",
+                  "2 queue_mode bio 0 1 1 round-robin 0 1 1 8:33 1 "
+                ]
+              ],
+              "active_digest": "9f3c95cf3f547b0ab61551f27928c7ce5f9d2649ed03cb0e0c65afda736e3b05",
+              "inactive": [],
+              "inactive_digest": null,
+              "info": {
+                "deferred_remove": 0,
+                "event_nr": 0,
+                "exists": 1,
+                "inactive_table": 0,
+                "internal_suspend": 0,
+                "live_table": 1,
+                "major": 252,
+                "minor": 2,
+                "open_count": 0,
+                "read_only": 0,
+                "suspended": 0,
+                "target_count": 1
+              },
+              "uuid": "RAMRESCUE-DATA-vm-ext4"
+            },
+            "updated_at": 9.927690126
+          },
+          "state": {
+            "multipath_target_version": [
+              1,
+              15,
+              0
+            ],
+            "node": "/dev/sdc1",
+            "observations": {
+              "control": "idle",
+              "identity": "enrolled",
+              "transport": {
+                "completed": 0,
+                "in_flight": 0,
+                "state": "no_io",
+                "without_completion_seconds": 0.0
+              },
+              "upper_errors": {
+                "reason": "application and filesystem history not fully observed",
+                "state": "incomplete"
+              }
+            },
+            "outcome": "initial_mapping",
+            "owner_epoch": "fb7a1729847b45b5a4553d4e7a338de3",
+            "recoveries": 0,
+            "state": "ready",
+            "time": 9.946084519
+          },
+          "stop": null,
+          "archive": null,
+          "invocation": {
+            "config_digest": "4539b88856108aff1a56c9d959e705b05351f50f209a986973ae645f9ede9fb6",
+            "invocation_id": "9811c5c65b724d24b551feddf86d72cf",
+            "owner_epoch": "fb7a1729847b45b5a4553d4e7a338de3",
+            "schema": 1
+          },
+          "supervisor": null,
+          "lock_inode": 1380,
+          "table": "0 131072 multipath 3 queue_if_no_path queue_mode bio 0 1 1 round-robin 0 1 1 8:33 1",
+          "status": "0 131072 multipath 2 1 0 0 1 1 E 0 1 0 8:33 A 0",
+          "ram_mounts": [
+            "61 30 0:45 / /run/ram-rescue-manager/rootfs rw,nosuid,relatime shared:276 - tmpfs ram-rescue-data-tools rw,size=262144k,mode=700,inode64,noswap",
+            "93 61 0:7 / /run/ram-rescue-manager/rootfs/dev rw,nosuid,relatime shared:2 - devtmpfs udev rw,size=846572k,nr_inodes=211643,mode=755,inode64",
+            "332 61 0:24 / /run/ram-rescue-manager/rootfs/proc rw,nosuid,nodev,noexec,relatime shared:13 - proc proc rw",
+            "383 61 0:23 / /run/ram-rescue-manager/rootfs/sys rw,nosuid,nodev,noexec,relatime shared:8 - sysfs sysfs rw",
+            "392 61 0:26 / /run/ram-rescue-manager/rootfs/run rw,nosuid,nodev,noexec,relatime shared:6 - tmpfs tmpfs rw,size=297324k,mode=755,inode64",
+            "401 61 252:0 /etc/fstab /run/ram-rescue-manager/rootfs/etc/rescue/host-fstab ro,relatime shared:1 - ext4 /dev/mapper/labrescue-ubuntu rw,errors=remount-ro"
+          ],
+          "fstab_sha256": "a78708de7d787238eec41ada8a49bed91e87c77e57e8aa44f5c0bb66368c4908",
+          "root_enrollment_exists": false,
+          "worker_pid": null,
+          "worker_poll": null,
+          "acks": 0,
+          "errors": [],
+          "records": []
+        }
+      }
+    },
+    {
+      "action": "busy_cases",
+      "value": {
+        "mounted": {
+          "stop": {
+            "args": [
+              "/usr/sbin/chroot",
+              "/run/ram-rescue-manager/rootfs",
+              "/opt/guard-runtime/guard-runtime",
+              "safe-stop",
+              "--record",
+              "/run/ram-rescue-data/rr-data-vm-ext4/record.json"
+            ],
+            "returncode": 1,
+            "stdout": "{\"reason\":\"Data map busy, suspended, read-only, or deferred\",\"state\":\"blocked\"}\n",
+            "stderr": "",
+            "value": {
+              "reason": "Data map busy, suspended, read-only, or deferred",
+              "state": "blocked"
+            }
+          },
+          "before": {
+            "pid": 1260,
+            "start_ticks": "978",
+            "exe_sha256": "34e1c96717f92d125c0b5b51e097a906dd3e8dfddb013c8c024ef7e6d5935890",
+            "service": "active",
+            "cgroup": "/ramrescuedata.slice/ram-rescue-data-rr-data-vm-ext4.service",
+            "cgroup_procs": "1260\n",
+            "journal": {
+              "boot_id": "f511b355-41f3-41a7-a50d-15dbf63c40c3",
+              "candidate": null,
+              "config_digest": "4539b88856108aff1a56c9d959e705b05351f50f209a986973ae645f9ede9fb6",
+              "deadline": null,
+              "map_name": "rr-data-vm-ext4",
+              "map_uuid": "RAMRESCUE-DATA-vm-ext4",
+              "owner_epoch": "fb7a1729847b45b5a4553d4e7a338de3",
+              "owner_pid": 1260,
+              "phase": "idle",
+              "recoveries": 0,
+              "schema": 1,
+              "snapshot": {
+                "active": [
+                  [
+                    0,
+                    131072,
+                    "multipath",
+                    "2 queue_mode bio 0 1 1 round-robin 0 1 1 8:33 1 "
+                  ]
+                ],
+                "active_digest": "9f3c95cf3f547b0ab61551f27928c7ce5f9d2649ed03cb0e0c65afda736e3b05",
+                "inactive": [],
+                "inactive_digest": null,
+                "info": {
+                  "deferred_remove": 0,
+                  "event_nr": 0,
+                  "exists": 1,
+                  "inactive_table": 0,
+                  "internal_suspend": 0,
+                  "live_table": 1,
+                  "major": 252,
+                  "minor": 2,
+                  "open_count": 0,
+                  "read_only": 0,
+                  "suspended": 0,
+                  "target_count": 1
+                },
+                "uuid": "RAMRESCUE-DATA-vm-ext4"
+              },
+              "updated_at": 9.927690126
+            },
+            "state": {
+              "multipath_target_version": [
+                1,
+                15,
+                0
+              ],
+              "node": "/dev/sdc1",
+              "observations": {
+                "control": "idle",
+                "identity": "enrolled",
+                "transport": {
+                  "completed": 0,
+                  "in_flight": 0,
+                  "state": "no_io",
+                  "without_completion_seconds": 0.0
+                },
+                "upper_errors": {
+                  "reason": "application and filesystem history not fully observed",
+                  "state": "incomplete"
+                }
+              },
+              "outcome": "initial_mapping",
+              "owner_epoch": "fb7a1729847b45b5a4553d4e7a338de3",
+              "recoveries": 0,
+              "state": "ready",
+              "time": 9.946084519
+            },
+            "stop": null,
+            "archive": null,
+            "invocation": {
+              "config_digest": "4539b88856108aff1a56c9d959e705b05351f50f209a986973ae645f9ede9fb6",
+              "invocation_id": "9811c5c65b724d24b551feddf86d72cf",
+              "owner_epoch": "fb7a1729847b45b5a4553d4e7a338de3",
+              "schema": 1
+            },
+            "supervisor": null,
+            "lock_inode": 1380,
+            "table": "0 131072 multipath 3 queue_if_no_path queue_mode bio 0 1 1 round-robin 0 1 1 8:33 1",
+            "status": "0 131072 multipath 2 0 0 0 1 1 A 0 1 0 8:33 A 0",
+            "ram_mounts": [
+              "61 30 0:45 / /run/ram-rescue-manager/rootfs rw,nosuid,relatime shared:276 - tmpfs ram-rescue-data-tools rw,size=262144k,mode=700,inode64,noswap",
+              "93 61 0:7 / /run/ram-rescue-manager/rootfs/dev rw,nosuid,relatime shared:2 - devtmpfs udev rw,size=846572k,nr_inodes=211643,mode=755,inode64",
+              "332 61 0:24 / /run/ram-rescue-manager/rootfs/proc rw,nosuid,nodev,noexec,relatime shared:13 - proc proc rw",
+              "383 61 0:23 / /run/ram-rescue-manager/rootfs/sys rw,nosuid,nodev,noexec,relatime shared:8 - sysfs sysfs rw",
+              "392 61 0:26 / /run/ram-rescue-manager/rootfs/run rw,nosuid,nodev,noexec,relatime shared:6 - tmpfs tmpfs rw,size=297324k,mode=755,inode64",
+              "401 61 252:0 /etc/fstab /run/ram-rescue-manager/rootfs/etc/rescue/host-fstab ro,relatime shared:1 - ext4 /dev/mapper/labrescue-ubuntu rw,errors=remount-ro"
+            ],
+            "fstab_sha256": "a78708de7d787238eec41ada8a49bed91e87c77e57e8aa44f5c0bb66368c4908",
+            "root_enrollment_exists": false,
+            "worker_pid": null,
+            "worker_poll": null,
+            "acks": 0,
+            "errors": [],
+            "records": []
+          },
+          "after": {
+            "pid": 1260,
+            "start_ticks": "978",
+            "exe_sha256": "34e1c96717f92d125c0b5b51e097a906dd3e8dfddb013c8c024ef7e6d5935890",
+            "service": "active",
+            "cgroup": "/ramrescuedata.slice/ram-rescue-data-rr-data-vm-ext4.service",
+            "cgroup_procs": "1260\n",
+            "journal": {
+              "boot_id": "f511b355-41f3-41a7-a50d-15dbf63c40c3",
+              "candidate": null,
+              "config_digest": "4539b88856108aff1a56c9d959e705b05351f50f209a986973ae645f9ede9fb6",
+              "deadline": null,
+              "map_name": "rr-data-vm-ext4",
+              "map_uuid": "RAMRESCUE-DATA-vm-ext4",
+              "owner_epoch": "fb7a1729847b45b5a4553d4e7a338de3",
+              "owner_pid": 1260,
+              "phase": "idle",
+              "recoveries": 0,
+              "schema": 1,
+              "snapshot": {
+                "active": [
+                  [
+                    0,
+                    131072,
+                    "multipath",
+                    "2 queue_mode bio 0 1 1 round-robin 0 1 1 8:33 1 "
+                  ]
+                ],
+                "active_digest": "9f3c95cf3f547b0ab61551f27928c7ce5f9d2649ed03cb0e0c65afda736e3b05",
+                "inactive": [],
+                "inactive_digest": null,
+                "info": {
+                  "deferred_remove": 0,
+                  "event_nr": 0,
+                  "exists": 1,
+                  "inactive_table": 0,
+                  "internal_suspend": 0,
+                  "live_table": 1,
+                  "major": 252,
+                  "minor": 2,
+                  "open_count": 0,
+                  "read_only": 0,
+                  "suspended": 0,
+                  "target_count": 1
+                },
+                "uuid": "RAMRESCUE-DATA-vm-ext4"
+              },
+              "updated_at": 9.927690126
+            },
+            "state": {
+              "multipath_target_version": [
+                1,
+                15,
+                0
+              ],
+              "node": "/dev/sdc1",
+              "observations": {
+                "control": "idle",
+                "identity": "enrolled",
+                "transport": {
+                  "completed": 0,
+                  "in_flight": 0,
+                  "state": "no_io",
+                  "without_completion_seconds": 0.0
+                },
+                "upper_errors": {
+                  "reason": "application and filesystem history not fully observed",
+                  "state": "incomplete"
+                }
+              },
+              "outcome": "initial_mapping",
+              "owner_epoch": "fb7a1729847b45b5a4553d4e7a338de3",
+              "recoveries": 0,
+              "state": "ready",
+              "time": 9.946084519
+            },
+            "stop": null,
+            "archive": null,
+            "invocation": {
+              "config_digest": "4539b88856108aff1a56c9d959e705b05351f50f209a986973ae645f9ede9fb6",
+              "invocation_id": "9811c5c65b724d24b551feddf86d72cf",
+              "owner_epoch": "fb7a1729847b45b5a4553d4e7a338de3",
+              "schema": 1
+            },
+            "supervisor": null,
+            "lock_inode": 1380,
+            "table": "0 131072 multipath 3 queue_if_no_path queue_mode bio 0 1 1 round-robin 0 1 1 8:33 1",
+            "status": "0 131072 multipath 2 0 0 0 1 1 A 0 1 0 8:33 A 0",
+            "ram_mounts": [
+              "61 30 0:45 / /run/ram-rescue-manager/rootfs rw,nosuid,relatime shared:276 - tmpfs ram-rescue-data-tools rw,size=262144k,mode=700,inode64,noswap",
+              "93 61 0:7 / /run/ram-rescue-manager/rootfs/dev rw,nosuid,relatime shared:2 - devtmpfs udev rw,size=846572k,nr_inodes=211643,mode=755,inode64",
+              "332 61 0:24 / /run/ram-rescue-manager/rootfs/proc rw,nosuid,nodev,noexec,relatime shared:13 - proc proc rw",
+              "383 61 0:23 / /run/ram-rescue-manager/rootfs/sys rw,nosuid,nodev,noexec,relatime shared:8 - sysfs sysfs rw",
+              "392 61 0:26 / /run/ram-rescue-manager/rootfs/run rw,nosuid,nodev,noexec,relatime shared:6 - tmpfs tmpfs rw,size=297324k,mode=755,inode64",
+              "401 61 252:0 /etc/fstab /run/ram-rescue-manager/rootfs/etc/rescue/host-fstab ro,relatime shared:1 - ext4 /dev/mapper/labrescue-ubuntu rw,errors=remount-ro"
+            ],
+            "fstab_sha256": "a78708de7d787238eec41ada8a49bed91e87c77e57e8aa44f5c0bb66368c4908",
+            "root_enrollment_exists": false,
+            "worker_pid": null,
+            "worker_poll": null,
+            "acks": 0,
+            "errors": [],
+            "records": []
+          }
+        },
+        "dm_fd_open": {
+          "stop": {
+            "args": [
+              "/usr/sbin/chroot",
+              "/run/ram-rescue-manager/rootfs",
+              "/opt/guard-runtime/guard-runtime",
+              "safe-stop",
+              "--record",
+              "/run/ram-rescue-data/rr-data-vm-ext4/record.json"
+            ],
+            "returncode": 1,
+            "stdout": "{\"reason\":\"Data map busy, suspended, read-only, or deferred\",\"state\":\"blocked\"}\n",
+            "stderr": "",
+            "value": {
+              "reason": "Data map busy, suspended, read-only, or deferred",
+              "state": "blocked"
+            }
+          },
+          "before": {
+            "pid": 1260,
+            "start_ticks": "978",
+            "exe_sha256": "34e1c96717f92d125c0b5b51e097a906dd3e8dfddb013c8c024ef7e6d5935890",
+            "service": "active",
+            "cgroup": "/ramrescuedata.slice/ram-rescue-data-rr-data-vm-ext4.service",
+            "cgroup_procs": "1260\n",
+            "journal": {
+              "boot_id": "f511b355-41f3-41a7-a50d-15dbf63c40c3",
+              "candidate": null,
+              "config_digest": "4539b88856108aff1a56c9d959e705b05351f50f209a986973ae645f9ede9fb6",
+              "deadline": null,
+              "map_name": "rr-data-vm-ext4",
+              "map_uuid": "RAMRESCUE-DATA-vm-ext4",
+              "owner_epoch": "fb7a1729847b45b5a4553d4e7a338de3",
+              "owner_pid": 1260,
+              "phase": "idle",
+              "recoveries": 0,
+              "schema": 1,
+              "snapshot": {
+                "active": [
+                  [
+                    0,
+                    131072,
+                    "multipath",
+                    "2 queue_mode bio 0 1 1 round-robin 0 1 1 8:33 1 "
+                  ]
+                ],
+                "active_digest": "9f3c95cf3f547b0ab61551f27928c7ce5f9d2649ed03cb0e0c65afda736e3b05",
+                "inactive": [],
+                "inactive_digest": null,
+                "info": {
+                  "deferred_remove": 0,
+                  "event_nr": 0,
+                  "exists": 1,
+                  "inactive_table": 0,
+                  "internal_suspend": 0,
+                  "live_table": 1,
+                  "major": 252,
+                  "minor": 2,
+                  "open_count": 0,
+                  "read_only": 0,
+                  "suspended": 0,
+                  "target_count": 1
+                },
+                "uuid": "RAMRESCUE-DATA-vm-ext4"
+              },
+              "updated_at": 9.927690126
+            },
+            "state": {
+              "multipath_target_version": [
+                1,
+                15,
+                0
+              ],
+              "node": "/dev/sdc1",
+              "observations": {
+                "control": "idle",
+                "identity": "enrolled",
+                "transport": {
+                  "completed": 0,
+                  "in_flight": 0,
+                  "state": "no_io",
+                  "without_completion_seconds": 0.0
+                },
+                "upper_errors": {
+                  "reason": "application and filesystem history not fully observed",
+                  "state": "incomplete"
+                }
+              },
+              "outcome": "initial_mapping",
+              "owner_epoch": "fb7a1729847b45b5a4553d4e7a338de3",
+              "recoveries": 0,
+              "state": "ready",
+              "time": 9.946084519
+            },
+            "stop": null,
+            "archive": null,
+            "invocation": {
+              "config_digest": "4539b88856108aff1a56c9d959e705b05351f50f209a986973ae645f9ede9fb6",
+              "invocation_id": "9811c5c65b724d24b551feddf86d72cf",
+              "owner_epoch": "fb7a1729847b45b5a4553d4e7a338de3",
+              "schema": 1
+            },
+            "supervisor": null,
+            "lock_inode": 1380,
+            "table": "0 131072 multipath 3 queue_if_no_path queue_mode bio 0 1 1 round-robin 0 1 1 8:33 1",
+            "status": "0 131072 multipath 2 0 0 0 1 1 A 0 1 0 8:33 A 0",
+            "ram_mounts": [
+              "61 30 0:45 / /run/ram-rescue-manager/rootfs rw,nosuid,relatime shared:276 - tmpfs ram-rescue-data-tools rw,size=262144k,mode=700,inode64,noswap",
+              "93 61 0:7 / /run/ram-rescue-manager/rootfs/dev rw,nosuid,relatime shared:2 - devtmpfs udev rw,size=846572k,nr_inodes=211643,mode=755,inode64",
+              "332 61 0:24 / /run/ram-rescue-manager/rootfs/proc rw,nosuid,nodev,noexec,relatime shared:13 - proc proc rw",
+              "383 61 0:23 / /run/ram-rescue-manager/rootfs/sys rw,nosuid,nodev,noexec,relatime shared:8 - sysfs sysfs rw",
+              "392 61 0:26 / /run/ram-rescue-manager/rootfs/run rw,nosuid,nodev,noexec,relatime shared:6 - tmpfs tmpfs rw,size=297324k,mode=755,inode64",
+              "401 61 252:0 /etc/fstab /run/ram-rescue-manager/rootfs/etc/rescue/host-fstab ro,relatime shared:1 - ext4 /dev/mapper/labrescue-ubuntu rw,errors=remount-ro"
+            ],
+            "fstab_sha256": "a78708de7d787238eec41ada8a49bed91e87c77e57e8aa44f5c0bb66368c4908",
+            "root_enrollment_exists": false,
+            "worker_pid": null,
+            "worker_poll": null,
+            "acks": 0,
+            "errors": [],
+            "records": []
+          },
+          "after": {
+            "pid": 1260,
+            "start_ticks": "978",
+            "exe_sha256": "34e1c96717f92d125c0b5b51e097a906dd3e8dfddb013c8c024ef7e6d5935890",
+            "service": "active",
+            "cgroup": "/ramrescuedata.slice/ram-rescue-data-rr-data-vm-ext4.service",
+            "cgroup_procs": "1260\n",
+            "journal": {
+              "boot_id": "f511b355-41f3-41a7-a50d-15dbf63c40c3",
+              "candidate": null,
+              "config_digest": "4539b88856108aff1a56c9d959e705b05351f50f209a986973ae645f9ede9fb6",
+              "deadline": null,
+              "map_name": "rr-data-vm-ext4",
+              "map_uuid": "RAMRESCUE-DATA-vm-ext4",
+              "owner_epoch": "fb7a1729847b45b5a4553d4e7a338de3",
+              "owner_pid": 1260,
+              "phase": "idle",
+              "recoveries": 0,
+              "schema": 1,
+              "snapshot": {
+                "active": [
+                  [
+                    0,
+                    131072,
+                    "multipath",
+                    "2 queue_mode bio 0 1 1 round-robin 0 1 1 8:33 1 "
+                  ]
+                ],
+                "active_digest": "9f3c95cf3f547b0ab61551f27928c7ce5f9d2649ed03cb0e0c65afda736e3b05",
+                "inactive": [],
+                "inactive_digest": null,
+                "info": {
+                  "deferred_remove": 0,
+                  "event_nr": 0,
+                  "exists": 1,
+                  "inactive_table": 0,
+                  "internal_suspend": 0,
+                  "live_table": 1,
+                  "major": 252,
+                  "minor": 2,
+                  "open_count": 0,
+                  "read_only": 0,
+                  "suspended": 0,
+                  "target_count": 1
+                },
+                "uuid": "RAMRESCUE-DATA-vm-ext4"
+              },
+              "updated_at": 9.927690126
+            },
+            "state": {
+              "multipath_target_version": [
+                1,
+                15,
+                0
+              ],
+              "node": "/dev/sdc1",
+              "observations": {
+                "control": "idle",
+                "identity": "enrolled",
+                "transport": {
+                  "completed": 0,
+                  "in_flight": 0,
+                  "state": "no_io",
+                  "without_completion_seconds": 0.0
+                },
+                "upper_errors": {
+                  "reason": "application and filesystem history not fully observed",
+                  "state": "incomplete"
+                }
+              },
+              "outcome": "initial_mapping",
+              "owner_epoch": "fb7a1729847b45b5a4553d4e7a338de3",
+              "recoveries": 0,
+              "state": "ready",
+              "time": 9.946084519
+            },
+            "stop": null,
+            "archive": null,
+            "invocation": {
+              "config_digest": "4539b88856108aff1a56c9d959e705b05351f50f209a986973ae645f9ede9fb6",
+              "invocation_id": "9811c5c65b724d24b551feddf86d72cf",
+              "owner_epoch": "fb7a1729847b45b5a4553d4e7a338de3",
+              "schema": 1
+            },
+            "supervisor": null,
+            "lock_inode": 1380,
+            "table": "0 131072 multipath 3 queue_if_no_path queue_mode bio 0 1 1 round-robin 0 1 1 8:33 1",
+            "status": "0 131072 multipath 2 0 0 0 1 1 A 0 1 0 8:33 A 0",
+            "ram_mounts": [
+              "61 30 0:45 / /run/ram-rescue-manager/rootfs rw,nosuid,relatime shared:276 - tmpfs ram-rescue-data-tools rw,size=262144k,mode=700,inode64,noswap",
+              "93 61 0:7 / /run/ram-rescue-manager/rootfs/dev rw,nosuid,relatime shared:2 - devtmpfs udev rw,size=846572k,nr_inodes=211643,mode=755,inode64",
+              "332 61 0:24 / /run/ram-rescue-manager/rootfs/proc rw,nosuid,nodev,noexec,relatime shared:13 - proc proc rw",
+              "383 61 0:23 / /run/ram-rescue-manager/rootfs/sys rw,nosuid,nodev,noexec,relatime shared:8 - sysfs sysfs rw",
+              "392 61 0:26 / /run/ram-rescue-manager/rootfs/run rw,nosuid,nodev,noexec,relatime shared:6 - tmpfs tmpfs rw,size=297324k,mode=755,inode64",
+              "401 61 252:0 /etc/fstab /run/ram-rescue-manager/rootfs/etc/rescue/host-fstab ro,relatime shared:1 - ext4 /dev/mapper/labrescue-ubuntu rw,errors=remount-ro"
+            ],
+            "fstab_sha256": "a78708de7d787238eec41ada8a49bed91e87c77e57e8aa44f5c0bb66368c4908",
+            "root_enrollment_exists": false,
+            "worker_pid": null,
+            "worker_poll": null,
+            "acks": 0,
+            "errors": [],
+            "records": []
+          }
+        },
+        "upper_holder": {
+          "stop": {
+            "args": [
+              "/usr/sbin/chroot",
+              "/run/ram-rescue-manager/rootfs",
+              "/opt/guard-runtime/guard-runtime",
+              "safe-stop",
+              "--record",
+              "/run/ram-rescue-data/rr-data-vm-ext4/record.json"
+            ],
+            "returncode": 1,
+            "stdout": "{\"reason\":\"Data map busy, suspended, read-only, or deferred\",\"state\":\"blocked\"}\n",
+            "stderr": "",
+            "value": {
+              "reason": "Data map busy, suspended, read-only, or deferred",
+              "state": "blocked"
+            }
+          },
+          "before": {
+            "pid": 1260,
+            "start_ticks": "978",
+            "exe_sha256": "34e1c96717f92d125c0b5b51e097a906dd3e8dfddb013c8c024ef7e6d5935890",
+            "service": "active",
+            "cgroup": "/ramrescuedata.slice/ram-rescue-data-rr-data-vm-ext4.service",
+            "cgroup_procs": "1260\n",
+            "journal": {
+              "boot_id": "f511b355-41f3-41a7-a50d-15dbf63c40c3",
+              "candidate": null,
+              "config_digest": "4539b88856108aff1a56c9d959e705b05351f50f209a986973ae645f9ede9fb6",
+              "deadline": null,
+              "map_name": "rr-data-vm-ext4",
+              "map_uuid": "RAMRESCUE-DATA-vm-ext4",
+              "owner_epoch": "fb7a1729847b45b5a4553d4e7a338de3",
+              "owner_pid": 1260,
+              "phase": "idle",
+              "recoveries": 0,
+              "schema": 1,
+              "snapshot": {
+                "active": [
+                  [
+                    0,
+                    131072,
+                    "multipath",
+                    "2 queue_mode bio 0 1 1 round-robin 0 1 1 8:33 1 "
+                  ]
+                ],
+                "active_digest": "9f3c95cf3f547b0ab61551f27928c7ce5f9d2649ed03cb0e0c65afda736e3b05",
+                "inactive": [],
+                "inactive_digest": null,
+                "info": {
+                  "deferred_remove": 0,
+                  "event_nr": 0,
+                  "exists": 1,
+                  "inactive_table": 0,
+                  "internal_suspend": 0,
+                  "live_table": 1,
+                  "major": 252,
+                  "minor": 2,
+                  "open_count": 0,
+                  "read_only": 0,
+                  "suspended": 0,
+                  "target_count": 1
+                },
+                "uuid": "RAMRESCUE-DATA-vm-ext4"
+              },
+              "updated_at": 9.927690126
+            },
+            "state": {
+              "multipath_target_version": [
+                1,
+                15,
+                0
+              ],
+              "node": "/dev/sdc1",
+              "observations": {
+                "control": "idle",
+                "identity": "enrolled",
+                "transport": {
+                  "completed": 0,
+                  "in_flight": 0,
+                  "state": "no_io",
+                  "without_completion_seconds": 0.0
+                },
+                "upper_errors": {
+                  "reason": "application and filesystem history not fully observed",
+                  "state": "incomplete"
+                }
+              },
+              "outcome": "initial_mapping",
+              "owner_epoch": "fb7a1729847b45b5a4553d4e7a338de3",
+              "recoveries": 0,
+              "state": "ready",
+              "time": 9.946084519
+            },
+            "stop": null,
+            "archive": null,
+            "invocation": {
+              "config_digest": "4539b88856108aff1a56c9d959e705b05351f50f209a986973ae645f9ede9fb6",
+              "invocation_id": "9811c5c65b724d24b551feddf86d72cf",
+              "owner_epoch": "fb7a1729847b45b5a4553d4e7a338de3",
+              "schema": 1
+            },
+            "supervisor": null,
+            "lock_inode": 1380,
+            "table": "0 131072 multipath 3 queue_if_no_path queue_mode bio 0 1 1 round-robin 0 1 1 8:33 1",
+            "status": "0 131072 multipath 2 0 0 0 1 1 A 0 1 0 8:33 A 0",
+            "ram_mounts": [
+              "61 30 0:45 / /run/ram-rescue-manager/rootfs rw,nosuid,relatime shared:276 - tmpfs ram-rescue-data-tools rw,size=262144k,mode=700,inode64,noswap",
+              "93 61 0:7 / /run/ram-rescue-manager/rootfs/dev rw,nosuid,relatime shared:2 - devtmpfs udev rw,size=846572k,nr_inodes=211643,mode=755,inode64",
+              "332 61 0:24 / /run/ram-rescue-manager/rootfs/proc rw,nosuid,nodev,noexec,relatime shared:13 - proc proc rw",
+              "383 61 0:23 / /run/ram-rescue-manager/rootfs/sys rw,nosuid,nodev,noexec,relatime shared:8 - sysfs sysfs rw",
+              "392 61 0:26 / /run/ram-rescue-manager/rootfs/run rw,nosuid,nodev,noexec,relatime shared:6 - tmpfs tmpfs rw,size=297324k,mode=755,inode64",
+              "401 61 252:0 /etc/fstab /run/ram-rescue-manager/rootfs/etc/rescue/host-fstab ro,relatime shared:1 - ext4 /dev/mapper/labrescue-ubuntu rw,errors=remount-ro"
+            ],
+            "fstab_sha256": "a78708de7d787238eec41ada8a49bed91e87c77e57e8aa44f5c0bb66368c4908",
+            "root_enrollment_exists": false,
+            "worker_pid": null,
+            "worker_poll": null,
+            "acks": 0,
+            "errors": [],
+            "records": []
+          },
+          "after": {
+            "pid": 1260,
+            "start_ticks": "978",
+            "exe_sha256": "34e1c96717f92d125c0b5b51e097a906dd3e8dfddb013c8c024ef7e6d5935890",
+            "service": "active",
+            "cgroup": "/ramrescuedata.slice/ram-rescue-data-rr-data-vm-ext4.service",
+            "cgroup_procs": "1260\n",
+            "journal": {
+              "boot_id": "f511b355-41f3-41a7-a50d-15dbf63c40c3",
+              "candidate": null,
+              "config_digest": "4539b88856108aff1a56c9d959e705b05351f50f209a986973ae645f9ede9fb6",
+              "deadline": null,
+              "map_name": "rr-data-vm-ext4",
+              "map_uuid": "RAMRESCUE-DATA-vm-ext4",
+              "owner_epoch": "fb7a1729847b45b5a4553d4e7a338de3",
+              "owner_pid": 1260,
+              "phase": "idle",
+              "recoveries": 0,
+              "schema": 1,
+              "snapshot": {
+                "active": [
+                  [
+                    0,
+                    131072,
+                    "multipath",
+                    "2 queue_mode bio 0 1 1 round-robin 0 1 1 8:33 1 "
+                  ]
+                ],
+                "active_digest": "9f3c95cf3f547b0ab61551f27928c7ce5f9d2649ed03cb0e0c65afda736e3b05",
+                "inactive": [],
+                "inactive_digest": null,
+                "info": {
+                  "deferred_remove": 0,
+                  "event_nr": 0,
+                  "exists": 1,
+                  "inactive_table": 0,
+                  "internal_suspend": 0,
+                  "live_table": 1,
+                  "major": 252,
+                  "minor": 2,
+                  "open_count": 0,
+                  "read_only": 0,
+                  "suspended": 0,
+                  "target_count": 1
+                },
+                "uuid": "RAMRESCUE-DATA-vm-ext4"
+              },
+              "updated_at": 9.927690126
+            },
+            "state": {
+              "multipath_target_version": [
+                1,
+                15,
+                0
+              ],
+              "node": "/dev/sdc1",
+              "observations": {
+                "control": "idle",
+                "identity": "enrolled",
+                "transport": {
+                  "completed": 0,
+                  "in_flight": 0,
+                  "state": "no_io",
+                  "without_completion_seconds": 0.0
+                },
+                "upper_errors": {
+                  "reason": "application and filesystem history not fully observed",
+                  "state": "incomplete"
+                }
+              },
+              "outcome": "initial_mapping",
+              "owner_epoch": "fb7a1729847b45b5a4553d4e7a338de3",
+              "recoveries": 0,
+              "state": "ready",
+              "time": 9.946084519
+            },
+            "stop": null,
+            "archive": null,
+            "invocation": {
+              "config_digest": "4539b88856108aff1a56c9d959e705b05351f50f209a986973ae645f9ede9fb6",
+              "invocation_id": "9811c5c65b724d24b551feddf86d72cf",
+              "owner_epoch": "fb7a1729847b45b5a4553d4e7a338de3",
+              "schema": 1
+            },
+            "supervisor": null,
+            "lock_inode": 1380,
+            "table": "0 131072 multipath 3 queue_if_no_path queue_mode bio 0 1 1 round-robin 0 1 1 8:33 1",
+            "status": "0 131072 multipath 2 0 0 0 1 1 A 0 1 0 8:33 A 0",
+            "ram_mounts": [
+              "61 30 0:45 / /run/ram-rescue-manager/rootfs rw,nosuid,relatime shared:276 - tmpfs ram-rescue-data-tools rw,size=262144k,mode=700,inode64,noswap",
+              "93 61 0:7 / /run/ram-rescue-manager/rootfs/dev rw,nosuid,relatime shared:2 - devtmpfs udev rw,size=846572k,nr_inodes=211643,mode=755,inode64",
+              "332 61 0:24 / /run/ram-rescue-manager/rootfs/proc rw,nosuid,nodev,noexec,relatime shared:13 - proc proc rw",
+              "383 61 0:23 / /run/ram-rescue-manager/rootfs/sys rw,nosuid,nodev,noexec,relatime shared:8 - sysfs sysfs rw",
+              "392 61 0:26 / /run/ram-rescue-manager/rootfs/run rw,nosuid,nodev,noexec,relatime shared:6 - tmpfs tmpfs rw,size=297324k,mode=755,inode64",
+              "401 61 252:0 /etc/fstab /run/ram-rescue-manager/rootfs/etc/rescue/host-fstab ro,relatime shared:1 - ext4 /dev/mapper/labrescue-ubuntu rw,errors=remount-ro"
+            ],
+            "fstab_sha256": "a78708de7d787238eec41ada8a49bed91e87c77e57e8aa44f5c0bb66368c4908",
+            "root_enrollment_exists": false,
+            "worker_pid": null,
+            "worker_poll": null,
+            "acks": 0,
+            "errors": [],
+            "records": []
+          }
+        },
+        "unknown_geometry_table": {
+          "stop": {
+            "args": [
+              "/usr/sbin/chroot",
+              "/run/ram-rescue-manager/rootfs",
+              "/opt/guard-runtime/guard-runtime",
+              "safe-stop",
+              "--record",
+              "/run/ram-rescue-data/rr-data-vm-ext4/record.json"
+            ],
+            "returncode": 1,
+            "stdout": "{\"reason\":\"Data map table or geometry changed\",\"state\":\"blocked\"}\n",
+            "stderr": "",
+            "value": {
+              "reason": "Data map table or geometry changed",
+              "state": "blocked"
+            }
+          },
+          "before": {
+            "pid": 1260,
+            "start_ticks": "978",
+            "exe_sha256": "34e1c96717f92d125c0b5b51e097a906dd3e8dfddb013c8c024ef7e6d5935890",
+            "service": "active",
+            "cgroup": "/ramrescuedata.slice/ram-rescue-data-rr-data-vm-ext4.service",
+            "cgroup_procs": "1260\n",
+            "journal": {
+              "boot_id": "f511b355-41f3-41a7-a50d-15dbf63c40c3",
+              "candidate": null,
+              "config_digest": "4539b88856108aff1a56c9d959e705b05351f50f209a986973ae645f9ede9fb6",
+              "deadline": null,
+              "map_name": "rr-data-vm-ext4",
+              "map_uuid": "RAMRESCUE-DATA-vm-ext4",
+              "owner_epoch": "fb7a1729847b45b5a4553d4e7a338de3",
+              "owner_pid": 1260,
+              "phase": "idle",
+              "recoveries": 0,
+              "schema": 1,
+              "snapshot": {
+                "active": [
+                  [
+                    0,
+                    131072,
+                    "multipath",
+                    "2 queue_mode bio 0 1 1 round-robin 0 1 1 8:33 1 "
+                  ]
+                ],
+                "active_digest": "9f3c95cf3f547b0ab61551f27928c7ce5f9d2649ed03cb0e0c65afda736e3b05",
+                "inactive": [],
+                "inactive_digest": null,
+                "info": {
+                  "deferred_remove": 0,
+                  "event_nr": 0,
+                  "exists": 1,
+                  "inactive_table": 0,
+                  "internal_suspend": 0,
+                  "live_table": 1,
+                  "major": 252,
+                  "minor": 2,
+                  "open_count": 0,
+                  "read_only": 0,
+                  "suspended": 0,
+                  "target_count": 1
+                },
+                "uuid": "RAMRESCUE-DATA-vm-ext4"
+              },
+              "updated_at": 9.927690126
+            },
+            "state": {
+              "multipath_target_version": [
+                1,
+                15,
+                0
+              ],
+              "node": "/dev/sdc1",
+              "observations": {
+                "control": "idle",
+                "identity": "enrolled",
+                "transport": {
+                  "completed": 0,
+                  "in_flight": 0,
+                  "state": "no_io",
+                  "without_completion_seconds": 0.0
+                },
+                "upper_errors": {
+                  "reason": "application and filesystem history not fully observed",
+                  "state": "incomplete"
+                }
+              },
+              "outcome": "initial_mapping",
+              "owner_epoch": "fb7a1729847b45b5a4553d4e7a338de3",
+              "recoveries": 0,
+              "state": "ready",
+              "time": 9.946084519
+            },
+            "stop": null,
+            "archive": null,
+            "invocation": {
+              "config_digest": "4539b88856108aff1a56c9d959e705b05351f50f209a986973ae645f9ede9fb6",
+              "invocation_id": "9811c5c65b724d24b551feddf86d72cf",
+              "owner_epoch": "fb7a1729847b45b5a4553d4e7a338de3",
+              "schema": 1
+            },
+            "supervisor": null,
+            "lock_inode": 1380,
+            "table": "0 131071 multipath 3 queue_if_no_path queue_mode bio 0 1 1 round-robin 0 1 1 8:33 1",
+            "status": "0 131071 multipath 2 1 0 0 1 1 E 0 1 0 8:33 A 0",
+            "ram_mounts": [
+              "61 30 0:45 / /run/ram-rescue-manager/rootfs rw,nosuid,relatime shared:276 - tmpfs ram-rescue-data-tools rw,size=262144k,mode=700,inode64,noswap",
+              "93 61 0:7 / /run/ram-rescue-manager/rootfs/dev rw,nosuid,relatime shared:2 - devtmpfs udev rw,size=846572k,nr_inodes=211643,mode=755,inode64",
+              "332 61 0:24 / /run/ram-rescue-manager/rootfs/proc rw,nosuid,nodev,noexec,relatime shared:13 - proc proc rw",
+              "383 61 0:23 / /run/ram-rescue-manager/rootfs/sys rw,nosuid,nodev,noexec,relatime shared:8 - sysfs sysfs rw",
+              "392 61 0:26 / /run/ram-rescue-manager/rootfs/run rw,nosuid,nodev,noexec,relatime shared:6 - tmpfs tmpfs rw,size=297324k,mode=755,inode64",
+              "401 61 252:0 /etc/fstab /run/ram-rescue-manager/rootfs/etc/rescue/host-fstab ro,relatime shared:1 - ext4 /dev/mapper/labrescue-ubuntu rw,errors=remount-ro"
+            ],
+            "fstab_sha256": "a78708de7d787238eec41ada8a49bed91e87c77e57e8aa44f5c0bb66368c4908",
+            "root_enrollment_exists": false,
+            "worker_pid": null,
+            "worker_poll": null,
+            "acks": 0,
+            "errors": [],
+            "records": []
+          },
+          "after": {
+            "pid": 1260,
+            "start_ticks": "978",
+            "exe_sha256": "34e1c96717f92d125c0b5b51e097a906dd3e8dfddb013c8c024ef7e6d5935890",
+            "service": "active",
+            "cgroup": "/ramrescuedata.slice/ram-rescue-data-rr-data-vm-ext4.service",
+            "cgroup_procs": "1260\n",
+            "journal": {
+              "boot_id": "f511b355-41f3-41a7-a50d-15dbf63c40c3",
+              "candidate": null,
+              "config_digest": "4539b88856108aff1a56c9d959e705b05351f50f209a986973ae645f9ede9fb6",
+              "deadline": null,
+              "map_name": "rr-data-vm-ext4",
+              "map_uuid": "RAMRESCUE-DATA-vm-ext4",
+              "owner_epoch": "fb7a1729847b45b5a4553d4e7a338de3",
+              "owner_pid": 1260,
+              "phase": "idle",
+              "recoveries": 0,
+              "schema": 1,
+              "snapshot": {
+                "active": [
+                  [
+                    0,
+                    131072,
+                    "multipath",
+                    "2 queue_mode bio 0 1 1 round-robin 0 1 1 8:33 1 "
+                  ]
+                ],
+                "active_digest": "9f3c95cf3f547b0ab61551f27928c7ce5f9d2649ed03cb0e0c65afda736e3b05",
+                "inactive": [],
+                "inactive_digest": null,
+                "info": {
+                  "deferred_remove": 0,
+                  "event_nr": 0,
+                  "exists": 1,
+                  "inactive_table": 0,
+                  "internal_suspend": 0,
+                  "live_table": 1,
+                  "major": 252,
+                  "minor": 2,
+                  "open_count": 0,
+                  "read_only": 0,
+                  "suspended": 0,
+                  "target_count": 1
+                },
+                "uuid": "RAMRESCUE-DATA-vm-ext4"
+              },
+              "updated_at": 9.927690126
+            },
+            "state": {
+              "multipath_target_version": [
+                1,
+                15,
+                0
+              ],
+              "node": "/dev/sdc1",
+              "observations": {
+                "control": "idle",
+                "identity": "enrolled",
+                "transport": {
+                  "completed": 0,
+                  "in_flight": 0,
+                  "state": "no_io",
+                  "without_completion_seconds": 0.0
+                },
+                "upper_errors": {
+                  "reason": "application and filesystem history not fully observed",
+                  "state": "incomplete"
+                }
+              },
+              "outcome": "initial_mapping",
+              "owner_epoch": "fb7a1729847b45b5a4553d4e7a338de3",
+              "recoveries": 0,
+              "state": "ready",
+              "time": 9.946084519
+            },
+            "stop": null,
+            "archive": null,
+            "invocation": {
+              "config_digest": "4539b88856108aff1a56c9d959e705b05351f50f209a986973ae645f9ede9fb6",
+              "invocation_id": "9811c5c65b724d24b551feddf86d72cf",
+              "owner_epoch": "fb7a1729847b45b5a4553d4e7a338de3",
+              "schema": 1
+            },
+            "supervisor": null,
+            "lock_inode": 1380,
+            "table": "0 131071 multipath 3 queue_if_no_path queue_mode bio 0 1 1 round-robin 0 1 1 8:33 1",
+            "status": "0 131071 multipath 2 1 0 0 1 1 E 0 1 0 8:33 A 0",
+            "ram_mounts": [
+              "61 30 0:45 / /run/ram-rescue-manager/rootfs rw,nosuid,relatime shared:276 - tmpfs ram-rescue-data-tools rw,size=262144k,mode=700,inode64,noswap",
+              "93 61 0:7 / /run/ram-rescue-manager/rootfs/dev rw,nosuid,relatime shared:2 - devtmpfs udev rw,size=846572k,nr_inodes=211643,mode=755,inode64",
+              "332 61 0:24 / /run/ram-rescue-manager/rootfs/proc rw,nosuid,nodev,noexec,relatime shared:13 - proc proc rw",
+              "383 61 0:23 / /run/ram-rescue-manager/rootfs/sys rw,nosuid,nodev,noexec,relatime shared:8 - sysfs sysfs rw",
+              "392 61 0:26 / /run/ram-rescue-manager/rootfs/run rw,nosuid,nodev,noexec,relatime shared:6 - tmpfs tmpfs rw,size=297324k,mode=755,inode64",
+              "401 61 252:0 /etc/fstab /run/ram-rescue-manager/rootfs/etc/rescue/host-fstab ro,relatime shared:1 - ext4 /dev/mapper/labrescue-ubuntu rw,errors=remount-ro"
+            ],
+            "fstab_sha256": "a78708de7d787238eec41ada8a49bed91e87c77e57e8aa44f5c0bb66368c4908",
+            "root_enrollment_exists": false,
+            "worker_pid": null,
+            "worker_poll": null,
+            "acks": 0,
+            "errors": [],
+            "records": []
+          }
+        },
+        "residual_test_helper": {
+          "stop": {
+            "args": [
+              "/usr/sbin/chroot",
+              "/run/ram-rescue-manager/rootfs",
+              "/opt/guard-runtime/guard-runtime",
+              "safe-stop",
+              "--record",
+              "/run/ram-rescue-data/rr-data-vm-ext4/record.json"
+            ],
+            "returncode": 1,
+            "stdout": "{\"reason\":\"Controller cgroup contains a residual helper or another process\",\"state\":\"blocked\"}\n",
+            "stderr": "",
+            "value": {
+              "reason": "Controller cgroup contains a residual helper or another process",
+              "state": "blocked"
+            }
+          },
+          "before": {
+            "pid": 1260,
+            "start_ticks": "978",
+            "exe_sha256": "34e1c96717f92d125c0b5b51e097a906dd3e8dfddb013c8c024ef7e6d5935890",
+            "service": "active",
+            "cgroup": "/ramrescuedata.slice/ram-rescue-data-rr-data-vm-ext4.service",
+            "cgroup_procs": "1260\n1343\n",
+            "journal": {
+              "boot_id": "f511b355-41f3-41a7-a50d-15dbf63c40c3",
+              "candidate": null,
+              "config_digest": "4539b88856108aff1a56c9d959e705b05351f50f209a986973ae645f9ede9fb6",
+              "deadline": null,
+              "map_name": "rr-data-vm-ext4",
+              "map_uuid": "RAMRESCUE-DATA-vm-ext4",
+              "owner_epoch": "fb7a1729847b45b5a4553d4e7a338de3",
+              "owner_pid": 1260,
+              "phase": "idle",
+              "recoveries": 0,
+              "schema": 1,
+              "snapshot": {
+                "active": [
+                  [
+                    0,
+                    131072,
+                    "multipath",
+                    "2 queue_mode bio 0 1 1 round-robin 0 1 1 8:33 1 "
+                  ]
+                ],
+                "active_digest": "9f3c95cf3f547b0ab61551f27928c7ce5f9d2649ed03cb0e0c65afda736e3b05",
+                "inactive": [],
+                "inactive_digest": null,
+                "info": {
+                  "deferred_remove": 0,
+                  "event_nr": 0,
+                  "exists": 1,
+                  "inactive_table": 0,
+                  "internal_suspend": 0,
+                  "live_table": 1,
+                  "major": 252,
+                  "minor": 2,
+                  "open_count": 0,
+                  "read_only": 0,
+                  "suspended": 0,
+                  "target_count": 1
+                },
+                "uuid": "RAMRESCUE-DATA-vm-ext4"
+              },
+              "updated_at": 9.927690126
+            },
+            "state": {
+              "multipath_target_version": [
+                1,
+                15,
+                0
+              ],
+              "node": "/dev/sdc1",
+              "observations": {
+                "control": "idle",
+                "identity": "enrolled",
+                "transport": {
+                  "completed": 0,
+                  "in_flight": 0,
+                  "state": "no_io",
+                  "without_completion_seconds": 0.0
+                },
+                "upper_errors": {
+                  "reason": "application and filesystem history not fully observed",
+                  "state": "incomplete"
+                }
+              },
+              "outcome": "initial_mapping",
+              "owner_epoch": "fb7a1729847b45b5a4553d4e7a338de3",
+              "recoveries": 0,
+              "state": "ready",
+              "time": 9.946084519
+            },
+            "stop": null,
+            "archive": null,
+            "invocation": {
+              "config_digest": "4539b88856108aff1a56c9d959e705b05351f50f209a986973ae645f9ede9fb6",
+              "invocation_id": "9811c5c65b724d24b551feddf86d72cf",
+              "owner_epoch": "fb7a1729847b45b5a4553d4e7a338de3",
+              "schema": 1
+            },
+            "supervisor": null,
+            "lock_inode": 1380,
+            "table": "0 131072 multipath 3 queue_if_no_path queue_mode bio 0 1 1 round-robin 0 1 1 8:33 1",
+            "status": "0 131072 multipath 2 1 0 0 1 1 E 0 1 0 8:33 A 0",
+            "ram_mounts": [
+              "61 30 0:45 / /run/ram-rescue-manager/rootfs rw,nosuid,relatime shared:276 - tmpfs ram-rescue-data-tools rw,size=262144k,mode=700,inode64,noswap",
+              "93 61 0:7 / /run/ram-rescue-manager/rootfs/dev rw,nosuid,relatime shared:2 - devtmpfs udev rw,size=846572k,nr_inodes=211643,mode=755,inode64",
+              "332 61 0:24 / /run/ram-rescue-manager/rootfs/proc rw,nosuid,nodev,noexec,relatime shared:13 - proc proc rw",
+              "383 61 0:23 / /run/ram-rescue-manager/rootfs/sys rw,nosuid,nodev,noexec,relatime shared:8 - sysfs sysfs rw",
+              "392 61 0:26 / /run/ram-rescue-manager/rootfs/run rw,nosuid,nodev,noexec,relatime shared:6 - tmpfs tmpfs rw,size=297324k,mode=755,inode64",
+              "401 61 252:0 /etc/fstab /run/ram-rescue-manager/rootfs/etc/rescue/host-fstab ro,relatime shared:1 - ext4 /dev/mapper/labrescue-ubuntu rw,errors=remount-ro"
+            ],
+            "fstab_sha256": "a78708de7d787238eec41ada8a49bed91e87c77e57e8aa44f5c0bb66368c4908",
+            "root_enrollment_exists": false,
+            "worker_pid": null,
+            "worker_poll": null,
+            "acks": 0,
+            "errors": [],
+            "records": []
+          },
+          "after": {
+            "pid": 1260,
+            "start_ticks": "978",
+            "exe_sha256": "34e1c96717f92d125c0b5b51e097a906dd3e8dfddb013c8c024ef7e6d5935890",
+            "service": "active",
+            "cgroup": "/ramrescuedata.slice/ram-rescue-data-rr-data-vm-ext4.service",
+            "cgroup_procs": "1260\n1343\n",
+            "journal": {
+              "boot_id": "f511b355-41f3-41a7-a50d-15dbf63c40c3",
+              "candidate": null,
+              "config_digest": "4539b88856108aff1a56c9d959e705b05351f50f209a986973ae645f9ede9fb6",
+              "deadline": null,
+              "map_name": "rr-data-vm-ext4",
+              "map_uuid": "RAMRESCUE-DATA-vm-ext4",
+              "owner_epoch": "fb7a1729847b45b5a4553d4e7a338de3",
+              "owner_pid": 1260,
+              "phase": "idle",
+              "recoveries": 0,
+              "schema": 1,
+              "snapshot": {
+                "active": [
+                  [
+                    0,
+                    131072,
+                    "multipath",
+                    "2 queue_mode bio 0 1 1 round-robin 0 1 1 8:33 1 "
+                  ]
+                ],
+                "active_digest": "9f3c95cf3f547b0ab61551f27928c7ce5f9d2649ed03cb0e0c65afda736e3b05",
+                "inactive": [],
+                "inactive_digest": null,
+                "info": {
+                  "deferred_remove": 0,
+                  "event_nr": 0,
+                  "exists": 1,
+                  "inactive_table": 0,
+                  "internal_suspend": 0,
+                  "live_table": 1,
+                  "major": 252,
+                  "minor": 2,
+                  "open_count": 0,
+                  "read_only": 0,
+                  "suspended": 0,
+                  "target_count": 1
+                },
+                "uuid": "RAMRESCUE-DATA-vm-ext4"
+              },
+              "updated_at": 9.927690126
+            },
+            "state": {
+              "multipath_target_version": [
+                1,
+                15,
+                0
+              ],
+              "node": "/dev/sdc1",
+              "observations": {
+                "control": "idle",
+                "identity": "enrolled",
+                "transport": {
+                  "completed": 0,
+                  "in_flight": 0,
+                  "state": "no_io",
+                  "without_completion_seconds": 0.0
+                },
+                "upper_errors": {
+                  "reason": "application and filesystem history not fully observed",
+                  "state": "incomplete"
+                }
+              },
+              "outcome": "initial_mapping",
+              "owner_epoch": "fb7a1729847b45b5a4553d4e7a338de3",
+              "recoveries": 0,
+              "state": "ready",
+              "time": 9.946084519
+            },
+            "stop": null,
+            "archive": null,
+            "invocation": {
+              "config_digest": "4539b88856108aff1a56c9d959e705b05351f50f209a986973ae645f9ede9fb6",
+              "invocation_id": "9811c5c65b724d24b551feddf86d72cf",
+              "owner_epoch": "fb7a1729847b45b5a4553d4e7a338de3",
+              "schema": 1
+            },
+            "supervisor": null,
+            "lock_inode": 1380,
+            "table": "0 131072 multipath 3 queue_if_no_path queue_mode bio 0 1 1 round-robin 0 1 1 8:33 1",
+            "status": "0 131072 multipath 2 1 0 0 1 1 E 0 1 0 8:33 A 0",
+            "ram_mounts": [
+              "61 30 0:45 / /run/ram-rescue-manager/rootfs rw,nosuid,relatime shared:276 - tmpfs ram-rescue-data-tools rw,size=262144k,mode=700,inode64,noswap",
+              "93 61 0:7 / /run/ram-rescue-manager/rootfs/dev rw,nosuid,relatime shared:2 - devtmpfs udev rw,size=846572k,nr_inodes=211643,mode=755,inode64",
+              "332 61 0:24 / /run/ram-rescue-manager/rootfs/proc rw,nosuid,nodev,noexec,relatime shared:13 - proc proc rw",
+              "383 61 0:23 / /run/ram-rescue-manager/rootfs/sys rw,nosuid,nodev,noexec,relatime shared:8 - sysfs sysfs rw",
+              "392 61 0:26 / /run/ram-rescue-manager/rootfs/run rw,nosuid,nodev,noexec,relatime shared:6 - tmpfs tmpfs rw,size=297324k,mode=755,inode64",
+              "401 61 252:0 /etc/fstab /run/ram-rescue-manager/rootfs/etc/rescue/host-fstab ro,relatime shared:1 - ext4 /dev/mapper/labrescue-ubuntu rw,errors=remount-ro"
+            ],
+            "fstab_sha256": "a78708de7d787238eec41ada8a49bed91e87c77e57e8aa44f5c0bb66368c4908",
+            "root_enrollment_exists": false,
+            "worker_pid": null,
+            "worker_poll": null,
+            "acks": 0,
+            "errors": [],
+            "records": []
+          }
+        },
+        "identity_changed": {
+          "stop": {
+            "args": [
+              "/usr/sbin/chroot",
+              "/run/ram-rescue-manager/rootfs",
+              "/opt/guard-runtime/guard-runtime",
+              "safe-stop",
+              "--record",
+              "/run/ram-rescue-data/rr-data-vm-ext4/record.json"
+            ],
+            "returncode": 1,
+            "stdout": "",
+            "stderr": "{\"outcome\":\"native_entry_refused\",\"reason\":\"Data runtime differs from the selected registration\",\"state\":\"blocked\"}\n",
+            "value": {
+              "outcome": "native_entry_refused",
+              "reason": "Data runtime differs from the selected registration",
+              "state": "blocked"
+            }
+          },
+          "before": {
+            "pid": 1260,
+            "start_ticks": "978",
+            "exe_sha256": "34e1c96717f92d125c0b5b51e097a906dd3e8dfddb013c8c024ef7e6d5935890",
+            "service": "active",
+            "cgroup": "/ramrescuedata.slice/ram-rescue-data-rr-data-vm-ext4.service",
+            "cgroup_procs": "1260\n",
+            "journal": {
+              "boot_id": "f511b355-41f3-41a7-a50d-15dbf63c40c3",
+              "candidate": null,
+              "config_digest": "4539b88856108aff1a56c9d959e705b05351f50f209a986973ae645f9ede9fb6",
+              "deadline": null,
+              "map_name": "rr-data-vm-ext4",
+              "map_uuid": "RAMRESCUE-DATA-vm-ext4",
+              "owner_epoch": "fb7a1729847b45b5a4553d4e7a338de3",
+              "owner_pid": 1260,
+              "phase": "idle",
+              "recoveries": 0,
+              "schema": 1,
+              "snapshot": {
+                "active": [
+                  [
+                    0,
+                    131072,
+                    "multipath",
+                    "2 queue_mode bio 0 1 1 round-robin 0 1 1 8:33 1 "
+                  ]
+                ],
+                "active_digest": "9f3c95cf3f547b0ab61551f27928c7ce5f9d2649ed03cb0e0c65afda736e3b05",
+                "inactive": [],
+                "inactive_digest": null,
+                "info": {
+                  "deferred_remove": 0,
+                  "event_nr": 0,
+                  "exists": 1,
+                  "inactive_table": 0,
+                  "internal_suspend": 0,
+                  "live_table": 1,
+                  "major": 252,
+                  "minor": 2,
+                  "open_count": 0,
+                  "read_only": 0,
+                  "suspended": 0,
+                  "target_count": 1
+                },
+                "uuid": "RAMRESCUE-DATA-vm-ext4"
+              },
+              "updated_at": 9.927690126
+            },
+            "state": {
+              "multipath_target_version": [
+                1,
+                15,
+                0
+              ],
+              "node": "/dev/sdc1",
+              "observations": {
+                "control": "idle",
+                "identity": "enrolled",
+                "transport": {
+                  "completed": 0,
+                  "in_flight": 0,
+                  "state": "no_io",
+                  "without_completion_seconds": 0.0
+                },
+                "upper_errors": {
+                  "reason": "application and filesystem history not fully observed",
+                  "state": "incomplete"
+                }
+              },
+              "outcome": "initial_mapping",
+              "owner_epoch": "fb7a1729847b45b5a4553d4e7a338de3",
+              "recoveries": 0,
+              "state": "ready",
+              "time": 9.946084519
+            },
+            "stop": null,
+            "archive": null,
+            "invocation": {
+              "config_digest": "4539b88856108aff1a56c9d959e705b05351f50f209a986973ae645f9ede9fb6",
+              "invocation_id": "9811c5c65b724d24b551feddf86d72cf",
+              "owner_epoch": "fb7a1729847b45b5a4553d4e7a338de3",
+              "schema": 1
+            },
+            "supervisor": null,
+            "lock_inode": 1380,
+            "table": "0 131072 multipath 3 queue_if_no_path queue_mode bio 0 1 1 round-robin 0 1 1 8:33 1",
+            "status": "0 131072 multipath 2 1 0 0 1 1 E 0 1 0 8:33 A 0",
+            "ram_mounts": [
+              "61 30 0:45 / /run/ram-rescue-manager/rootfs rw,nosuid,relatime shared:276 - tmpfs ram-rescue-data-tools rw,size=262144k,mode=700,inode64,noswap",
+              "93 61 0:7 / /run/ram-rescue-manager/rootfs/dev rw,nosuid,relatime shared:2 - devtmpfs udev rw,size=846572k,nr_inodes=211643,mode=755,inode64",
+              "332 61 0:24 / /run/ram-rescue-manager/rootfs/proc rw,nosuid,nodev,noexec,relatime shared:13 - proc proc rw",
+              "383 61 0:23 / /run/ram-rescue-manager/rootfs/sys rw,nosuid,nodev,noexec,relatime shared:8 - sysfs sysfs rw",
+              "392 61 0:26 / /run/ram-rescue-manager/rootfs/run rw,nosuid,nodev,noexec,relatime shared:6 - tmpfs tmpfs rw,size=297324k,mode=755,inode64",
+              "401 61 252:0 /etc/fstab /run/ram-rescue-manager/rootfs/etc/rescue/host-fstab ro,relatime shared:1 - ext4 /dev/mapper/labrescue-ubuntu rw,errors=remount-ro"
+            ],
+            "fstab_sha256": "a78708de7d787238eec41ada8a49bed91e87c77e57e8aa44f5c0bb66368c4908",
+            "root_enrollment_exists": false,
+            "worker_pid": null,
+            "worker_poll": null,
+            "acks": 0,
+            "errors": [],
+            "records": []
+          },
+          "after": {
+            "pid": 1260,
+            "start_ticks": "978",
+            "exe_sha256": "34e1c96717f92d125c0b5b51e097a906dd3e8dfddb013c8c024ef7e6d5935890",
+            "service": "active",
+            "cgroup": "/ramrescuedata.slice/ram-rescue-data-rr-data-vm-ext4.service",
+            "cgroup_procs": "1260\n",
+            "journal": {
+              "boot_id": "f511b355-41f3-41a7-a50d-15dbf63c40c3",
+              "candidate": null,
+              "config_digest": "4539b88856108aff1a56c9d959e705b05351f50f209a986973ae645f9ede9fb6",
+              "deadline": null,
+              "map_name": "rr-data-vm-ext4",
+              "map_uuid": "RAMRESCUE-DATA-vm-ext4",
+              "owner_epoch": "fb7a1729847b45b5a4553d4e7a338de3",
+              "owner_pid": 1260,
+              "phase": "idle",
+              "recoveries": 0,
+              "schema": 1,
+              "snapshot": {
+                "active": [
+                  [
+                    0,
+                    131072,
+                    "multipath",
+                    "2 queue_mode bio 0 1 1 round-robin 0 1 1 8:33 1 "
+                  ]
+                ],
+                "active_digest": "9f3c95cf3f547b0ab61551f27928c7ce5f9d2649ed03cb0e0c65afda736e3b05",
+                "inactive": [],
+                "inactive_digest": null,
+                "info": {
+                  "deferred_remove": 0,
+                  "event_nr": 0,
+                  "exists": 1,
+                  "inactive_table": 0,
+                  "internal_suspend": 0,
+                  "live_table": 1,
+                  "major": 252,
+                  "minor": 2,
+                  "open_count": 0,
+                  "read_only": 0,
+                  "suspended": 0,
+                  "target_count": 1
+                },
+                "uuid": "RAMRESCUE-DATA-vm-ext4"
+              },
+              "updated_at": 9.927690126
+            },
+            "state": {
+              "multipath_target_version": [
+                1,
+                15,
+                0
+              ],
+              "node": "/dev/sdc1",
+              "observations": {
+                "control": "idle",
+                "identity": "enrolled",
+                "transport": {
+                  "completed": 0,
+                  "in_flight": 0,
+                  "state": "no_io",
+                  "without_completion_seconds": 0.0
+                },
+                "upper_errors": {
+                  "reason": "application and filesystem history not fully observed",
+                  "state": "incomplete"
+                }
+              },
+              "outcome": "initial_mapping",
+              "owner_epoch": "fb7a1729847b45b5a4553d4e7a338de3",
+              "recoveries": 0,
+              "state": "ready",
+              "time": 9.946084519
+            },
+            "stop": null,
+            "archive": null,
+            "invocation": {
+              "config_digest": "4539b88856108aff1a56c9d959e705b05351f50f209a986973ae645f9ede9fb6",
+              "invocation_id": "9811c5c65b724d24b551feddf86d72cf",
+              "owner_epoch": "fb7a1729847b45b5a4553d4e7a338de3",
+              "schema": 1
+            },
+            "supervisor": null,
+            "lock_inode": 1380,
+            "table": "0 131072 multipath 3 queue_if_no_path queue_mode bio 0 1 1 round-robin 0 1 1 8:33 1",
+            "status": "0 131072 multipath 2 1 0 0 1 1 E 0 1 0 8:33 A 0",
+            "ram_mounts": [
+              "61 30 0:45 / /run/ram-rescue-manager/rootfs rw,nosuid,relatime shared:276 - tmpfs ram-rescue-data-tools rw,size=262144k,mode=700,inode64,noswap",
+              "93 61 0:7 / /run/ram-rescue-manager/rootfs/dev rw,nosuid,relatime shared:2 - devtmpfs udev rw,size=846572k,nr_inodes=211643,mode=755,inode64",
+              "332 61 0:24 / /run/ram-rescue-manager/rootfs/proc rw,nosuid,nodev,noexec,relatime shared:13 - proc proc rw",
+              "383 61 0:23 / /run/ram-rescue-manager/rootfs/sys rw,nosuid,nodev,noexec,relatime shared:8 - sysfs sysfs rw",
+              "392 61 0:26 / /run/ram-rescue-manager/rootfs/run rw,nosuid,nodev,noexec,relatime shared:6 - tmpfs tmpfs rw,size=297324k,mode=755,inode64",
+              "401 61 252:0 /etc/fstab /run/ram-rescue-manager/rootfs/etc/rescue/host-fstab ro,relatime shared:1 - ext4 /dev/mapper/labrescue-ubuntu rw,errors=remount-ro"
+            ],
+            "fstab_sha256": "a78708de7d787238eec41ada8a49bed91e87c77e57e8aa44f5c0bb66368c4908",
+            "root_enrollment_exists": false,
+            "worker_pid": null,
+            "worker_poll": null,
+            "acks": 0,
+            "errors": [],
+            "records": []
+          }
+        }
+      }
+    },
+    {
+      "action": "lifecycle_checks",
+      "value": {
+        "active_package_reinstall_preserved_owner": {
+          "args": [
+            "/usr/bin/dpkg",
+            "-i",
+            "/run/candidate/handler.deb"
+          ],
+          "returncode": 0,
+          "stdout": "(Reading database ... 37749 files and directories currently installed.)\nPreparing to unpack /run/candidate/handler.deb ...\nUnpacking ram-rescue-handler (0.0.1~beta+0802c9bc69e4f9e8bbb5dcee) over (0.0.1~beta+0802c9bc69e4f9e8bbb5dcee) ...\nSetting up ram-rescue-handler (0.0.1~beta+0802c9bc69e4f9e8bbb5dcee) ...\n",
+          "stderr": ""
+        },
+        "package_removal_refused": {
+          "args": [
+            "/usr/bin/dpkg",
+            "--remove",
+            "ram-rescue-handler"
+          ],
+          "returncode": 1,
+          "stdout": "(Reading database ... 37749 files and directories currently installed.)\nRemoving ram-rescue-handler (0.0.1~beta+0802c9bc69e4f9e8bbb5dcee) ...\n",
+          "stderr": "{\"state\": \"blocked\", \"reason\": \"Disable and remove every configured data device before uninstalling\"}\ndpkg: error processing package ram-rescue-handler (--remove):\n installed ram-rescue-handler package pre-removal script subprocess returned error exit status 1\nErrors were encountered while processing:\n ram-rescue-handler\n"
+        },
+        "stopped": {
+          "map": "rr-data-vm-ext4",
+          "map_preserved": true,
+          "outcome": "safe_data_owner_exit",
+          "owner_epoch": "fb7a1729847b45b5a4553d4e7a338de3",
+          "raw_open_descriptors": "not_observable",
+          "receipt_digest": "33b38f5975d9bd38ba801109b9c833cfe17a5f1c949b1bfcbb39fc99dd66a4ef",
+          "shared_ram_preserved": true,
+          "state": "stopped",
+          "enabled_at_boot": true
+        },
+        "restarted": {
+          "map": "rr-data-vm-ext4",
+          "state": "active",
+          "device": "/dev/mapper/rr-data-vm-ext4"
+        },
+        "busy_disable": {
+          "args": [
+            "/usr/bin/rescue-guard-admin",
+            "device",
+            "disable",
+            "--name",
+            "rr-data-vm-ext4"
+          ],
+          "returncode": 1,
+          "stdout": "",
+          "stderr": "{\"state\": \"blocked\", \"reason\": \"Safe stop refused; resources retained: {\\\"reason\\\": \\\"Data map busy, suspended, read-only, or deferred\\\", \\\"state\\\": \\\"blocked\\\"}\"}\n"
+        },
+        "disabled": {
+          "map": "rr-data-vm-ext4",
+          "map_preserved": true,
+          "outcome": "safe_data_owner_exit",
+          "owner_epoch": "bbea4ae7f38545369284aa95bd11021d",
+          "raw_open_descriptors": "not_observable",
+          "receipt_digest": "5e4dc16462aea5afd830613ed2283d024ebd5c80198658e17facfb9d2904502e",
+          "shared_ram_preserved": true,
+          "state": "stopped",
+          "enabled_at_boot": false
+        }
+      }
+    },
+    {
+      "action": "start_workload",
+      "value": {
+        "pid": 1886,
+        "start_ticks": "1566",
+        "exe_sha256": "34e1c96717f92d125c0b5b51e097a906dd3e8dfddb013c8c024ef7e6d5935890",
+        "service": "active",
+        "cgroup": "/ramrescuedata.slice/ram-rescue-data-rr-data-vm-ext4.service",
+        "cgroup_procs": "1886\n",
+        "journal": {
+          "boot_id": "f511b355-41f3-41a7-a50d-15dbf63c40c3",
+          "candidate": null,
+          "config_digest": "4539b88856108aff1a56c9d959e705b05351f50f209a986973ae645f9ede9fb6",
+          "deadline": null,
+          "map_name": "rr-data-vm-ext4",
+          "map_uuid": "RAMRESCUE-DATA-vm-ext4",
+          "owner_epoch": "41132d5f9dc1419ab64599faec3b8e68",
+          "owner_pid": 1886,
+          "phase": "idle",
+          "recoveries": 0,
+          "schema": 1,
+          "snapshot": {
+            "active": [
+              [
+                0,
+                131072,
+                "multipath",
+                "3 queue_if_no_path queue_mode bio 0 1 1 round-robin 0 1 1 8:33 1 "
+              ]
+            ],
+            "active_digest": "9f3c95cf3f547b0ab61551f27928c7ce5f9d2649ed03cb0e0c65afda736e3b05",
+            "inactive": [],
+            "inactive_digest": null,
+            "info": {
+              "deferred_remove": 0,
+              "event_nr": 0,
+              "exists": 1,
+              "inactive_table": 0,
+              "internal_suspend": 0,
+              "live_table": 1,
+              "major": 252,
+              "minor": 2,
+              "open_count": 0,
+              "read_only": 0,
+              "suspended": 0,
+              "target_count": 1
+            },
+            "uuid": "RAMRESCUE-DATA-vm-ext4"
+          },
+          "updated_at": 15.827050474
+        },
+        "state": {
+          "multipath_target_version": [
+            1,
+            15,
+            0
+          ],
+          "node": "/dev/sdc1",
+          "observations": {
+            "control": "idle",
+            "identity": "enrolled",
+            "transport": {
+              "completed": 167,
+              "in_flight": 0,
+              "state": "no_io",
+              "without_completion_seconds": 0.0
+            },
+            "upper_errors": {
+              "reason": "application and filesystem history not fully observed",
+              "state": "incomplete"
+            }
+          },
+          "outcome": "initial_mapping",
+          "owner_epoch": "41132d5f9dc1419ab64599faec3b8e68",
+          "recoveries": 0,
+          "state": "ready",
+          "time": 15.827445615
+        },
+        "stop": {
+          "boot_id": "f511b355-41f3-41a7-a50d-15dbf63c40c3",
+          "config_digest": "4539b88856108aff1a56c9d959e705b05351f50f209a986973ae645f9ede9fb6",
+          "identity_digest": "3774ea66c59611217774c02503020042e836496e4bf5bfe3a3c7f632ac431333",
+          "journal_digest": "5f18e5051cf6343c49202be2b5c44bb5b417a2dc1803c8ccf664da98a234718c",
+          "map_name": "rr-data-vm-ext4",
+          "map_uuid": "RAMRESCUE-DATA-vm-ext4",
+          "owner_epoch": "bbea4ae7f38545369284aa95bd11021d",
+          "purpose": "safe_host_data_stop",
+          "schema": 1
+        },
+        "archive": {
+          "invocation": {
+            "config_digest": "4539b88856108aff1a56c9d959e705b05351f50f209a986973ae645f9ede9fb6",
+            "invocation_id": "3c08550d40aa41c0a1e9adde4e995ec9",
+            "owner_epoch": "bbea4ae7f38545369284aa95bd11021d",
+            "schema": 1
+          },
+          "journal": {
+            "boot_id": "f511b355-41f3-41a7-a50d-15dbf63c40c3",
+            "candidate": null,
+            "config_digest": "4539b88856108aff1a56c9d959e705b05351f50f209a986973ae645f9ede9fb6",
+            "deadline": null,
+            "map_name": "rr-data-vm-ext4",
+            "map_uuid": "RAMRESCUE-DATA-vm-ext4",
+            "owner_cgroup": "/ramrescuedata.slice/ram-rescue-data-rr-data-vm-ext4.service",
+            "owner_epoch": "bbea4ae7f38545369284aa95bd11021d",
+            "owner_pid": 1636,
+            "phase": "safe_stopped",
+            "queue_disable": "verified_safe_stop",
+            "raw_open_descriptors": "not_observable",
+            "recoveries": 0,
+            "schema": 1,
+            "snapshot": {
+              "active": [
+                [
+                  0,
+                  131072,
+                  "multipath",
+                  "2 queue_mode bio 0 1 1 round-robin 0 1 1 8:33 1 "
+                ]
+              ],
+              "active_digest": "9f3c95cf3f547b0ab61551f27928c7ce5f9d2649ed03cb0e0c65afda736e3b05",
+              "inactive": [],
+              "inactive_digest": null,
+              "info": {
+                "deferred_remove": 0,
+                "event_nr": 0,
+                "exists": 1,
+                "inactive_table": 0,
+                "internal_suspend": 0,
+                "live_table": 1,
+                "major": 252,
+                "minor": 2,
+                "open_count": 0,
+                "read_only": 0,
+                "suspended": 0,
+                "target_count": 1
+              },
+              "uuid": "RAMRESCUE-DATA-vm-ext4"
+            },
+            "stopped_instance": {
+              "dev": "8:33",
+              "diskseq": 13,
+              "node": "/dev/sdc1",
+              "sys_path": "/sys/devices/pci0000:00/0000:00:01.0/usb2/2-2/2-2:1.0/host6/target6:0:0/6:0:0:0/block/sdc/sdc1"
+            },
+            "updated_at": 13.58733675
+          },
+          "receipt": {
+            "boot_id": "f511b355-41f3-41a7-a50d-15dbf63c40c3",
+            "config_digest": "4539b88856108aff1a56c9d959e705b05351f50f209a986973ae645f9ede9fb6",
+            "identity_digest": "3774ea66c59611217774c02503020042e836496e4bf5bfe3a3c7f632ac431333",
+            "journal_digest": "5f18e5051cf6343c49202be2b5c44bb5b417a2dc1803c8ccf664da98a234718c",
+            "map_name": "rr-data-vm-ext4",
+            "map_uuid": "RAMRESCUE-DATA-vm-ext4",
+            "owner_epoch": "bbea4ae7f38545369284aa95bd11021d",
+            "purpose": "safe_host_data_stop",
+            "schema": 1
+          },
+          "schema": 1
+        },
+        "invocation": {
+          "config_digest": "4539b88856108aff1a56c9d959e705b05351f50f209a986973ae645f9ede9fb6",
+          "invocation_id": "5bb33f956cb94754bc43e53501901368",
+          "owner_epoch": "41132d5f9dc1419ab64599faec3b8e68",
+          "schema": 1
+        },
+        "supervisor": {
+          "outcome": "explicit_safe_stop_preserved",
+          "owner_epoch": "bbea4ae7f38545369284aa95bd11021d",
+          "state": "safe_stopped"
+        },
+        "lock_inode": 1380,
+        "table": "0 131072 multipath 3 queue_if_no_path queue_mode bio 0 1 1 round-robin 0 1 1 8:33 1",
+        "status": "0 131072 multipath 2 0 0 0 1 1 A 0 1 0 8:33 A 0",
+        "ram_mounts": [
+          "61 30 0:45 / /run/ram-rescue-manager/rootfs rw,nosuid,relatime shared:276 - tmpfs ram-rescue-data-tools rw,size=262144k,mode=700,inode64,noswap",
+          "93 61 0:7 / /run/ram-rescue-manager/rootfs/dev rw,nosuid,relatime shared:2 - devtmpfs udev rw,size=846572k,nr_inodes=211643,mode=755,inode64",
+          "332 61 0:24 / /run/ram-rescue-manager/rootfs/proc rw,nosuid,nodev,noexec,relatime shared:13 - proc proc rw",
+          "383 61 0:23 / /run/ram-rescue-manager/rootfs/sys rw,nosuid,nodev,noexec,relatime shared:8 - sysfs sysfs rw",
+          "392 61 0:26 / /run/ram-rescue-manager/rootfs/run rw,nosuid,nodev,noexec,relatime shared:6 - tmpfs tmpfs rw,size=297324k,mode=755,inode64",
+          "401 61 252:0 /etc/fstab /run/ram-rescue-manager/rootfs/etc/rescue/host-fstab ro,relatime shared:1 - ext4 /dev/mapper/labrescue-ubuntu rw,errors=remount-ro"
+        ],
+        "fstab_sha256": "a78708de7d787238eec41ada8a49bed91e87c77e57e8aa44f5c0bb66368c4908",
+        "root_enrollment_exists": false,
+        "worker_pid": 1900,
+        "worker_poll": null,
+        "acks": 3,
+        "errors": [],
+        "records": [
+          {
+            "seq": 1,
+            "start": 15.881258969,
+            "ok": true,
+            "elapsed": 0.001029292000000126
+          },
+          {
+            "seq": 2,
+            "start": 15.982577407,
+            "ok": true,
+            "elapsed": 0.0018587759999988407
+          },
+          {
+            "seq": 3,
+            "start": 16.084633644,
+            "ok": true,
+            "elapsed": 0.0016130220000007967
+          }
+        ]
+      }
+    },
+    {
+      "action": "gap_stop",
+      "value": {
+        "before": {
+          "pid": 1886,
+          "start_ticks": "1566",
+          "exe_sha256": "34e1c96717f92d125c0b5b51e097a906dd3e8dfddb013c8c024ef7e6d5935890",
+          "service": "active",
+          "cgroup": "/ramrescuedata.slice/ram-rescue-data-rr-data-vm-ext4.service",
+          "cgroup_procs": "1886\n",
+          "journal": {
+            "boot_id": "f511b355-41f3-41a7-a50d-15dbf63c40c3",
+            "candidate": null,
+            "commit_started": false,
+            "config_digest": "4539b88856108aff1a56c9d959e705b05351f50f209a986973ae645f9ede9fb6",
+            "deadline": 24.200359261,
+            "map_name": "rr-data-vm-ext4",
+            "map_uuid": "RAMRESCUE-DATA-vm-ext4",
+            "owner_epoch": "41132d5f9dc1419ab64599faec3b8e68",
+            "owner_pid": 1886,
+            "phase": "verifying",
+            "recoveries": 0,
+            "schema": 1,
+            "snapshot": {
+              "active": [
+                [
+                  0,
+                  131072,
+                  "multipath",
+                  "3 queue_if_no_path queue_mode bio 0 1 1 round-robin 0 1 1 8:33 1 "
+                ]
+              ],
+              "active_digest": "9f3c95cf3f547b0ab61551f27928c7ce5f9d2649ed03cb0e0c65afda736e3b05",
+              "inactive": [],
+              "inactive_digest": null,
+              "info": {
+                "deferred_remove": 0,
+                "event_nr": 0,
+                "exists": 1,
+                "inactive_table": 0,
+                "internal_suspend": 0,
+                "live_table": 1,
+                "major": 252,
+                "minor": 2,
+                "open_count": 0,
+                "read_only": 0,
+                "suspended": 0,
+                "target_count": 1
+              },
+              "uuid": "RAMRESCUE-DATA-vm-ext4"
+            },
+            "updated_at": 16.20068902
+          },
+          "state": {
+            "multipath_target_version": [
+              1,
+              15,
+              0
+            ],
+            "observations": {
+              "control": "verifying",
+              "identity": "missing_or_failed",
+              "transport": {
+                "completed": 257,
+                "in_flight": 1,
+                "state": "explicit_failure",
+                "without_completion_seconds": 0.0
+              },
+              "upper_errors": {
+                "reason": "application and filesystem history not fully observed",
+                "state": "incomplete"
+              }
+            },
+            "owner_epoch": "41132d5f9dc1419ab64599faec3b8e68",
+            "reason": "Expected ONE matching USB disk; found 0. No changes made.",
+            "recoveries": 0,
+            "state": "rejected",
+            "time": 16.201204357
+          },
+          "stop": {
+            "boot_id": "f511b355-41f3-41a7-a50d-15dbf63c40c3",
+            "config_digest": "4539b88856108aff1a56c9d959e705b05351f50f209a986973ae645f9ede9fb6",
+            "identity_digest": "3774ea66c59611217774c02503020042e836496e4bf5bfe3a3c7f632ac431333",
+            "journal_digest": "5f18e5051cf6343c49202be2b5c44bb5b417a2dc1803c8ccf664da98a234718c",
+            "map_name": "rr-data-vm-ext4",
+            "map_uuid": "RAMRESCUE-DATA-vm-ext4",
+            "owner_epoch": "bbea4ae7f38545369284aa95bd11021d",
+            "purpose": "safe_host_data_stop",
+            "schema": 1
+          },
+          "archive": {
+            "invocation": {
+              "config_digest": "4539b88856108aff1a56c9d959e705b05351f50f209a986973ae645f9ede9fb6",
+              "invocation_id": "3c08550d40aa41c0a1e9adde4e995ec9",
+              "owner_epoch": "bbea4ae7f38545369284aa95bd11021d",
+              "schema": 1
+            },
+            "journal": {
+              "boot_id": "f511b355-41f3-41a7-a50d-15dbf63c40c3",
+              "candidate": null,
+              "config_digest": "4539b88856108aff1a56c9d959e705b05351f50f209a986973ae645f9ede9fb6",
+              "deadline": null,
+              "map_name": "rr-data-vm-ext4",
+              "map_uuid": "RAMRESCUE-DATA-vm-ext4",
+              "owner_cgroup": "/ramrescuedata.slice/ram-rescue-data-rr-data-vm-ext4.service",
+              "owner_epoch": "bbea4ae7f38545369284aa95bd11021d",
+              "owner_pid": 1636,
+              "phase": "safe_stopped",
+              "queue_disable": "verified_safe_stop",
+              "raw_open_descriptors": "not_observable",
+              "recoveries": 0,
+              "schema": 1,
+              "snapshot": {
+                "active": [
+                  [
+                    0,
+                    131072,
+                    "multipath",
+                    "2 queue_mode bio 0 1 1 round-robin 0 1 1 8:33 1 "
+                  ]
+                ],
+                "active_digest": "9f3c95cf3f547b0ab61551f27928c7ce5f9d2649ed03cb0e0c65afda736e3b05",
+                "inactive": [],
+                "inactive_digest": null,
+                "info": {
+                  "deferred_remove": 0,
+                  "event_nr": 0,
+                  "exists": 1,
+                  "inactive_table": 0,
+                  "internal_suspend": 0,
+                  "live_table": 1,
+                  "major": 252,
+                  "minor": 2,
+                  "open_count": 0,
+                  "read_only": 0,
+                  "suspended": 0,
+                  "target_count": 1
+                },
+                "uuid": "RAMRESCUE-DATA-vm-ext4"
+              },
+              "stopped_instance": {
+                "dev": "8:33",
+                "diskseq": 13,
+                "node": "/dev/sdc1",
+                "sys_path": "/sys/devices/pci0000:00/0000:00:01.0/usb2/2-2/2-2:1.0/host6/target6:0:0/6:0:0:0/block/sdc/sdc1"
+              },
+              "updated_at": 13.58733675
+            },
+            "receipt": {
+              "boot_id": "f511b355-41f3-41a7-a50d-15dbf63c40c3",
+              "config_digest": "4539b88856108aff1a56c9d959e705b05351f50f209a986973ae645f9ede9fb6",
+              "identity_digest": "3774ea66c59611217774c02503020042e836496e4bf5bfe3a3c7f632ac431333",
+              "journal_digest": "5f18e5051cf6343c49202be2b5c44bb5b417a2dc1803c8ccf664da98a234718c",
+              "map_name": "rr-data-vm-ext4",
+              "map_uuid": "RAMRESCUE-DATA-vm-ext4",
+              "owner_epoch": "bbea4ae7f38545369284aa95bd11021d",
+              "purpose": "safe_host_data_stop",
+              "schema": 1
+            },
+            "schema": 1
+          },
+          "invocation": {
+            "config_digest": "4539b88856108aff1a56c9d959e705b05351f50f209a986973ae645f9ede9fb6",
+            "invocation_id": "5bb33f956cb94754bc43e53501901368",
+            "owner_epoch": "41132d5f9dc1419ab64599faec3b8e68",
+            "schema": 1
+          },
+          "supervisor": {
+            "outcome": "explicit_safe_stop_preserved",
+            "owner_epoch": "bbea4ae7f38545369284aa95bd11021d",
+            "state": "safe_stopped"
+          },
+          "lock_inode": 1380,
+          "table": "0 131072 multipath 3 queue_if_no_path queue_mode bio 0 1 1 round-robin 0 1 1 8:33 1",
+          "status": "0 131072 multipath 2 0 0 0 1 1 E 0 1 0 8:33 F 1",
+          "ram_mounts": [
+            "61 30 0:45 / /run/ram-rescue-manager/rootfs rw,nosuid,relatime shared:276 - tmpfs ram-rescue-data-tools rw,size=262144k,mode=700,inode64,noswap",
+            "93 61 0:7 / /run/ram-rescue-manager/rootfs/dev rw,nosuid,relatime shared:2 - devtmpfs udev rw,size=846572k,nr_inodes=211643,mode=755,inode64",
+            "332 61 0:24 / /run/ram-rescue-manager/rootfs/proc rw,nosuid,nodev,noexec,relatime shared:13 - proc proc rw",
+            "383 61 0:23 / /run/ram-rescue-manager/rootfs/sys rw,nosuid,nodev,noexec,relatime shared:8 - sysfs sysfs rw",
+            "392 61 0:26 / /run/ram-rescue-manager/rootfs/run rw,nosuid,nodev,noexec,relatime shared:6 - tmpfs tmpfs rw,size=297324k,mode=755,inode64",
+            "401 61 252:0 /etc/fstab /run/ram-rescue-manager/rootfs/etc/rescue/host-fstab ro,relatime shared:1 - ext4 /dev/mapper/labrescue-ubuntu rw,errors=remount-ro"
+          ],
+          "fstab_sha256": "a78708de7d787238eec41ada8a49bed91e87c77e57e8aa44f5c0bb66368c4908",
+          "root_enrollment_exists": false,
+          "worker_pid": 1900,
+          "worker_poll": null,
+          "acks": 3,
+          "errors": [],
+          "records": [
+            {
+              "seq": 1,
+              "start": 15.881258969,
+              "ok": true,
+              "elapsed": 0.001029292000000126
+            },
+            {
+              "seq": 2,
+              "start": 15.982577407,
+              "ok": true,
+              "elapsed": 0.0018587759999988407
+            },
+            {
+              "seq": 3,
+              "start": 16.084633644,
+              "ok": true,
+              "elapsed": 0.0016130220000007967
+            }
+          ]
+        },
+        "stop": {
+          "args": [
+            "/usr/sbin/chroot",
+            "/run/ram-rescue-manager/rootfs",
+            "/opt/guard-runtime/guard-runtime",
+            "safe-stop",
+            "--record",
+            "/run/ram-rescue-data/rr-data-vm-ext4/record.json"
+          ],
+          "returncode": 1,
+          "stdout": "{\"reason\":\"Data owner is recovering or has an unfinished helper\",\"state\":\"blocked\"}\n",
+          "stderr": "",
+          "value": {
+            "reason": "Data owner is recovering or has an unfinished helper",
+            "state": "blocked"
+          }
+        },
+        "after": {
+          "pid": 1886,
+          "start_ticks": "1566",
+          "exe_sha256": "34e1c96717f92d125c0b5b51e097a906dd3e8dfddb013c8c024ef7e6d5935890",
+          "service": "active",
+          "cgroup": "/ramrescuedata.slice/ram-rescue-data-rr-data-vm-ext4.service",
+          "cgroup_procs": "1886\n",
+          "journal": {
+            "boot_id": "f511b355-41f3-41a7-a50d-15dbf63c40c3",
+            "candidate": null,
+            "commit_started": false,
+            "config_digest": "4539b88856108aff1a56c9d959e705b05351f50f209a986973ae645f9ede9fb6",
+            "deadline": 24.200359261,
+            "map_name": "rr-data-vm-ext4",
+            "map_uuid": "RAMRESCUE-DATA-vm-ext4",
+            "owner_epoch": "41132d5f9dc1419ab64599faec3b8e68",
+            "owner_pid": 1886,
+            "phase": "verifying",
+            "recoveries": 0,
+            "schema": 1,
+            "snapshot": {
+              "active": [
+                [
+                  0,
+                  131072,
+                  "multipath",
+                  "3 queue_if_no_path queue_mode bio 0 1 1 round-robin 0 1 1 8:33 1 "
+                ]
+              ],
+              "active_digest": "9f3c95cf3f547b0ab61551f27928c7ce5f9d2649ed03cb0e0c65afda736e3b05",
+              "inactive": [],
+              "inactive_digest": null,
+              "info": {
+                "deferred_remove": 0,
+                "event_nr": 0,
+                "exists": 1,
+                "inactive_table": 0,
+                "internal_suspend": 0,
+                "live_table": 1,
+                "major": 252,
+                "minor": 2,
+                "open_count": 0,
+                "read_only": 0,
+                "suspended": 0,
+                "target_count": 1
+              },
+              "uuid": "RAMRESCUE-DATA-vm-ext4"
+            },
+            "updated_at": 16.20068902
+          },
+          "state": {
+            "multipath_target_version": [
+              1,
+              15,
+              0
+            ],
+            "observations": {
+              "control": "verifying",
+              "identity": "missing_or_failed",
+              "transport": {
+                "completed": 257,
+                "in_flight": 1,
+                "state": "explicit_failure",
+                "without_completion_seconds": 0.0
+              },
+              "upper_errors": {
+                "reason": "application and filesystem history not fully observed",
+                "state": "incomplete"
+              }
+            },
+            "owner_epoch": "41132d5f9dc1419ab64599faec3b8e68",
+            "reason": "Expected ONE matching USB disk; found 0. No changes made.",
+            "recoveries": 0,
+            "state": "rejected",
+            "time": 16.201204357
+          },
+          "stop": {
+            "boot_id": "f511b355-41f3-41a7-a50d-15dbf63c40c3",
+            "config_digest": "4539b88856108aff1a56c9d959e705b05351f50f209a986973ae645f9ede9fb6",
+            "identity_digest": "3774ea66c59611217774c02503020042e836496e4bf5bfe3a3c7f632ac431333",
+            "journal_digest": "5f18e5051cf6343c49202be2b5c44bb5b417a2dc1803c8ccf664da98a234718c",
+            "map_name": "rr-data-vm-ext4",
+            "map_uuid": "RAMRESCUE-DATA-vm-ext4",
+            "owner_epoch": "bbea4ae7f38545369284aa95bd11021d",
+            "purpose": "safe_host_data_stop",
+            "schema": 1
+          },
+          "archive": {
+            "invocation": {
+              "config_digest": "4539b88856108aff1a56c9d959e705b05351f50f209a986973ae645f9ede9fb6",
+              "invocation_id": "3c08550d40aa41c0a1e9adde4e995ec9",
+              "owner_epoch": "bbea4ae7f38545369284aa95bd11021d",
+              "schema": 1
+            },
+            "journal": {
+              "boot_id": "f511b355-41f3-41a7-a50d-15dbf63c40c3",
+              "candidate": null,
+              "config_digest": "4539b88856108aff1a56c9d959e705b05351f50f209a986973ae645f9ede9fb6",
+              "deadline": null,
+              "map_name": "rr-data-vm-ext4",
+              "map_uuid": "RAMRESCUE-DATA-vm-ext4",
+              "owner_cgroup": "/ramrescuedata.slice/ram-rescue-data-rr-data-vm-ext4.service",
+              "owner_epoch": "bbea4ae7f38545369284aa95bd11021d",
+              "owner_pid": 1636,
+              "phase": "safe_stopped",
+              "queue_disable": "verified_safe_stop",
+              "raw_open_descriptors": "not_observable",
+              "recoveries": 0,
+              "schema": 1,
+              "snapshot": {
+                "active": [
+                  [
+                    0,
+                    131072,
+                    "multipath",
+                    "2 queue_mode bio 0 1 1 round-robin 0 1 1 8:33 1 "
+                  ]
+                ],
+                "active_digest": "9f3c95cf3f547b0ab61551f27928c7ce5f9d2649ed03cb0e0c65afda736e3b05",
+                "inactive": [],
+                "inactive_digest": null,
+                "info": {
+                  "deferred_remove": 0,
+                  "event_nr": 0,
+                  "exists": 1,
+                  "inactive_table": 0,
+                  "internal_suspend": 0,
+                  "live_table": 1,
+                  "major": 252,
+                  "minor": 2,
+                  "open_count": 0,
+                  "read_only": 0,
+                  "suspended": 0,
+                  "target_count": 1
+                },
+                "uuid": "RAMRESCUE-DATA-vm-ext4"
+              },
+              "stopped_instance": {
+                "dev": "8:33",
+                "diskseq": 13,
+                "node": "/dev/sdc1",
+                "sys_path": "/sys/devices/pci0000:00/0000:00:01.0/usb2/2-2/2-2:1.0/host6/target6:0:0/6:0:0:0/block/sdc/sdc1"
+              },
+              "updated_at": 13.58733675
+            },
+            "receipt": {
+              "boot_id": "f511b355-41f3-41a7-a50d-15dbf63c40c3",
+              "config_digest": "4539b88856108aff1a56c9d959e705b05351f50f209a986973ae645f9ede9fb6",
+              "identity_digest": "3774ea66c59611217774c02503020042e836496e4bf5bfe3a3c7f632ac431333",
+              "journal_digest": "5f18e5051cf6343c49202be2b5c44bb5b417a2dc1803c8ccf664da98a234718c",
+              "map_name": "rr-data-vm-ext4",
+              "map_uuid": "RAMRESCUE-DATA-vm-ext4",
+              "owner_epoch": "bbea4ae7f38545369284aa95bd11021d",
+              "purpose": "safe_host_data_stop",
+              "schema": 1
+            },
+            "schema": 1
+          },
+          "invocation": {
+            "config_digest": "4539b88856108aff1a56c9d959e705b05351f50f209a986973ae645f9ede9fb6",
+            "invocation_id": "5bb33f956cb94754bc43e53501901368",
+            "owner_epoch": "41132d5f9dc1419ab64599faec3b8e68",
+            "schema": 1
+          },
+          "supervisor": {
+            "outcome": "explicit_safe_stop_preserved",
+            "owner_epoch": "bbea4ae7f38545369284aa95bd11021d",
+            "state": "safe_stopped"
+          },
+          "lock_inode": 1380,
+          "table": "0 131072 multipath 3 queue_if_no_path queue_mode bio 0 1 1 round-robin 0 1 1 8:33 1",
+          "status": "0 131072 multipath 2 0 0 0 1 1 E 0 1 0 8:33 F 1",
+          "ram_mounts": [
+            "61 30 0:45 / /run/ram-rescue-manager/rootfs rw,nosuid,relatime shared:276 - tmpfs ram-rescue-data-tools rw,size=262144k,mode=700,inode64,noswap",
+            "93 61 0:7 / /run/ram-rescue-manager/rootfs/dev rw,nosuid,relatime shared:2 - devtmpfs udev rw,size=846572k,nr_inodes=211643,mode=755,inode64",
+            "332 61 0:24 / /run/ram-rescue-manager/rootfs/proc rw,nosuid,nodev,noexec,relatime shared:13 - proc proc rw",
+            "383 61 0:23 / /run/ram-rescue-manager/rootfs/sys rw,nosuid,nodev,noexec,relatime shared:8 - sysfs sysfs rw",
+            "392 61 0:26 / /run/ram-rescue-manager/rootfs/run rw,nosuid,nodev,noexec,relatime shared:6 - tmpfs tmpfs rw,size=297324k,mode=755,inode64",
+            "401 61 252:0 /etc/fstab /run/ram-rescue-manager/rootfs/etc/rescue/host-fstab ro,relatime shared:1 - ext4 /dev/mapper/labrescue-ubuntu rw,errors=remount-ro"
+          ],
+          "fstab_sha256": "a78708de7d787238eec41ada8a49bed91e87c77e57e8aa44f5c0bb66368c4908",
+          "root_enrollment_exists": false,
+          "worker_pid": 1900,
+          "worker_poll": null,
+          "acks": 3,
+          "errors": [],
+          "records": [
+            {
+              "seq": 1,
+              "start": 15.881258969,
+              "ok": true,
+              "elapsed": 0.001029292000000126
+            },
+            {
+              "seq": 2,
+              "start": 15.982577407,
+              "ok": true,
+              "elapsed": 0.0018587759999988407
+            },
+            {
+              "seq": 3,
+              "start": 16.084633644,
+              "ok": true,
+              "elapsed": 0.0016130220000007967
+            }
+          ]
+        },
+        "recovery_specific_reason": true
+      }
+    },
+    {
+      "action": "finish_workload",
+      "value": {
+        "snapshot": {
+          "pid": 1886,
+          "start_ticks": "1566",
+          "exe_sha256": "34e1c96717f92d125c0b5b51e097a906dd3e8dfddb013c8c024ef7e6d5935890",
+          "service": "active",
+          "cgroup": "/ramrescuedata.slice/ram-rescue-data-rr-data-vm-ext4.service",
+          "cgroup_procs": "1886\n",
+          "journal": {
+            "boot_id": "f511b355-41f3-41a7-a50d-15dbf63c40c3",
+            "candidate": {
+              "boot_id": "f511b355-41f3-41a7-a50d-15dbf63c40c3",
+              "deadline": 24.200359261,
+              "enrollment_digest": "dd4195ae8f48b1fcafb3e4a888510b1869e8cfade1089e71f9bbb599217a2b58",
+              "instance": {
+                "dev": 2097,
+                "disk_sectors": 163840,
+                "disk_sys_path": "/sys/devices/pci0000:00/0000:00:01.0/usb2/2-2/2-2:1.0/host9/target9:0:0/9:0:0:0/block/sdd",
+                "diskseq": 18,
+                "logical_block_size": 512,
+                "node": "/dev/sdd1",
+                "partition_number": 1,
+                "partition_sectors": 131072,
+                "partition_start": 2048,
+                "sys_path": "/sys/devices/pci0000:00/0000:00:01.0/usb2/2-2/2-2:1.0/host9/target9:0:0/9:0:0:0/block/sdd/sdd1"
+              },
+              "layout_digest": "746e9b31cf99dbc7938e1411d7a298423b10e0ccf7f0c765fded16bc546722af",
+              "layout_version": "746e9b31cf99dbc7938e1411d7a298423b10e0ccf7f0c765fded16bc546722af",
+              "owner_epoch": "41132d5f9dc1419ab64599faec3b8e68",
+              "schema": 1,
+              "verified_at": 18.079826013
+            },
+            "candidate_table_digest": "eb5aa3d6f0c627b0a950fd26e71ea66dc0bcbac4adf8199f76f5317406762647",
+            "commit_started": true,
+            "config_digest": "4539b88856108aff1a56c9d959e705b05351f50f209a986973ae645f9ede9fb6",
+            "deadline": null,
+            "generation": 1,
+            "kernel_probe": {
+              "elapsed": 0.00041751900000264186,
+              "errno": 0,
+              "source": "ioctl",
+              "status": "completed",
+              "token": 1
+            },
+            "map_name": "rr-data-vm-ext4",
+            "map_uuid": "RAMRESCUE-DATA-vm-ext4",
+            "owner_epoch": "41132d5f9dc1419ab64599faec3b8e68",
+            "owner_pid": 1886,
+            "phase": "ready",
+            "previous": {
+              "active": [
+                [
+                  0,
+                  131072,
+                  "multipath",
+                  "3 queue_if_no_path queue_mode bio 0 1 1 round-robin 0 1 1 8:33 1 "
+                ]
+              ],
+              "active_digest": "9f3c95cf3f547b0ab61551f27928c7ce5f9d2649ed03cb0e0c65afda736e3b05",
+              "inactive": [],
+              "inactive_digest": null,
+              "info": {
+                "deferred_remove": 0,
+                "event_nr": 1,
+                "exists": 1,
+                "inactive_table": 0,
+                "internal_suspend": 0,
+                "live_table": 1,
+                "major": 252,
+                "minor": 2,
+                "open_count": 1,
+                "read_only": 0,
+                "suspended": 0,
+                "target_count": 1
+              },
+              "uuid": "RAMRESCUE-DATA-vm-ext4"
+            },
+            "recoveries": 1,
+            "schema": 1,
+            "snapshot": {
+              "active": [
+                [
+                  0,
+                  131072,
+                  "multipath",
+                  "3 queue_if_no_path queue_mode bio 0 1 1 round-robin 0 1 1 8:49 1 "
+                ]
+              ],
+              "active_digest": "eb5aa3d6f0c627b0a950fd26e71ea66dc0bcbac4adf8199f76f5317406762647",
+              "inactive": [],
+              "inactive_digest": null,
+              "info": {
+                "deferred_remove": 0,
+                "event_nr": 1,
+                "exists": 1,
+                "inactive_table": 0,
+                "internal_suspend": 0,
+                "live_table": 1,
+                "major": 252,
+                "minor": 2,
+                "open_count": 1,
+                "read_only": 0,
+                "suspended": 0,
+                "target_count": 1
+              },
+              "uuid": "RAMRESCUE-DATA-vm-ext4"
+            },
+            "updated_at": 18.23150733
+          },
+          "state": {
+            "confirmation": "kernel-probe-and-state",
+            "kernel_probe": {
+              "elapsed": 0.00041751900000264186,
+              "errno": 0,
+              "source": "ioctl",
+              "status": "completed",
+              "token": 1
+            },
+            "multipath_target_version": [
+              1,
+              15,
+              0
+            ],
+            "node": "/dev/sdd1",
+            "observations": {
+              "control": "ready",
+              "identity": "verified",
+              "transport": {
+                "completed": 271,
+                "in_flight": 1,
+                "state": "completion_progress",
+                "without_completion_seconds": 0.0
+              },
+              "upper_errors": {
+                "reason": "application and filesystem history not fully observed",
+                "state": "incomplete"
+              }
+            },
+            "outcome": "path_restored",
+            "owner_epoch": "41132d5f9dc1419ab64599faec3b8e68",
+            "recoveries": 1,
+            "state": "ready",
+            "time": 18.231556048
+          },
+          "stop": {
+            "boot_id": "f511b355-41f3-41a7-a50d-15dbf63c40c3",
+            "config_digest": "4539b88856108aff1a56c9d959e705b05351f50f209a986973ae645f9ede9fb6",
+            "identity_digest": "3774ea66c59611217774c02503020042e836496e4bf5bfe3a3c7f632ac431333",
+            "journal_digest": "5f18e5051cf6343c49202be2b5c44bb5b417a2dc1803c8ccf664da98a234718c",
+            "map_name": "rr-data-vm-ext4",
+            "map_uuid": "RAMRESCUE-DATA-vm-ext4",
+            "owner_epoch": "bbea4ae7f38545369284aa95bd11021d",
+            "purpose": "safe_host_data_stop",
+            "schema": 1
+          },
+          "archive": {
+            "invocation": {
+              "config_digest": "4539b88856108aff1a56c9d959e705b05351f50f209a986973ae645f9ede9fb6",
+              "invocation_id": "3c08550d40aa41c0a1e9adde4e995ec9",
+              "owner_epoch": "bbea4ae7f38545369284aa95bd11021d",
+              "schema": 1
+            },
+            "journal": {
+              "boot_id": "f511b355-41f3-41a7-a50d-15dbf63c40c3",
+              "candidate": null,
+              "config_digest": "4539b88856108aff1a56c9d959e705b05351f50f209a986973ae645f9ede9fb6",
+              "deadline": null,
+              "map_name": "rr-data-vm-ext4",
+              "map_uuid": "RAMRESCUE-DATA-vm-ext4",
+              "owner_cgroup": "/ramrescuedata.slice/ram-rescue-data-rr-data-vm-ext4.service",
+              "owner_epoch": "bbea4ae7f38545369284aa95bd11021d",
+              "owner_pid": 1636,
+              "phase": "safe_stopped",
+              "queue_disable": "verified_safe_stop",
+              "raw_open_descriptors": "not_observable",
+              "recoveries": 0,
+              "schema": 1,
+              "snapshot": {
+                "active": [
+                  [
+                    0,
+                    131072,
+                    "multipath",
+                    "2 queue_mode bio 0 1 1 round-robin 0 1 1 8:33 1 "
+                  ]
+                ],
+                "active_digest": "9f3c95cf3f547b0ab61551f27928c7ce5f9d2649ed03cb0e0c65afda736e3b05",
+                "inactive": [],
+                "inactive_digest": null,
+                "info": {
+                  "deferred_remove": 0,
+                  "event_nr": 0,
+                  "exists": 1,
+                  "inactive_table": 0,
+                  "internal_suspend": 0,
+                  "live_table": 1,
+                  "major": 252,
+                  "minor": 2,
+                  "open_count": 0,
+                  "read_only": 0,
+                  "suspended": 0,
+                  "target_count": 1
+                },
+                "uuid": "RAMRESCUE-DATA-vm-ext4"
+              },
+              "stopped_instance": {
+                "dev": "8:33",
+                "diskseq": 13,
+                "node": "/dev/sdc1",
+                "sys_path": "/sys/devices/pci0000:00/0000:00:01.0/usb2/2-2/2-2:1.0/host6/target6:0:0/6:0:0:0/block/sdc/sdc1"
+              },
+              "updated_at": 13.58733675
+            },
+            "receipt": {
+              "boot_id": "f511b355-41f3-41a7-a50d-15dbf63c40c3",
+              "config_digest": "4539b88856108aff1a56c9d959e705b05351f50f209a986973ae645f9ede9fb6",
+              "identity_digest": "3774ea66c59611217774c02503020042e836496e4bf5bfe3a3c7f632ac431333",
+              "journal_digest": "5f18e5051cf6343c49202be2b5c44bb5b417a2dc1803c8ccf664da98a234718c",
+              "map_name": "rr-data-vm-ext4",
+              "map_uuid": "RAMRESCUE-DATA-vm-ext4",
+              "owner_epoch": "bbea4ae7f38545369284aa95bd11021d",
+              "purpose": "safe_host_data_stop",
+              "schema": 1
+            },
+            "schema": 1
+          },
+          "invocation": {
+            "config_digest": "4539b88856108aff1a56c9d959e705b05351f50f209a986973ae645f9ede9fb6",
+            "invocation_id": "5bb33f956cb94754bc43e53501901368",
+            "owner_epoch": "41132d5f9dc1419ab64599faec3b8e68",
+            "schema": 1
+          },
+          "supervisor": {
+            "outcome": "explicit_safe_stop_preserved",
+            "owner_epoch": "bbea4ae7f38545369284aa95bd11021d",
+            "state": "safe_stopped"
+          },
+          "lock_inode": 1380,
+          "table": "0 131072 multipath 3 queue_if_no_path queue_mode bio 0 1 1 round-robin 0 1 1 8:49 1",
+          "status": "0 131072 multipath 2 0 0 0 1 1 A 0 1 0 8:49 A 0",
+          "ram_mounts": [
+            "61 30 0:45 / /run/ram-rescue-manager/rootfs rw,nosuid,relatime shared:276 - tmpfs ram-rescue-data-tools rw,size=262144k,mode=700,inode64,noswap",
+            "93 61 0:7 / /run/ram-rescue-manager/rootfs/dev rw,nosuid,relatime shared:2 - devtmpfs udev rw,size=846572k,nr_inodes=211643,mode=755,inode64",
+            "332 61 0:24 / /run/ram-rescue-manager/rootfs/proc rw,nosuid,nodev,noexec,relatime shared:13 - proc proc rw",
+            "383 61 0:23 / /run/ram-rescue-manager/rootfs/sys rw,nosuid,nodev,noexec,relatime shared:8 - sysfs sysfs rw",
+            "392 61 0:26 / /run/ram-rescue-manager/rootfs/run rw,nosuid,nodev,noexec,relatime shared:6 - tmpfs tmpfs rw,size=297324k,mode=755,inode64",
+            "401 61 252:0 /etc/fstab /run/ram-rescue-manager/rootfs/etc/rescue/host-fstab ro,relatime shared:1 - ext4 /dev/mapper/labrescue-ubuntu rw,errors=remount-ro"
+          ],
+          "fstab_sha256": "a78708de7d787238eec41ada8a49bed91e87c77e57e8aa44f5c0bb66368c4908",
+          "root_enrollment_exists": false,
+          "worker_pid": 1900,
+          "worker_poll": null,
+          "acks": 6,
+          "errors": [],
+          "records": [
+            {
+              "seq": 1,
+              "start": 15.881258969,
+              "ok": true,
+              "elapsed": 0.001029292000000126
+            },
+            {
+              "seq": 2,
+              "start": 15.982577407,
+              "ok": true,
+              "elapsed": 0.0018587759999988407
+            },
+            {
+              "seq": 3,
+              "start": 16.084633644,
+              "ok": true,
+              "elapsed": 0.0016130220000007967
+            },
+            {
+              "seq": 4,
+              "start": 16.186382246,
+              "ok": true,
+              "elapsed": 1.9431997410000008
+            },
+            {
+              "seq": 5,
+              "start": 18.229688641,
+              "ok": true,
+              "elapsed": 0.0019551550000009854
+            },
+            {
+              "seq": 6,
+              "start": 18.331743772,
+              "ok": true,
+              "elapsed": 0.001624765999999056
+            }
+          ]
+        },
+        "workload_exit": 0,
+        "records": [
+          {
+            "seq": 1,
+            "start": 15.881258969,
+            "ok": true,
+            "elapsed": 0.001029292000000126
+          },
+          {
+            "seq": 2,
+            "start": 15.982577407,
+            "ok": true,
+            "elapsed": 0.0018587759999988407
+          },
+          {
+            "seq": 3,
+            "start": 16.084633644,
+            "ok": true,
+            "elapsed": 0.0016130220000007967
+          },
+          {
+            "seq": 4,
+            "start": 16.186382246,
+            "ok": true,
+            "elapsed": 1.9431997410000008
+          },
+          {
+            "seq": 5,
+            "start": 18.229688641,
+            "ok": true,
+            "elapsed": 0.0019551550000009854
+          },
+          {
+            "seq": 6,
+            "start": 18.331743772,
+            "ok": true,
+            "elapsed": 0.001624765999999056
+          }
+        ],
+        "file_verified": true
+      }
+    },
+    {
+      "action": "disable_for_boot",
+      "value": {
+        "map": "rr-data-vm-ext4",
+        "map_preserved": true,
+        "outcome": "safe_data_owner_exit",
+        "owner_epoch": "41132d5f9dc1419ab64599faec3b8e68",
+        "raw_open_descriptors": "not_observable",
+        "receipt_digest": "df037bdaa917e2bd4dd1fb33368c0b1999202d53bbccbd10d8c93a1d2ed739c4",
+        "shared_ram_preserved": true,
+        "state": "stopped",
+        "enabled_at_boot": false
+      }
+    },
+    {
+      "action": "shutdown",
+      "value": {
+        "requested": true
+      }
+    },
+    {
+      "action": "reboot_disabled",
+      "value": {
+        "disabled_persisted": true,
+        "now": {
+          "map": "rr-data-vm-ext4",
+          "enabled_at_boot": true,
+          "config_sha256": "1b5a1b153ab676ffba7531b9ad3965c2fe1b1db9346618af55bcf70bcfeff2ed",
+          "configuration": {
+            "enabled": true,
+            "record": {
+              "guard": {
+                "identity_path": "/run/ram-rescue-data/rr-data-vm-ext4/identity.json",
+                "kernel_release": "7.0.0-34-generic",
+                "layout": {
+                  "fs_type": "ext4",
+                  "fs_uuid": "ec994cec-166b-4d1e-8577-d2c3cc88a8c3",
+                  "kind": "filesystem",
+                  "partuuid": "4dba02a2-e343-4e9b-855e-af41b9500268"
+                },
+                "logical_block_size": 512,
+                "map_name": "rr-data-vm-ext4",
+                "map_uuid": "RAMRESCUE-DATA-vm-ext4",
+                "partition_sectors": 131072,
+                "partition_start": 2048,
+                "profile": "host-data",
+                "queue_seconds": 8,
+                "run_dir": "/run/ram-rescue-data/rr-data-vm-ext4/state",
+                "schema": 1
+              },
+              "identity": {
+                "fs_type": "ext4",
+                "fs_uuid": "ec994cec-166b-4d1e-8577-d2c3cc88a8c3",
+                "kind": "filesystem",
+                "partition_number": 1,
+                "partuuid": "4dba02a2-e343-4e9b-855e-af41b9500268",
+                "pid": "0001",
+                "sectors": 163840,
+                "usb_serial": "DATA-VM-EXT4",
+                "vid": "46f4"
+              },
+              "schema": 1
+            },
+            "schema": 1
+          },
+          "map_present": true,
+          "native": {
+            "multipath_target_version": [
+              1,
+              15,
+              0
+            ],
+            "node": "/dev/sdb1",
+            "observations": {
+              "control": "idle",
+              "identity": "enrolled",
+              "transport": {
+                "completed": 0,
+                "in_flight": 0,
+                "state": "no_io",
+                "without_completion_seconds": 0.0
+              },
+              "upper_errors": {
+                "reason": "application and filesystem history not fully observed",
+                "state": "incomplete"
+              }
+            },
+            "outcome": "initial_mapping",
+            "owner_epoch": "a77e25310d9649dd9e2b2e63466cdf71",
+            "recoveries": 0,
+            "state": "ready",
+            "time": 6.603497723
+          },
+          "service": "active",
+          "operation": {
+            "boot_id": "bcd7d86b-fd78-4667-84ce-ef4051bd9c98",
+            "phase": "active",
+            "record_sha256": "5022bfd7be0ee355584e6a29411194cf97307df2ef8210d4f283632c53fb1812",
+            "schema": 1
+          }
+        }
+      }
+    },
+    {
+      "action": "shutdown",
+      "value": {
+        "requested": true
+      }
+    },
+    {
+      "action": "reboot_enabled",
+      "value": {
+        "boot_activated": {
+          "map": "rr-data-vm-ext4",
+          "enabled_at_boot": false,
+          "config_sha256": "42a7347ace2b8dd079183221f6b5a301a4070012142c5c4a69f10f67b880be43",
+          "configuration": {
+            "enabled": false,
+            "record": {
+              "guard": {
+                "identity_path": "/run/ram-rescue-data/rr-data-vm-ext4/identity.json",
+                "kernel_release": "7.0.0-34-generic",
+                "layout": {
+                  "fs_type": "ext4",
+                  "fs_uuid": "ec994cec-166b-4d1e-8577-d2c3cc88a8c3",
+                  "kind": "filesystem",
+                  "partuuid": "4dba02a2-e343-4e9b-855e-af41b9500268"
+                },
+                "logical_block_size": 512,
+                "map_name": "rr-data-vm-ext4",
+                "map_uuid": "RAMRESCUE-DATA-vm-ext4",
+                "partition_sectors": 131072,
+                "partition_start": 2048,
+                "profile": "host-data",
+                "queue_seconds": 8,
+                "run_dir": "/run/ram-rescue-data/rr-data-vm-ext4/state",
+                "schema": 1
+              },
+              "identity": {
+                "fs_type": "ext4",
+                "fs_uuid": "ec994cec-166b-4d1e-8577-d2c3cc88a8c3",
+                "kind": "filesystem",
+                "partition_number": 1,
+                "partuuid": "4dba02a2-e343-4e9b-855e-af41b9500268",
+                "pid": "0001",
+                "sectors": 163840,
+                "usb_serial": "DATA-VM-EXT4",
+                "vid": "46f4"
+              },
+              "schema": 1
+            },
+            "schema": 1
+          },
+          "map_present": true,
+          "native": {
+            "multipath_target_version": [
+              1,
+              15,
+              0
+            ],
+            "observations": {
+              "control": "safe_stopped",
+              "identity": "enrolled",
+              "transport": {
+                "completed": 0,
+                "in_flight": 0,
+                "state": "no_io",
+                "without_completion_seconds": 0.0
+              },
+              "upper_errors": {
+                "reason": "application and filesystem history not fully observed",
+                "state": "incomplete"
+              }
+            },
+            "outcome": "safe_data_owner_exit",
+            "owner_epoch": "66924b0fafc34abab4d31d10b4cc92e5",
+            "recoveries": 0,
+            "state": "safe_stopped",
+            "time": 6.094758253
+          },
+          "service": "inactive",
+          "operation": {
+            "boot_id": "2613ea36-c191-4cb5-9276-32eada73074d",
+            "phase": "disabled",
+            "record_sha256": "5022bfd7be0ee355584e6a29411194cf97307df2ef8210d4f283632c53fb1812",
+            "schema": 1
+          }
+        },
+        "removed": {
+          "map": "rr-data-vm-ext4",
+          "state": "removed",
+          "filesystem_changed": false,
+          "runtime_evidence": "retained_until_reboot"
+        },
+        "live_ram_removal_refused": {
+          "args": [
+            "/usr/bin/rescue-guard-admin",
+            "device",
+            "uninstall"
+          ],
+          "returncode": 1,
+          "stdout": "",
+          "stderr": "{\"state\": \"blocked\", \"reason\": \"RAM runtime remains from this boot; reboot after orderly device removal before uninstalling\"}\n"
+        }
+      }
+    },
+    {
+      "action": "shutdown",
+      "value": {
+        "requested": true
+      }
+    },
+    {
+      "action": "uninstall_reinstall",
+      "value": {
+        "uninstalled": {
+          "state": "uninstalled",
+          "receipts_retained": true
+        },
+        "package_removed": {
+          "args": [
+            "/usr/bin/dpkg",
+            "--remove",
+            "ram-rescue-handler"
+          ],
+          "returncode": 0,
+          "stdout": "(Reading database ... 37749 files and directories currently installed.)\nRemoving ram-rescue-handler (0.0.1~beta+0802c9bc69e4f9e8bbb5dcee) ...\n{\n  \"state\": \"removable\",\n  \"receipts_retained\": true\n}\n",
+          "stderr": ""
+        },
+        "reinstalled_and_removed": true
+      }
+    },
+    {
+      "action": "shutdown",
+      "value": {
+        "requested": true
+      }
+    }
+  ],
+  "sources": {
+    "lab/release_probe.py": "c3990f3ab5370544347558cc83ba57e878c92d3fcca9ffff8794c4f0065e67ce",
+    "lab/guest/release_probe.py": "3d9de2316342684393d0d0ad72abef0997b27c3e370a3319029ecfc9b8830c69"
+  },
+  "seed_sha256": "7565aae2d5866f905e2e9c523d28a4bcb7eda0b2bfce1576424303574de579b7",
+  "regular_block_inputs": [
+    "/workspace/Project/External-Memo-Rescue-Handler/lab/work/release-0001/qualification-release/usb.qcow2",
+    "/workspace/Project/External-Memo-Rescue-Handler/lab/work/rp-1004c/seed/s0/usb.raw",
+    "/workspace/Project/External-Memo-Rescue-Handler/lab/work/release-0001/qualification-release/decoy.raw",
+    "/workspace/Project/External-Memo-Rescue-Handler/lab/work/release-0001/qualification-release/rr-data-vm-ext4.raw",
+    "/workspace/Project/External-Memo-Rescue-Handler/lab/work/release-0001/qualification-release/rr-data-vm-vfat.raw",
+    "/workspace/Project/External-Memo-Rescue-Handler/lab/work/release-0001/qualification-release/wrong-vfat.raw"
+  ],
+  "command": [
+    "qemu-system-x86_64",
+    "-machine",
+    "q35",
+    "-accel",
+    "kvm",
+    "-m",
+    "3072",
+    "-smp",
+    "2",
+    "-display",
+    "none",
+    "-nodefaults",
+    "-no-reboot",
+    "-nic",
+    "none",
+    "-smbios",
+    "type=1,product=RAMRescueLab",
+    "-kernel",
+    "/workspace/Project/External-Memo-Rescue-Handler/lab/work/rp-1004c/vmlinuz",
+    "-initrd",
+    "/workspace/Project/External-Memo-Rescue-Handler/lab/work/release-0001/qualification-release/initrd.img",
+    "-append",
+    "console=ttyS0 ram_rescue_lab=1 root=/dev/mapper/labrescue-ubuntu ro systemd.mask=lab-agent.service systemd.mask=lab-guard.service systemd.mask=lab-shell.service systemd.mask=lab-ready.service systemd.mask=lab-workload.service ram_rescue_candidate_test=1 dm_multipath.queue_if_no_path_timeout_secs=10",
+    "-serial",
+    "file:/workspace/Project/External-Memo-Rescue-Handler/lab/work/release-0001/qualification-release/console.log",
+    "-serial",
+    "unix:/workspace/Project/External-Memo-Rescue-Handler/lab/work/release-0001/qualification-release/agent.sock,server=on,wait=off",
+    "-serial",
+    "unix:/workspace/Project/External-Memo-Rescue-Handler/lab/work/release-0001/qualification-release/rescue.sock,server=on,wait=off",
+    "-qmp",
+    "unix:/workspace/Project/External-Memo-Rescue-Handler/lab/work/release-0001/qualification-release/qmp.sock,server=on,wait=off",
+    "-device",
+    "qemu-xhci,id=xhci",
+    "-blockdev",
+    "{\"driver\": \"qcow2\", \"node-name\": \"usbdisk\", \"file\": {\"driver\": \"file\", \"filename\": \"/workspace/Project/External-Memo-Rescue-Handler/lab/work/release-0001/qualification-release/usb.qcow2\"}, \"backing\": {\"driver\": \"raw\", \"read-only\": true, \"file\": {\"driver\": \"file\", \"filename\": \"/workspace/Project/External-Memo-Rescue-Handler/lab/work/rp-1004c/seed/s0/usb.raw\"}}}",
+    "-blockdev",
+    "{\"driver\": \"raw\", \"node-name\": \"decoydisk\", \"file\": {\"driver\": \"file\", \"filename\": \"/workspace/Project/External-Memo-Rescue-Handler/lab/work/release-0001/qualification-release/decoy.raw\"}}",
+    "-device",
+    "usb-uas,bus=xhci.0,id=stick,serial=RAMRESCUE-LAB-001,port=1",
+    "-device",
+    "scsi-hd,bus=stick.0,id=lun,drive=usbdisk",
+    "-blockdev",
+    "{\"driver\": \"raw\", \"node-name\": \"rr-data-vm-ext4\", \"file\": {\"driver\": \"file\", \"filename\": \"/workspace/Project/External-Memo-Rescue-Handler/lab/work/release-0001/qualification-release/rr-data-vm-ext4.raw\"}}",
+    "-device",
+    "usb-storage,bus=xhci.0,port=2,id=rr-data-vm-ext4,drive=rr-data-vm-ext4,serial=DATA-VM-EXT4",
+    "-blockdev",
+    "{\"driver\": \"raw\", \"node-name\": \"rr-data-vm-vfat\", \"file\": {\"driver\": \"file\", \"filename\": \"/workspace/Project/External-Memo-Rescue-Handler/lab/work/release-0001/qualification-release/rr-data-vm-vfat.raw\"}}",
+    "-device",
+    "usb-storage,bus=xhci.0,port=3,id=rr-data-vm-vfat,drive=rr-data-vm-vfat,serial=DATA-VM-VFAT",
+    "-blockdev",
+    "{\"driver\": \"raw\", \"node-name\": \"wrong-vfat\", \"file\": {\"driver\": \"file\", \"filename\": \"/workspace/Project/External-Memo-Rescue-Handler/lab/work/release-0001/qualification-release/wrong-vfat.raw\"}}"
+  ],
+  "subject": {
+    "schema": 1,
+    "platform": {
+      "id": "ubuntu",
+      "version_id": "24.04",
+      "architecture": "amd64"
+    },
+    "kernel": {
+      "release": "7.0.0-34-generic",
+      "image_sha256": "73d9c6e40b210deb638070d6af591a68bb6d7ff0280d0ec34c9ccf705a4f47ac",
+      "modules_manifest_sha256": "46a6c18a8987f156ac11137109a0a8e6cbef02df3986817f765b33895bc97f6d"
+    },
+    "administration": {
+      "manifest_sha256": "3c7cef99c3add0f02d7438ce99f88f3e7f4e65c308932344690ab22fbd10857d",
+      "entrypoint_sha256": "b985cdf84aaadbde543e210a970c1607c1551458e1368bb175f8bde171f08a31"
+    },
+    "runtime": {
+      "manifest_sha256": "b2f4994d6b3db190b97ca046f16e19fa2ad4a24f090b2b95d4286f8e90f78d23",
+      "archive_sha256": "52810d5beb0ad0dcdbdeab08249841b4cb2c14042c8be0c2574423d52849dd35",
+      "binary_sha256": "34e1c96717f92d125c0b5b51e097a906dd3e8dfddb013c8c024ef7e6d5935890",
+      "libraries_manifest_sha256": "51054cbc9537dc47d837d742da58ba8654073885b40988ea2ddf535ccdf29491"
+    },
+    "host_dependencies": {
+      "manifest_sha256": "649b549a3d4b74aee32448484b9dbba6977085df396c924d73716da867c21bbd"
+    }
+  },
+  "recovery": {
+    "pid": 1886,
+    "start_ticks": "1566",
+    "exe_sha256": "34e1c96717f92d125c0b5b51e097a906dd3e8dfddb013c8c024ef7e6d5935890",
+    "service": "active",
+    "cgroup": "/ramrescuedata.slice/ram-rescue-data-rr-data-vm-ext4.service",
+    "cgroup_procs": "1886\n",
+    "journal": {
+      "boot_id": "f511b355-41f3-41a7-a50d-15dbf63c40c3",
+      "candidate": {
+        "boot_id": "f511b355-41f3-41a7-a50d-15dbf63c40c3",
+        "deadline": 24.200359261,
+        "enrollment_digest": "dd4195ae8f48b1fcafb3e4a888510b1869e8cfade1089e71f9bbb599217a2b58",
+        "instance": {
+          "dev": 2097,
+          "disk_sectors": 163840,
+          "disk_sys_path": "/sys/devices/pci0000:00/0000:00:01.0/usb2/2-2/2-2:1.0/host9/target9:0:0/9:0:0:0/block/sdd",
+          "diskseq": 18,
+          "logical_block_size": 512,
+          "node": "/dev/sdd1",
+          "partition_number": 1,
+          "partition_sectors": 131072,
+          "partition_start": 2048,
+          "sys_path": "/sys/devices/pci0000:00/0000:00:01.0/usb2/2-2/2-2:1.0/host9/target9:0:0/9:0:0:0/block/sdd/sdd1"
+        },
+        "layout_digest": "746e9b31cf99dbc7938e1411d7a298423b10e0ccf7f0c765fded16bc546722af",
+        "layout_version": "746e9b31cf99dbc7938e1411d7a298423b10e0ccf7f0c765fded16bc546722af",
+        "owner_epoch": "41132d5f9dc1419ab64599faec3b8e68",
+        "schema": 1,
+        "verified_at": 18.079826013
+      },
+      "candidate_table_digest": "eb5aa3d6f0c627b0a950fd26e71ea66dc0bcbac4adf8199f76f5317406762647",
+      "commit_started": true,
+      "config_digest": "4539b88856108aff1a56c9d959e705b05351f50f209a986973ae645f9ede9fb6",
+      "deadline": null,
+      "generation": 1,
+      "kernel_probe": {
+        "elapsed": 0.00041751900000264186,
+        "errno": 0,
+        "source": "ioctl",
+        "status": "completed",
+        "token": 1
+      },
+      "map_name": "rr-data-vm-ext4",
+      "map_uuid": "RAMRESCUE-DATA-vm-ext4",
+      "owner_epoch": "41132d5f9dc1419ab64599faec3b8e68",
+      "owner_pid": 1886,
+      "phase": "ready",
+      "previous": {
+        "active": [
+          [
+            0,
+            131072,
+            "multipath",
+            "3 queue_if_no_path queue_mode bio 0 1 1 round-robin 0 1 1 8:33 1 "
+          ]
+        ],
+        "active_digest": "9f3c95cf3f547b0ab61551f27928c7ce5f9d2649ed03cb0e0c65afda736e3b05",
+        "inactive": [],
+        "inactive_digest": null,
+        "info": {
+          "deferred_remove": 0,
+          "event_nr": 1,
+          "exists": 1,
+          "inactive_table": 0,
+          "internal_suspend": 0,
+          "live_table": 1,
+          "major": 252,
+          "minor": 2,
+          "open_count": 1,
+          "read_only": 0,
+          "suspended": 0,
+          "target_count": 1
+        },
+        "uuid": "RAMRESCUE-DATA-vm-ext4"
+      },
+      "recoveries": 1,
+      "schema": 1,
+      "snapshot": {
+        "active": [
+          [
+            0,
+            131072,
+            "multipath",
+            "3 queue_if_no_path queue_mode bio 0 1 1 round-robin 0 1 1 8:49 1 "
+          ]
+        ],
+        "active_digest": "eb5aa3d6f0c627b0a950fd26e71ea66dc0bcbac4adf8199f76f5317406762647",
+        "inactive": [],
+        "inactive_digest": null,
+        "info": {
+          "deferred_remove": 0,
+          "event_nr": 1,
+          "exists": 1,
+          "inactive_table": 0,
+          "internal_suspend": 0,
+          "live_table": 1,
+          "major": 252,
+          "minor": 2,
+          "open_count": 1,
+          "read_only": 0,
+          "suspended": 0,
+          "target_count": 1
+        },
+        "uuid": "RAMRESCUE-DATA-vm-ext4"
+      },
+      "updated_at": 18.23150733
+    },
+    "state": {
+      "confirmation": "kernel-probe-and-state",
+      "kernel_probe": {
+        "elapsed": 0.00041751900000264186,
+        "errno": 0,
+        "source": "ioctl",
+        "status": "completed",
+        "token": 1
+      },
+      "multipath_target_version": [
+        1,
+        15,
+        0
+      ],
+      "node": "/dev/sdd1",
+      "observations": {
+        "control": "ready",
+        "identity": "verified",
+        "transport": {
+          "completed": 271,
+          "in_flight": 1,
+          "state": "completion_progress",
+          "without_completion_seconds": 0.0
+        },
+        "upper_errors": {
+          "reason": "application and filesystem history not fully observed",
+          "state": "incomplete"
+        }
+      },
+      "outcome": "path_restored",
+      "owner_epoch": "41132d5f9dc1419ab64599faec3b8e68",
+      "recoveries": 1,
+      "state": "ready",
+      "time": 18.231556048
+    },
+    "stop": {
+      "boot_id": "f511b355-41f3-41a7-a50d-15dbf63c40c3",
+      "config_digest": "4539b88856108aff1a56c9d959e705b05351f50f209a986973ae645f9ede9fb6",
+      "identity_digest": "3774ea66c59611217774c02503020042e836496e4bf5bfe3a3c7f632ac431333",
+      "journal_digest": "5f18e5051cf6343c49202be2b5c44bb5b417a2dc1803c8ccf664da98a234718c",
+      "map_name": "rr-data-vm-ext4",
+      "map_uuid": "RAMRESCUE-DATA-vm-ext4",
+      "owner_epoch": "bbea4ae7f38545369284aa95bd11021d",
+      "purpose": "safe_host_data_stop",
+      "schema": 1
+    },
+    "archive": {
+      "invocation": {
+        "config_digest": "4539b88856108aff1a56c9d959e705b05351f50f209a986973ae645f9ede9fb6",
+        "invocation_id": "3c08550d40aa41c0a1e9adde4e995ec9",
+        "owner_epoch": "bbea4ae7f38545369284aa95bd11021d",
+        "schema": 1
+      },
+      "journal": {
+        "boot_id": "f511b355-41f3-41a7-a50d-15dbf63c40c3",
+        "candidate": null,
+        "config_digest": "4539b88856108aff1a56c9d959e705b05351f50f209a986973ae645f9ede9fb6",
+        "deadline": null,
+        "map_name": "rr-data-vm-ext4",
+        "map_uuid": "RAMRESCUE-DATA-vm-ext4",
+        "owner_cgroup": "/ramrescuedata.slice/ram-rescue-data-rr-data-vm-ext4.service",
+        "owner_epoch": "bbea4ae7f38545369284aa95bd11021d",
+        "owner_pid": 1636,
+        "phase": "safe_stopped",
+        "queue_disable": "verified_safe_stop",
+        "raw_open_descriptors": "not_observable",
+        "recoveries": 0,
+        "schema": 1,
+        "snapshot": {
+          "active": [
+            [
+              0,
+              131072,
+              "multipath",
+              "2 queue_mode bio 0 1 1 round-robin 0 1 1 8:33 1 "
+            ]
+          ],
+          "active_digest": "9f3c95cf3f547b0ab61551f27928c7ce5f9d2649ed03cb0e0c65afda736e3b05",
+          "inactive": [],
+          "inactive_digest": null,
+          "info": {
+            "deferred_remove": 0,
+            "event_nr": 0,
+            "exists": 1,
+            "inactive_table": 0,
+            "internal_suspend": 0,
+            "live_table": 1,
+            "major": 252,
+            "minor": 2,
+            "open_count": 0,
+            "read_only": 0,
+            "suspended": 0,
+            "target_count": 1
+          },
+          "uuid": "RAMRESCUE-DATA-vm-ext4"
+        },
+        "stopped_instance": {
+          "dev": "8:33",
+          "diskseq": 13,
+          "node": "/dev/sdc1",
+          "sys_path": "/sys/devices/pci0000:00/0000:00:01.0/usb2/2-2/2-2:1.0/host6/target6:0:0/6:0:0:0/block/sdc/sdc1"
+        },
+        "updated_at": 13.58733675
+      },
+      "receipt": {
+        "boot_id": "f511b355-41f3-41a7-a50d-15dbf63c40c3",
+        "config_digest": "4539b88856108aff1a56c9d959e705b05351f50f209a986973ae645f9ede9fb6",
+        "identity_digest": "3774ea66c59611217774c02503020042e836496e4bf5bfe3a3c7f632ac431333",
+        "journal_digest": "5f18e5051cf6343c49202be2b5c44bb5b417a2dc1803c8ccf664da98a234718c",
+        "map_name": "rr-data-vm-ext4",
+        "map_uuid": "RAMRESCUE-DATA-vm-ext4",
+        "owner_epoch": "bbea4ae7f38545369284aa95bd11021d",
+        "purpose": "safe_host_data_stop",
+        "schema": 1
+      },
+      "schema": 1
+    },
+    "invocation": {
+      "config_digest": "4539b88856108aff1a56c9d959e705b05351f50f209a986973ae645f9ede9fb6",
+      "invocation_id": "5bb33f956cb94754bc43e53501901368",
+      "owner_epoch": "41132d5f9dc1419ab64599faec3b8e68",
+      "schema": 1
+    },
+    "supervisor": {
+      "outcome": "explicit_safe_stop_preserved",
+      "owner_epoch": "bbea4ae7f38545369284aa95bd11021d",
+      "state": "safe_stopped"
+    },
+    "lock_inode": 1380,
+    "table": "0 131072 multipath 3 queue_if_no_path queue_mode bio 0 1 1 round-robin 0 1 1 8:49 1",
+    "status": "0 131072 multipath 2 0 0 0 1 1 A 0 1 0 8:49 A 0",
+    "ram_mounts": [
+      "61 30 0:45 / /run/ram-rescue-manager/rootfs rw,nosuid,relatime shared:276 - tmpfs ram-rescue-data-tools rw,size=262144k,mode=700,inode64,noswap",
+      "93 61 0:7 / /run/ram-rescue-manager/rootfs/dev rw,nosuid,relatime shared:2 - devtmpfs udev rw,size=846572k,nr_inodes=211643,mode=755,inode64",
+      "332 61 0:24 / /run/ram-rescue-manager/rootfs/proc rw,nosuid,nodev,noexec,relatime shared:13 - proc proc rw",
+      "383 61 0:23 / /run/ram-rescue-manager/rootfs/sys rw,nosuid,nodev,noexec,relatime shared:8 - sysfs sysfs rw",
+      "392 61 0:26 / /run/ram-rescue-manager/rootfs/run rw,nosuid,nodev,noexec,relatime shared:6 - tmpfs tmpfs rw,size=297324k,mode=755,inode64",
+      "401 61 252:0 /etc/fstab /run/ram-rescue-manager/rootfs/etc/rescue/host-fstab ro,relatime shared:1 - ext4 /dev/mapper/labrescue-ubuntu rw,errors=remount-ro"
+    ],
+    "fstab_sha256": "a78708de7d787238eec41ada8a49bed91e87c77e57e8aa44f5c0bb66368c4908",
+    "root_enrollment_exists": false,
+    "worker_pid": 1900,
+    "worker_poll": null,
+    "acks": 6,
+    "errors": [],
+    "records": [
+      {
+        "seq": 1,
+        "start": 15.881258969,
+        "ok": true,
+        "elapsed": 0.001029292000000126
+      },
+      {
+        "seq": 2,
+        "start": 15.982577407,
+        "ok": true,
+        "elapsed": 0.0018587759999988407
+      },
+      {
+        "seq": 3,
+        "start": 16.084633644,
+        "ok": true,
+        "elapsed": 0.0016130220000007967
+      },
+      {
+        "seq": 4,
+        "start": 16.186382246,
+        "ok": true,
+        "elapsed": 1.9431997410000008
+      },
+      {
+        "seq": 5,
+        "start": 18.229688641,
+        "ok": true,
+        "elapsed": 0.0019551550000009854
+      },
+      {
+        "seq": 6,
+        "start": 18.331743772,
+        "ok": true,
+        "elapsed": 0.001624765999999056
+      }
+    ]
+  },
+  "seed_readonly_backing_stat_unchanged": true
+}

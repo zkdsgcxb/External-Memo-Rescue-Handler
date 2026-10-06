@@ -2,7 +2,7 @@
 
 **Linux USB 存储短暂断联恢复工具 · v0.0.1-beta**
 
-[English](README.en.md) · [安装与使用](docs/USAGE.md) · [支持范围](docs/SUPPORT.md) · [架构](ARCHITECTURE.md) · [安全](SECURITY.md) · [参与开发](CONTRIBUTING.md)
+[English](README.en.md) · [安装与使用](docs/USAGE.md) · [支持范围](docs/SUPPORT.md) · [发布验收](docs/VALIDATION.md) · [架构](ARCHITECTURE.md) · [安全](SECURITY.md) · [参与开发](CONTRIBUTING.md)
 
 通过稳定的 DM multipath 映射和 C++17 后台控制器，在原 USB 盘短暂断联、重新枚举后核验身份并重新接入，让等待中的 I/O 有机会继续。恢复期间读写可能阻塞；本工具不能撤销已返回应用的 I/O 错误或修复损坏的文件系统。
 

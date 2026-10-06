@@ -1,0 +1,165 @@
+{
+  "schema": 1,
+  "release": "v0.0.1-beta",
+  "passed": true,
+  "host_deployed": false,
+  "physical_hardware_acceptance": false,
+  "package": {
+    "schema": 1,
+    "package": "ram-rescue-handler_0.0.1~beta+0802c9bc69e4f9e8bbb5dcee_amd64.deb",
+    "sha256": "79b2c0e8955af2b242b396781393c28ff9de26128111eb362cefd63c44a3985c",
+    "administration_version": "0802c9bc69e4f9e8bbb5dcee",
+    "runtime": {
+      "schema": 1,
+      "kind": "data-runtime",
+      "kernel_release": "7.0.0-34-generic",
+      "archive_sha256": "52810d5beb0ad0dcdbdeab08249841b4cb2c14042c8be0c2574423d52849dd35",
+      "binary_sha256": "34e1c96717f92d125c0b5b51e097a906dd3e8dfddb013c8c024ef7e6d5935890",
+      "native_runtime": {
+        "schema": 1,
+        "runtime": "cpp",
+        "binary_path": "/opt/guard-runtime/guard-runtime",
+        "binary_sha256": "34e1c96717f92d125c0b5b51e097a906dd3e8dfddb013c8c024ef7e6d5935890",
+        "entrypoint_path": "/opt/guard-runtime/maintain",
+        "entrypoint_sha256": "e2cd3b560621354d5110908b715095dc470bea369071708740ec3ab47b4d7b3c",
+        "library_sha256": {
+          "/lib/x86_64-linux-gnu/libc.so.6": "3a15d66867d83762c7f2f1e37359cb8f6c5743edb369c65285cb0b1c4f7498bf",
+          "/lib/x86_64-linux-gnu/libcap.so.2": "6ac6abc86ac891c6e13486470e26f1d939f47fda9e6b5d5508a7f5ec881adc84",
+          "/lib/x86_64-linux-gnu/libcrypto.so.3": "6866ed711dab8927e1bf82bf1cd30e828bdfc34f3cc1e83b1c9eb01ce6c37d9a",
+          "/lib/x86_64-linux-gnu/libdevmapper.so.1.02.1": "0b33f9e9780b2e22bd40170f4cfe358b0cf525974d01896b3bb2b02d6e4e2582",
+          "/lib/x86_64-linux-gnu/libgcc_s.so.1": "d93224d2b0dab4247598be683adca02f5cf00586f99c187579cd7e92058fb7cb",
+          "/lib/x86_64-linux-gnu/libm.so.6": "fce00b6f25f459cf4ae0b7fae4257909a1a8a86f9149e7c029a5d617baf1ccd0",
+          "/lib/x86_64-linux-gnu/libpcre2-8.so.0": "e00576d71d81d3ba0cfa4903c835a44a8723aac96f72f79ff75200b4cff9071b",
+          "/lib/x86_64-linux-gnu/libselinux.so.1": "0ec0843463f90e227b0e138e1f379774f50b5514bd7f5dbd4c8a87aca0aa6670",
+          "/lib/x86_64-linux-gnu/libstdc++.so.6": "1fd75fe70354a416d75aef22bcae68c47bd25d20e2d0568c30b1a9838cf62f11",
+          "/lib/x86_64-linux-gnu/libudev.so.1": "4298228175fa62a36af88b1afd4406cdd8b1bf166621f957d0dbbde45a698fe5",
+          "/lib64/ld-linux-x86-64.so.2": "c20a2dc8917c755f02b94049356320fe1f62ac7d9f8994731f807d9df39302da"
+        },
+        "payload_file_bytes": 13833958,
+        "dependency_packages": {
+          "/lib/x86_64-linux-gnu/libc.so.6": {
+            "package": "libc6:amd64",
+            "version": "2.39-0ubuntu8.9",
+            "architecture": "amd64"
+          },
+          "/lib/x86_64-linux-gnu/libcap.so.2": {
+            "package": "libcap2:amd64",
+            "version": "1:2.66-5ubuntu2.4",
+            "architecture": "amd64"
+          },
+          "/lib/x86_64-linux-gnu/libcrypto.so.3": {
+            "package": "libssl3t64:amd64",
+            "version": "3.0.13-0ubuntu3.16",
+            "architecture": "amd64"
+          },
+          "/lib/x86_64-linux-gnu/libdevmapper.so.1.02.1": {
+            "package": "libdevmapper1.02.1:amd64",
+            "version": "2:1.02.185-3ubuntu3.2",
+            "architecture": "amd64"
+          },
+          "/lib/x86_64-linux-gnu/libgcc_s.so.1": {
+            "package": "libgcc-s1:amd64",
+            "version": "14.2.0-4ubuntu2~24.04.1",
+            "architecture": "amd64"
+          },
+          "/lib/x86_64-linux-gnu/libm.so.6": {
+            "package": "libc6:amd64",
+            "version": "2.39-0ubuntu8.9",
+            "architecture": "amd64"
+          },
+          "/lib/x86_64-linux-gnu/libpcre2-8.so.0": {
+            "package": "libpcre2-8-0:amd64",
+            "version": "10.42-4ubuntu2.1",
+            "architecture": "amd64"
+          },
+          "/lib/x86_64-linux-gnu/libselinux.so.1": {
+            "package": "libselinux1:amd64",
+            "version": "3.5-2ubuntu2.1",
+            "architecture": "amd64"
+          },
+          "/lib/x86_64-linux-gnu/libstdc++.so.6": {
+            "package": "libstdc++6:amd64",
+            "version": "14.2.0-4ubuntu2~24.04.1",
+            "architecture": "amd64"
+          },
+          "/lib/x86_64-linux-gnu/libudev.so.1": {
+            "package": "libudev1:amd64",
+            "version": "255.4-1ubuntu8.17",
+            "architecture": "amd64"
+          },
+          "/lib64/ld-linux-x86-64.so.2": {
+            "package": "libc6:amd64",
+            "version": "2.39-0ubuntu8.9",
+            "architecture": "amd64"
+          }
+        }
+      },
+      "base_sha256": "152c6d2720ff01b232941e917b651fdca638627f2dcb547893ae17dc3237c3b0"
+    },
+    "source_commit": "b876cef58a969166968c7f264fb86d6e262bda95",
+    "installed": false,
+    "maintainer_scripts": [
+      "prerm"
+    ],
+    "automatic_activation": false,
+    "version": "0.0.1-beta"
+  },
+  "support_package": {
+    "package": "ram-rescue-handler-support_0.0.1~beta+0802c9bc69e4f9e8bbb5dcee_all.deb",
+    "sha256": "b8cd5bbb469b987554fc547c83369d756a536f03085f96c5c3ecc2dd23e4f201",
+    "acceptance_sha256": "d13135f0ff8a4fd7c8ca21a33c25514e44a50e61576c71fe3485e0fc9b20002b",
+    "evidence_sha256": "f1f0b0acc646c98fd8b326e49be68ff802bfda132a69c4197eb1930a1e635c43",
+    "automatic_activation": false
+  },
+  "administration_source_members_match": 87,
+  "observer_commit": "af149f7de02a95a8a8c26effce7948f2d72090ce",
+  "validation": {
+    "python_tests": 571,
+    "rescue_tests": 25,
+    "native_checks": 243,
+    "hostile_input_mutations_per_build": 10000,
+    "release_and_sanitizer_builds_passed": true,
+    "public_lifecycle_boots": 4,
+    "qualification_fixture_in_final_run": false,
+    "native_stop_rearm_recovery_kill_takeover_passed": true,
+    "active_package_reinstall_preserves_owner": true
+  },
+  "github_actions": [
+    {
+      "conclusion": "success",
+      "headSha": "af149f7de02a95a8a8c26effce7948f2d72090ce",
+      "url": "https://github.com/zkdsgcxb/External-Memo-Rescue-Handler/actions/runs/37504687945",
+      "workflowName": "Management and packaging checks"
+    },
+    {
+      "conclusion": "success",
+      "headSha": "af149f7de02a95a8a8c26effce7948f2d72090ce",
+      "url": "https://github.com/zkdsgcxb/External-Memo-Rescue-Handler/actions/runs/37504687822",
+      "workflowName": "Native security checks"
+    }
+  ],
+  "reports": {
+    "engineering-lifecycle.json": {
+      "sha256": "f1f0b0acc646c98fd8b326e49be68ff802bfda132a69c4197eb1930a1e635c43",
+      "passed": true
+    },
+    "release-lifecycle.json": {
+      "sha256": "14f3368c09c0c60738c03a743c58665a8b5207b5e7285cc6bd117a050471088e",
+      "passed": true
+    },
+    "native-lifecycle.json": {
+      "sha256": "2c2973585ab6e4e56bdcafab7d03c9140d1ef74e16d457e95e40ccf75606c21f",
+      "passed": true
+    }
+  },
+  "distribution": {
+    "bundled_package_notices": 48,
+    "corresponding_source_packages": 33
+  },
+  "limitations": [
+    "Exact Ubuntu 24.04 amd64 / 7.0.0-34-generic combination only; see SUPPORT-MATRIX.json.",
+    "No physical hot-unplug, suspend/resume or host deployment acceptance for this release.",
+    "No guarantee for permanent lower-driver stalls, power loss, all raw open descriptors or every crash instruction boundary.",
+    "Root protection remains advanced experimental functionality."
+  ]
+}

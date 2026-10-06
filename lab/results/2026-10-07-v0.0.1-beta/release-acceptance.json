@@ -1,0 +1,40 @@
+{
+  "evidence_sha256": "f1f0b0acc646c98fd8b326e49be68ff802bfda132a69c4197eb1930a1e635c43",
+  "filesystems": [
+    "ext4"
+  ],
+  "package_sha256": "79b2c0e8955af2b242b396781393c28ff9de26128111eb362cefd63c44a3985c",
+  "purpose": "data_activation_release_acceptance",
+  "result": "passed",
+  "schema": 1,
+  "subjects": [
+    {
+      "administration": {
+        "entrypoint_sha256": "b985cdf84aaadbde543e210a970c1607c1551458e1368bb175f8bde171f08a31",
+        "manifest_sha256": "3c7cef99c3add0f02d7438ce99f88f3e7f4e65c308932344690ab22fbd10857d"
+      },
+      "host_dependencies": {
+        "manifest_sha256": "649b549a3d4b74aee32448484b9dbba6977085df396c924d73716da867c21bbd"
+      },
+      "kernel": {
+        "image_sha256": "73d9c6e40b210deb638070d6af591a68bb6d7ff0280d0ec34c9ccf705a4f47ac",
+        "modules_manifest_sha256": "46a6c18a8987f156ac11137109a0a8e6cbef02df3986817f765b33895bc97f6d",
+        "release": "7.0.0-34-generic"
+      },
+      "platform": {
+        "architecture": "amd64",
+        "id": "ubuntu",
+        "version_id": "24.04"
+      },
+      "runtime": {
+        "archive_sha256": "52810d5beb0ad0dcdbdeab08249841b4cb2c14042c8be0c2574423d52849dd35",
+        "binary_sha256": "34e1c96717f92d125c0b5b51e097a906dd3e8dfddb013c8c024ef7e6d5935890",
+        "libraries_manifest_sha256": "51054cbc9537dc47d837d742da58ba8654073885b40988ea2ddf535ccdf29491",
+        "manifest_sha256": "b2f4994d6b3db190b97ca046f16e19fa2ad4a24f090b2b95d4286f8e90f78d23"
+      },
+      "schema": 1
+    }
+  ],
+  "validation_scope": "isolated_QEMU_software_acceptance_no_physical_hardware_claim",
+  "version": "0.0.1-beta"
+}

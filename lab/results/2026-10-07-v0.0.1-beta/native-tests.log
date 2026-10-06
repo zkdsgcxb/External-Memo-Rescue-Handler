@@ -1,0 +1,6 @@
+37 admission checks passed
+13 controller checks passed
+core: 60 checks passed
+100 data lifecycle safety checks passed
+33 native storage/input security checks passed
+10000 deterministic hostile input mutations passed
