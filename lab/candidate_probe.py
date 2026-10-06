@@ -69,7 +69,7 @@ def budget(root):
     return used
 
 
-def create_initrd(folder, inputs, package, reference, source, fixture):
+def create_initrd(folder, inputs, package, reference, source, fixture, *, extra_files=None):
     unpacked = folder / 'unpacked'
     subprocess.run(['unmkinitramfs', str(inputs['initrd']), str(unpacked)], check=True,
                    stdout=subprocess.DEVNULL, stderr=subprocess.PIPE)
@@ -81,6 +81,10 @@ def create_initrd(folder, inputs, package, reference, source, fixture):
     payload.mkdir(parents=True)
     shutil.copyfile(GUEST, payload / 'probe.py')
     shutil.copyfile(inputs['package'], payload / 'handler.deb')
+    for name, path in (extra_files or {}).items():
+        if Path(name).name != name:
+            raise ValueError('Extra payload needs a plain filename')
+        shutil.copyfile(standalone.regular_lab_file(path), payload / name)
     shutil.copytree(reference / 'reference', payload / 'reference')
     (payload / 'fixture.json').write_text(json.dumps(fixture, indent=2) + '\n')
     (payload / 'candidate-probe.service').write_text(UNIT)

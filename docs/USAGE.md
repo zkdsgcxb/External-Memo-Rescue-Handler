@@ -8,12 +8,12 @@
 
 ```sh
 sha256sum -c SHA256SUMS
-sudo apt install ./ram-rescue-handler_0.0.1~beta+*.deb
+sudo apt install ./ram-rescue-handler_0.0.1~beta+*.deb ./ram-rescue-handler-support_0.0.1~beta+*.deb
 rescue-guard-admin --version
 sudo rescue-guard-admin device --help
 ```
 
-安装不创建设备映射、不准备 RAM、不启用服务、不修改 fstab 或启动镜像。支持材料安装步骤及精确组合见发布附带的支持清单；缺少匹配的资格或官方内核参考文件时，计划和启用都会拒绝，不提供 `--force`。
+安装不创建设备映射、不准备 RAM、不启用服务、不修改 fstab 或启动镜像。第二个包仅安装验收资格和官方内核参考材料，不会安装或切换内核。精确组合见发布附带的支持清单；缺少匹配的资格或官方内核参考文件时，计划和启用都会拒绝，不提供 `--force`。
 
 普通 Ubuntu 可能尚未载入 multipath 模块。可以显式执行 `sudo modprobe dm_multipath` 后预检；不能同时运行发行版 `multipathd` 管理这些映射。本工具不自动修改全局内核排队超时或禁用其他服务。
 
@@ -77,7 +77,7 @@ sudo rescue-guard-admin device remove --name rr-data-work
 
 ```sh
 sudo rescue-guard-admin device uninstall
-sudo apt remove ram-rescue-handler
+sudo apt remove ram-rescue-handler-support ram-rescue-handler
 ```
 
 卸载检查拒绝仍有配置、保护映射、RAM 运行环境、未完成事务或旧根盘集成的情况。不会自动停止业务、移除磁盘或清除证据。操作收据保留在 `/var/lib/ram-rescue-handler/devices/`。

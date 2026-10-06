@@ -374,8 +374,15 @@ def prepare():
         qualification = FIXTURE['acceptance']
         assert subject in qualification['subjects']
     target = Path('/usr/share/ram-rescue-handler/releases/0.0.1-beta.json')
-    target.parent.mkdir(parents=True, mode=0o755)
-    target.write_text(json.dumps(qualification))
+    if 'support_package_sha256' in FIXTURE:
+        assert sha(PAYLOAD / 'support.deb') == FIXTURE['support_package_sha256']
+        execute('/usr/bin/dpkg', '-i', str(PAYLOAD / 'support.deb'))
+        assert json.loads(target.read_text()) == qualification
+        assert not Path('/run/ram-rescue-manager/runtime-environment.json').exists()
+        assert not Path('/etc/systemd/system/ram-rescue-devices.service').exists()
+    else:
+        target.parent.mkdir(parents=True, mode=0o755)
+        target.write_text(json.dumps(qualification))
     plan = parsed('plan', '--device', node, '--name', NAME)
     assert plan['existing_map'] is False
     bad = cli('enroll', '--device', node, '--name', NAME, '--expect-plan', '0' * 64, check=False)
@@ -465,9 +472,13 @@ def reboot_enabled():
 
 def uninstall_reinstall():
     result = parsed('uninstall')
+    if 'support_package_sha256' in FIXTURE:
+        execute('/usr/bin/dpkg', '--remove', 'ram-rescue-handler-support')
     removed = execute('/usr/bin/dpkg', '--remove', 'ram-rescue-handler')
     assert not Path('/usr/bin/rescue-guard-admin').exists()
     execute('/usr/bin/dpkg', '-i', str(PAYLOAD / 'handler.deb'))
+    if 'support_package_sha256' in FIXTURE:
+        execute('/usr/bin/dpkg', '-i', str(PAYLOAD / 'support.deb'))
     assert not Path('/etc/systemd/system/ram-rescue-devices.service').exists()
     assert not Path('/run/ram-rescue-manager/runtime-environment.json').exists()
     node = str((Path('/dev/disk/by-partuuid') / SPEC['partuuid']).resolve(strict=True))
@@ -476,6 +487,8 @@ def uninstall_reinstall():
     value = configuration()
     parsed('remove', '--name', NAME, '--expect-plan', value['config_sha256'])
     parsed('uninstall')
+    if 'support_package_sha256' in FIXTURE:
+        execute('/usr/bin/dpkg', '--remove', 'ram-rescue-handler-support')
     execute('/usr/bin/dpkg', '--remove', 'ram-rescue-handler')
     return {'uninstalled': result, 'package_removed': removed, 'reinstalled_and_removed': True}
 

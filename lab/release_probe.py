@@ -18,7 +18,7 @@ from run import Channel, WORK
 REPO = Path(__file__).resolve().parents[1]
 
 
-def run(reproduction, package_dir, reference, folder, acceptance=None):
+def run(reproduction, package_dir, reference, folder, acceptance=None, support_package=None):
     inputs, package = standalone.validate_inputs(reproduction, package_dir)
     source = json.loads((reference / 'reference/source.json').read_text())
     if candidate.sha(inputs['kernel']) != source['image']['sha256']:
@@ -31,6 +31,8 @@ def run(reproduction, package_dir, reference, folder, acceptance=None):
                'spec': data.SPECS[0], 'workload': ast.literal_eval(assignment.value)}
     if acceptance:
         fixture['acceptance'] = json.loads(acceptance.read_text())
+    if support_package:
+        fixture['support_package_sha256'] = candidate.sha(support_package)
     report = {'schema': 1, 'passed': False, 'scope': 'public_data_lifecycle_four_boot_vm',
               'qualification_fixture': acceptance is None, 'package': package,
               'host_deployed': False, 'actions': []}
@@ -54,7 +56,8 @@ def run(reproduction, package_dir, reference, folder, acceptance=None):
 
     try:
         overlay = data.create_images(folder, inputs['seed'])
-        image = candidate.create_initrd(folder, inputs, package, reference, source, fixture)
+        image = candidate.create_initrd(folder, inputs, package, reference, source, fixture,
+            extra_files={'support.deb': support_package} if support_package else None)
         command = standalone.vm_command(folder, inputs, image, overlay)
         index = command.index('-append') + 1
         command[index] = command[index].replace('ram_rescue_standalone_test=1', 'ram_rescue_candidate_test=1')
@@ -127,9 +130,10 @@ if __name__ == '__main__':
     for option in ('reproduction-dir', 'package-dir', 'reference-dir', 'output'):
         parser.add_argument('--' + option, type=Path, required=True)
     parser.add_argument('--acceptance', type=Path)
+    parser.add_argument('--support-package', type=Path)
     args = parser.parse_args()
     for path in (args.reproduction_dir, args.package_dir, args.reference_dir, args.output):
         if not path.resolve().is_relative_to(WORK.resolve()) or path.is_symlink():
             raise SystemExit('Use only regular lab/work artifacts')
     run(args.reproduction_dir.resolve(), args.package_dir.resolve(), args.reference_dir.resolve(),
-        args.output.resolve(), args.acceptance)
+        args.output.resolve(), args.acceptance, args.support_package)
