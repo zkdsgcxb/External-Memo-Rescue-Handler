@@ -404,6 +404,10 @@ def prepare():
 
 def lifecycle_checks():
     before = snapshot()
+    reinstalled = execute('/usr/bin/dpkg', '-i', str(PAYLOAD / 'handler.deb'))
+    after_reinstall = snapshot()
+    assert (before['pid'], before['start_ticks'], before['exe_sha256']) == (
+        after_reinstall['pid'], after_reinstall['start_ticks'], after_reinstall['exe_sha256'])
     rejected = execute('/usr/bin/dpkg', '--remove', 'ram-rescue-handler', check=False)
     assert rejected['returncode'] != 0
     assert snapshot()['pid'] == before['pid']
@@ -426,7 +430,8 @@ def lifecycle_checks():
     # Re-enable to verify next-boot activation later in the scenario.
     value = configuration()
     parsed('enable', '--name', NAME, '--expect-plan', value['config_sha256'])
-    return {'package_removal_refused': rejected, 'stopped': stopped,
+    return {'active_package_reinstall_preserved_owner': reinstalled,
+            'package_removal_refused': rejected, 'stopped': stopped,
             'restarted': restarted, 'busy_disable': busy, 'disabled': disabled}
 
 

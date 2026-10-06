@@ -196,6 +196,7 @@ def start(name, value):
     if active == 'active':
         if read_trusted_json(runtime_record) != record:
             raise RuntimeError('Running owner differs from saved configuration')
+        journal(name, 'active', record_sha256=digest(record))
         return {'map': name, 'state': 'active', 'already_active': True}
     if active not in ('inactive', 'failed'):
         raise RuntimeError('Controller transition is still in progress')
@@ -275,7 +276,12 @@ def enable(name, expected):
     install_boot()
     value['enabled'] = True
     write(config_path(name), value)
-    return start(name, value)
+    journal(name, 'enabling', record_sha256=digest(value['record']))
+    try:
+        return start(name, value)
+    except BaseException:
+        journal(name, 'enable_incomplete', record_sha256=digest(value['record']))
+        raise
 
 
 def stop_owner(name, value):
@@ -317,8 +323,10 @@ def remove(name, expected):
         raise RuntimeError('Disable this device before removing it')
     record = value['record']
     item = map_entry(name)
+    # Even a missing mapping does not prove that its native owner has exited.
+    # Preserve configuration if a live/incomplete owner cannot confirm stop.
+    stop_owner(name, value)
     if item:
-        stop_owner(name, value)
         node = current_node(record)
         require_idle(record, node, item)
         journal(name, 'removing', record_sha256=digest(record))

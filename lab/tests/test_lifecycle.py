@@ -58,6 +58,26 @@ class LifecycleTests(unittest.TestCase):
                 life.remove.__wrapped__(self.name, digest(value))
         run.assert_not_called()
 
+    def test_missing_map_is_not_proof_of_owner_exit(self):
+        with patch.object(life, 'load', return_value=self.value), \
+                patch.object(life, 'map_entry', return_value=None), \
+                patch.object(life, 'stop_owner', side_effect=RuntimeError('owner unresolved')), \
+                patch.object(life, 'config_path') as path:
+            with self.assertRaisesRegex(RuntimeError, 'owner unresolved'):
+                life.remove.__wrapped__(self.name, digest(self.value))
+        path.assert_not_called()
+
+    def test_activation_failure_records_incomplete_consent(self):
+        events = []
+        with patch.object(life, 'load', return_value=copy.deepcopy(self.value)), \
+                patch.object(life.release_support, 'require_supported'), \
+                patch.object(life, 'install_boot'), patch.object(life, 'write'), \
+                patch.object(life, 'journal', side_effect=lambda *a, **k: events.append(a[1])), \
+                patch.object(life, 'start', side_effect=RuntimeError('busy')):
+            with self.assertRaisesRegex(RuntimeError, 'busy'):
+                life.enable.__wrapped__(self.name, digest(self.value))
+        self.assertEqual(events, ['enabling', 'enable_incomplete'])
+
     def test_unsupported_enable_does_not_write_boot_or_consent(self):
         with patch.object(life, 'load', return_value=self.value), \
                 patch.object(life.release_support, 'require_supported', side_effect=RuntimeError('unsupported')), \
